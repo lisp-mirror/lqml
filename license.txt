@@ -1,0 +1,3 @@
+please see Qt6 and ECL license (both LGPL)
+
+everything else can be considered public domain
