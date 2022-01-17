@@ -1,0 +1,620 @@
+#include "ecl_ext.h"
+#include "marshal.h"
+#include "lqml.h"
+#include "single_shot.h"
+#include <QTimer>
+#include <QLibrary>
+#include <QGuiApplication>
+#include <QQuickItem>
+#include <QQuickView>
+#include <QQmlEngine>
+#include <QQmlExpression>
+#include <QQmlProperty>
+
+QT_BEGIN_NAMESPACE
+
+void iniCLFunctions() {
+  cl_object qml(STRING("QML"));
+  if (cl_find_package(qml) == ECL_NIL) {
+    cl_make_package(1, qml);
+  }
+  si_select_package(qml);
+  DEFUN ("%js",                js2,                2)
+  DEFUN ("pixel-ratio",        pixel_ratio,        0)
+  DEFUN ("%qapropos",          qapropos2,          3)
+  DEFUN ("qchild-items",       qchild_items,       1)
+  DEFUN ("qescape",            qescape,            1)
+  DEFUN ("%qexec",             qexec2,             1)
+  DEFUN ("qexit",              qexit,              0)
+  DEFUN ("qfind-child",        qfind_child,        2)
+  DEFUN ("%qfind-children",    qfind_children2,    3)
+  DEFUN ("qfrom-utf8",         qfrom_utf8,         1)
+  DEFUN ("%qinvoke-method",    qinvoke_method2,    3)
+  DEFUN ("%qload-c++",         qload_cpp,          2)
+  DEFUN ("qlocal8bit",         qlocal8bit,         1)
+  DEFUN ("%qlog",              qlog2,              1)
+  DEFUN ("%qml-get",           qml_get2,           2)
+  DEFUN ("%qml-set",           qml_set2,           3)
+  DEFUN ("qobject-name",       qobject_name,       1)
+  DEFUN ("qprocess-events",    qprocess_events,    0)
+  DEFUN ("%qquit",             qquit2,             1)
+  DEFUN ("%qrun-on-ui-thread", qrun_on_ui_thread2, 2)
+  DEFUN ("%qget",              qget2,              2)
+  DEFUN ("%qset",              qset2,              2)
+  DEFUN ("%qsingle-shot",      qsingle_shot2,      2)
+  DEFUN ("qtranslate",         qtranslate,         3)
+  DEFUN ("qutf8",              qutf8,              1)
+  DEFUN ("qversion",           qversion,           0)
+  DEFUN ("reload",             reload,             0)
+  DEFUN ("root-item",          root_item,          0)
+  DEFUN ("%set-shutdown-p",    set_shutdown_p,     1)
+}
+
+
+
+// *** utils ***
+
+void error_msg(const char* fun, cl_object l_args) {
+  STATIC_SYMBOL_PKG (s_break_on_errors, "*BREAK-ON-ERRORS*", "QML")
+  if (cl_symbol_value(s_break_on_errors) != ECL_NIL) {
+    STATIC_SYMBOL_PKG (s_break, "%BREAK", "QML") // see "ini.lisp"
+    cl_funcall(4,
+               s_break,
+               STRING("~%[LQML:error] ~A ~{~S~^ ~}~%"),
+               STRING(fun),
+               l_args);
+  }
+  else {
+    STATIC_SYMBOL (s_error_output, "*ERROR-OUTPUT*")
+    cl_format(4,
+              cl_symbol_value(s_error_output),
+              STRING("~%[LQML:error] ~A ~{~S~^ ~}~%"),
+              STRING(fun),
+              l_args);
+  }
+}
+
+
+
+// *** main functions ***
+
+cl_object set_shutdown_p(cl_object l_obj) {
+  LQML::cl_shutdown_p = (l_obj != ECL_NIL);
+  ecl_return1(ecl_process_env(), l_obj);
+}
+
+cl_object qget2(cl_object l_obj, cl_object l_name) {
+  QObject* qobject = toQObjectPointer(l_obj);
+  if (ECL_STRINGP(l_name) && (qobject != nullptr)) {
+    const QMetaObject* mo = qobject->metaObject();
+    int n = mo->indexOfProperty(toCString(l_name));
+    if (n != -1) {
+      QMetaProperty mp(mo->property(n));
+      QVariant var(mp.read(qobject));
+      cl_object l_ret1 = from_qvariant(var);
+      ecl_return2(ecl_process_env(), l_ret1, ECL_T);
+    }
+  }
+  ecl_process_env()->nvalues = 1;
+  error_msg("QGET", LIST2(l_obj, l_name));
+  ecl_return1(ecl_process_env(), ECL_NIL);
+}
+
+cl_object qset2(cl_object l_obj, cl_object l_args) {
+  QObject* qobject = toQObjectPointer(l_obj);
+  if (qobject != nullptr) {
+    const QMetaObject* mo = qobject->metaObject();
+    for (cl_object l_do = l_args; l_do != ECL_NIL; l_do = cl_cddr(l_do)) {
+      cl_object l_name = cl_first(l_do);
+      cl_object l_val = cl_second(l_do);
+      int n = mo->indexOfProperty(toCString(l_name));
+      if (n == -1) {
+        goto fail;
+      }
+      QMetaProperty mp(mo->property(n));
+      QVariant var;
+      if (mp.isEnumType()) {
+        var = toInt(l_val);
+      }
+      else {
+        var = toQVariant(l_val, mp.typeId());
+      }
+      if (!mp.write(qobject, var)) {
+        goto fail;
+      }
+    }
+    ecl_return2(ecl_process_env(), l_args, ECL_T);
+  }
+fail:
+  error_msg("QSET", LIST2(l_obj, l_args));
+  ecl_return1(ecl_process_env(), ECL_NIL);
+}
+
+cl_object qfind_child(cl_object l_obj, cl_object l_name) {
+  ecl_process_env()->nvalues = 1;
+  QString name(toQString(l_name));
+  if (!name.isEmpty()) {
+    QObject* qobject = toQObjectPointer(l_obj);
+    if (qobject != nullptr) {
+      QObject* obj = qobject->findChild<QObject*>(name);
+      if (obj != nullptr) {
+        cl_object l_ret = from_qobject_pointer(obj);
+        return l_ret;
+      }
+    }
+  }
+  error_msg("QFIND-CHILD", LIST2(l_obj, l_name));
+  return ECL_NIL;
+}
+
+cl_object qfind_children2(cl_object l_obj, cl_object l_name, cl_object l_class) {
+  ecl_process_env()->nvalues = 1;
+  QString objectName(toQString(l_name));
+  QByteArray className(toCString(l_class));
+  QObject* qobject = toQObjectPointer(l_obj);
+  if (qobject != nullptr) {
+    QObjectList children = qobject->findChildren<QObject*>(objectName);
+    cl_object l_children = ECL_NIL;
+    Q_FOREACH(QObject* child, children) {
+      QByteArray className2(child->metaObject()->className());
+      if (className.isEmpty() || (className == className2)) {
+        l_children = CONS(from_qobject_pointer(child),
+                          l_children);
+      }
+    }
+    l_children = cl_nreverse(l_children);
+    return l_children;
+  }
+  error_msg("QFIND-CHILDREN", LIST3(l_obj, l_name, l_class));
+  return ECL_NIL;
+}
+
+cl_object qchild_items(cl_object l_item) {
+  ecl_process_env()->nvalues = 1;
+  QObject* qobject = toQObjectPointer(l_item);
+  QQuickItem* item = qobject_cast<QQuickItem*>(qobject); // type check
+  if (item != nullptr) {
+    QList<QQuickItem*> children = item->childItems();
+    cl_object l_children = ECL_NIL;
+    Q_FOREACH(QQuickItem* child, children) {
+      l_children = CONS(from_qobject_pointer(child),
+                        l_children);
+    }
+    l_children = cl_nreverse(l_children);
+    return l_children;
+  }
+  error_msg("QCHILD-ITEMS", LIST1(l_item));
+  return ECL_NIL;
+}
+
+cl_object qload_cpp(cl_object l_lib_name, cl_object l_unload) { /// qload-c++
+  static QHash<QString, QLibrary*> libraries;
+  QString libName = toQString(l_lib_name);
+  bool unload = (l_unload != ECL_NIL);
+  if (!libName.isEmpty()) {
+    if (!libName.contains('/')) {
+      libName.prepend("./");
+    }
+    QLibrary* lib = libraries.value(libName, 0);
+    if (lib) {
+      if (lib->isLoaded()) {
+        lib->unload(); // for both unload/reload
+        if (!unload) {
+          cl_sleep(ecl_make_singlefloat(0.5));
+        }
+      }
+    }
+    if (unload) {
+      ecl_process_env()->nvalues = 1;
+      if (lib) {
+        delete lib;
+        libraries.remove(libName);
+        return l_lib_name;
+      }
+      return ECL_NIL;
+    }
+    if (!lib) {
+      lib = new QLibrary(libName);
+      libraries[libName] = lib;
+    }
+    typedef QObject* (*Ini)();
+    Ini ini = (Ini)lib->resolve("ini");
+    if (ini) {
+      QObject* main = ini();
+      if (main) {
+        ecl_return1(ecl_process_env(), ECL_T);
+      }
+    }
+  }
+  error_msg("QLOAD-C++", LIST2(l_lib_name, l_unload));
+  ecl_return1(ecl_process_env(), ECL_NIL);
+}
+
+
+
+// *** convenience functions ***
+
+cl_object qtranslate(cl_object l_con, cl_object l_src, cl_object l_n) {
+  QByteArray context(toQString(l_con).toUtf8());
+  QByteArray source(toQString(l_src).toUtf8());
+  int n = toInt(l_n);
+  cl_object l_ret;
+  if (n == -1) {
+    l_ret = from_qstring(QCoreApplication::translate(context, source));
+  }
+  else {
+    l_ret = from_qstring(QCoreApplication::translate(context, source, 0, n));
+  }
+  ecl_return1(ecl_process_env(), l_ret);
+}
+
+cl_object qlocal8bit(cl_object l_str) {
+  // returns 'ecl_simple_base_string', not Unicode
+  cl_object l_ret = from_cstring(toQString(l_str).toLocal8Bit());
+  ecl_return1(ecl_process_env(), l_ret);
+}
+
+cl_object qutf8(cl_object l_str) {
+  // returns 'ecl_simple_base_string', not Unicode
+  cl_object l_ret = from_cstring(toQString(l_str).toUtf8());
+  ecl_return1(ecl_process_env(), l_ret);
+}
+
+cl_object qfrom_utf8(cl_object l_ba) {
+  cl_object l_ret = from_qstring(QString::fromUtf8(toQByteArray(l_ba)));
+  ecl_return1(ecl_process_env(), l_ret);
+}
+
+cl_object qescape(cl_object l_str) {
+  cl_object l_ret = from_qstring(toQString(l_str).toHtmlEscaped());
+  ecl_return1(ecl_process_env(), l_ret);
+}
+
+cl_object qprocess_events() {
+  QGuiApplication::processEvents();
+  ecl_return1(ecl_process_env(), ECL_T);
+}
+
+cl_object qexec2(cl_object l_milliseconds) {
+  ecl_process_env()->nvalues = 1;
+  if (l_milliseconds != ECL_NIL) {
+    static QTimer* timer = 0;
+    if (!timer) {
+      timer = new QTimer;
+      LQML::eventLoop = new QEventLoop;
+      timer->setSingleShot(true);
+      QObject::connect(timer, &QTimer::timeout, LQML::me, &LQML::exitEventLoop);
+    }
+    timer->start(toInt(l_milliseconds));
+    LQML::eventLoop->exec();
+    return l_milliseconds;
+  }
+  QCoreApplication::exit(); // prevent "the event loop is already running"
+  QGuiApplication::exec();
+  return ECL_T;
+}
+
+cl_object qexit() {
+  ecl_process_env()->nvalues = 1;
+  if (LQML::eventLoop) {
+    if (LQML::eventLoop->isRunning()) {
+      LQML::eventLoop->exit();
+      return ECL_T;
+    }
+  }
+  return ECL_NIL;
+}
+
+cl_object qsingle_shot2(cl_object l_msec, cl_object l_fun) {
+  ecl_process_env()->nvalues = 1;
+  if (l_fun != ECL_NIL) {
+    new SingleShot(toInt(l_msec), l_fun); // see "delete this;" in "single_shot.h"
+    return l_msec;
+  }
+  error_msg("QSINGLE-SHOT", LIST2(l_msec, l_fun));
+  return ECL_NIL;
+}
+
+cl_object qversion() {
+  cl_object l_ret1 = from_cstring(LQML::version);
+  cl_object l_ret2 = from_cstring(qVersion());
+  ecl_return2(ecl_process_env(), l_ret1, l_ret2);
+}
+
+cl_object qrun_on_ui_thread2(cl_object l_function_or_closure, cl_object l_blocking) {
+  ecl_process_env()->nvalues = 1;
+  if (l_function_or_closure != ECL_NIL) {
+    QObject o;
+    if (o.thread() == qGuiApp->thread()) {
+      // direct call
+      LQML::me->runOnUiThread(l_function_or_closure);
+      return ECL_T;
+    }
+    else {
+      // queued call in main event loop (GUI thread)
+      QMetaObject::invokeMethod(LQML::me,
+                                "runOnUiThread",
+                                (l_blocking != ECL_NIL) ? Qt::BlockingQueuedConnection : Qt::QueuedConnection,
+                                Q_ARG(void*, l_function_or_closure)); 
+      return ECL_T;
+    }
+  }
+  error_msg("QRUN-ON-UI-THREAD", LIST1(l_function_or_closure));
+  return ECL_NIL;
+}
+
+cl_object qlog2(cl_object l_msg) {
+  // for android logging only; see 'ini.lisp::qlog' and 'lqml.cpp::logMessageHandler'
+  qDebug() << toQString(l_msg);
+  ecl_return1(ecl_process_env(), ECL_NIL);
+}
+
+cl_object qinvoke_method2(cl_object l_obj, cl_object l_name, cl_object l_args) {
+  // max. 10 arguments
+  // supported argument types: T, NIL, INTEGER, FLOAT, STRING,
+  // (nested) LIST of mentioned arguments
+  //
+  // N.B. does not support default arguments if used to call JS functions
+  ecl_process_env()->nvalues = 1;
+  const int MAX = 10;
+  QVariant arg[MAX];
+  QGenericArgument genA[MAX];
+  const char* v = "QVariant";
+  int i = 0;
+  for (cl_object l_do_list = l_args; l_do_list != ECL_NIL; l_do_list = cl_cdr(l_do_list), i++) {
+    cl_object l_el = cl_car(l_do_list);
+    arg[i] = toQVariant(l_el);
+    genA[i] = QGenericArgument(v, &arg[i]);
+  }
+  QGenericArgument null;
+  for (; i < MAX; i++) {
+    genA[i] = null;
+  }
+  QObject* qobject = toQObjectPointer(l_obj);
+  QByteArray name(toCString(l_name));
+  if ((qobject != nullptr) && !name.isEmpty()) {
+    QVariant ret;
+    QGenericReturnArgument genR(v, &ret);
+    QMetaObject::invokeMethod(qobject, name, genR,
+                              genA[0], genA[1], genA[2], genA[3], genA[4], genA[5], genA[6], genA[7], genA[8], genA[9]);
+    cl_object l_ret = from_qvariant(ret);
+    return l_ret;
+  }
+  error_msg("QJS", LIST3(l_obj, l_name, l_args));
+  return ECL_NIL;
+}
+
+cl_object js2(cl_object l_item, cl_object l_str) {
+  ecl_process_env()->nvalues = 1;
+  QObject* qobject = toQObjectPointer(l_item);
+  if (qobject != nullptr) {
+    QQmlExpression exp(LQML::quickView->rootContext(), qobject, toQString(l_str));
+    cl_object l_ret = from_qvariant(exp.evaluate());
+    return l_ret;
+  }
+  error_msg("JS", LIST2(l_item, l_str));
+  return ECL_NIL;
+}
+
+cl_object qml_get2(cl_object l_item, cl_object l_name) {
+  QObject* qobject = toQObjectPointer(l_item);
+  QByteArray name = toCString(l_name);
+  if ((qobject != nullptr) && !name.isEmpty()) {
+    QQmlProperty property(qobject, name);
+    if (property.isValid()) {
+      cl_object l_val = from_qvariant(property.read());
+      ecl_return2(ecl_process_env(), l_val, ECL_T);
+    }
+  }
+  error_msg("QML-GET", LIST2(l_item, l_name));
+  ecl_return1(ecl_process_env(), ECL_NIL);
+}
+
+cl_object qml_set2(cl_object l_item, cl_object l_name, cl_object l_value) {
+  ecl_process_env()->nvalues = 1;
+  QObject* qobject = toQObjectPointer(l_item);
+  QByteArray name = toCString(l_name);
+  if ((qobject != nullptr) && !name.isEmpty()) {
+    QQmlProperty property(qobject, name);
+    if (property.isValid()) {
+      cl_object l_ret = property.write(toQVariant(l_value, property.propertyType()))
+                        ? ECL_T : ECL_NIL;
+      return l_ret;
+    }
+  }
+  error_msg("QML-SET", LIST3(l_item, l_name, l_value));
+  return ECL_NIL;
+}
+
+cl_object qobject_name(cl_object l_obj) {
+  ecl_process_env()->nvalues = 1;
+  QObject* qobject = toQObjectPointer(l_obj);
+  if (qobject != nullptr) {
+    cl_object l_ret = from_qstring(qobject->objectName());
+    return l_ret;
+  }
+  error_msg("QOBJECT-NAME", LIST1(l_obj));
+  return ECL_NIL;
+}
+
+cl_object root_item() {
+  ecl_process_env()->nvalues = 1;
+  cl_object l_ret = from_qobject_pointer(LQML::quickView->rootObject());
+  ecl_return1(ecl_process_env(), l_ret);
+}
+
+cl_object qquit2(cl_object l_status) {
+  qGuiApp->quit();
+  cl_shutdown();
+  LQML::cl_shutdown_p = true;
+  int s = toInt(l_status);
+  if (s < 0) {
+    abort();
+  } else {
+    exit(s);
+  }
+  return ECL_NIL;
+}
+
+cl_object pixel_ratio() {
+  cl_object l_ret = ecl_make_doublefloat(LQML::quickView->effectiveDevicePixelRatio());
+  ecl_return1(ecl_process_env(), l_ret);
+}
+
+cl_object reload() {
+  LQML::quickView->engine()->clearComponentCache();
+  QUrl source(LQML::quickView->source());
+  LQML::quickView->setSource(source);
+  cl_object l_ret = from_qstring(source.toString());
+  ecl_return1(ecl_process_env(), l_ret);
+}
+
+
+
+// *** meta info ***
+
+static QByteArrayList metaInfo(const QByteArray& type,
+                               const QByteArray& qclass,
+                               const QByteArray& search,
+                               const QMetaObject* mo,
+                               bool no_offset = false) {
+  QByteArrayList info;
+  if ("methods" == type) {
+    for (int i = mo->methodOffset(); i < mo->methodCount(); i++) {
+      QMetaMethod mm(mo->method(i));
+      if (mm.methodType() == QMetaMethod::Method) {
+        QString sig(mm.methodSignature());
+        QString ret(mm.typeName());
+        if (ret.isEmpty()) {
+          ret = "void";
+        }
+        ret.append(" ");
+        if (!sig.startsWith("_q_")) {
+          QString name(ret + sig);
+          QByteArray rm('(' + qclass + '*');
+          if (mm.parameterNames().size() > 1) {
+            rm.append(',');
+          }
+          name.replace(rm, "(");
+          if (name.contains(search, Qt::CaseInsensitive)) {
+            info << name.toLatin1();
+          }
+        }
+      }
+    }
+  } else if ("properties" == type) {
+    // 'no_offset' is for properties only (QML)
+    for (int i = (no_offset ? 0 : mo->propertyOffset()); i < mo->propertyCount(); i++) {
+      QMetaProperty mp(mo->property(i));
+      QString name = QString("%1 %2%3").arg(mp.typeName())
+                                       .arg(mp.name())
+                                       .arg(mp.isWritable() ? "" : " const");
+      if (name.contains(search, Qt::CaseInsensitive)) {
+        info << name.toLatin1();
+      }
+    }
+  } else {
+    int _type = ("signals" == type) ? QMetaMethod::Signal : QMetaMethod::Slot;
+    for (int i = mo->methodOffset(); i < mo->methodCount(); i++) {
+      QMetaMethod mm(mo->method(i));
+      if (mm.methodType() == _type) {
+        QString ret(mm.typeName());
+        if (ret.isEmpty()) {
+          ret = "void";
+        }
+        QString sig(mm.methodSignature());
+        if (!sig.startsWith("_q_")) {
+          QString name(QString("%1 %2").arg(ret).arg(sig));
+          if (name.contains(search, Qt::CaseInsensitive)) {
+            info << name.toLatin1();
+          }
+        }
+      }
+    }
+  }
+  return info;
+}
+
+static bool metaInfoLessThan(const QByteArray& s1, const QByteArray& s2) {
+  if (s1.contains('(')) {
+    return s1.mid(1 + s1.lastIndexOf(' ', s1.indexOf('('))) <
+           s2.mid(1 + s2.lastIndexOf(' ', s2.indexOf('(')));
+  }
+  return s1.mid(1 + s1.indexOf(' ')) <
+         s2.mid(1 + s2.indexOf(' '));
+}
+
+static cl_object collectInfo(const QByteArray& type,
+                             const QByteArray& qclass,
+                             const QByteArray& qsearch,
+                             bool* found,
+                             const QMetaObject* mo,
+                             bool no_offset = false) {
+  cl_object l_info = ECL_NIL;
+  QByteArrayList info = metaInfo(type, qclass, qsearch, mo, no_offset);
+  std::sort(info.begin(), info.end(), metaInfoLessThan);
+  if (info.size()) {
+    *found = true;
+    Q_FOREACH(QByteArray i, info) {
+      l_info = CONS(STRING_COPY(i.constData()), l_info);
+    }
+  }
+  l_info = cl_nreverse(l_info);
+  return l_info;
+}
+
+cl_object qapropos2(cl_object l_search, cl_object l_obj, cl_object l_no_offset) {
+  ecl_process_env()->nvalues = 1;  
+  QByteArray search;
+  if (ECL_STRINGP(l_search)) {
+    search = toCString(l_search);
+  }
+  bool no_offset = (l_no_offset != ECL_NIL); // for QML (all instance properties)
+  const QMetaObject* mo = 0;
+  QObject* obj = toQObjectPointer(l_obj);
+  if (obj != nullptr) {
+    mo = obj->metaObject();
+    cl_object l_docs = ECL_NIL;
+    do {
+      bool found = false;
+      const QMetaObject* super = mo->superClass();
+      QString superName;
+      if (super != nullptr) {
+        superName = QString(" : %1").arg(super->className());
+      }
+      QByteArray _class = (QString(mo->className()) + superName).toLatin1();
+      cl_object l_doc_pro = ECL_NIL;
+      cl_object l_doc_slo = ECL_NIL;
+      cl_object l_doc_sig = ECL_NIL;
+      l_doc_pro = collectInfo("properties", _class, search, &found, mo, no_offset);
+      cl_object l_doc_met = collectInfo("methods", _class, search, &found, mo);
+      l_doc_slo = collectInfo("slots", _class, search, &found, mo);
+      l_doc_sig = collectInfo("signals", _class, search, &found, mo);
+      if (found) {
+        cl_object l_doc = ECL_NIL;
+        if (l_doc_pro != ECL_NIL) {
+          l_doc = CONS(CONS(STRING("Properties:"), l_doc_pro), l_doc);
+        }
+        if (l_doc_met != ECL_NIL) {
+          l_doc = CONS(CONS(STRING("Methods:"), l_doc_met), l_doc);
+        }
+        if (l_doc_slo != ECL_NIL) {
+          l_doc = CONS(CONS(STRING("Slots:"), l_doc_slo), l_doc);
+        }
+        if (l_doc_sig != ECL_NIL) {
+          l_doc = CONS(CONS(STRING("Signals:"), l_doc_sig), l_doc);
+        }
+        l_doc = cl_nreverse(l_doc);
+        if (l_doc != ECL_NIL) {
+          l_docs = CONS(CONS(STRING_COPY(_class.data()), l_doc), l_docs);
+        }
+      }
+    } while ((mo = mo->superClass()));
+    cl_object l_ret = cl_nreverse(l_docs);
+    return l_ret;
+  }
+  error_msg("QAPROPOS", LIST3(l_search, l_obj, l_no_offset));
+  return ECL_NIL;
+}
+
+QT_END_NAMESPACE
