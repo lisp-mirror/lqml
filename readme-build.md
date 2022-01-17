@@ -8,9 +8,12 @@ Currently still using qmake, will be ported to CMake
 * make sure to use `qmake` from Qt6
 
 ```
-$ cd src/build
+$ cd src
+$ mkdir build
+$ cd build
+
 $ qmake ../lqml.pro
-$ make
+$ make -j4
 $ sudo make install
 ```
 

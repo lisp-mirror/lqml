@@ -1,4 +1,5 @@
-LISP_FILES = make.lisp \
+LISP_FILES = \
+  make.lisp \
   lisp/x.lisp \
   lisp/package.lisp \
   lisp/ini.lisp \
@@ -20,34 +21,36 @@ TARGET      = lqml
 DESTDIR     = .
 
 linux {
-    target.path = /usr/bin
+  target.path = /usr/bin
 }
 
 osx {
-    target.path = /usr/local/bin
+  target.path = /usr/local/bin
 }
 
 INSTALLS = target
 
 win32 {
-    include(windows.pri)
+  include(windows.pri)
 }
 
-HEADERS += cpp/marsahl.h \
-           cpp/ecl_ext.h \
-           cpp/lqml.h \
-           cpp/qml.h \
-           cpp/qt_ecl.h \
-           cpp/single_shot.h
+HEADERS += \
+  cpp/marshal.h \
+  cpp/ecl_ext.h \
+  cpp/lqml.h \
+  cpp/qml.h \
+  cpp/qt_ecl.h \
+  cpp/single_shot.h
 
-SOURCES += cpp/marshal.cpp \
-           cpp/ecl_ext.cpp \
-           cpp/lqml.cpp \
-           cpp/qml.cpp \
-           cpp/qt_ecl.cpp \
-           cpp/main.cpp
+SOURCES += \
+  cpp/marshal.cpp \
+  cpp/ecl_ext.cpp \
+  cpp/lqml.cpp \
+  cpp/qml.cpp \
+  cpp/qt_ecl.cpp \
+  cpp/main.cpp
 
 clang {
-    QMAKE_CXXFLAGS += -std=c++17
+  QMAKE_CXXFLAGS += -std=c++17
 }
 
