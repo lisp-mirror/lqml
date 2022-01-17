@@ -68,13 +68,24 @@ int main(int argc, char* argv[]) {
     LQML::eval("(x:when-it (probe-file \"~/.eclrc\") (load x:it))");
   }
 
+  bool slime = false;
+  if (arguments.contains("-slime")) {
+    arguments.removeAll("-slime");
+    slime = true;
+  }
+
   // load Lisp file
   if (arguments.length() > 1) {
     QString arg1(QDir::fromNativeSeparators(arguments.at(1)));
     if (arg1.endsWith(".lisp")) {
       LQML::eval(QString("(load \"%1\")").arg(arg1));
-      //LQML::eval("(loop (with-simple-restart (restart-qt-events \"Restart Qt event processing.\") (qexec)))");
     }
+  }
+
+  if (slime) {
+    LQML::eval("(loop (with-simple-restart (restart-qt-events \"Restart Qt event processing.\") (qexec)))",
+               true);
+    return 0;
   }
 
   return catch_all_qexec();

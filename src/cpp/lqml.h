@@ -26,7 +26,7 @@ public:
   static const char version[];
   static QEventLoop* eventLoop;
   static void ini(int, char* []);
-  static void eval(const QString&);
+  static void eval(const QString&, bool = false);
   static LQML* me;
   static QQuickView* quickView;
 

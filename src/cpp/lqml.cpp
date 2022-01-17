@@ -74,11 +74,22 @@ static cl_object safe_eval(const char* lisp_code) {
   return ret;
 }
 
-void LQML::eval(const QString& lisp_code) {
-  cl_object ret = safe_eval(lisp_code.toLatin1().constData());
-  if (ecl_t_of(ret) == t_fixnum && (fix(ret) == EVAL_ERROR_VALUE)) {
-    qDebug() << "Error evaluating " << lisp_code;
-    exit(-1);
+static void safe_eval_debug(const char* lisp_code) {
+  CL_CATCH_ALL_BEGIN(ecl_process_env()) {
+    si_safe_eval(2, ecl_read_from_cstring((char*)lisp_code), ECL_NIL);
+  }
+  CL_CATCH_ALL_END;
+}
+
+void LQML::eval(const QString& lisp_code, bool slime) {
+  if (slime) {
+    safe_eval_debug(lisp_code.toLatin1().constData());
+  } else {
+    cl_object ret = safe_eval(lisp_code.toLatin1().constData());
+    if (ecl_t_of(ret) == t_fixnum && (fix(ret) == EVAL_ERROR_VALUE)) {
+      qDebug() << "Error evaluating " << lisp_code;
+      exit(-1);
+    }
   }
 }
 
