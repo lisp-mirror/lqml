@@ -105,6 +105,10 @@
   "Like QML function 'children'."
   (qrun* (qchild-items (quick-item item/name))))
 
+(defun reload ()
+  "Reloads all QML files, clearing the cache."
+  (qrun* (%reload)))
+
 ;;; get/set QML properties, call QML methods (through JS)
 
 (defun qml-get (item/name property-name)

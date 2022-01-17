@@ -45,7 +45,7 @@ void iniCLFunctions() {
   DEFUN ("qtranslate",         qtranslate,         3)
   DEFUN ("qutf8",              qutf8,              1)
   DEFUN ("qversion",           qversion,           0)
-  DEFUN ("reload",             reload,             0)
+  DEFUN ("%reload",            reload2,            0)
   DEFUN ("root-item",          root_item,          0)
   DEFUN ("%set-shutdown-p",    set_shutdown_p,     1)
 }
@@ -461,7 +461,7 @@ cl_object pixel_ratio() {
   ecl_return1(ecl_process_env(), l_ret);
 }
 
-cl_object reload() {
+cl_object reload2() {
   LQML::quickView->engine()->clearComponentCache();
   QUrl source(LQML::quickView->source());
   LQML::quickView->setSource(source);
