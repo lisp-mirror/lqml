@@ -2,8 +2,8 @@
 WIP
 ---
 
-Currently Linux/desktop only, will be extended to all platforms (including
-mobile); not so sure about Windows though...
+Currently Linux/macOS/desktop only, will be extended to all platforms
+(including mobile); not so sure about Windows though...
 
 
 Description

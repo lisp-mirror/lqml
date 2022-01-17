@@ -25,6 +25,7 @@ linux {
 }
 
 osx {
+  CONFIG -= app_bundle
   target.path = /usr/local/bin
 }
 
