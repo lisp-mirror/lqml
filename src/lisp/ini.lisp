@@ -103,11 +103,34 @@
       (unless (member x '(t nil))
         (symbol-name x)))))
 
+(defun qrun-on-ui-thread (function &optional (blocking t))
+  ;; for internal use
+  (%qrun-on-ui-thread function blocking))
+
+(defvar *gui-thread* mp:*current-process*)
+
+(defmacro qrun-on-ui-thread* (&body body)
+  ;; for internal use
+  (let ((values (gensym)))
+    `(if (eql *gui-thread* mp:*current-process*)
+         ,(if (second body)
+              (cons 'progn body)
+              (first body))
+         (let (,values)
+           (qrun (lambda ()
+                   (setf ,values (multiple-value-list ,(if (second body)
+                                                           (cons 'progn body)
+                                                           (first body))))))
+           (values-list ,values)))))
+
+(defmacro qrun* (&body body) ; alias
+  `(qrun-on-ui-thread* ,@body))
+
 (defun qfind-children (object &optional object-name class-name)
   (%qfind-children object object-name class-name))
 
 (defun qload-c++ (library-name &optional unload)
-  (%qload-c++ library-name unload))
+  (qrun* (%qload-c++ library-name unload)))
 
 (defun define-qt-wrappers (qt-library &rest what)
   "args: (qt-library &rest what)
@@ -164,29 +187,6 @@
                                     (symbol-name x)
                                     x))
                               arguments))))
-
-(defun qrun-on-ui-thread (function &optional (blocking t))
-  ;; for internal use
-  (%qrun-on-ui-thread function blocking))
-
-(defvar *gui-thread* mp:*current-process*)
-
-(defmacro qrun-on-ui-thread* (&body body)
-  ;; for internal use
-  (let ((values (gensym)))
-    `(if (eql *gui-thread* mp:*current-process*)
-         ,(if (second body)
-              (cons 'progn body)
-              (first body))
-         (let (,values)
-           (qrun (lambda ()
-                   (setf ,values (multiple-value-list ,(if (second body)
-                                                           (cons 'progn body)
-                                                           (first body))))))
-           (values-list ,values)))))
-
-(defmacro qrun* (&body body) ; alias
-  `(qrun-on-ui-thread* ,@body))
 
 (defun qquit (&optional (exit-status 0) (kill-all-threads t))
   "args: (&optional (exit-status 0) (kill-all-threads t))

@@ -2,10 +2,11 @@
 Build
 -----
 
-Switch to `cpp/` and do:
 ```
-qmake lib.pro
-make
+$ cd cpp
+$ qmake lib.pro
+$ make
+$ cd ..
 ```
 
 
@@ -14,7 +15,6 @@ Run
 
 ```
 $ lqml ~/slime/qml-start-swank.lisp
-
 $ emacs run.lisp
 ```
 
