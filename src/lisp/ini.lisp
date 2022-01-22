@@ -25,7 +25,7 @@
   ;; usage:
   ;;   (! "myFunction" *cpp* 1 2 3)
   ;;   (! |myFunction| *cpp* 1 2 3)
-  `(qfun ,qobject ,(if (stringp fun) fun (symbol-name fun)) ,@(rest args)))
+  `(qfun ,qobject ,(if (stringp fun) fun (symbol-name fun)) ,@args))
 
 (defun %reference-name ()
   (format nil "%~A%" (gensym)))
