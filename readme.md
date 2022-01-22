@@ -23,10 +23,9 @@ TODO
 ----
 
 * port to CMake
-* generate help from docu strings
 * make example work on android
 * make example work on iOS
-* add sokoban example
 * add item model example
+* add sokoban example
 * add cpp-lib example
 
