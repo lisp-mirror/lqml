@@ -116,7 +116,8 @@
     (define-qt-wrappers *c++*)          ; generate wrappers
     (define-qt-wrappers *c++* :methods) ; Qt methods only (no slots/signals)
     (my-qt-function *c++* x y)          ; call from Lisp"
-  (let ((all-functions (qapropos* nil (ensure-qt-object qt-library)))
+  (assert (qobject-p qt-library))
+  (let ((all-functions (qapropos* nil qt-library))
         (lispify (not (find :do-not-lispify what))))
     (setf what (remove-if (lambda (x) (find x '(:do-not-lispify t)))
                           what))
@@ -142,7 +143,7 @@
             ;; there seems to be no simple way to avoid EVAL here
             ;; (excluding non-portable hacks)
             (eval `(defgeneric ,lisp-name (object &rest arguments)))
-            (eval `(defmethod ,lisp-name ((object qt-object) &rest arguments)
+            (eval `(defmethod ,lisp-name ((object si:foreign-data) &rest arguments)
                      (%qinvoke-method object ,qt-name arguments)))))))))
 
 (defun qinvoke-method (object function-name &rest arguments)

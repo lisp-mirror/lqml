@@ -250,7 +250,8 @@ cl_object qload_cpp(cl_object l_lib_name, cl_object l_unload) { /// qload-c++
     if (ini) {
       QObject* main = ini();
       if (main) {
-        ecl_return1(ecl_process_env(), ECL_T);
+        cl_object l_ret = from_qobject_pointer(main);
+        ecl_return1(ecl_process_env(), l_ret);
       }
     }
   }
@@ -391,8 +392,9 @@ cl_object qlog2(cl_object l_msg) {
 cl_object qinvoke_method2(cl_object l_obj, cl_object l_name, cl_object l_args) {
   // for internal use: this is used to call user defined JS functions, and to
   // call user defined Qt/C++ plugin functions.
-  // Max. 10 arguments of type T, NIL, INTEGER, FLOAT, STRING, (nested) LIST of
-  // mentioned arguments. On Qt side, only QVariant arguments are allowed.
+  // Max. 10 arguments of type T, NIL, INTEGER, FLOAT, STRING, VECTOR of
+  // octets, (nested) LIST of mentioned arguments. On Qt side, only QVariant
+  // arguments are allowed.
   // N.B. does not support default arguments, if used to call JS functions
   ecl_process_env()->nvalues = 1;
   const int MAX = 10;

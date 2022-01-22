@@ -27,5 +27,4 @@ TODO
 * make example work on iOS
 * add item model example
 * add sokoban example
-* add cpp-lib example
 

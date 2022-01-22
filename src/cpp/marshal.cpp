@@ -132,9 +132,10 @@ TO_QT_FLOAT_4 (QRectF)
 QVariant toQVariant(cl_object l_arg, int type) {
   QVariant var;
   switch (type) {
-    case QMetaType::QPointF: var = toQPointF(l_arg); break;
-    case QMetaType::QRectF:  var = toQRectF(l_arg);  break;
-    case QMetaType::QSizeF:  var = toQSizeF(l_arg);  break;
+    case QMetaType::QByteArray: var = toQByteArray(l_arg); break;
+    case QMetaType::QPointF:    var = toQPointF(l_arg);    break;
+    case QMetaType::QRectF:     var = toQRectF(l_arg);     break;
+    case QMetaType::QSizeF:     var = toQSizeF(l_arg);     break;
     default:
     if (cl_integerp(l_arg) == ECL_T) {                  // int
       var = QVariant(toInt(l_arg));
@@ -153,6 +154,9 @@ QVariant toQVariant(cl_object l_arg, int type) {
     }
     else if (cl_listp(l_arg) == ECL_T) {                // list
       var = QVariant::fromValue(toQVariantList(l_arg));
+    }
+    else if (cl_vectorp(l_arg) == ECL_T) {              // vector (of octets)
+      var = QVariant(toQByteArray(l_arg));
     }
     else {                                              // default: undefined
       var = QVariant();

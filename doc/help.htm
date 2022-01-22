@@ -24,6 +24,16 @@
     (define-qt-wrappers *c++*)                ; Lisp wrapper functions
 
 
+<b>define-qt-wrappers (qt-library &rest what)</b>
+
+  Defines Lisp methods for all Qt methods/signals/slots of given library,
+  previously loaded with QLOAD-C++.
+
+    (define-qt-wrappers *c++*)          ; generate wrappers
+    (define-qt-wrappers *c++* :methods) ; Qt methods only (no slots/signals)
+    (my-qt-function *c++* x y)          ; call from Lisp
+
+
 <b>find-quick-item (object-name)</b>
 
   Finds the first QQuickItem matching OBJECT-NAME. Locally set *ROOT-ITEM* if
@@ -125,7 +135,8 @@
 
   Fast and convenient way to call JS functions defined in QML. You may pass
   up to 10 arguments of the following types:
-  T, NIL, INTEGER, FLOAT, STRING, and (nested) lists of mentioned arguments.
+  T, NIL, INTEGER, FLOAT, STRING, VECTOR of octets, and (nested) lists of
+  mentioned arguments.
   N.B: Does not work with JS default arguments.
 
 

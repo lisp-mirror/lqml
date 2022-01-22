@@ -179,7 +179,8 @@
   "args: (method-name item/name &rest arguments
   Fast and convenient way to call JS functions defined in QML. You may pass
   up to 10 arguments of the following types:
-  T, NIL, INTEGER, FLOAT, STRING, and (nested) lists of mentioned arguments.
+  T, NIL, INTEGER, FLOAT, STRING, VECTOR of octets, and (nested) lists of
+  mentioned arguments.
   N.B: Does not work with JS default arguments."
   `(qrun* (qfun (quick-item ,item/name)
                 ,(if (symbolp method-name)

@@ -7,6 +7,7 @@
    #:*root-item*
    #:*caller*
    #:children
+   #:define-qt-wrappers
    #:find-quick-item
    #:js
    #:make-qobject
