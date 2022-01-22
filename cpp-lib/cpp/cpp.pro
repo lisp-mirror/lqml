@@ -1,4 +1,4 @@
-QT          += core
+QT          += widgets
 TEMPLATE    = lib
 CONFIG      += plugin release
 DESTDIR     = ../
