@@ -13,6 +13,7 @@
    #:pixel-ratio
    #:qapropos
    #:qapropos*
+   #:qfind-child
    #:qml-call
    #:qml-get
    #:qml-set
@@ -22,20 +23,16 @@
    #:q>
    #:q>*
    #:qjs
-   #+linux
-   #:qchild-items
+   #:qchildren
    #:qescape
    #:qexec
    #:qexit
-   #:qfind-child
-   #:qfind-children
    #:qfrom-utf8
    #:qfun
    #:qget
    #:qset
    #:qlater
    #:qload-c++
-   #:qlocal8bit
    #:qlog
    #:qobject-p
    #:qprocess-events
@@ -48,13 +45,11 @@
    #:qsingle-shot
    #:qsleep
    #:qtranslate
-   #:qutf8
    #:qversion
-   #:qvariant-from-value
-   #:qvariant-value
    #:root-item
    #:reload
-   #:tr))
+   #:tr
+   #:!))
 
 (defpackage :qml-user
   (:use :common-lisp :qml))

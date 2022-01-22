@@ -1,5 +1,3 @@
-#undef SLOT
-
 #include "qt_ecl.h"
 #include "marshal.h"
 #include "ecl_ext.h"

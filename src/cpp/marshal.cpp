@@ -246,7 +246,9 @@ cl_object from_qvariant(const QVariant& var) {
 
 cl_object from_qobject_pointer(QObject* qobject) {
   STATIC_SYMBOL_PKG (s_make_qobject, "MAKE-QOBJECT", "QML") // see 'ini.lisp'
-  return cl_funcall(2, s_make_qobject, ecl_make_unsigned_integer((quintptr)qobject));
+  return cl_funcall(2,
+                    s_make_qobject,
+                    ecl_make_unsigned_integer(reinterpret_cast<quintptr>(qobject)));
 }
 
 QT_END_NAMESPACE

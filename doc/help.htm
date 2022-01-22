@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<title>Function List</title>
+<meta charset="utf-8">
+</head>
+<body>
+<pre>
+<b>qload-c++ (library-name &optional unload)</b>
+
+  Loads a custom Qt/C++ plugin (see 'cpp-lib' in sources). The LIBRARY-NAME
+  has to be passed as path to the plugin, without file ending. This offers
+  a simple way to extend your application with your own Qt/C++ functions.
+  The plugin will be reloaded (if supported by the OS) every time you call
+  this function. If the UNLOAD argument is not NIL, the plugin will be
+  unloaded (if supported by the OS).
+  N.B: This works only for Qt6 functions with the following signature:
+  "QVariant foo(QVariant, ...)" ; max 10 QVariant arguments
+  Since a QVariant can also be of type QVariantList, this is a perfect fit
+  for (nested) Lisp lists.
+
+    (defparameter *c++* (qload-c++ "my-lib"))
+    (qapropos nil *c++*)                      ; documentation
+    (define-qt-wrappers *c++*)                ; Lisp wrapper functions
+
+
+<b>find-quick-item (object-name)</b>
+
+  Finds the first QQuickItem matching OBJECT-NAME. Locally set *ROOT-ITEM* if
+  you want to find items inside a specific item, like in a QML Repeater. See
+  also note in sources.
+
+
+<b>pixel-ratio ()</b>
+
+  Returns the effective device pixel ratio.
+
+
+<b>q! (method-name item/name &rest arguments)</b>
+
+  For calling methods of QML items.
+
+    (q! |requestPaint| *canvas*)
+
+
+<b>q< (property-name item/name)</b>
+
+  Convenience macro for QML-GET. Use symbol instead of string name.
+
+    (q< |text| *label*)
+    (q< |font.pixelSize| *label*)
+
+
+<b>q> (property-name item/name value)</b>
+
+  Convenience macro for QML-SET. Use symbol instead of string name.
+
+    (q> |text| *label* "greetings!")
+
+
+<b>q>* (property-name item/name value)</b>
+
+  Convenience macro for QML-SET-ALL. Use symbol instead of string name. Sets
+  given property of all items sharing the same 'objectName'.
+
+
+<b>qapropos (name &optional qobject/name)</b>
+
+  Searches properties, methods, signals, slots for NAME in QObject
+  (e.g. QQuickItem) passed as second argument. QQuickItems can also be passed
+  by their 'objectName'.
+
+    (qapropos nil *canvas*)
+    (qapropos "color")
+
+
+<b>qapropos* (name &optional qobject/name)</b>
+
+  Similar to QAPROPOS, returning the results as nested list.
+
+
+<b>qchildren (item/name)</b>
+
+  Like QML function children().
+
+
+<b>qescape (string)</b>
+
+  Calls QString::toHtmlEscaped().
+
+
+<b>qexec (&optional milliseconds)</b>
+
+  Calls QCoreApplication::exec(). Optionally pass the time in milliseconds
+  after which QEventLoop::exit() will be called. See also QSLEEP.
+
+
+<b>qexit ()</b>
+
+  Calls QEventLoop::exit(), in order to exit event processing after a call
+  QEXEC with a timeout. Returns T if the event loop has effectively been
+  exited.
+
+
+<b>qfind-child (qobject name)</b>
+
+  Calls QObject::findChild<QObject*>().
+
+
+<b>qfrom-utf8 (byte-array)</b>
+
+  Returns the BYTE-ARRAY (vector of octets) converted using
+  QString::fromUtf8().
+
+
+<b>qget (object name)</b>
+
+  Gets a Qt property. Enumerator values are returned as integer values.
+  Returns T as second return value for successful calls.
+
+    (qget *quick-view* |width|)
+
+
+<b>qjs (method-name item/name &rest arguments</b>
+
+  Fast and convenient way to call JS functions defined in QML. You may pass
+  up to 10 arguments of the following types:
+  T, NIL, INTEGER, FLOAT, STRING, and (nested) lists of mentioned arguments.
+  N.B: Does not work with JS default arguments.
+
+
+<b>qlater (function)</b>
+
+  Calls FUNCTION as soon as the Qt event loop is idle.
+
+
+<b>qlog (arg1 &optional arg2 arg3...)</b>
+
+  For log messages on android.
+
+    (qlog 12)
+    (qlog "width" 10 "height" 20)
+    (qlog "x ~A y ~A" x y)
+
+
+<b>qobject-name (qobject)</b>
+
+  Returns the QObject::objectName() of passed QOBJECT (FFI pointer).
+
+
+<b>qobject-p (x)</b>
+
+  Tests if argument is of type QObject.
+
+
+<b>qprocess-events ()</b>
+
+  Calls QCoreApplication::processEvents().
+
+
+<b>qquit (&optional (exit-status 0) (kill-all-threads t))</b>
+<b>qq</b>
+
+  Terminates LQML. Use this function instead of ECL (ext:quit) to quit
+  gracefully. Negative values for EXIT-STATUS will call C abort() instead of
+  normal program exit.
+
+
+<b>qset (object name1 value1 &optional name2 value2...)</b>
+
+  Sets a Qt property. Enumerators have to be passed as integer values.
+  Returns T as second return value for successful calls.
+
+    (qset *quick-view* |x| 100 |y| 100)
+
+
+<b>qsingle-shot (milliseconds function)</b>
+
+  A single shot timer similar to QTimer::singleShot().
+
+    (qsingle-shot 1000 'one-second-later)
+
+
+<b>qsleep (seconds)</b>
+
+  Similar to SLEEP, but continuing to process Qt events.
+
+
+<b>qversion ()</b>
+
+  Returns the LQML version number as 'year.month.counter'. The second
+  return value is the Qt version as returned by QLibraryInfo::version().
+
+
+<b>root-item ()</b>
+
+  Returns the root item of the QQuickView.
+
+
+<b>tr (source &optional context plural-number)</b>
+
+  Macro expanding to QTRANSLATE, which calls QCoreApplication::translate().
+  Both SOURCE and CONTEXT can be Lisp forms evaluating to constant strings
+  (at compile time). The CONTEXT argument defaults to the Lisp file name.
+  For the PLURAL-NUMBER, see Qt Assistant.
+
+
+</pre>
+</body>
+</html>

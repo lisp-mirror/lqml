@@ -20,7 +20,7 @@ QObject* iniQml() {
 static QVariant qmlApply(QObject* caller, const QString& function, const QVariantList& arguments) {
   QVariant var =
   ecl_fun("qml:qml-apply",
-          QVariant((quintptr)caller),
+          QVariant(reinterpret_cast<quintptr>(caller)),
           QVariant(function),
           QVariant(arguments));
   QString str(var.toString());

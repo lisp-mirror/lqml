@@ -1,8 +1,6 @@
 #ifndef SINGLE_SHOT_H
 #define SINGLE_SHOT_H
 
-#undef SLOT
-
 #include <ecl/ecl.h>
 #include <QObject>
 

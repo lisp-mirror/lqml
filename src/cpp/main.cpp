@@ -28,6 +28,7 @@ int main(int argc, char* argv[]) {
   //app.setOrganizationName("MyProject");
   //app.setOrganizationDomain("my.org");
   app.setApplicationName(QFileInfo(app.applicationFilePath()).baseName());
+  QStringList arguments(QCoreApplication::arguments());
 
   QQuickView view;
   ADD_MACOS_BUNDLE_IMPORT_PATH
@@ -41,7 +42,6 @@ int main(int argc, char* argv[]) {
   view.connect(view.engine(), &QQmlEngine::quit, &app, &QCoreApplication::quit);
 
   LQML lqml(argc, argv, &view);
-  QStringList arguments(QCoreApplication::arguments());
   if (arguments.contains("-v") || arguments.contains("--version")) {
     lqml.printVersion();
     std::cout << std::endl;
@@ -49,16 +49,25 @@ int main(int argc, char* argv[]) {
   }
 
   new QQmlFileSelector(view.engine(), &view);
-  QUrl url("qrc:///qml/main.qml");
-  if (!QFile::exists(url.fileName())) {
-    url = "qml/main.qml";
+  QString qml("qml/main.qml");
+  QUrl url("qrc:///" + qml);
+  bool set = false;
+  if (QFile::exists(url.fileName())) {
+    set = true;
+  } else {
+    url = QUrl::fromLocalFile(qml);
+    if (QFile::exists(QDir::currentPath() + "/" + qml)) {
+      set = true;
+    }
   }
-  view.setSource(url); 
-  if (view.status() == QQuickView::Error) {
-    return -1;
+  if (set) {
+    view.setSource(url);
+    if (view.status() == QQuickView::Error) {
+      return -1;
+    }
+    view.setResizeMode(QQuickView::SizeRootObjectToView);
+    QTimer::singleShot(0, &view, &QQuickView::show);
   }
-  view.setResizeMode(QQuickView::SizeRootObjectToView);
-  QTimer::singleShot(0, &view, &QQuickView::show);
 
   // load .eclrc
   if (arguments.contains("-norc")) {

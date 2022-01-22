@@ -4,6 +4,7 @@
 #include "single_shot.h"
 #include <QTimer>
 #include <QLibrary>
+#include <QLibraryInfo>
 #include <QGuiApplication>
 #include <QQuickItem>
 #include <QQuickView>
@@ -22,7 +23,7 @@ void iniCLFunctions() {
   DEFUN ("%js",                js2,                2)
   DEFUN ("pixel-ratio",        pixel_ratio,        0)
   DEFUN ("%qapropos",          qapropos2,          3)
-  DEFUN ("qchild-items",       qchild_items,       1)
+  DEFUN ("qchildren",          qchildren,          1)
   DEFUN ("qescape",            qescape,            1)
   DEFUN ("%qexec",             qexec2,             1)
   DEFUN ("qexit",              qexit,              0)
@@ -31,7 +32,6 @@ void iniCLFunctions() {
   DEFUN ("qfrom-utf8",         qfrom_utf8,         1)
   DEFUN ("%qinvoke-method",    qinvoke_method2,    3)
   DEFUN ("%qload-c++",         qload_cpp,          2)
-  DEFUN ("qlocal8bit",         qlocal8bit,         1)
   DEFUN ("%qlog",              qlog2,              1)
   DEFUN ("%qml-get",           qml_get2,           2)
   DEFUN ("%qml-set",           qml_set2,           3)
@@ -43,7 +43,6 @@ void iniCLFunctions() {
   DEFUN ("%qset",              qset2,              2)
   DEFUN ("%qsingle-shot",      qsingle_shot2,      2)
   DEFUN ("qtranslate",         qtranslate,         3)
-  DEFUN ("qutf8",              qutf8,              1)
   DEFUN ("qversion",           qversion,           0)
   DEFUN ("%reload",            reload2,            0)
   DEFUN ("root-item",          root_item,          0)
@@ -55,6 +54,7 @@ void iniCLFunctions() {
 // *** utils ***
 
 void error_msg(const char* fun, cl_object l_args) {
+  // for error messages in ECL functions defined in C++
   STATIC_SYMBOL_PKG (s_break_on_errors, "*BREAK-ON-ERRORS*", "QML")
   if (cl_symbol_value(s_break_on_errors) != ECL_NIL) {
     STATIC_SYMBOL_PKG (s_break, "%BREAK", "QML") // see "ini.lisp"
@@ -79,11 +79,16 @@ void error_msg(const char* fun, cl_object l_args) {
 // *** main functions ***
 
 cl_object set_shutdown_p(cl_object l_obj) {
+  // for internal use
   LQML::cl_shutdown_p = (l_obj != ECL_NIL);
   ecl_return1(ecl_process_env(), l_obj);
 }
 
 cl_object qget2(cl_object l_obj, cl_object l_name) {
+  /// args: (object name)
+  /// Gets a Qt property. Enumerator values are returned as integer values.
+  /// Returns T as second return value for successful calls.
+  ///   (qget *quick-view* |width|)
   QObject* qobject = toQObjectPointer(l_obj);
   if (ECL_STRINGP(l_name) && (qobject != nullptr)) {
     const QMetaObject* mo = qobject->metaObject();
@@ -101,6 +106,10 @@ cl_object qget2(cl_object l_obj, cl_object l_name) {
 }
 
 cl_object qset2(cl_object l_obj, cl_object l_args) {
+  /// args: (object name1 value1 &optional name2 value2...)
+  /// Sets a Qt property. Enumerators have to be passed as integer values.
+  /// Returns T as second return value for successful calls.
+  ///   (qset *quick-view* |x| 100 |y| 100)
   QObject* qobject = toQObjectPointer(l_obj);
   if (qobject != nullptr) {
     const QMetaObject* mo = qobject->metaObject();
@@ -131,6 +140,8 @@ fail:
 }
 
 cl_object qfind_child(cl_object l_obj, cl_object l_name) {
+  /// args: (qobject name)
+  /// Calls QObject::findChild<QObject*>().
   ecl_process_env()->nvalues = 1;
   QString name(toQString(l_name));
   if (!name.isEmpty()) {
@@ -148,6 +159,7 @@ cl_object qfind_child(cl_object l_obj, cl_object l_name) {
 }
 
 cl_object qfind_children2(cl_object l_obj, cl_object l_name, cl_object l_class) {
+  // for internal use
   ecl_process_env()->nvalues = 1;
   QString objectName(toQString(l_name));
   QByteArray className(toCString(l_class));
@@ -169,7 +181,9 @@ cl_object qfind_children2(cl_object l_obj, cl_object l_name, cl_object l_class) 
   return ECL_NIL;
 }
 
-cl_object qchild_items(cl_object l_item) {
+cl_object qchildren(cl_object l_item) {
+  /// args: (item/name)
+  /// Like QML function children().
   ecl_process_env()->nvalues = 1;
   QObject* qobject = toQObjectPointer(l_item);
   QQuickItem* item = qobject_cast<QQuickItem*>(qobject); // type check
@@ -183,11 +197,25 @@ cl_object qchild_items(cl_object l_item) {
     l_children = cl_nreverse(l_children);
     return l_children;
   }
-  error_msg("QCHILD-ITEMS", LIST1(l_item));
+  error_msg("QCHILDREN", LIST1(l_item));
   return ECL_NIL;
 }
 
 cl_object qload_cpp(cl_object l_lib_name, cl_object l_unload) { /// qload-c++
+  /// args: (library-name &optional unload)
+  /// Loads a custom Qt/C++ plugin (see 'cpp-lib' in sources). The LIBRARY-NAME
+  /// has to be passed as path to the plugin, without file ending. This offers
+  /// a simple way to extend your application with your own Qt/C++ functions.
+  /// The plugin will be reloaded (if supported by the OS) every time you call
+  /// this function. If the UNLOAD argument is not NIL, the plugin will be
+  /// unloaded (if supported by the OS).
+  /// N.B: This works only for Qt6 functions with the following signature:
+  /// "QVariant foo(QVariant, ...)" ; max 10 QVariant arguments
+  /// Since a QVariant can also be of type QVariantList, this is a perfect fit
+  /// for (nested) Lisp lists.
+  ///   (defparameter *c++* (qload-c++ "my-lib"))
+  ///   (qapropos nil *c++*)                      ; documentation
+  ///   (define-qt-wrappers *c++*)                ; Lisp wrapper functions
   static QHash<QString, QLibrary*> libraries;
   QString libName = toQString(l_lib_name);
   bool unload = (l_unload != ECL_NIL);
@@ -235,6 +263,7 @@ cl_object qload_cpp(cl_object l_lib_name, cl_object l_unload) { /// qload-c++
 // *** convenience functions ***
 
 cl_object qtranslate(cl_object l_con, cl_object l_src, cl_object l_n) {
+  // called by QML:TR
   QByteArray context(toQString(l_con).toUtf8());
   QByteArray source(toQString(l_src).toUtf8());
   int n = toInt(l_n);
@@ -248,34 +277,32 @@ cl_object qtranslate(cl_object l_con, cl_object l_src, cl_object l_n) {
   ecl_return1(ecl_process_env(), l_ret);
 }
 
-cl_object qlocal8bit(cl_object l_str) {
-  // returns 'ecl_simple_base_string', not Unicode
-  cl_object l_ret = from_cstring(toQString(l_str).toLocal8Bit());
-  ecl_return1(ecl_process_env(), l_ret);
-}
-
-cl_object qutf8(cl_object l_str) {
-  // returns 'ecl_simple_base_string', not Unicode
-  cl_object l_ret = from_cstring(toQString(l_str).toUtf8());
-  ecl_return1(ecl_process_env(), l_ret);
-}
-
 cl_object qfrom_utf8(cl_object l_ba) {
+  /// args: (byte-array)
+  /// Returns the BYTE-ARRAY (vector of octets) converted using
+  /// QString::fromUtf8().
   cl_object l_ret = from_qstring(QString::fromUtf8(toQByteArray(l_ba)));
   ecl_return1(ecl_process_env(), l_ret);
 }
 
 cl_object qescape(cl_object l_str) {
+  /// args: (string)
+  /// Calls QString::toHtmlEscaped().
   cl_object l_ret = from_qstring(toQString(l_str).toHtmlEscaped());
   ecl_return1(ecl_process_env(), l_ret);
 }
 
 cl_object qprocess_events() {
-  QGuiApplication::processEvents();
+  /// args: ()
+  /// Calls QCoreApplication::processEvents().
+  QCoreApplication::processEvents();
   ecl_return1(ecl_process_env(), ECL_T);
 }
 
 cl_object qexec2(cl_object l_milliseconds) {
+  /// args: (&optional milliseconds)
+  /// Calls QCoreApplication::exec(). Optionally pass the time in milliseconds
+  /// after which QEventLoop::exit() will be called. See also QSLEEP.
   ecl_process_env()->nvalues = 1;
   if (l_milliseconds != ECL_NIL) {
     static QTimer* timer = 0;
@@ -290,11 +317,15 @@ cl_object qexec2(cl_object l_milliseconds) {
     return l_milliseconds;
   }
   QCoreApplication::exit(); // prevent "the event loop is already running"
-  QGuiApplication::exec();
+  QCoreApplication::exec();
   return ECL_T;
 }
 
 cl_object qexit() {
+  /// args: ()
+  /// Calls QEventLoop::exit(), in order to exit event processing after a call
+  /// QEXEC with a timeout. Returns T if the event loop has effectively been
+  /// exited.
   ecl_process_env()->nvalues = 1;
   if (LQML::eventLoop) {
     if (LQML::eventLoop->isRunning()) {
@@ -306,6 +337,9 @@ cl_object qexit() {
 }
 
 cl_object qsingle_shot2(cl_object l_msec, cl_object l_fun) {
+  /// args: (milliseconds function)
+  /// A single shot timer similar to QTimer::singleShot().
+  ///   (qsingle-shot 1000 'one-second-later)
   ecl_process_env()->nvalues = 1;
   if (l_fun != ECL_NIL) {
     new SingleShot(toInt(l_msec), l_fun); // see "delete this;" in "single_shot.h"
@@ -316,12 +350,16 @@ cl_object qsingle_shot2(cl_object l_msec, cl_object l_fun) {
 }
 
 cl_object qversion() {
+  /// args: ()
+  /// Returns the LQML version number as 'year.month.counter'. The second
+  /// return value is the Qt version as returned by QLibraryInfo::version().
   cl_object l_ret1 = from_cstring(LQML::version);
-  cl_object l_ret2 = from_cstring(qVersion());
+  cl_object l_ret2 = from_qstring(QLibraryInfo::version().toString());
   ecl_return2(ecl_process_env(), l_ret1, l_ret2);
 }
 
 cl_object qrun_on_ui_thread2(cl_object l_function_or_closure, cl_object l_blocking) {
+  // for internal use, you should never need to call it explicitely
   ecl_process_env()->nvalues = 1;
   if (l_function_or_closure != ECL_NIL) {
     QObject o;
@@ -344,17 +382,18 @@ cl_object qrun_on_ui_thread2(cl_object l_function_or_closure, cl_object l_blocki
 }
 
 cl_object qlog2(cl_object l_msg) {
-  // for android logging only; see 'ini.lisp::qlog' and 'lqml.cpp::logMessageHandler'
+  // called by QML:QLOG
+  // for android logging only; see also 'lqml.cpp::logMessageHandler'
   qDebug() << toQString(l_msg);
   ecl_return1(ecl_process_env(), ECL_NIL);
 }
 
 cl_object qinvoke_method2(cl_object l_obj, cl_object l_name, cl_object l_args) {
-  // max. 10 arguments
-  // supported argument types: T, NIL, INTEGER, FLOAT, STRING,
-  // (nested) LIST of mentioned arguments
-  //
-  // N.B. does not support default arguments if used to call JS functions
+  // for internal use: this is used to call user defined JS functions, and to
+  // call user defined Qt/C++ plugin functions.
+  // Max. 10 arguments of type T, NIL, INTEGER, FLOAT, STRING, (nested) LIST of
+  // mentioned arguments. On Qt side, only QVariant arguments are allowed.
+  // N.B. does not support default arguments, if used to call JS functions
   ecl_process_env()->nvalues = 1;
   const int MAX = 10;
   QVariant arg[MAX];
@@ -385,6 +424,7 @@ cl_object qinvoke_method2(cl_object l_obj, cl_object l_name, cl_object l_args) {
 }
 
 cl_object js2(cl_object l_item, cl_object l_str) {
+  // called by function QML:JS
   ecl_process_env()->nvalues = 1;
   QObject* qobject = toQObjectPointer(l_item);
   if (qobject != nullptr) {
@@ -397,6 +437,7 @@ cl_object js2(cl_object l_item, cl_object l_str) {
 }
 
 cl_object qml_get2(cl_object l_item, cl_object l_name) {
+  // called by QML:QML-GET
   QObject* qobject = toQObjectPointer(l_item);
   QByteArray name = toCString(l_name);
   if ((qobject != nullptr) && !name.isEmpty()) {
@@ -411,6 +452,7 @@ cl_object qml_get2(cl_object l_item, cl_object l_name) {
 }
 
 cl_object qml_set2(cl_object l_item, cl_object l_name, cl_object l_value) {
+  // called by QML:QML-SET
   ecl_process_env()->nvalues = 1;
   QObject* qobject = toQObjectPointer(l_item);
   QByteArray name = toCString(l_name);
@@ -427,6 +469,8 @@ cl_object qml_set2(cl_object l_item, cl_object l_name, cl_object l_value) {
 }
 
 cl_object qobject_name(cl_object l_obj) {
+  /// args: (qobject)
+  /// Returns the QObject::objectName() of passed QOBJECT (FFI pointer).
   ecl_process_env()->nvalues = 1;
   QObject* qobject = toQObjectPointer(l_obj);
   if (qobject != nullptr) {
@@ -438,16 +482,19 @@ cl_object qobject_name(cl_object l_obj) {
 }
 
 cl_object root_item() {
+  /// args: ()
+  /// Returns the root item of the QQuickView.
   ecl_process_env()->nvalues = 1;
   cl_object l_ret = from_qobject_pointer(LQML::quickView->rootObject());
   ecl_return1(ecl_process_env(), l_ret);
 }
 
 cl_object qquit2(cl_object l_status) {
+  // called by QML:QQUIT
+  int s = toInt(l_status);
   qGuiApp->quit();
   cl_shutdown();
   LQML::cl_shutdown_p = true;
-  int s = toInt(l_status);
   if (s < 0) {
     abort();
   } else {
@@ -457,11 +504,14 @@ cl_object qquit2(cl_object l_status) {
 }
 
 cl_object pixel_ratio() {
+  /// args: ()
+  /// Returns the effective device pixel ratio.
   cl_object l_ret = ecl_make_doublefloat(LQML::quickView->effectiveDevicePixelRatio());
   ecl_return1(ecl_process_env(), l_ret);
 }
 
 cl_object reload2() {
+  // called by QML:RELOAD
   LQML::quickView->engine()->clearComponentCache();
   QUrl source(LQML::quickView->source());
   LQML::quickView->setSource(source);
@@ -564,6 +614,7 @@ static cl_object collectInfo(const QByteArray& type,
 }
 
 cl_object qapropos2(cl_object l_search, cl_object l_obj, cl_object l_no_offset) {
+  // called by QML:QAPROPOS
   ecl_process_env()->nvalues = 1;  
   QByteArray search;
   if (ECL_STRINGP(l_search)) {

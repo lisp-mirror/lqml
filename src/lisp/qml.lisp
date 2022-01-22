@@ -49,9 +49,9 @@
     (print-js-readably object)))
 
 (defun qml-apply (caller function arguments)
-  "Every 'Lisp.call()' or 'Lisp.apply()' function call in QML will call this
-  function. The variable *CALLER* will be bound to the calling QQuickItem, if
-  passed with 'this' as first argument to 'Lisp.call()' / 'Lisp.apply()'."
+  ;; Every 'Lisp.call()' or 'Lisp.apply()' function call in QML will call this
+  ;: function. The variable *CALLER* will be bound to the calling QQuickItem,
+  ;; if passed with 'this' as first argument to 'Lisp.call()' / 'Lisp.apply()'.
   (let* ((*caller* (if (zerop caller) ; don't change LET*
                        *caller*
                        (make-qobject caller)))
@@ -64,7 +64,8 @@
 ;;; utils
 
 (defun find-quick-item (object-name)
-  "Finds the first QQuickItem matching OBJECT-NAME. Locally set *ROOT-ITEM* if
+  "args: (object-name)
+  Finds the first QQuickItem matching OBJECT-NAME. Locally set *ROOT-ITEM* if
   you want to find items inside a specific item, like in a QML Repeater. See
   also note in sources."
   ;;
@@ -94,6 +95,7 @@
           (qfind-child parent object-name)))))
 
 (defun quick-item (item/name)
+  ;; for internal use
   (cond ((stringp item/name)
          (find-quick-item item/name))
         ((qobject-p item/name)
@@ -102,52 +104,55 @@
          (root-item))))
 
 (defun children (item/name)
-  "Like QML function 'children'."
+  "args: (item/name)
+  Like QML function 'children'."
   (qrun* (qchild-items (quick-item item/name))))
 
 (defun reload ()
-  "Reloads all QML files, clearing the cache."
+  "args: ()
+  Reloads all QML files, clearing the cache."
   (qrun* (%reload)))
 
 ;;; get/set QML properties, call QML methods (through JS)
 
 (defun qml-get (item/name property-name)
-  "Gets QQmlProperty of either ITEM or first object matching NAME."
+  ;; see Q<
   (qrun* (%qml-get (quick-item item/name) property-name)))
 
 (defun qml-set (item/name property-name value)
-  "Sets QQmlProperty of either ITEM, or first object matching NAME.
-  Returns T on success."
+  ;; see Q>
   (qrun* (%qml-set (quick-item item/name) property-name value)))
 
 (defun qml-set-all (name property-name value)
-  "Sets QQmlProperty of all objects matching NAME."
+  ;; see Q>*
   (assert (stringp name))
   (qrun* (dolist (item (qfind-children (root-item) name))
            (qml-set item property-name value))))
 
-(defmacro q! (method-name item/name &rest arguments)
-  "Convenience macro for QML-CALL. Use symbol instead of string name."
-  `(js ,item/name ,(symbol-name method-name) ,@arguments))
-
-(defmacro q> (property-name item/name value)
-  "Convenience macro for QML-SET. Use symbol instead of string name."
-  `(qml-set ,item/name ,(symbol-name property-name) ,value))
+;;; convenience macros: re-arrange arguments to put the name first, and use
+;;; a symbol instead of the string name, so we can use auto completion
 
 (defmacro q< (property-name item/name)
-  "Convenience macro for QML-GET. Use symbol instead of string name."
+  "args: (property-name item/name)
+  Convenience macro for QML-GET. Use symbol instead of string name.
+    (q< |text| *label*)
+    (q< |font.pixelSize| *label*)"
   `(qml-get ,item/name ,(symbol-name property-name)))
 
+(defmacro q> (property-name item/name value)
+  "args: (property-name item/name value)
+  Convenience macro for QML-SET. Use symbol instead of string name.
+    (q> |text| *label* \"greetings!\")"
+  `(qml-set ,item/name ,(symbol-name property-name) ,value))
+
 (defmacro q>* (property-name item/name value)
-  "Convenience macro for QML-SET-ALL. Use symbol instead of string name."
+  "args: (property-name item/name value)
+  Convenience macro for QML-SET-ALL. Use symbol instead of string name. Sets
+  given property of all items sharing the same 'objectName'."
   `(qml-set-all ,item/name ,(symbol-name property-name) ,value))
 
-;;; JS
-
 (defun js (item/name fun &rest arguments)
-  "Evaluates a JS string, with 'this' bound to either ITEM, or first object
-  matching NAME. Use this function instead of the (faster) QJS if you need to
-  evaluate generic JS code, or for JS functions with default arguments."
+  ;; for internal use, see macro Q!
   (qrun* (%js (quick-item item/name)
               (apply 'format nil
                      (format nil "~A(~A)"
@@ -156,13 +161,26 @@
                      (mapcar 'js-arg arguments)))))
 
 (defun js-arg (object)
-  "Used for arguments in function JS."
+  ;; for arguments in function JS
   (if (stringp object)
       object
       (with-output-to-string (*standard-output*)
         (print-js-readably object))))
 
+(defmacro q! (method-name item/name &rest arguments)
+  "args: (method-name item/name &rest arguments)
+  For calling methods of QML items.
+    (q! |requestPaint| *canvas*)"
+  `(js ,item/name ,(symbol-name method-name) ,@arguments))
+
+;;; JS calls
+
 (defmacro qjs (method-name item/name &rest arguments)
+  "args: (method-name item/name &rest arguments
+  Fast and convenient way to call JS functions defined in QML. You may pass
+  up to 10 arguments of the following types:
+  T, NIL, INTEGER, FLOAT, STRING, and (nested) lists of mentioned arguments.
+  N.B: Does not work with JS default arguments."
   `(qrun* (qfun (quick-item ,item/name)
                 ,(if (symbolp method-name)
                      (symbol-name method-name)
@@ -176,8 +194,14 @@
       x
       (quick-item x)))
 
-(defun qapropos (name &optional class offset)
-  (dolist (sub1 (%qapropos (%string-or-nil name) (%to-qobject class) offset))
+(defun qapropos (name &optional qobject/name offset)
+  "args: (name &optional qobject/name)
+  Searches properties, methods, signals, slots for NAME in QObject
+  (e.g. QQuickItem) passed as second argument. QQuickItems can also be passed
+  by their 'objectName'.
+    (qapropos nil *canvas*)
+    (qapropos \"color\")"
+  (dolist (sub1 (%qapropos (%string-or-nil name) (%to-qobject qobject/name) offset))
     (format t "~%~%~A~%" (first sub1))
     (dolist (sub2 (rest sub1))
       (format t "~%  ~A~%~%" (first sub2))
@@ -190,6 +214,8 @@
   (terpri)
   nil)
 
-(defun qapropos* (name &optional class offset)
-  (%qapropos (%string-or-nil name) (%to-qobject class) offset))
+(defun qapropos* (name &optional qobject/name offset)
+  "args: (name &optional qobject/name)
+  Similar to QAPROPOS, returning the results as nested list."
+  (%qapropos (%string-or-nil name) (%to-qobject qobject/name) offset))
 
