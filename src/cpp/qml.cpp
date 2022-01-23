@@ -10,7 +10,7 @@ static Lisp* lisp = 0;
 static QObject* lisp_provider(QQmlEngine*, QJSEngine*) { return lisp; }
 
 QObject* iniQml() {
-  if(!lisp) {
+  if (!lisp) {
     lisp = new Lisp;
     qmlRegisterSingletonType<Lisp>("Lisp", 1, 0, "Lisp", lisp_provider);
   }
@@ -47,47 +47,47 @@ QVariant Lisp::call(const QJSValue& caller_or_function,
   QObject* caller = 0;
   QString function;
   QVariantList arguments;
-  if(caller_or_function.isQObject()) {
+  if (caller_or_function.isQObject()) {
     caller = caller_or_function.toQObject();
     function = function_or_arg0.toString();
   }
-  else if(caller_or_function.isString()) {
+  else if (caller_or_function.isString()) {
     function = caller_or_function.toString();
-    if(!function_or_arg0.isUndefined()) {
+    if (!function_or_arg0.isUndefined()) {
       arguments << function_or_arg0.toVariant();
     }
   }
-  if(!arg1.isUndefined()) {
+  if (!arg1.isUndefined()) {
     arguments << arg1.toVariant();
-    if(!arg2.isUndefined()) {
+    if (!arg2.isUndefined()) {
       arguments << arg2.toVariant();
-      if(!arg3.isUndefined()) {
+      if (!arg3.isUndefined()) {
         arguments << arg3.toVariant();
-        if(!arg4.isUndefined()) {
+        if (!arg4.isUndefined()) {
           arguments << arg4.toVariant();
-          if(!arg5.isUndefined()) {
+          if (!arg5.isUndefined()) {
             arguments << arg5.toVariant();
-            if(!arg6.isUndefined()) {
+            if (!arg6.isUndefined()) {
               arguments << arg6.toVariant();
-              if(!arg7.isUndefined()) {
+              if (!arg7.isUndefined()) {
                 arguments << arg7.toVariant();
-                if(!arg8.isUndefined()) {
+                if (!arg8.isUndefined()) {
                   arguments << arg8.toVariant();
-                  if(!arg9.isUndefined()) {
+                  if (!arg9.isUndefined()) {
                     arguments << arg9.toVariant();
-                    if(!arg10.isUndefined()) {
+                    if (!arg10.isUndefined()) {
                       arguments << arg10.toVariant();
-                      if(!arg11.isUndefined()) {
+                      if (!arg11.isUndefined()) {
                         arguments << arg11.toVariant();
-                        if(!arg12.isUndefined()) {
+                        if (!arg12.isUndefined()) {
                           arguments << arg12.toVariant();
-                          if(!arg13.isUndefined()) {
+                          if (!arg13.isUndefined()) {
                             arguments << arg13.toVariant();
-                            if(!arg14.isUndefined()) {
+                            if (!arg14.isUndefined()) {
                               arguments << arg14.toVariant();
-                              if(!arg15.isUndefined()) {
+                              if (!arg15.isUndefined()) {
                                 arguments << arg15.toVariant();
-                                if(!arg16.isUndefined()) {
+                                if (!arg16.isUndefined()) {
                                   arguments << arg16.toVariant();
                                 }
                               }
@@ -114,12 +114,12 @@ QVariant Lisp::apply(const QJSValue& caller_or_function,
   QObject* caller = 0;
   QString function;
   QVariantList arguments;
-  if(caller_or_function.isQObject()) {
+  if (caller_or_function.isQObject()) {
     caller = caller_or_function.toQObject();
     function = function_or_arguments.toString();
     arguments = arguments_or_undefined.toVariant().value<QVariantList>();
   }
-  else if(caller_or_function.isString()) {
+  else if (caller_or_function.isString()) {
     function = caller_or_function.toString();
     arguments = function_or_arguments.toVariant().value<QVariantList>();
   }

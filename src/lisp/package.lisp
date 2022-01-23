@@ -9,7 +9,6 @@
    #:define-qt-wrappers
    #:find-quick-item
    #:js
-   #:make-qobject
    #:pixel-ratio
    #:qapropos
    #:qapropos*
@@ -34,7 +33,6 @@
    #:qlater
    #:qload-c++
    #:qlog
-   #:qobject-p
    #:qprocess-events
    #:qq
    #:qquit
@@ -46,6 +44,8 @@
    #:qsleep
    #:qtranslate
    #:qversion
+   #:qt-object
+   #:qt-object-p
    #:reload
    #:root-item
    #:tr

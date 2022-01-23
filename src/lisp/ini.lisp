@@ -8,17 +8,19 @@
 (defvar *break-on-errors* t
   "If T, call (BREAK) on errors inside of LQML functions defined in C++.")
 
-(defun make-qobject (address)
-  ;; for internal use
-  (ffi:make-pointer address :pointer-void))
+(defstruct (qt-object (:constructor qt-object (address)))
+  (address 0 :type integer))
 
-(defun qobject-p (x)
-  "args: (x)
-  Tests if argument is of type QObject."
-  (eql 'si:foreign-data (type-of x)))
-
-(defmacro alias (s1 s2)
-  `(setf (symbol-function ',s1) (function ,s2)))
+(defmethod print-object ((object qt-object) s)
+  (print-unreadable-object (object s :type nil :identity nil)
+    (multiple-value-bind (class name address)
+        (qt-object-info object)
+      (format s "~A ~S ~A"
+              class
+              name
+              (if (zerop address)
+                  "NULL"
+                  (format nil "0x~X" address))))))
 
 (defmacro ! (fun qobject &rest args)
   ;; legacy, should not be needed, use DEFINE-QT-WRAPPERS instead
@@ -139,7 +141,7 @@
     (define-qt-wrappers *c++*)          ; generate wrappers
     (define-qt-wrappers *c++* :methods) ; Qt methods only (no slots/signals)
     (my-qt-function *c++* x y)          ; call from Lisp"
-  (assert (qobject-p qt-library))
+  (assert (qt-object-p qt-library))
   (let ((all-functions (qapropos* nil qt-library))
         (lispify (not (find :do-not-lispify what))))
     (setf what (remove-if (lambda (x) (find x '(:do-not-lispify t)))
@@ -166,7 +168,7 @@
             ;; there seems to be no simple way to avoid EVAL here
             ;; (excluding non-portable hacks)
             (eval `(defgeneric ,lisp-name (object &rest arguments)))
-            (eval `(defmethod ,lisp-name ((object si:foreign-data) &rest arguments)
+            (eval `(defmethod ,lisp-name ((object qt-object) &rest arguments)
                      (%qinvoke-method object ,qt-name arguments)))))))))
 
 (defun qinvoke-method (object function-name &rest arguments)
@@ -198,10 +200,6 @@
   (assert (typep exit-status 'fixnum))
   (%qquit exit-status))
 
-(alias qfun qinvoke-method)
-(alias qrun qrun-on-ui-thread)
-(alias qq   qquit)
-
 ;;; for android logging
 
 (defun qlog (arg1 &rest args)
@@ -215,3 +213,11 @@
              (apply 'format nil arg1 args)
              (x:join (mapcar 'princ-to-string (cons arg1 args))))))
 
+;;; alias
+
+(defmacro alias (s1 s2)
+  `(setf (symbol-function ',s1) (function ,s2)))
+
+(alias qfun qinvoke-method)
+(alias qrun qrun-on-ui-thread)
+(alias qq   qquit)

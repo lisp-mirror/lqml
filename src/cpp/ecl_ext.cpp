@@ -44,6 +44,7 @@ void iniCLFunctions() {
   DEFUN ("%qsingle-shot",      qsingle_shot2,      2)
   DEFUN ("qtranslate",         qtranslate,         3)
   DEFUN ("qversion",           qversion,           0)
+  DEFUN ("qt-object-info",     qt_object_info,     1)
   DEFUN ("%reload",            reload2,            0)
   DEFUN ("root-item",          root_item,          0)
   DEFUN ("%set-shutdown-p",    set_shutdown_p,     1)
@@ -472,7 +473,7 @@ cl_object qml_set2(cl_object l_item, cl_object l_name, cl_object l_value) {
 
 cl_object qobject_name(cl_object l_obj) {
   /// args: (qobject)
-  /// Returns the QObject::objectName() of passed QOBJECT (FFI pointer).
+  /// Returns the QObject::objectName() of passed QT-OBJECT.
   ecl_process_env()->nvalues = 1;
   QObject* qobject = toQObjectPointer(l_obj);
   if (qobject != nullptr) {
@@ -481,6 +482,27 @@ cl_object qobject_name(cl_object l_obj) {
   }
   error_msg("QOBJECT-NAME", LIST1(l_obj));
   return ECL_NIL;
+}
+
+cl_object qt_object_info(cl_object l_obj) {
+  // for internal use
+  QString className("?");
+  QString objectName("");
+  quintptr address = 0;
+  QObject* qobject = toQObjectPointer(l_obj);
+  if (qobject != nullptr) {
+    className = qobject->metaObject()->className();
+    int i = -1;
+    if ((i = className.indexOf('_')) != -1) {
+      className.truncate(i);
+    }
+    objectName = qobject->objectName();
+    address = reinterpret_cast<quintptr>(qobject);
+  }
+  cl_object l_class = from_qstring(className);
+  cl_object l_name = from_qstring(objectName);
+  cl_object l_addr = ecl_make_unsigned_integer(address);
+  ecl_return3(ecl_process_env(), l_class, l_name, l_addr);
 }
 
 cl_object root_item() {

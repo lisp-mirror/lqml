@@ -73,6 +73,7 @@ cl_object qset2               (cl_object, cl_object);
 cl_object qsingle_shot2       (cl_object, cl_object);
 cl_object qtranslate          (cl_object, cl_object, cl_object);
 cl_object qversion            ();
+cl_object qt_object_info      (cl_object);
 cl_object reload2             ();
 cl_object root_item           ();
 cl_object set_shutdown_p      (cl_object);

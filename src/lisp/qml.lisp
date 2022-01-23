@@ -20,7 +20,7 @@
   ;; if passed with 'this' as first argument to 'Lisp.call()' / 'Lisp.apply()'.
   (let ((*caller* (if (zerop caller)
                        *caller*
-                       (make-qobject caller))))
+                       (qt-qobject caller))))
     (apply (string-to-symbol function)
            arguments)))
 
@@ -52,7 +52,7 @@
   ;;      (QRUN* is used internally here)
   ;;
   (let ((parent (or *root-item* (root-item))))
-    (when (and parent (/= 0 (ffi:pointer-address parent)))
+    (when (and parent (/= 0 (qt-object-address parent)))
       (if (string= (qobject-name parent) object-name)
           parent
           (qfind-child parent object-name)))))
@@ -61,7 +61,7 @@
   ;; for internal use
   (cond ((stringp item/name)
          (find-quick-item item/name))
-        ((qobject-p item/name)
+        ((qt-object-p item/name)
          item/name)
         ((not item/name)
          (root-item))))
@@ -180,8 +180,8 @@
 
 ;;; apropos
 
-(defun %to-qobject (x)
-  (if (qobject-p x)
+(defun %to-qt-object (x)
+  (if (qt-object-p x)
       x
       (quick-item x)))
 
@@ -192,7 +192,7 @@
   by their 'objectName'.
     (qapropos nil *canvas*)
     (qapropos \"color\")"
-  (dolist (sub1 (%qapropos (%string-or-nil name) (%to-qobject qobject/name) offset))
+  (dolist (sub1 (%qapropos (%string-or-nil name) (%to-qt-object qobject/name) offset))
     (format t "~%~%~A~%" (first sub1))
     (dolist (sub2 (rest sub1))
       (format t "~%  ~A~%~%" (first sub2))
@@ -208,5 +208,5 @@
 (defun qapropos* (name &optional qobject/name offset)
   "args: (name &optional qobject/name)
   Similar to QAPROPOS, returning the results as nested list."
-  (%qapropos (%string-or-nil name) (%to-qobject qobject/name) offset))
+  (%qapropos (%string-or-nil name) (%to-qt-object qobject/name) offset))
 

@@ -178,10 +178,10 @@ QVariantList toQVariantList(cl_object l_list) {
 }
 
 QObject* toQObjectPointer(cl_object l_obj) {
-  STATIC_SYMBOL_PKG (s_qobject_p,       "QOBJECT-P",       "QML") // see 'ini.lisp'
-  STATIC_SYMBOL_PKG (s_pointer_address, "POINTER-ADDRESS", "FFI")
-  if (cl_funcall(2, s_qobject_p, l_obj) != ECL_NIL) {
-    return reinterpret_cast<QObject*>(toUInt<quintptr>(cl_funcall(2, s_pointer_address, l_obj)));
+  STATIC_SYMBOL_PKG (s_qt_object_p,       "QT-OBJECT-P",       "QML") // see 'ini.lisp'
+  STATIC_SYMBOL_PKG (s_qt_object_address, "QT-OBJECT-ADDRESS", "QML")
+  if (cl_funcall(2, s_qt_object_p, l_obj) != ECL_NIL) {
+    return reinterpret_cast<QObject*>(toUInt<quintptr>(cl_funcall(2, s_qt_object_address, l_obj)));
   }
   return nullptr;
 }
@@ -249,9 +249,9 @@ cl_object from_qvariant(const QVariant& var) {
 }
 
 cl_object from_qobject_pointer(QObject* qobject) {
-  STATIC_SYMBOL_PKG (s_make_qobject, "MAKE-QOBJECT", "QML") // see 'ini.lisp'
+  STATIC_SYMBOL_PKG (s_qt_object, "QT-OBJECT", "QML") // see 'ini.lisp'
   return cl_funcall(2,
-                    s_make_qobject,
+                    s_qt_object,
                     ecl_make_unsigned_integer(reinterpret_cast<quintptr>(qobject)));
 }
 

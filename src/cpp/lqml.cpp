@@ -48,7 +48,7 @@ LQML::LQML(int argc, char* argv[], QQuickView* view) : QObject() {
   iniCLFunctions();
   ecl_init_module(NULL, ini_LQML);
   eval("(in-package :qml-user)");
-  eval(QString("(setf *quick-view* (make-qobject %1))")
+  eval(QString("(setf *quick-view* (qt-object %1))")
               .arg(reinterpret_cast<quintptr>(view)));
 }
 
