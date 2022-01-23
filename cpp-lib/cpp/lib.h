@@ -13,8 +13,7 @@ QT_BEGIN_NAMESPACE
 
 extern "C" { LIB_EXPORT QObject* ini(); }
 
-class CPP : public QObject
-{
+class CPP : public QObject {
   Q_OBJECT
 
 public:

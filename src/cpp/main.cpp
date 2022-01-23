@@ -80,7 +80,7 @@ int main(int argc, char* argv[]) {
 
   bool slime = false;
   if (arguments.contains("-slime")
-  || (arguments.indexOf(QRegularExpression::fromWildcard(QStringView(QString("*start-swank*.lisp")))) != -1)) {
+  || (arguments.indexOf(QRegularExpression::fromWildcard(QString("*start-swank*.lisp"))) != -1)) {
     arguments.removeAll("-slime");
     slime = true;
   }

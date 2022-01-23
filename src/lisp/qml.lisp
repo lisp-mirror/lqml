@@ -2,7 +2,6 @@
 
 (defvar *quick-view* nil) ; is set in 'lqml.cpp' on startup
 (defvar *caller*     nil)
-(defvar *root*       nil)
 (defvar *root-item*  nil) ; see note in 'find-quick-item'
 
 (defun string-to-symbol (name)
@@ -15,51 +14,15 @@
 
 ;;; function calls from QML
 
-(defun print-js-readably (object)
-  "Prints (nested) lists, vectors, T, NIL, floats in JS notation, which will be
-  passed to JS 'eval()'."
-  (if (and (not (stringp object))
-           (vectorp object))
-      (print-js-readably (coerce object 'list))
-      (typecase object
-        (cons
-         (write-char #\[)
-         (do ((list object (rest list)))
-             ((null list) (write-char #\]))
-           (print-js-readably (first list))
-           (when (rest list)
-             (write-char #\,))))
-        (float
-         ;; JS can't read 'd0' 'l0'
-         (let ((str (princ-to-string object)))
-           (x:when-it (position-if (lambda (ch) (find ch "dl")) str)
-             (setf (char str x:it) #\e))
-           (princ str)))
-        (t
-         (cond ((eql 't object)
-                (princ "true"))
-               ((eql 'nil object)
-                (princ "false"))
-               (t
-                (prin1 object)))))))
-
-(defun print-to-js-string (object)
-  (with-output-to-string (*standard-output*)
-    (princ "#<>") ; mark for passing to JS "eval()"
-    (print-js-readably object)))
-
 (defun qml-apply (caller function arguments)
   ;; Every 'Lisp.call()' or 'Lisp.apply()' function call in QML will call this
   ;: function. The variable *CALLER* will be bound to the calling QQuickItem,
   ;; if passed with 'this' as first argument to 'Lisp.call()' / 'Lisp.apply()'.
-  (let* ((*caller* (if (zerop caller) ; don't change LET*
+  (let ((*caller* (if (zerop caller)
                        *caller*
-                       (make-qobject caller)))
-         (value (apply (string-to-symbol function)
-                       arguments)))
-    (if (stringp value)
-        value
-        (print-to-js-string value))))
+                       (make-qobject caller))))
+    (apply (string-to-symbol function)
+           arguments)))
 
 ;;; utils
 
@@ -159,6 +122,33 @@
                              fun
                              (x:join (loop repeat (length arguments) collect "~S") #\,))
                      (mapcar 'js-arg arguments)))))
+
+(defun print-js-readably (object)
+  "Prints (nested) lists, vectors, T, NIL, floats in JS notation."
+  (if (and (not (stringp object))
+           (vectorp object))
+      (print-js-readably (coerce object 'list))
+      (typecase object
+        (cons
+         (write-char #\[)
+         (do ((list object (rest list)))
+             ((null list) (write-char #\]))
+           (print-js-readably (first list))
+           (when (rest list)
+             (write-char #\,))))
+        (float
+         ;; JS can't read 'd0' 'l0'
+         (let ((str (princ-to-string object)))
+           (x:when-it (position-if (lambda (ch) (find ch "dl")) str)
+             (setf (char str x:it) #\e))
+           (princ str)))
+        (t
+         (cond ((eql 't object)
+                (princ "true"))
+               ((eql 'nil object)
+                (princ "false"))
+               (t
+                (prin1 object)))))))
 
 (defun js-arg (object)
   ;; for arguments in function JS

@@ -3,7 +3,6 @@
   (:export
    #:*break-on-errors*
    #:*quick-view*
-   #:*root*
    #:*root-item*
    #:*caller*
    #:children
@@ -47,8 +46,8 @@
    #:qsleep
    #:qtranslate
    #:qversion
-   #:root-item
    #:reload
+   #:root-item
    #:tr
    #:!))
 

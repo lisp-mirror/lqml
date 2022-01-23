@@ -17,18 +17,13 @@ QObject* iniQml() {
   return lisp;
 }
 
-static QVariant qmlApply(QObject* caller, const QString& function, const QVariantList& arguments) {
-  QVariant var =
-  ecl_fun("qml:qml-apply",
-          QVariant(reinterpret_cast<quintptr>(caller)),
-          QVariant(function),
-          QVariant(arguments));
-  QString str(var.toString());
-  if(str.startsWith("#<>")) { // prepared in Lisp for JS eval
-    QQmlExpression exp(LQML::quickView->rootContext(), caller, str.mid(3));
-    return exp.evaluate();
-  }
-  return var;
+static QVariant qmlApply(QObject* caller,
+                         const QString& function,
+                         const QVariantList& arguments) {
+  return ecl_fun("qml:qml-apply",
+                 QVariant(reinterpret_cast<quintptr>(caller)),
+                 QVariant(function),
+                 QVariant(arguments));
 }
 
 QVariant Lisp::call(const QJSValue& caller_or_function,
