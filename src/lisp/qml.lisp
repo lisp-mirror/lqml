@@ -20,7 +20,7 @@
   ;; if passed with 'this' as first argument to 'Lisp.call()' / 'Lisp.apply()'.
   (let ((*caller* (if (zerop caller)
                        *caller*
-                       (qt-qobject caller))))
+                       (qt-object caller))))
     (apply (string-to-symbol function)
            arguments)))
 
@@ -185,14 +185,14 @@
       x
       (quick-item x)))
 
-(defun qapropos (name &optional qobject/name offset)
-  "args: (name &optional qobject/name)
+(defun qapropos (name &optional qt-object/name offset)
+  "args: (name &optional qt-object/name)
   Searches properties, methods, signals, slots for NAME in QObject
   (e.g. QQuickItem) passed as second argument. QQuickItems can also be passed
   by their 'objectName'.
     (qapropos nil *canvas*)
     (qapropos \"color\")"
-  (dolist (sub1 (%qapropos (%string-or-nil name) (%to-qt-object qobject/name) offset))
+  (dolist (sub1 (%qapropos (%string-or-nil name) (%to-qt-object qt-object/name) offset))
     (format t "~%~%~A~%" (first sub1))
     (dolist (sub2 (rest sub1))
       (format t "~%  ~A~%~%" (first sub2))
@@ -205,8 +205,8 @@
   (terpri)
   nil)
 
-(defun qapropos* (name &optional qobject/name offset)
-  "args: (name &optional qobject/name)
+(defun qapropos* (name &optional qt-object/name offset)
+  "args: (name &optional qt-object/name)
   Similar to QAPROPOS, returning the results as nested list."
-  (%qapropos (%string-or-nil name) (%to-qt-object qobject/name) offset))
+  (%qapropos (%string-or-nil name) (%to-qt-object qt-object/name) offset))
 

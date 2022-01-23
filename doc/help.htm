@@ -5,24 +5,8 @@
 <meta charset="utf-8">
 </head>
 <body>
+<h2><pre>LQML</pre></h2>
 <pre>
-<b>qload-c++ (library-name &optional unload)</b>
-
-  Loads a custom Qt/C++ plugin (see 'cpp-lib' in sources). The LIBRARY-NAME
-  has to be passed as path to the plugin, without file ending. This offers
-  a simple way to extend your application with your own Qt/C++ functions.
-  The plugin will be reloaded (if supported by the OS) every time you call
-  this function. If the UNLOAD argument is not NIL, the plugin will be
-  unloaded (if supported by the OS).
-  N.B: This works only for Qt6 functions with the following signature:
-  "QVariant foo(QVariant, ...)" ; max 10 QVariant arguments
-  Since a QVariant can also be of type QVariantList, this is a perfect fit
-  for (nested) Lisp lists.
-
-    (defparameter *c++* (qload-c++ "my-lib"))
-    (qapropos nil *c++*)                      ; documentation
-    (define-qt-wrappers *c++*)                ; Lisp wrapper functions
-
 
 <b>define-qt-wrappers (qt-library &rest what)</b>
 
@@ -74,7 +58,7 @@
   given property of all items sharing the same 'objectName'.
 
 
-<b>qapropos (name &optional qobject/name)</b>
+<b>qapropos (name &optional qt-object/name)</b>
 
   Searches properties, methods, signals, slots for NAME in QObject
   (e.g. QQuickItem) passed as second argument. QQuickItems can also be passed
@@ -84,7 +68,7 @@
     (qapropos "color")
 
 
-<b>qapropos* (name &optional qobject/name)</b>
+<b>qapropos* (name &optional qt-object/name)</b>
 
   Similar to QAPROPOS, returning the results as nested list.
 
@@ -112,7 +96,7 @@
   exited.
 
 
-<b>qfind-child (qobject name)</b>
+<b>qfind-child (qt-object name)</b>
 
   Calls QObject::findChild<QObject*>().
 
@@ -123,7 +107,7 @@
   QString::fromUtf8().
 
 
-<b>qget (object name)</b>
+<b>qget (qt-object name)</b>
 
   Gets a Qt property. Enumerator values are returned as integer values.
   Returns T as second return value for successful calls.
@@ -145,6 +129,24 @@
   Calls FUNCTION as soon as the Qt event loop is idle.
 
 
+<b>qload-c++ (library-name &optional unload)</b>
+
+  Loads a custom Qt/C++ plugin (see 'cpp-lib' in sources). The LIBRARY-NAME
+  has to be passed as path to the plugin, without file ending. This offers
+  a simple way to extend your application with your own Qt/C++ functions.
+  The plugin will be reloaded (if supported by the OS) every time you call
+  this function. If the UNLOAD argument is not NIL, the plugin will be
+  unloaded (if supported by the OS).
+  N.B: This works only for Qt6 functions with the following signature:
+  "QVariant foo(QVariant, ...)" ; max 10 QVariant arguments
+  Since a QVariant can also be of type QVariantList, this is a perfect fit
+  for (nested) Lisp lists.
+
+    (defparameter *c++* (qload-c++ "my-lib"))
+    (qapropos nil *c++*)                      ; documentation
+    (define-qt-wrappers *c++*)                ; Lisp wrapper functions
+
+
 <b>qlog (arg1 &optional arg2 arg3...)</b>
 
   For log messages on android.
@@ -154,14 +156,9 @@
     (qlog "x ~A y ~A" x y)
 
 
-<b>qobject-name (qobject)</b>
+<b>qobject-name (qt-object)</b>
 
-  Returns the QObject::objectName() of passed QOBJECT (FFI pointer).
-
-
-<b>qobject-p (x)</b>
-
-  Tests if argument is of type QObject.
+  Returns the QObject::objectName() of passed QT-OBJECT.
 
 
 <b>qprocess-events ()</b>
@@ -177,7 +174,7 @@
   normal program exit.
 
 
-<b>qset (object name1 value1 &optional name2 value2...)</b>
+<b>qset (qt-object name1 value1 &optional name2 value2...)</b>
 
   Sets a Qt property. Enumerators have to be passed as integer values.
   Returns T as second return value for successful calls.

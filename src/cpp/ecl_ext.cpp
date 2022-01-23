@@ -86,7 +86,7 @@ cl_object set_shutdown_p(cl_object l_obj) {
 }
 
 cl_object qget2(cl_object l_obj, cl_object l_name) {
-  /// args: (object name)
+  /// args: (qt-object name)
   /// Gets a Qt property. Enumerator values are returned as integer values.
   /// Returns T as second return value for successful calls.
   ///   (qget *quick-view* |width|)
@@ -107,7 +107,7 @@ cl_object qget2(cl_object l_obj, cl_object l_name) {
 }
 
 cl_object qset2(cl_object l_obj, cl_object l_args) {
-  /// args: (object name1 value1 &optional name2 value2...)
+  /// args: (qt-object name1 value1 &optional name2 value2...)
   /// Sets a Qt property. Enumerators have to be passed as integer values.
   /// Returns T as second return value for successful calls.
   ///   (qset *quick-view* |x| 100 |y| 100)
@@ -141,7 +141,7 @@ fail:
 }
 
 cl_object qfind_child(cl_object l_obj, cl_object l_name) {
-  /// args: (qobject name)
+  /// args: (qt-object name)
   /// Calls QObject::findChild<QObject*>().
   ecl_process_env()->nvalues = 1;
   QString name(toQString(l_name));
@@ -472,7 +472,7 @@ cl_object qml_set2(cl_object l_item, cl_object l_name, cl_object l_value) {
 }
 
 cl_object qobject_name(cl_object l_obj) {
-  /// args: (qobject)
+  /// args: (qt-object)
   /// Returns the QObject::objectName() of passed QT-OBJECT.
   ecl_process_env()->nvalues = 1;
   QObject* qobject = toQObjectPointer(l_obj);
