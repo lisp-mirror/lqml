@@ -127,7 +127,11 @@ cl_object qset2(cl_object l_obj, cl_object l_args) {
         var = toInt(l_val);
       }
       else {
+#if QT_VERSION < 0x060000
+        var = toQVariant(l_val, mp.type());
+#else
         var = toQVariant(l_val, mp.typeId());
+#endif
       }
       if (!mp.write(qobject, var)) {
         goto fail;

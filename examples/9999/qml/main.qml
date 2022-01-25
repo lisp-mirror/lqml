@@ -1,6 +1,6 @@
-import QtQuick
-import QtQuick.Controls
-import Lisp
+import QtQuick 2.13
+import QtQuick.Controls 2.13
+import Lisp 1.0
 
 Rectangle {
   width: 220

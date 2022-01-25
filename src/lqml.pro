@@ -51,7 +51,5 @@ SOURCES += \
   cpp/qt_ecl.cpp \
   cpp/main.cpp
 
-clang {
-  QMAKE_CXXFLAGS += -std=c++17
-}
+QMAKE_CXXFLAGS += -std=c++17
 

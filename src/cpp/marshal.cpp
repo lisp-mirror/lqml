@@ -225,7 +225,11 @@ TO_CL_FLOAT_4 (QRectF,  qrectf,  x, y, width, height)
 
 cl_object from_qvariant(const QVariant& var) {
   cl_object l_obj = ECL_NIL;
+#if QT_VERSION < 0x060000
+  const int type = var.type();
+#else
   const int type = var.typeId();
+#endif
   switch (type) {
     case QMetaType::Bool:       l_obj = var.toBool() ? ECL_T : ECL_NIL;               break;
     case QMetaType::Double:     l_obj = ecl_make_doublefloat(var.toDouble());         break;
