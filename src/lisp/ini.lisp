@@ -11,12 +11,25 @@
 (defstruct (qt-object (:constructor qt-object (address)))
   (address 0 :type integer))
 
+(defun %qml-name (name)
+  (if (find name '("QQuickView" "Item") :test 'string=)
+      name
+      (subseq name
+              (let ((start 0))
+                (dolist (q '("QDeclarativeGeo" "QDeclarative" "QQuick" "QQml" "Qml"))
+                  (when (x:starts-with q name)
+                    (setf start (length q))
+                    (return)))
+                start)
+              (or (search "Item" name)
+                  (position #\_ name)))))
+
 (defmethod print-object ((object qt-object) s)
   (print-unreadable-object (object s :type nil :identity nil)
     (multiple-value-bind (class name address)
         (qt-object-info object)
       (format s "~A ~S ~A"
-              class
+              (%qml-name class)
               name
               (if (zerop address)
                   "NULL"
