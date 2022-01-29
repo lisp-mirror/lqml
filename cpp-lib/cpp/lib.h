@@ -20,6 +20,7 @@ public:
   // max. 10 arguments of type QVariant
   // return type must also be a QVariant
   Q_INVOKABLE QVariant hello(const QVariant&);
+  Q_INVOKABLE QVariant callLisp(const QVariant&);
 };
 
 QT_END_NAMESPACE

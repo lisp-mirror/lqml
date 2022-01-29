@@ -26,6 +26,9 @@ Only tested with **Qt5.15** and latest **Qt6**. It's recommended to use the new
 Qt online installer (see [doc/get-qt6](doc/get-qt6.md)), where you can choose
 to install different Qt versions side by side, sharing the same Qt Creator.
 
+The **mobile** part is currently only tested with **Qt5.15**, because the Qt6
+port still lacks significant parts of mobile (as of Qt6.2).
+
 
 TODO
 ----

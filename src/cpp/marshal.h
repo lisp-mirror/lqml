@@ -56,7 +56,7 @@ static cl_object from_##name(const cap_name& q) { \
 
 #define TO_QT_FLOAT_2(name) \
 static name to##name(cl_object x) { \
-  if(LISTP(x)) { \
+  if (LISTP(x)) { \
     return name(toReal(cl_first(x)), toReal(cl_second(x))); \
   } \
   return name(); \
@@ -64,7 +64,7 @@ static name to##name(cl_object x) { \
 
 #define TO_QT_FLOAT_4(name) \
 static name to##name(cl_object x) { \
-  if(LISTP(x)) { \
+  if (LISTP(x)) { \
     return name(toReal(cl_first(x)), toReal(cl_second(x)), toReal(cl_third(x)), toReal(cl_fourth(x))); \
   } \
   return name(); \

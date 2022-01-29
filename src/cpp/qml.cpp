@@ -1,7 +1,6 @@
 #include "qml.h"
 #include "lqml.h"
 #include "ecl_fun.h"
-#include <QQuickView>
 
 QT_BEGIN_NAMESPACE
 

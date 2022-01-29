@@ -2,11 +2,9 @@
   (:use :common-lisp)
   (:export
    #:cc
-   #:check-recompile
    #:bytes-to-string
    #:d
    #:do-string
-   #:do-with
    #:empty-string
    #:ensure-list
    #:ends-with
@@ -15,8 +13,6 @@
    #:if-it
    #:if-it*
    #:join
-   #:let-it
-   #:path
    #:split
    #:starts-with
    #:string-substitute
@@ -38,11 +34,6 @@
 (defmacro if-it* (exp then &optional else)
   `(let ((it* ,exp))
     (if it* ,then ,else)))
-
-(defmacro let-it (exp &body body)
-  `(let ((it ,exp))
-     ,@body
-     it))
 
 (defmacro when-it (exp &body body)
   `(let ((it ,exp))
@@ -73,15 +64,6 @@
      (map nil (lambda (,var)
                 ,@body)
           ,str)))
-
-(defmacro do-with (with &body body)
-  `(progn
-     ,@(mapcar (lambda (line)
-                 (append with (if (or (atom line)
-                                      (eql 'quote (first line)))
-                                  (list line)
-                                  line)))
-               body)))
 
 (defun d (&rest args)
   "A simple debug print."
@@ -147,31 +129,3 @@
 (defun string-to-bytes (s)
   (map 'vector 'char-code s))
 
-(defun path (name)
-  "Needed because ECL uses base strings (not Unicode) for pathnames internally."
-  #+(or darwin linux)
-  (funcall (intern "QUTF8" :eql) name)
-  #+win32
-  (if (< (funcall (intern "%WINDOWS-VERSION" :eql)) #xa0)
-      (funcall (intern "QLOCAL8BIT" :eql) name)           ; Windows 7 and lower
-      name))                                              ; Windows 8 and higher
-
-(defun check-recompile (file-name)
-  "Given a global file name without file ending, ensures re-compiling on every ECL/Qt5/EQL5 version change."
-  (labels ((ver-name ()
-             (format nil "~A.ver" file-name))
-           (version ()
-             (multiple-value-bind (eql5 qt5)
-                 (funcall (find-symbol "QVERSION" :eql))
-               (format nil "EQL5 ~A (ECL ~A, Qt ~A)" eql5 (lisp-implementation-version) qt5)))
-           (write-version ()
-             (with-open-file (s (ver-name) :direction :output :if-exists :supersede)
-               (princ (version) s)))
-           (read-version ()
-             (x:when-it (probe-file (ver-name))
-               (with-open-file (s x:it :direction :input)
-                 (read-line s)))))
-    (unless (equal (version) (read-version))
-      (compile-file file-name)
-      (write-version)))
-  file-name)

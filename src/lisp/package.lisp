@@ -8,7 +8,6 @@
    #:children
    #:define-qt-wrappers
    #:find-quick-item
-   #:js
    #:pixel-ratio
    #:qapropos
    #:qapropos*

@@ -142,6 +142,7 @@
   `(qrun-on-ui-thread* ,@body))
 
 (defun qfind-children (object &optional object-name class-name)
+  ;; for internal use
   (%qfind-children object object-name class-name))
 
 (defun qload-c++ (library-name &optional unload)

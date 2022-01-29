@@ -188,7 +188,7 @@ QObject* toQObjectPointer(cl_object l_obj) {
 
 
 
-// *** Qt to Lisp
+// *** Qt to Lisp ***
 
 cl_object from_cstring(const QByteArray& s) {
   cl_object l_s = ecl_alloc_simple_base_string(s.length());

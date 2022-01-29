@@ -36,29 +36,29 @@ QVariant ecl_fun(const QByteArray& pkgFun,
                  const QVariant& a9,
                  const QVariant& a10) {
   void* symbol = lisp_functions.value(pkgFun);
-  if(!symbol) {
+  if (!symbol) {
     int p = pkgFun.indexOf(':');
     QByteArray pkg = (p == -1) ? "qml-user" : pkgFun.left(p);
     QByteArray fun = pkgFun.mid(pkgFun.lastIndexOf(':') + 1);
     cl_object l_sym = cl_find_symbol(2,
                                      make_constant_base_string(fun.toUpper().constData()),
                                      cl_find_package(make_constant_base_string(pkg.toUpper().constData())));
-    if(l_sym != Cnil) {
+    if (l_sym != Cnil) {
       symbol = l_sym;
       lisp_functions[pkgFun] = symbol;
     }
   }
   cl_object l_args = Cnil;
-  if(!a1.isNull()) { PUSH_ARG(a1);
-    if(!a2.isNull()) { PUSH_ARG(a2);
-      if(!a3.isNull()) { PUSH_ARG(a3);
-        if(!a4.isNull()) { PUSH_ARG(a4);
-          if(!a5.isNull()) { PUSH_ARG(a5);
-            if(!a6.isNull()) { PUSH_ARG(a6);
-              if(!a7.isNull()) { PUSH_ARG(a7);
-                if(!a8.isNull()) { PUSH_ARG(a8);
-                  if(!a9.isNull()) { PUSH_ARG(a9);
-                    if(!a10.isNull()) { PUSH_ARG(a10); }
+  if (!a1.isNull()) { PUSH_ARG(a1);
+    if (!a2.isNull()) { PUSH_ARG(a2);
+      if (!a3.isNull()) { PUSH_ARG(a3);
+        if (!a4.isNull()) { PUSH_ARG(a4);
+          if (!a5.isNull()) { PUSH_ARG(a5);
+            if (!a6.isNull()) { PUSH_ARG(a6);
+              if (!a7.isNull()) { PUSH_ARG(a7);
+                if (!a8.isNull()) { PUSH_ARG(a8);
+                  if (!a9.isNull()) { PUSH_ARG(a9);
+                    if (!a10.isNull()) { PUSH_ARG(a10); }
                   }
                 }
               }
@@ -69,7 +69,7 @@ QVariant ecl_fun(const QByteArray& pkgFun,
     }
   }
   l_args = cl_nreverse(l_args);
-  if(symbol) {
+  if (symbol) {
     cl_object l_ret = lisp_apply((cl_object)symbol, l_args);
     return toQVariant(l_ret);
   }

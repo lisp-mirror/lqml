@@ -348,7 +348,7 @@ cl_object qsingle_shot2(cl_object l_msec, cl_object l_fun) {
   ///   (qsingle-shot 1000 'one-second-later)
   ecl_process_env()->nvalues = 1;
   if (l_fun != ECL_NIL) {
-    new SingleShot(toInt(l_msec), l_fun); // see "delete this;" in "single_shot.h"
+    new SingleShot(toInt(l_msec), l_fun);
     return l_msec;
   }
   error_msg("QSINGLE-SHOT", LIST2(l_msec, l_fun));
