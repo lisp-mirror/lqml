@@ -115,13 +115,15 @@
     (qget *quick-view* |width|)
 
 
-<b>qjs (method-name item/name &rest arguments</b>
+<b>qjs (method-name item/name &rest arguments)</b>
 
   Fast and convenient way to call JS functions defined in QML. You may pass
   up to 10 arguments of the following types:
   T, NIL, INTEGER, FLOAT, STRING, VECTOR of octets, and (nested) lists of
   mentioned arguments.
   N.B: Does not work with JS default arguments.
+
+    (qjs |drawLine| *canvas* x1 y1 x2 y2))
 
 
 <b>qlater (function)</b>
@@ -137,7 +139,7 @@
   The plugin will be reloaded (if supported by the OS) every time you call
   this function. If the UNLOAD argument is not NIL, the plugin will be
   unloaded (if supported by the OS).
-  N.B: This works only for Qt6 functions with the following signature:
+  N.B: This works only for Qt functions with the following signature:
   "QVariant foo(QVariant, ...)" ; max 10 QVariant arguments
   Since a QVariant can also be of type QVariantList, this is a perfect fit
   for (nested) Lisp lists.
@@ -147,7 +149,7 @@
     (define-qt-wrappers *c++*)                ; Lisp wrapper functions
 
 
-<b>qlog (arg1 &optional arg2 arg3...)</b>
+<b>qlog (arg1 &rest args)</b>
 
   For log messages on android.
 

@@ -20,7 +20,7 @@ QObject* ini() {
   return cpp;
 }
 
-// functiones defined Q_INVOKABLE
+// functions defined Q_INVOKABLE
 
 QVariant CPP::hello(const QVariant& arg) {
 

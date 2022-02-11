@@ -1,39 +1,25 @@
-LISP_FILES = \
-  make.lisp \
-  lisp/x.lisp \
-  lisp/package.lisp \
-  lisp/ini.lisp \
-  lisp/qml.lisp \
-  lqml.asd
-
-lisp.output   = liblqml.a
-lisp.commands = ecl -shell $$PWD/make.lisp
-lisp.input    = LISP_FILES
-
-QMAKE_EXTRA_COMPILERS += lisp
-
 QT          += quick qml
 TEMPLATE    = app
 CONFIG      += no_keywords release
-INCLUDEPATH += /usr/local/include
-LIBS        += -L/usr/local/lib -lecl -L. -llqml
+INCLUDEPATH = /usr/local/include
+LIBS        = -L/usr/local/lib -lecl -llisp
 TARGET      = lqml
 DESTDIR     = .
+OBJECTS_DIR = ./tmp
+MOC_DIR     = ./tmp
 
 linux {
+  LIBS        += -L../../platforms/linux/lib
   target.path = /usr/bin
 }
 
-osx {
-  CONFIG -= app_bundle
+macx {
+  CONFIG      -= app_bundle
+  LIBS        += -L../../platforms/macos/lib
   target.path = /usr/local/bin
 }
 
 INSTALLS = target
-
-win32 {
-  include(windows.pri)
-}
 
 HEADERS += \
   cpp/marshal.h \
@@ -49,7 +35,10 @@ SOURCES += \
   cpp/lqml.cpp \
   cpp/qml.cpp \
   cpp/qt_ecl.cpp \
+  cpp/single_shot.cpp \
   cpp/main.cpp
 
 QMAKE_CXXFLAGS += -std=c++17
+
+QMAKE_PRE_LINK = ecl -shell $$PWD/make.lisp
 

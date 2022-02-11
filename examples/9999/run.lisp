@@ -1,12 +1,17 @@
 (in-package :qml-user)
 
-(load "lisp/main")
+(require :asdf)
+
+(push (merge-pathnames "./")
+      asdf:*central-registry*)
+
+(asdf:operate 'asdf:load-source-op :app)
 
 (qset *quick-view*
       |x| 75
       |y| 75)
 
-;;; for Slime after copying 'qml-start-swank.lisp' from LQML sources
+;;; for Slime after copying 'lqml-start-swank.lisp' from LQML sources
 ;;; to your Slime directory, which is assumed to be '~/slime/'
 
 (when (find "-slime" (ext:command-args) :test 'string=)

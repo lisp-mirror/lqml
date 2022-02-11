@@ -58,11 +58,9 @@
   ;; check for LAMBDA, #'LAMBDA
   (if (find (first function) '(lambda function))
       ;; hold a reference (will be called later from Qt event loop)
-      `(qrun (lambda ()
-               (%qsingle-shot ,milliseconds (setf (symbol-function (intern ,(%reference-name))) ; lambda
-                                                  ,function))))
-      `(qrun (lambda ()
-               (%qsingle-shot ,milliseconds ,function)))))                                      ; 'foo
+      `(qrun* (%qsingle-shot ,milliseconds (setf (symbol-function (intern ,(%reference-name))) ; lambda
+                                                 ,function)))
+      `(qrun* (%qsingle-shot ,milliseconds ,function))))                                       ; 'foo
 
 (defmacro qlater (function)
   "args: (function)
@@ -217,7 +215,7 @@
 ;;; for android logging
 
 (defun qlog (arg1 &rest args)
-  "args: (arg1 &optional arg2 arg3...)
+  "args: (arg1 &rest args)
   For log messages on android.
     (qlog 12)
     (qlog \"width\" 10 \"height\" 20)
@@ -235,3 +233,4 @@
 (alias qfun qinvoke-method)
 (alias qrun qrun-on-ui-thread)
 (alias qq   qquit)
+

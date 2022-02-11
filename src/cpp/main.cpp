@@ -15,6 +15,10 @@
 #define ADD_MACOS_BUNDLE_IMPORT_PATH
 #endif
 
+#ifdef INI_LISP
+  extern "C" void ini_app(cl_object);
+#endif
+
 int catch_all_qexec() {
   int ret = 0;
   CL_CATCH_ALL_BEGIN(ecl_process_env()) {
@@ -25,6 +29,7 @@ int catch_all_qexec() {
 }
 
 int main(int argc, char* argv[]) {
+  QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
   QGuiApplication app(argc, argv);
   //app.setOrganizationName("MyProject");
   //app.setOrganizationDomain("my.org");
@@ -49,25 +54,26 @@ int main(int argc, char* argv[]) {
     exit(0);
   }
 
+#ifdef INI_LISP
+  ecl_init_module(NULL, ini_app);
+#endif
+
   new QQmlFileSelector(view.engine(), &view);
   QString qml("qml/main.qml");
-  QUrl url("qrc:///" + qml);        // (1) try resources first (final app)
-  bool set = false;
-  if (QFile::exists(url.fileName())) {
-    set = true;
+  QUrl url;
+  if (QFile::exists(qml)) {         // (1) try local file (development)
+    url = QUrl::fromLocalFile(qml);
   } else {
-    url = QUrl::fromLocalFile(qml); // (2) use local file (development)
-    if (QFile::exists(QDir::currentPath() + "/" + qml)) {
-      set = true;
-    }
+    url = QUrl("qrc:///" + qml);    // (2) use resource file (final app)
   }
-  if (set) {
-    view.setSource(url);
-    if (view.status() == QQuickView::Error) {
-      return -1;
-    }
+  view.setSource(url);
+  if (view.status() != QQuickView::Error) {
     view.setResizeMode(QQuickView::SizeRootObjectToView);
+#if (defined Q_OS_ANDROID) || (defined Q_OS_IOS)
+    view.show();
+#else
     QTimer::singleShot(0, &view, &QQuickView::show);
+#endif
   }
 
   // load .eclrc

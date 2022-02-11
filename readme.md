@@ -11,6 +11,10 @@ Description
 
 A lightweight ECL based QML-only binding to Qt5/Qt6.
 
+This small project aims to simplify all the steps needed for building
+cross-platform apps. The same sources can be used to build executables for both
+desktop (Linux/macOS) and mobile (android/iOS).
+
 
 License
 -------
@@ -33,7 +37,6 @@ port still lacks significant parts of mobile (as of Qt6.2).
 TODO
 ----
 
-* make example work on android
 * make example work on iOS
 * add item model example
 * add sokoban example

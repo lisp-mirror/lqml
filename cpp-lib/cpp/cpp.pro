@@ -16,7 +16,7 @@ win32 {
 HEADERS += \
   lib.h \
   ../../src/cpp/marshal.h \
-  ../../src/cpp/qt_ech.h
+  ../../src/cpp/qt_ecl.h
 
 SOURCES += \
   lib.cpp \

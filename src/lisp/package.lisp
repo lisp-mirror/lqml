@@ -1,5 +1,5 @@
 (defpackage :qml
-  (:use :common-lisp)
+  (:use :cl)
   (:export
    #:*break-on-errors*
    #:*quick-view*
@@ -51,6 +51,6 @@
    #:!))
 
 (defpackage :qml-user
-  (:use :common-lisp :qml))
+  (:use :cl :qml))
 
 (pushnew :qml *features*)

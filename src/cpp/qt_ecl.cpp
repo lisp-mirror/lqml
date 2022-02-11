@@ -1,7 +1,6 @@
 #include "qt_ecl.h"
 #include "marshal.h"
 #include "ecl_ext.h"
-#include <ecl/ecl.h>
 #include <QVariant>
 
 QT_BEGIN_NAMESPACE

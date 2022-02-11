@@ -1,6 +1,8 @@
 #ifndef LQML_H
 #define LQML_H
 
+#undef SLOT
+
 #include <ecl/ecl.h>
 #include <QObject>
 #include <QByteArray>

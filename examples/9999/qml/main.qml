@@ -1,17 +1,37 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import QtQuick.Window 2.15
 import Lisp 1.0
 
 Rectangle {
-  width: 220
-  height: 320 + input.height
+  id: main
+  width: 200
+  height: 300 + input.height
   color: "lavender"
+
+  TextField {
+    id: input
+    objectName: "input"
+    width: parent.width
+    horizontalAlignment: Qt.AlignHCenter
+    text: "0000"
+    inputMask: "9999"
+    inputMethodHints: Qt.ImhDigitsOnly
+    focus: true
+
+    onTextChanged: Lisp.call("app:draw-number", Number(text))
+  }
 
   Canvas {
     id: canvas
     objectName: "canvas"
-    width: 220
-    height: 320
+    y: input.height
+    width: parent.width
+    height: {
+      var h = Qt.inputMethod.keyboardRectangle.y
+      h = (h === 0) ?  main.height : h / Screen.devicePixelRatio
+      return (h - input.height)
+    }
 
     property var ctx
 
@@ -36,23 +56,13 @@ Rectangle {
     onPaint: {
       ctx = getContext("2d")
       ctx.reset()
-      ctx.translate(110, 160)
+      ctx.translate(canvas.width / 2, canvas.height / 2)
+      var s = height / 340
+      ctx.scale(s, s)
 
-      Lisp.call("qml-user:paint")
+      Lisp.call("app:paint")
 
       ctx.stroke()
     }
-  }
-
-  TextField {
-    id: input
-    objectName: "input"
-    width: parent.width
-    anchors.bottom: parent.bottom
-    horizontalAlignment: Qt.AlignHCenter
-    text: "0000"
-    inputMask: "9999"
-
-    onTextChanged: Lisp.call("qml-user:draw-number", Number(text))
   }
 }

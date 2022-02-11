@@ -7,7 +7,7 @@
 #include <QStringList>
 #include <QDebug>
 
-const char LQML::version[] = "22.1.1"; // Jan 2022
+const char LQML::version[] = "22.2.1"; // Feb 2022
 
 extern "C" void ini_LQML(cl_object);
 
@@ -31,7 +31,7 @@ static void logMessageHandler(QtMsgType, const QMessageLogContext& context, cons
     report += " function ";
     report += QString(context.function);
   }
-  __android_log_write(ANDROID_LOG_DEBUG, "[EQL5]", report.toLocal8Bit().constData());
+  __android_log_write(ANDROID_LOG_DEBUG, "[LQML]", report.toLocal8Bit().constData());
 }
 
 #endif
@@ -44,11 +44,12 @@ LQML::LQML(int argc, char* argv[], QQuickView* view) : QObject() {
   qInstallMessageHandler(logMessageHandler); // see above
 #endif
   if (!cl_booted_p) {
-    cl_boot(argc, argv); }
+    cl_boot(argc, argv);
+  }
   iniCLFunctions();
   ecl_init_module(NULL, ini_LQML);
   eval("(in-package :qml-user)");
-  eval(QString("(setf *quick-view* (qt-object %1))")
+  eval(QString("(setf qml:*quick-view* (qml:qt-object %1))")
               .arg(reinterpret_cast<quintptr>(view)));
 }
 
@@ -87,7 +88,7 @@ void LQML::eval(const QString& lisp_code, bool slime) {
     safe_eval_debug(lisp_code.toLatin1().constData());
   } else {
     cl_object ret = safe_eval(lisp_code.toLatin1().constData());
-    if (ecl_t_of(ret) == t_fixnum && (fix(ret) == EVAL_ERROR_VALUE)) {
+    if ((ecl_t_of(ret) == t_fixnum) && (fix(ret) == EVAL_ERROR_VALUE)) {
       qDebug() << "Error evaluating " << lisp_code;
       exit(-1);
     }
@@ -96,7 +97,7 @@ void LQML::eval(const QString& lisp_code, bool slime) {
 
 void LQML::ignoreIOStreams() {
   // [Windows] print output would cause a gui exe to crash (without console)
-  eval("(eql::ignore-io-streams)");
+  eval("(qml::ignore-io-streams)");
 }
     
 void LQML::exec(lisp_ini ini, const QByteArray& expression, const QByteArray& package) {

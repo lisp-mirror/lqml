@@ -1,5 +1,4 @@
 #include "marshal.h"
-#include <ecl/ecl.h>
 #include <QVariant>
 #include <QObject>
 

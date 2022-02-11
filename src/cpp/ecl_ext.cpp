@@ -214,7 +214,7 @@ cl_object qload_cpp(cl_object l_lib_name, cl_object l_unload) { /// qload-c++
   /// The plugin will be reloaded (if supported by the OS) every time you call
   /// this function. If the UNLOAD argument is not NIL, the plugin will be
   /// unloaded (if supported by the OS).
-  /// N.B: This works only for Qt6 functions with the following signature:
+  /// N.B: This works only for Qt functions with the following signature:
   /// "QVariant foo(QVariant, ...)" ; max 10 QVariant arguments
   /// Since a QVariant can also be of type QVariantList, this is a perfect fit
   /// for (nested) Lisp lists.
@@ -348,7 +348,7 @@ cl_object qsingle_shot2(cl_object l_msec, cl_object l_fun) {
   ///   (qsingle-shot 1000 'one-second-later)
   ecl_process_env()->nvalues = 1;
   if (l_fun != ECL_NIL) {
-    new SingleShot(toInt(l_msec), l_fun);
+    new SingleShot(toInt(l_msec), l_fun); // see 'deleteLater()' in sources
     return l_msec;
   }
   error_msg("QSINGLE-SHOT", LIST2(l_msec, l_fun));

@@ -1,6 +1,8 @@
 #ifndef ECL_EXT_H
 #define ECL_EXT_H
 
+#undef SLOT
+
 #include <ecl/ecl.h>
 #include <QList>
 #include <QVariant>
@@ -8,7 +10,7 @@
 QT_BEGIN_NAMESPACE
 
 #define DEFUN(name, c_name, num_args) \
-    ecl_def_c_function(ecl_read_from_cstring(name), (cl_objectfn_fixed)c_name, num_args);
+  ecl_def_c_function(ecl_read_from_cstring(name), (cl_objectfn_fixed)c_name, num_args);
 
 #define STRING(s) ecl_make_constant_base_string(s, -1)
 
@@ -19,12 +21,12 @@ QT_BEGIN_NAMESPACE
 #define TERPRI() cl_terpri(0)
 
 #define STATIC_SYMBOL(var, name) \
-    static cl_object var = cl_intern(1, ecl_make_constant_base_string(name, -1));
+  static cl_object var = cl_intern(1, ecl_make_constant_base_string(name, -1));
 
 #define STATIC_SYMBOL_PKG(var, name, pkg) \
-    static cl_object var = cl_intern(2, \
-                                     ecl_make_constant_base_string(name, -1), \
-                                     cl_find_package(ecl_make_constant_base_string(pkg, -1)));
+  static cl_object var = cl_intern(2, \
+                                   ecl_make_constant_base_string(name, -1), \
+                                   cl_find_package(ecl_make_constant_base_string(pkg, -1)));
 
 #define LEN(x) fixint(cl_length(x))
 

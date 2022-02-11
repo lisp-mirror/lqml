@@ -19,8 +19,8 @@
   ;: function. The variable *CALLER* will be bound to the calling QQuickItem,
   ;; if passed with 'this' as first argument to 'Lisp.call()' / 'Lisp.apply()'.
   (let ((*caller* (if (zerop caller)
-                       *caller*
-                       (qt-object caller))))
+                      *caller*
+                      (qt-object caller))))
     (apply (string-to-symbol function)
            arguments)))
 
@@ -166,12 +166,13 @@
 ;;; JS calls
 
 (defmacro qjs (method-name item/name &rest arguments)
-  "args: (method-name item/name &rest arguments
+  "args: (method-name item/name &rest arguments)
   Fast and convenient way to call JS functions defined in QML. You may pass
   up to 10 arguments of the following types:
   T, NIL, INTEGER, FLOAT, STRING, VECTOR of octets, and (nested) lists of
   mentioned arguments.
-  N.B: Does not work with JS default arguments."
+  N.B: Does not work with JS default arguments.
+    (qjs |drawLine| *canvas* x1 y1 x2 y2))"
   `(qrun* (qfun (quick-item ,item/name)
                 ,(if (symbolp method-name)
                      (symbol-name method-name)
