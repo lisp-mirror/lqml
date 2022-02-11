@@ -1,0 +1,49 @@
+Install android development tools
+---------------------------------
+
+A good description of what you'll need can be found here:
+
+[http://doc.qt.io/qt-5/androidgs.html](http://doc.qt.io/qt-5/androidgs.html)
+
+You don't need Android Studio, so search for **command line tools** on the SDK
+download page.
+
+
+
+Define environment variables and aliases
+----------------------------------------
+
+Put this in e.g. `~/.bashrc`:
+```
+  export JAVA_HOME='<path-to-jdk>'
+  export ANDROID_HOME='<path-to-sdk>'
+  export ANDROID_NDK_ROOT='<path-to-ndk>'
+  export ANDROID_NDK_TOOLCHAIN='<path-to-ndk>/toolchains/llvm/prebuilt/linux-x86_64'
+  export ECL_ANDROID='<path-to-cross-compiled-ecl>/ecl-android'
+
+  alias qmake-android='<path-to-qt5.15>/android/bin/qmake'
+```
+(Use `source ~/.basrhc` to make new environment variables take effect
+immediately in your current terminal session.)
+
+
+
+Build cross-compiled ECL for android
+------------------------------------
+
+To build the cross-compiled ECL **aarch64**, just use the 2 scripts included in
+this project. As of February 2022, please use latest ECL from development
+branch.
+
+* extract a fresh copy of the ECL sources in e.g. `~/ecl`, and rename
+  `ecl-21.2.1` to `android`
+* copy the 2 scripts from [platforms/android/build-ecl/](platforms/android/build-ecl/)
+  to `~/ecl/android/`
+* run both scripts in order
+```
+  ./1-make-ecl-host.sh
+  ./2-make-ecl-android.sh
+```
+Now you should have your cross-compiled ECL under `~/ecl/android/ecl-android/`,  
+and your host ECL (for cross-compiling) under `~/ecl/android/ecl-android-host/`.
+
