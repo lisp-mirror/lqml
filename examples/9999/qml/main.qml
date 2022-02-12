@@ -29,7 +29,8 @@ Rectangle {
     width: parent.width
     height: {
       var h = Qt.inputMethod.keyboardRectangle.y
-      h = (h === 0) ?  main.height : h / Screen.devicePixelRatio
+      var f = (Qt.platform.os === "android") ? Screen.devicePixelRatio : 1
+      h = (h === 0) ?  main.height : h / f
       return (h - input.height)
     }
 

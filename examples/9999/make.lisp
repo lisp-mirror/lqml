@@ -1,5 +1,9 @@
-(when (search "/ecl-android/" (first (ext:command-args)))
-  (pushnew :android *features*))
+(let ((arg (first (ext:command-args))))
+  (mapc (lambda (name feature)
+          (when (search name arg)
+            (pushnew feature *features*)))
+        (list "/ecl-android/" "/ecl-ios/")
+        (list :android :ios)))
 
 (require :asdf)
 
@@ -22,7 +26,7 @@
 (defun cc (&rest args)
   (apply 'concatenate 'string args))
 
-#-android
+#-(or android ios)
 (progn
   (asdf:make-build "app"
                    :monolithic t
@@ -36,12 +40,14 @@
       (delete-file to*))
     (rename-file from to)))
 
-#+android
+#+(or android ios)
 (progn
   (defvar *asdf-system*   "app")
   (defvar *ql-libs*       (cc *current* "/ql-libs.lisp"))
-  (defvar *library-name*  (cc *current* "/build-android/tmp/app"))
   (defvar *init-name*     "ini_app")
+  (defvar *library-name*  (cc *current* (format nil "/build-~A/tmp/app"
+                                                #+android "android"
+                                                #+ios     "ios")))
   (defvar *epilogue-code* nil)
   (load "platforms/shared/make"))
 

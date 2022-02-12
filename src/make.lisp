@@ -1,5 +1,9 @@
-(when (search "/ecl-android/" (first (ext:command-args)))
-  (pushnew :android *features*))
+(let ((arg (first (ext:command-args))))
+  (mapc (lambda (name feature)
+          (when (search name arg)
+            (pushnew feature *features*)))
+        (list "/ecl-android/" "/ecl-ios/")
+        (list :android :ios)))
 
 (require :asdf)
 
@@ -9,7 +13,7 @@
 (setf *default-pathname-defaults*
       (merge-pathnames "../../")) ; LQML root
 
-#-android
+#-(or android ios)
 (progn
   (asdf:make-build "lqml"
                    :monolithic t
@@ -30,11 +34,13 @@
       (delete-file to*))
     (rename-file from to)))
 
-#+android
+#+(or android ios)
 (progn
-  (defvar *asdf-system*  :lqml)
-  (defvar *library-name* "platforms/android/lib/lisp")
+  (defvar *asdf-system*  "lqml")
   (defvar *init-name*    "ini_LQML")
+  (defvar *library-name* (format nil "platforms/~A/lib/lisp"
+                                     #+android "android"
+                                     #+ios     "ios"))
   (load "platforms/shared/make"))
 
 (terpri)

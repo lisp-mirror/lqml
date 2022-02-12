@@ -36,7 +36,16 @@
 
 (si:install-c-compiler)
 
-(load #+android (merge-pathnames "platforms/android/cross-compile"))
+(defun cc (&rest args)
+  (apply 'concatenate 'string args))
+
+#+android
+(load (merge-pathnames "platforms/android/cross-compile"))
+
+#+ios
+(let ((cross-compile (merge-pathnames "platforms/ios/cross-compile")))
+  (ext:run-program (cc (namestring cross-compile) ".sh") nil)
+  (load cross-compile))
 
 (setf *load-verbose*    nil
       *compile-verbose* t)
@@ -44,6 +53,8 @@
 (setf c::*suppress-compiler-warnings* nil
       c::*suppress-compiler-notes*    nil
       c::*compile-in-constants*       t)
+
+;;(setf c::*compile-print* t) ; for debugging compile errors
 
 (load (merge-pathnames "src/lisp/tr.lisp")) ; i18n
 
@@ -53,12 +64,12 @@
 
 (defvar *object-files* nil)
 
-(defun cc (&rest args)
-  (apply 'concatenate 'string args))
-
 (dolist (file *source-files*)
   (let ((src (cc file ".lisp"))
-        (obj (merge-pathnames (cc "src/.cache/" *architecture* file ".o"))))
+        (obj (merge-pathnames (format nil "src/.cache/ecl~A-~A/~A.o"
+                                      (lisp-implementation-version)
+                                      *architecture*
+                                      file))))
     (when (or (not (probe-file obj))
               (> (file-write-date src)
                  (file-write-date obj)))

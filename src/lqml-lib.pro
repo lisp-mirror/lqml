@@ -53,8 +53,7 @@ android {
   QMAKE_POST_LINK = $$(ECL_ANDROID)/../ecl-android-host/bin/ecl \
                     -norc -shell $$PWD/make.lisp
 } else:ios {
-  QMAKE_POST_LINK = $$(ECL_IOS)/../ecl-ios-host/bin/ecl \
-                    -norc -shell $$PWD/make.lisp
+  QMAKE_POST_LINK = ../../platforms/ios/cross-compile.sh ../make.lisp
 } else:unix {
   QMAKE_POST_LINK = ecl -shell $$PWD/make.lisp
 }

@@ -45,6 +45,13 @@ android {
   #ANDROID_PACKAGE_SOURCE_DIR = ../platforms/android/sources
 }
 
+ios {
+  INCLUDEPATH = $$(ECL_IOS)/include
+  LIBS        = -L$$(ECL_IOS)/lib -lecl
+  LIBS        += -leclatomic -leclffi -leclgc -leclgmp
+  LIBS        += -L../../../platforms/ios/lib -llqml -llisp -Ltmp -lapp
+}
+
 SOURCES += ../../src/cpp/main.cpp
 
 RESOURCES = app.qrc
