@@ -6,6 +6,7 @@
 #include <QLibrary>
 #include <QLibraryInfo>
 #include <QGuiApplication>
+#include <QThread>
 #include <QQuickItem>
 #include <QQuickView>
 #include <QQmlEngine>
@@ -368,8 +369,7 @@ cl_object qrun_on_ui_thread2(cl_object l_function_or_closure, cl_object l_blocki
   // for internal use, you should never need to call it explicitely
   ecl_process_env()->nvalues = 1;
   if (l_function_or_closure != ECL_NIL) {
-    QObject o;
-    if (o.thread() == qGuiApp->thread()) {
+    if (QThread::currentThread() == qGuiApp->thread()) {
       // direct call
       LQML::me->runOnUiThread(l_function_or_closure);
       return ECL_T;
