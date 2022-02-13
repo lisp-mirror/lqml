@@ -1,5 +1,4 @@
 #include "lib.h"
-#include "../../src/cpp/ecl_fun.h" // for calling Lisp
 #include <QApplication>
 #include <QMessageBox>
 #include <QtDebug>
@@ -31,11 +30,6 @@ QVariant CPP::hello(const QVariant& arg) {
   QMessageBox::information(nullptr, "hello", msg);
 
   return arg;
-}
-
-QVariant CPP::callLisp(const QVariant& arg) {
-
-  return ecl_fun("cl:format", false, "~R", arg);
 }
 
 QT_END_NAMESPACE
