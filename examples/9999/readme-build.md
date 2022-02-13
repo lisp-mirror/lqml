@@ -36,7 +36,7 @@ $ cd build-android
 $ qmake-android ../app.pro
 $ make apk
 
-$ adb install -r android-build/*.apk
+$ ./install.sh
 ```
 
 
