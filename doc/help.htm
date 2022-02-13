@@ -8,6 +8,11 @@
 <h2><pre>LQML</pre></h2>
 <pre>
 
+<b>children (item/name)</b>
+
+  Like QML function 'children'.
+
+
 <b>define-qt-wrappers (qt-library &rest what)</b>
 
   Defines Lisp methods for all Qt methods/signals/slots of given library,
@@ -200,6 +205,11 @@
 
   Returns the LQML version number as 'year.month.counter'. The second
   return value is the Qt version as returned by QLibraryInfo::version().
+
+
+<b>reload ()</b>
+
+  Reloads all QML files, clearing the cache.
 
 
 <b>root-item ()</b>
