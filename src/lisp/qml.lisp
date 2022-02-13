@@ -66,11 +66,6 @@
         ((not item/name)
          (root-item))))
 
-(defun children (item/name)
-  "args: (item/name)
-  Like QML function 'children'."
-  (qrun* (qchild-items (quick-item item/name))))
-
 (defun reload ()
   "args: ()
   Reloads all QML files, clearing the cache."

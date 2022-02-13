@@ -5,12 +5,12 @@
    #:*quick-view*
    #:*root-item*
    #:*caller*
-   #:children
    #:define-qt-wrappers
    #:find-quick-item
    #:pixel-ratio
    #:qapropos
    #:qapropos*
+   #:qchildren
    #:qfind-child
    #:qml-call
    #:qml-get
@@ -21,7 +21,6 @@
    #:q>
    #:q>*
    #:qjs
-   #:qchildren
    #:qescape
    #:qexec
    #:qexit
