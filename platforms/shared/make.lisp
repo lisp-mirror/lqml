@@ -39,13 +39,10 @@
 (defun cc (&rest args)
   (apply 'concatenate 'string args))
 
-#+android
-(load (merge-pathnames "platforms/android/cross-compile"))
-
-#+ios
-(let ((cross-compile (merge-pathnames "platforms/ios/cross-compile")))
-  (ext:run-program (cc (namestring cross-compile) ".sh") nil)
-  (load cross-compile))
+#+(or android ios)
+(load (merge-pathnames (format nil "platforms/~A/cross-compile"
+                               #+android "android"
+                               #+ios     "ios")))
 
 (setf *load-verbose*    nil
       *compile-verbose* t)

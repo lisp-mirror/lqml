@@ -35,7 +35,7 @@ and add the following below that line:
 ```
 * run second script
 ```
-  `./2-make-ecl-ios.sh`
+  ./2-make-ecl-ios.sh
 ```
 
 Now you should have your cross-compiled ECL under `~/ecl/ios/ecl-ios/`, and

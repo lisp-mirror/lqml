@@ -14,7 +14,7 @@ Run
 ---
 
 ```
-$ lqml ~/slime/qml-start-swank.lisp
+$ lqml ~/slime/lqml-start-swank.lisp
 $ emacs run.lisp
 ```
 
