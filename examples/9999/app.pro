@@ -31,14 +31,14 @@ TARGET      = app
 OBJECTS_DIR = ./tmp
 MOC_DIR     = ./tmp
 
-linux: LIBS += -L../../../platforms/linux/lib -llqml -llisp -Ltmp -lapp
-macx:  LIBS += -L../../../platforms/macos/lib -llqml -llisp -Ltmp -lapp
+linux: LIBS += -L../../../platforms/linux/lib
+macx:  LIBS += -L../../../platforms/macos/lib
 
 android {
   QT          += androidextras
   INCLUDEPATH = $$(ECL_ANDROID)/include
   LIBS        = -L$$(ECL_ANDROID)/lib -lecl
-  LIBS        += -L../../../platforms/android/lib -llqml -llisp -Ltmp -lapp
+  LIBS        += -L../../../platforms/android/lib
 
   ANDROID_ABIS               = "arm64-v8a"
   ANDROID_EXTRA_LIBS         += $$(ECL_ANDROID)/lib/libecl.so
@@ -49,11 +49,11 @@ ios {
   INCLUDEPATH = $$(ECL_IOS)/include
   LIBS        = -L$$(ECL_IOS)/lib -lecl
   LIBS        += -leclatomic -leclffi -leclgc -leclgmp
-  LIBS        += -L../../../platforms/ios/lib -llqml -llisp -Ltmp -lapp
+  LIBS        += -L../../../platforms/ios/lib
 }
 
-SOURCES += ../../src/cpp/main.cpp
-
+LIBS      += -llqml -llisp -Ltmp -lapp
+SOURCES   += ../../src/cpp/main.cpp
 RESOURCES = app.qrc
 
 QMAKE_CXXFLAGS += -std=c++17
