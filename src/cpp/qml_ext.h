@@ -1,5 +1,5 @@
-#ifndef QML_H
-#define QML_H
+#ifndef QML_EXT_H
+#define QML_EXT_H
 
 #include <QtQml>
 

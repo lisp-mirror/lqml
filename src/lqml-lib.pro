@@ -32,16 +32,16 @@ ios {
 HEADERS += \
   cpp/marshal.h \
   cpp/ecl_ext.h \
+  cpp/qml_ext.h \
   cpp/lqml.h \
-  cpp/qml.h \
   cpp/qt_ecl.h \
   cpp/single_shot.h
 
 SOURCES += \
   cpp/marshal.cpp \
   cpp/ecl_ext.cpp \
+  cpp/qml_ext.cpp \
   cpp/lqml.cpp \
-  cpp/qml.cpp \
   cpp/qt_ecl.cpp \
   cpp/single_shot.cpp
 

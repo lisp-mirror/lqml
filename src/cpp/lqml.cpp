@@ -1,5 +1,5 @@
 #include "lqml.h"
-#include "qml.h"
+#include "qml_ext.h"
 #include "ecl_ext.h"
 #include <iostream>
 #include <QCoreApplication>

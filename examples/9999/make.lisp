@@ -45,9 +45,10 @@
   (defvar *asdf-system*   "app")
   (defvar *ql-libs*       (cc *current* "/ql-libs.lisp"))
   (defvar *init-name*     "ini_app")
-  (defvar *library-name*  (cc *current* (format nil "/build-~A/tmp/app"
-                                                #+android "android"
-                                                #+ios     "ios")))
+  (defvar *library-name*  (format nil "~A/build-~A/tmp/app"
+                                  *current*
+                                  #+android "android"
+                                  #+ios     "ios"))
   (defvar *epilogue-code* nil)
   (load "platforms/shared/make"))
 
