@@ -41,3 +41,19 @@ and add the following below that line:
 Now you should have your cross-compiled ECL under `~/ecl/ios/ecl-ios/`, and
 your host ECL (for cross-compiling) under `~/ecl/ios/ecl-ios-host/`.
 
+
+
+Build for iOS Simulator (optional)
+----------------------------------
+
+Note: only tested on **Intel**.
+
+For this to work, you will need to upgrade your **gmp** library to the latest
+version (tested with gmp 6.2.1). Just substitute it in `src/gmp`.
+
+* run second script again, passing **sim**
+```
+  ./2-make-ecl-ios.sh sim
+```
+This will first compile for the simulator, then combine both versions to
+universal binaries.

@@ -62,6 +62,7 @@ Please note:
 * using latest Xcode, it may complain about the Legacy Build System; just go to
   File / Project Settings and select New Build System
 
-The simulator will not work here, because we didn't cross-compile ECL and
-the app code for the simulator.
+If you cross-compiled ECL for the simulator, it should work there too, but this
+is currently only tested on **Intel**.
 
+Simulator note: ensure the virtual keyboard is shown, see keys `cmd-k`.

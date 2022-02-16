@@ -5,16 +5,9 @@ source_dir=$script_dir
 
 config_options="--disable-shared --disable-c99complex --enable-manual=no --with-cross-config=$source_dir/src/util/iOS-arm64.cross_config"
 
-# please note: we need to add -DGC_DISABLE_INCREMENTAL, which will remove a private API call
-# from the binary, since those are not allowed in iOS (for security reasons)
+# -DGC_DISABLE_INCREMENTAL removes a private API call (not allowed in iOS)
 
 export CFLAGS="-DECL_C_COMPATIBLE_VARIADIC_DISPATCH -DECL_RWLOCK -DGC_DISABLE_INCREMENTAL"
-
-build_dir="$source_dir/build_ios/"
-install_prefix="$source_dir/ecl-ios/"
-
-mkdir -p "$build_dir"
-mkdir -p "$install_prefix"
 
 num_simultaneous_jobs=1
 
@@ -35,16 +28,20 @@ select_ios()
 
   ios_sdk_dir="$ios_sdks/$ios_sdk"
 
-  echo "*** Selecting platform \"$ios_platform\" and SDK \"$ios_sdk\" for \"$arch\"."
+  echo "*** compiling for \"$ios_platform\" - \"$ios_sdk\" - \"$arch\"."
 
   case "$platform_type" in
 
            iPhoneOS) config_options_extras=--host=aarch64-apple-darwin
                      sdk_name="iphoneos"
+                     build_dir="$source_dir/build_ios/"
+                     install_prefix="$source_dir/ecl-ios/"
                      ;;
 
-    iPhoneSimulator) config_options_extras=
+    iPhoneSimulator) config_options_extras=--host="$arch-apple-darwin"
                      sdk_name="iphonesimulator"
+                     build_dir="$source_dir/build_ios_sim/"
+                     install_prefix="$source_dir/ecl-ios-sim/"
                      ;;
 
   esac
@@ -62,7 +59,6 @@ select_ios()
 
   export CXXFLAGS="$CFLAGS"
 
-  # export LD="ld -arch $arch"
   export LD="ld"
   export LDFLAGS="-arch $arch -pipe -std=c99 -gdwarf-2 -isysroot $ios_sdk_dir"
 
@@ -80,8 +76,6 @@ make_ecl()
 {
   cd "$build_dir"
 
-  # make clean
-
   make -j $num_simultaneous_jobs || exit 1
 
   make install
@@ -96,11 +90,37 @@ build_one_ios()
 
   select_ios "$platform_type" "$arch"
 
+  mkdir -p "$build_dir"
+  mkdir -p "$install_prefix"
+
   configure_ecl
 
   make_ecl
 }
 
+universal_binaries()
+{
+  FILES=`find ecl-ios/lib -type f -name '*.a'`
+
+  for ios in $FILES
+  do
+    echo "processing: $ios"
+    sim="ecl-ios-sim${ios:7}"
+
+    lipo -create "$ios" "$sim" -output "$ios.uni"
+
+    mv "$ios.uni" "$ios"
+  done
+}
+
 export ECL_TO_RUN="../ecl-ios-host/bin/ecl"
 
-build_one_ios iPhoneOS arm64
+# pass 'sim' to cross-compile for simulator
+
+if [ "$1" == "sim" ]; then
+  build_one_ios iPhoneSimulator `uname -m`
+  universal_binaries
+else
+  build_one_ios iPhoneOS arm64
+fi
+
