@@ -105,7 +105,9 @@ int main(int argc, char* argv[]) {
   }
 
   if (slime) {
-    LQML::eval("(loop (with-simple-restart (restart-qt-events \"Restart Qt event processing.\") (qexec)))",
+    // fallback restart for conditions while processing the Qt event loop
+    LQML::eval("(loop (with-simple-restart (restart-qt-events \"Restart Qt event processing.\")"
+               "        (qexec)))",
                true);
     return 0;
   }

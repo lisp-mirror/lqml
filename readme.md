@@ -40,5 +40,7 @@ TODO
 * integrate Swank server for Slime
 * add item model example
 * add sokoban example
+* add CL REPL example
+* add Windows platform
 * port to CMake
 

@@ -1,4 +1,16 @@
 
+Important note
+--------------
+
+* **Lisp**: the cross-compile cache is `src/.cache`. Please remember to purge
+  it if you want to rebuild everything after any change to your ECL version
+  (read: not all changes to ECL are caught automatically).
+
+* **Qt**: in the above case, a `make clean` will also force the recompilation
+  of any Lisp code next time you do a build.
+
+
+
 Build executable
 ----------------
 
