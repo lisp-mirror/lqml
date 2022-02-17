@@ -100,7 +100,7 @@ int main(int argc, char* argv[]) {
   if (arguments.length() > 1) {
     QString arg1(QDir::fromNativeSeparators(arguments.at(1)));
     if (arg1.endsWith(".lisp")) {
-      LQML::eval(QString("(load \"%1\")").arg(arg1));
+      LQML::eval(QString("(load \"%1\")").arg(arg1), true);
     }
   }
 
