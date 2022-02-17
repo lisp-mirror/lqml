@@ -2,8 +2,8 @@
 WIP
 ---
 
-The (very simple) example currently works on Linux/macOS/android/iOS. More
-examples and Swank integration will follow.
+The (simple) example currently works on Linux/macOS/android/iOS. More examples
+and Swank integration will follow.
 
 
 Description
@@ -37,7 +37,7 @@ port still lacks significant parts of mobile (as of Qt6.2).
 TODO
 ----
 
-* integrate Swank server for Slime
+* add Swank server on mobile
 * add item model example
 * add sokoban example
 * add CL REPL example
