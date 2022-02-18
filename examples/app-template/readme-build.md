@@ -38,6 +38,8 @@ $ make apk
 
 $ ./install.sh
 ```
+Log note: for showing only your own messages, see `log.sh`.
+
 
 
 Build iOS app
@@ -65,4 +67,4 @@ Please note:
 If you cross-compiled ECL for the simulator, it should work there too, but this
 is currently only tested on **Intel**.
 
-Simulator note: ensure the virtual keyboard is shown, see keys `cmd-k`.
+Simulator note: to show the virtual keyboard, use `cmd-k`.

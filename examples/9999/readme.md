@@ -1,3 +1,14 @@
+
+Prepare
+-------
+
+Please copy the app template files first:
+```
+$ cd ..
+$ ./copy.sh 9999
+```
+
+
 Info
 ----
 
