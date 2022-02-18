@@ -47,6 +47,9 @@
           (format t "~&copying file: ~A" to)
           (ensure-directories-exist to)
           (unless (copy-file from to)
-            (error "File ~A could not be copied." to))))))
+            (error "File ~A could not be copied." to))
+          #+unix
+          (when (string= "sh" (pathname-type to))
+            (ext:run-program "chmod" (list "+x" to)))))))
 
 (terpri)
