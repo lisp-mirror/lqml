@@ -165,12 +165,37 @@ QVariant toQVariant(cl_object l_arg, int type) {
   return var;
 }
 
+QString toCamelCase(const QString& name) {
+  // convert Lisp name to Qt name
+  QString qtName(name);
+  int j = 0;
+  for (int i = 0; i < name.length(); i++, j++) {
+    qtName[j] = (name.at(i) == QChar('-'))
+                ? name.at(++i).toUpper() : name.at(i);
+  }
+  qtName.truncate(j);
+  return qtName;
+}
+
 QVariantList toQVariantList(cl_object l_list) {
   QVariantList l;
   if (ECL_LISTP(l_list)) {
-    for (cl_object l_do_list = l_list; l_do_list != ECL_NIL; l_do_list = cl_cdr(l_do_list)) {
-      cl_object l_el = cl_car(l_do_list);
-      l << toQVariant(l_el);
+    // special case: QVariantMap (for JS dictionary in QML)
+    // for e.g. populating a Model in QML
+    if (cl_keywordp(cl_first(l_list))) {
+      QVariantMap map;
+      cl_object l_do_args = l_list;
+      while (l_do_args != ECL_NIL) {
+        map.insert(toCamelCase(toQString(cl_symbol_name(cl_first(l_do_args))).toLower()),
+                   toQVariant(cl_second(l_do_args)));
+        l_do_args = cl_cddr(l_do_args);
+      }
+      l << map;
+    } else {
+      for (cl_object l_do_list = l_list; l_do_list != ECL_NIL; l_do_list = cl_cdr(l_do_list)) {
+        cl_object l_el = cl_car(l_do_list);
+        l << toQVariant(l_el);
+      }
     }
   }
   return l;

@@ -121,9 +121,12 @@
   up to 10 arguments of the following types:
   T, NIL, INTEGER, FLOAT, STRING, VECTOR of octets, and (nested) lists of
   mentioned arguments.
+  A special use case is to populate an item model in QML (using a trivial JS
+  glue code function) which expects a JS dictionary, see example below.
   N.B: Does not work with JS default arguments.
 
     (qjs |drawLine| *canvas* x1 y1 x2 y2))
+    (qjs |addPlanet| *planets* (list :name "Jupiter" :src "img/jupiter.png"))
 
 
 <b>qlater (function)</b>

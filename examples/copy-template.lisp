@@ -42,7 +42,7 @@
                                 "/app-template/"
                                 from)))
     (if (probe-file to)
-        (format t "~&skipping exisitng file: ~A" to)
+        (format t "~&skipping existing file: ~A" to)
         (progn
           (format t "~&copying file: ~A" to)
           (ensure-directories-exist to)

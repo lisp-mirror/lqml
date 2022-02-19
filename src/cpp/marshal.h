@@ -93,6 +93,8 @@ cl_object from_qstring(const QString&);
 cl_object from_qvariant(const QVariant&);
 cl_object from_qobject_pointer(QObject*);
 
+QString toCamelCase(const QString&);
+
 QT_END_NAMESPACE
 
 #endif

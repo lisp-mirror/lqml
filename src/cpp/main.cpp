@@ -54,10 +54,6 @@ int main(int argc, char* argv[]) {
     exit(0);
   }
 
-#ifdef INI_LISP
-  ecl_init_module(NULL, ini_app);
-#endif
-
   new QQmlFileSelector(view.engine(), &view);
   QString qml("qml/main.qml");
   QUrl url;
@@ -83,6 +79,10 @@ int main(int argc, char* argv[]) {
   else {
     LQML::eval("(x:when-it (probe-file \"~/.eclrc\") (load x:it))");
   }
+
+#ifdef INI_LISP
+  ecl_init_module(NULL, ini_app);
+#endif
 
   bool slime = false;
   if (arguments.contains("-slime")

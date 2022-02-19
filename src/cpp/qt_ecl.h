@@ -16,6 +16,12 @@ QVariant ecl_fun(
   const QVariant& = QVariant(),
   const QVariant& = QVariant(),
   const QVariant& = QVariant(),
+  const QVariant& = QVariant(),
+  const QVariant& = QVariant(),
+  const QVariant& = QVariant(),
+  const QVariant& = QVariant(),
+  const QVariant& = QVariant(),
+  const QVariant& = QVariant(),
   const QVariant& = QVariant());
 
 QT_END_NAMESPACE

@@ -33,7 +33,13 @@ QVariant ecl_fun(const QByteArray& pkgFun,
                  const QVariant& a7,
                  const QVariant& a8,
                  const QVariant& a9,
-                 const QVariant& a10) {
+                 const QVariant& a10,
+                 const QVariant& a11,
+                 const QVariant& a12,
+                 const QVariant& a13,
+                 const QVariant& a14,
+                 const QVariant& a15,
+                 const QVariant& a16) {
   void* symbol = lisp_functions.value(pkgFun);
   if (!symbol) {
     int p = pkgFun.indexOf(':');
@@ -57,7 +63,19 @@ QVariant ecl_fun(const QByteArray& pkgFun,
               if (!a7.isNull()) { PUSH_ARG(a7);
                 if (!a8.isNull()) { PUSH_ARG(a8);
                   if (!a9.isNull()) { PUSH_ARG(a9);
-                    if (!a10.isNull()) { PUSH_ARG(a10); }
+                    if (!a10.isNull()) { PUSH_ARG(a10);
+                      if (!a11.isNull()) { PUSH_ARG(a11);
+                        if (!a12.isNull()) { PUSH_ARG(a12);
+                          if (!a13.isNull()) { PUSH_ARG(a13);
+                            if (!a14.isNull()) { PUSH_ARG(a14);
+                              if (!a15.isNull()) { PUSH_ARG(a15);
+                                if (!a16.isNull()) { PUSH_ARG(a16); }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
                   }
                 }
               }
