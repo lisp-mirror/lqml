@@ -1,11 +1,4 @@
 
-WIP
----
-
-The (simple) example currently works on Linux/macOS/android/iOS. More examples
-and Swank integration will follow.
-
-
 Description
 -----------
 
@@ -38,7 +31,6 @@ TODO
 ----
 
 * add Swank server on mobile
-* add item model example
 * add sokoban example
 * add CL REPL example
 * add Windows platform
