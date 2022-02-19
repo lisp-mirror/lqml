@@ -24,7 +24,7 @@ Item {
     id: planets
     objectName: "planets"
 
-    // example
+    // example of inline item
     //ListElement { name: "Earth"; shape: "img/earth.png"; map: "img/earth-map.jpg"; info: "..." }
 
     function addPlanet(planet) {
@@ -32,7 +32,7 @@ Item {
     }
   }
 
-  property int itemHeight: 35
+  property int itemHeight: 44
 
   Component {
     id: planetInfo
@@ -54,7 +54,7 @@ Item {
           x: 15
           anchors.verticalCenter: parent.verticalCenter
           anchors.leftMargin: 4
-          font.pixelSize: parent.height - 12
+          font.pixelSize: parent.height - 22
           color: "#f0f0f0"
           text: name // see Lisp keyword name
         }
@@ -76,7 +76,7 @@ Item {
 
           Image {
             id: shapeImage
-            height: parent.height / (mapImage.visible ? 2 : 1)
+            height: parent.height - mapImage.height
             width: parent.width
             fillMode: Image.PreserveAspectFit
             source: shape // see Lisp keyword name
@@ -85,8 +85,8 @@ Item {
           Image {
             id: mapImage
             width: parent.width
+            height: 0
             fillMode: Image.PreserveAspectFit
-            visible: (wrapper.state === "expanded")
             source: map // see Lisp keyword name
           }
         }
@@ -107,7 +107,7 @@ Item {
 
         Rectangle {
           anchors.fill: parent
-          color: "lightyellow"
+          color: "#303060"
           border.color: "#101010"
           border.width: 1
 
@@ -132,9 +132,10 @@ Item {
 
             TextEdit {
               id: edit
-              readOnly: true
               width: flick.width
-              font.pixelSize: 14
+              color: "#f0f0f0"
+              font.pixelSize: 16
+              readOnly: true
               focus: true
               wrapMode: TextEdit.Wrap
               onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
@@ -175,6 +176,7 @@ Item {
 
           PropertyChanges { target: wrapper; height: view.height }
           PropertyChanges { target: image; width: view.width; height: view.height * 2/3; anchors.rightMargin: 0; anchors.topMargin: itemHeight }
+          PropertyChanges { target: mapImage; height: view.height * 1/3 }
           PropertyChanges { target: infoView; opacity: 1 }
           PropertyChanges { target: closeButton; opacity: 1 }
           PropertyChanges { target: wrapper.ListView.view; contentY: wrapper.y; interactive: false }
