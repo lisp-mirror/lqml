@@ -152,7 +152,9 @@ QVariant toQVariant(cl_object l_arg, int type) {
       var = QVariant(false);
     }
     else if (cl_listp(l_arg) == ECL_T) {                // list
-      var = QVariant::fromValue(toQVariantList(l_arg));
+      var = (cl_keywordp(cl_first(l_arg)) == ECL_T)
+            ? toQVariantMap(l_arg)
+            : toQVariantList(l_arg);
     }
     else if (cl_vectorp(l_arg) == ECL_T) {              // vector (of octets)
       var = QVariant(toQByteArray(l_arg));
@@ -163,6 +165,17 @@ QVariant toQVariant(cl_object l_arg, int type) {
     break;
   }
   return var;
+}
+
+QVariantList toQVariantList(cl_object l_list) {
+  QVariantList l;
+  if (ECL_LISTP(l_list)) {
+    for (cl_object l_do_list = l_list; l_do_list != ECL_NIL; l_do_list = cl_cdr(l_do_list)) {
+      cl_object l_el = cl_car(l_do_list);
+      l << toQVariant(l_el);
+    }
+  }
+  return l;
 }
 
 QString toCamelCase(const QString& name) {
@@ -177,28 +190,18 @@ QString toCamelCase(const QString& name) {
   return qtName;
 }
 
-QVariantList toQVariantList(cl_object l_list) {
-  QVariantList l;
-  if (ECL_LISTP(l_list)) {
-    // special case: QVariantMap (for JS dictionary in QML)
-    // for e.g. populating a Model in QML
-    if (cl_keywordp(cl_first(l_list))) {
-      QVariantMap map;
-      cl_object l_do_args = l_list;
-      while (l_do_args != ECL_NIL) {
-        map.insert(toCamelCase(toQString(cl_symbol_name(cl_first(l_do_args))).toLower()),
-                   toQVariant(cl_second(l_do_args)));
-        l_do_args = cl_cddr(l_do_args);
-      }
-      l << map;
-    } else {
-      for (cl_object l_do_list = l_list; l_do_list != ECL_NIL; l_do_list = cl_cdr(l_do_list)) {
-        cl_object l_el = cl_car(l_do_list);
-        l << toQVariant(l_el);
-      }
+QVariant toQVariantMap(cl_object l_list) {
+  // special case for JS dictionary, for e.g. populating a Model in QML
+  QVariantMap map;
+  if (cl_keywordp(cl_first(l_list)) == ECL_T) {
+    cl_object l_do_args = l_list;
+    while (l_do_args != ECL_NIL) {
+      map.insert(toCamelCase(toQString(cl_symbol_name(cl_first(l_do_args))).toLower()),
+                 toQVariant(cl_second(l_do_args)));
+      l_do_args = cl_cddr(l_do_args);
     }
   }
-  return l;
+  return map;
 }
 
 QObject* toQObjectPointer(cl_object l_obj) {

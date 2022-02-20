@@ -85,6 +85,7 @@ QByteArray   toQByteArray(cl_object);
 QString      toQString(cl_object);
 QVariant     toQVariant(cl_object, int = -1);
 QVariantList toQVariantList(cl_object);
+QVariant     toQVariantMap(cl_object);
 QObject*     toQObjectPointer(cl_object);
 
 cl_object from_cstring(const QByteArray&);
