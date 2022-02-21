@@ -5,7 +5,7 @@ Item {
   id: main
   objectName: "main"
   width: 300
-  height: 480
+  height: 500
 
   Rectangle {
     anchors.fill: parent
@@ -27,9 +27,7 @@ Item {
     // example of inline item
     //ListElement { name: "Earth"; shape: "img/earth.png"; map: "img/earth-map.jpg"; info: "..." }
 
-    function addPlanet(planet) {
-      append(planet)
-    }
+    function addPlanet(planet) { append(planet) }
   }
 
   property int itemHeight: 44

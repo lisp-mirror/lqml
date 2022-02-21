@@ -136,30 +136,30 @@ QVariant toQVariant(cl_object l_arg, int type) {
     case QMetaType::QRectF:     var = toQRectF(l_arg);     break;
     case QMetaType::QSizeF:     var = toQSizeF(l_arg);     break;
     default:
-    if (cl_integerp(l_arg) == ECL_T) {                  // int
+    if (cl_integerp(l_arg) == ECL_T) {              // int
       var = QVariant(toInt(l_arg));
     }
-    else if (cl_floatp(l_arg) == ECL_T) {               // double
+    else if (cl_floatp(l_arg) == ECL_T) {           // double
       var = QVariant(toFloat<double>(l_arg));
     }
-    else if (cl_stringp(l_arg) == ECL_T) {              // string
+    else if (cl_stringp(l_arg) == ECL_T) {          // string
       var = QVariant(toQString(l_arg));
     }
-    else if (l_arg == ECL_T) {                          // true
+    else if (l_arg == ECL_T) {                      // true
       var = QVariant(true);
     }
-    else if (l_arg == ECL_NIL) {                        // false
+    else if (l_arg == ECL_NIL) {                    // false
       var = QVariant(false);
     }
-    else if (cl_listp(l_arg) == ECL_T) {                // list
+    else if (cl_listp(l_arg) == ECL_T) {            // list
       var = (cl_keywordp(cl_first(l_arg)) == ECL_T)
             ? toQVariantMap(l_arg)
             : toQVariantList(l_arg);
     }
-    else if (cl_vectorp(l_arg) == ECL_T) {              // vector (of octets)
+    else if (cl_vectorp(l_arg) == ECL_T) {          // vector (of octets)
       var = QVariant(toQByteArray(l_arg));
     }
-    else {                                              // default: undefined
+    else {                                          // default: undefined
       var = QVariant();
     }
     break;
