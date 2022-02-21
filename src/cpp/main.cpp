@@ -86,12 +86,7 @@ int main(int argc, char* argv[]) {
 
   bool slime = false;
   if (arguments.contains("-slime")
-#if QT_VERSION < 0x060000
-  || (arguments.indexOf(QRegularExpression::wildcardToRegularExpression("*start-swank*.lisp")) != -1)
-#else
-  || (arguments.indexOf(QRegularExpression::fromWildcard(QString("*start-swank*.lisp"))) != -1)
-#endif
-    ) {
+  || (arguments.indexOf(QRegularExpression(".*start-swank.*")) != -1)) {
     arguments.removeAll("-slime");
     slime = true;
   }
