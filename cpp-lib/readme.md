@@ -1,4 +1,19 @@
 
+Info
+----
+
+Please see `run.lisp`, which should be self explaining.
+
+If you want to call Lisp from your Qt plugin, just include `ecl_fun_plugin.h`,
+which is independent from LQML, so you could even use it in Qt projects not
+linking the LQML library.
+
+Function `ecl_fun()` is convenient because you don't need to care about type
+conversions, as long as you only use `bool`, `long`, `double`, `QString`,
+`QByteArray` or (nested) `QVariant` lists of mentioned types.
+
+
+
 Build
 -----
 
