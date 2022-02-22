@@ -51,6 +51,7 @@ QT_BEGIN_NAMESPACE
 #define LIST10(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10) \
     CONS(a1, LIST9(a2, a3, a4, a5, a6, a7, a8, a9, a10))
 
+cl_object ensure_permissions2 (cl_object);
 cl_object js2                 (cl_object, cl_object);
 cl_object pixel_ratio         ();
 cl_object qapropos2           (cl_object, cl_object, cl_object);

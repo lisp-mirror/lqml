@@ -1,5 +1,5 @@
 #include "lib.h"
-#include "../../src/cpp/ecl_fun_plugin.h"
+#include "../../src/cpp/ecl_fun_plugin.h" // for ecl_fun(); independent from LQML
 #include <QApplication>
 #include <QMessageBox>
 #include <QtDebug>

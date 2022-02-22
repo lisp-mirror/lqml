@@ -1,4 +1,4 @@
-// all-in-on-header to include in Qt plugin source files which want to call
+// all-in-one header to include in Qt plugin source files which want to call
 // ECL functions through 'ecl_fun()'
 //
 // does not depend on LQML
@@ -312,7 +312,7 @@ cl_object from_qvariant(const QVariant& var) {
     case QMetaType::QString:    l_obj = from_qstring(var.toString());                 break;
     // special case (can be nested)
     case QMetaType::QVariantList:
-    Q_FOREACH(QVariant v, var.value<QVariantList>()) {
+    Q_FOREACH (QVariant v, var.value<QVariantList>()) {
       l_obj = CONS(from_qvariant(v), l_obj);
     }
     l_obj = cl_nreverse(l_obj);

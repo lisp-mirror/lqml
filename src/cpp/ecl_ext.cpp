@@ -13,6 +13,10 @@
 #include <QQmlExpression>
 #include <QQmlProperty>
 
+#ifdef Q_OS_ANDROID
+  #include <QtAndroid>
+#endif
+
 QT_BEGIN_NAMESPACE
 
 void iniCLFunctions() {
@@ -21,34 +25,35 @@ void iniCLFunctions() {
     cl_make_package(1, qml);
   }
   si_select_package(qml);
-  DEFUN ("%js",                js2,                2)
-  DEFUN ("pixel-ratio",        pixel_ratio,        0)
-  DEFUN ("%qapropos",          qapropos2,          3)
-  DEFUN ("qchildren",          qchildren,          1)
-  DEFUN ("qescape",            qescape,            1)
-  DEFUN ("%qexec",             qexec2,             1)
-  DEFUN ("qexit",              qexit,              0)
-  DEFUN ("qfind-child",        qfind_child,        2)
-  DEFUN ("%qfind-children",    qfind_children2,    3)
-  DEFUN ("qfrom-utf8",         qfrom_utf8,         1)
-  DEFUN ("%qinvoke-method",    qinvoke_method2,    3)
-  DEFUN ("%qload-c++",         qload_cpp,          2)
-  DEFUN ("%qlog",              qlog2,              1)
-  DEFUN ("%qml-get",           qml_get2,           2)
-  DEFUN ("%qml-set",           qml_set2,           3)
-  DEFUN ("qobject-name",       qobject_name,       1)
-  DEFUN ("qprocess-events",    qprocess_events,    0)
-  DEFUN ("%qquit",             qquit2,             1)
-  DEFUN ("%qrun-on-ui-thread", qrun_on_ui_thread2, 2)
-  DEFUN ("%qget",              qget2,              2)
-  DEFUN ("%qset",              qset2,              2)
-  DEFUN ("%qsingle-shot",      qsingle_shot2,      2)
-  DEFUN ("qtranslate",         qtranslate,         3)
-  DEFUN ("qversion",           qversion,           0)
-  DEFUN ("qt-object-info",     qt_object_info,     1)
-  DEFUN ("%reload",            reload2,            0)
-  DEFUN ("root-item",          root_item,          0)
-  DEFUN ("%set-shutdown-p",    set_shutdown_p,     1)
+  DEFUN ("%ensure-permissions", ensure_permissions2, 1)
+  DEFUN ("%js",                 js2,                 2)
+  DEFUN ("pixel-ratio",         pixel_ratio,         0)
+  DEFUN ("%qapropos",           qapropos2,           3)
+  DEFUN ("qchildren",           qchildren,           1)
+  DEFUN ("qescape",             qescape,             1)
+  DEFUN ("%qexec",              qexec2,              1)
+  DEFUN ("qexit",               qexit,               0)
+  DEFUN ("qfind-child",         qfind_child,         2)
+  DEFUN ("%qfind-children",     qfind_children2,     3)
+  DEFUN ("qfrom-utf8",          qfrom_utf8,          1)
+  DEFUN ("%qinvoke-method",     qinvoke_method2,     3)
+  DEFUN ("%qload-c++",          qload_cpp,           2)
+  DEFUN ("%qlog",               qlog2,               1)
+  DEFUN ("%qml-get",            qml_get2,            2)
+  DEFUN ("%qml-set",            qml_set2,            3)
+  DEFUN ("qobject-name",        qobject_name,        1)
+  DEFUN ("qprocess-events",     qprocess_events,     0)
+  DEFUN ("%qquit",              qquit2,              1)
+  DEFUN ("%qrun-on-ui-thread",  qrun_on_ui_thread2,  2)
+  DEFUN ("%qget",               qget2,               2)
+  DEFUN ("%qset",               qset2,               2)
+  DEFUN ("%qsingle-shot",       qsingle_shot2,       2)
+  DEFUN ("qtranslate",          qtranslate,          3)
+  DEFUN ("qversion",            qversion,            0)
+  DEFUN ("qt-object-info",      qt_object_info,      1)
+  DEFUN ("%reload",             reload2,             0)
+  DEFUN ("root-item",           root_item,           0)
+  DEFUN ("%set-shutdown-p",     set_shutdown_p,      1)
 }
 
 
@@ -173,7 +178,7 @@ cl_object qfind_children2(cl_object l_obj, cl_object l_name, cl_object l_class) 
   if (qobject != nullptr) {
     QObjectList children = qobject->findChildren<QObject*>(objectName);
     cl_object l_children = ECL_NIL;
-    Q_FOREACH(QObject* child, children) {
+    Q_FOREACH (QObject* child, children) {
       QByteArray className2(child->metaObject()->className());
       if (className.isEmpty() || (className == className2)) {
         l_children = CONS(from_qobject_pointer(child),
@@ -196,7 +201,7 @@ cl_object qchildren(cl_object l_item) {
   if (item != nullptr) {
     QList<QQuickItem*> children = item->childItems();
     cl_object l_children = ECL_NIL;
-    Q_FOREACH(QQuickItem* child, children) {
+    Q_FOREACH (QQuickItem* child, children) {
       l_children = CONS(from_qobject_pointer(child),
                         l_children);
     }
@@ -547,6 +552,46 @@ cl_object reload2() {
   ecl_return1(ecl_process_env(), l_ret);
 }
 
+cl_object ensure_permissions2(cl_object l_permissions) {
+  /// args: (permission/permissions)
+  /// Android only; requests the passed permission, or a list of them.
+  /// Returns the permission if it was granted, or a list of the granted
+  /// permissions.
+  ///   (ensure-permissions "android.permission.ACCESS_FINE_LOCATION")
+  cl_object l_ret = ECL_T;
+#if (defined Q_OS_ANDROID) && (QT_VERSION > 0x050A00) // 5.10
+  QStringList permissions(toQStringList(l_permissions));
+  QStringList denied;
+  QStringList granted;
+  Q_FOREACH (QString p, permissions) {
+    if (QtAndroid::checkPermission(p) == QtAndroid::PermissionResult::Granted) {
+      granted << p;
+    } else {
+      denied << p;
+    }
+  }
+  if (!denied.isEmpty()) {
+    QEventLoop loop; // custom sync because requestPermissionsSync() may hang
+    QtAndroid::requestPermissions(denied, [&](const QtAndroid::PermissionResultMap& res) {
+      Q_FOREACH (QString p, denied) {
+        if (res[p] == QtAndroid::PermissionResult::Granted) {
+          granted << p;
+        }
+      }
+      loop.exit();
+    });
+    loop.exec(QEventLoop::ExcludeUserInputEvents);
+  }
+  if (granted.length() == 1) {
+    l_ret = from_qstring(granted.first());
+  }
+  else {
+    l_ret = from_qstringlist(granted);
+  }
+#endif
+  ecl_return1(ecl_process_env(), l_ret);
+}
+
 
 
 // *** meta info ***
@@ -633,7 +678,7 @@ static cl_object collectInfo(const QByteArray& type,
   std::sort(info.begin(), info.end(), metaInfoLessThan);
   if (info.size()) {
     *found = true;
-    Q_FOREACH(QByteArray i, info) {
+    Q_FOREACH (QByteArray i, info) {
       l_info = CONS(STRING_COPY(i.constData()), l_info);
     }
   }

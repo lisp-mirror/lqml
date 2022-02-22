@@ -6,6 +6,7 @@
    #:*root-item*
    #:*caller*
    #:define-qt-wrappers
+   #:ensure-permissions
    #:find-quick-item
    #:pixel-ratio
    #:qapropos

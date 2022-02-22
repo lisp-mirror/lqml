@@ -17,6 +17,7 @@ macx {
 }
 
 android {
+  QT           += androidextras
   INCLUDEPATH  = $$(ECL_ANDROID)/include
   LIBS         = -L$$(ECL_ANDROID)/lib -lecl
   DESTDIR      = ../../platforms/android/lib

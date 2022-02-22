@@ -124,6 +124,18 @@ QString toQString(cl_object l_str) {
   return s;
 }
 
+QStringList toQStringList(cl_object l_list) {
+  QStringList l;
+  if (ECL_LISTP(l_list)) {
+    cl_object l_el = l_list;
+    while (l_el != ECL_NIL) {
+      l << toQString(cl_car(l_el));
+      l_el = cl_cdr(l_el);
+    }
+  }
+  return l;
+}
+
 TO_QT_FLOAT_2 (QPointF)
 TO_QT_FLOAT_2 (QSizeF)
 TO_QT_FLOAT_4 (QRectF)
@@ -246,6 +258,15 @@ cl_object from_qstring(const QString& s) {
   return l_s;
 }
 
+cl_object from_qstringlist(const QStringList& l) {
+  cl_object l_list = ECL_NIL;
+  Q_FOREACH (QString s, l) {
+    l_list = CONS(from_qstring(s), l_list);
+  }
+  l_list = cl_nreverse(l_list);
+  return l_list;
+}
+
 TO_CL_FLOAT_2 (QPointF, qpointf, x, y)
 TO_CL_FLOAT_2 (QSizeF,  qsizef,  width, height)
 TO_CL_FLOAT_4 (QRectF,  qrectf,  x, y, width, height)
@@ -270,7 +291,7 @@ cl_object from_qvariant(const QVariant& var) {
     case QMetaType::QString:    l_obj = from_qstring(var.toString());                 break;
     // special case (can be nested)
     case QMetaType::QVariantList:
-    Q_FOREACH(QVariant v, var.value<QVariantList>()) {
+    Q_FOREACH (QVariant v, var.value<QVariantList>()) {
       l_obj = CONS(from_qvariant(v), l_obj);
     }
     l_obj = cl_nreverse(l_obj);

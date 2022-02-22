@@ -8,6 +8,8 @@ _*
 *.o
 *.obj
 *.so*
+*.dylib
+*.dll
 *.qm
 *.stash
 *.ts

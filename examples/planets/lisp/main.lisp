@@ -74,4 +74,3 @@
              :info  #.(read-file "txt/neptune.txt"))))
 
 (populate-item-model)
-

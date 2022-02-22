@@ -212,7 +212,10 @@
   (assert (typep exit-status 'fixnum))
   (%qquit exit-status))
 
-;;; for android logging
+;;; android
+
+(defun ensure-permissions (permissions)
+  (qrun* (%ensure-permissions (x:ensure-list permissions))))
 
 (defun qlog (arg1 &rest args)
   "args: (arg1 &rest args)
