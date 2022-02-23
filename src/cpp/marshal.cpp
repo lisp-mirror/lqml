@@ -260,7 +260,8 @@ cl_object from_qstring(const QString& s) {
 
 cl_object from_qstringlist(const QStringList& l) {
   cl_object l_list = ECL_NIL;
-  Q_FOREACH (QString s, l) {
+
+  for (QString s : qAsConst(l)) {
     l_list = CONS(from_qstring(s), l_list);
   }
   l_list = cl_nreverse(l_list);
@@ -291,10 +292,11 @@ cl_object from_qvariant(const QVariant& var) {
     case QMetaType::QString:    l_obj = from_qstring(var.toString());                 break;
     // special case (can be nested)
     case QMetaType::QVariantList:
-    Q_FOREACH (QVariant v, var.value<QVariantList>()) {
-      l_obj = CONS(from_qvariant(v), l_obj);
-    }
-    l_obj = cl_nreverse(l_obj);
+      QVariantList list(var.value<QVariantList>());
+      for (QVariant v : qAsConst(list)) {
+        l_obj = CONS(from_qvariant(v), l_obj);
+      }
+      l_obj = cl_nreverse(l_obj);
     break;
   }
   return l_obj;

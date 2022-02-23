@@ -30,6 +30,7 @@ void iniCLFunctions() {
   DEFUN ("pixel-ratio",         pixel_ratio,         0)
   DEFUN ("%qapropos",           qapropos2,           3)
   DEFUN ("qchildren",           qchildren,           1)
+  DEFUN ("qcopy-file",          qcopy_file,          2)
   DEFUN ("qescape",             qescape,             1)
   DEFUN ("%qexec",              qexec2,              1)
   DEFUN ("qexit",               qexit,               0)
@@ -178,7 +179,7 @@ cl_object qfind_children2(cl_object l_obj, cl_object l_name, cl_object l_class) 
   if (qobject != nullptr) {
     QObjectList children = qobject->findChildren<QObject*>(objectName);
     cl_object l_children = ECL_NIL;
-    Q_FOREACH (QObject* child, children) {
+    for (QObject* child : qAsConst(children)) {
       QByteArray className2(child->metaObject()->className());
       if (className.isEmpty() || (className == className2)) {
         l_children = CONS(from_qobject_pointer(child),
@@ -201,7 +202,7 @@ cl_object qchildren(cl_object l_item) {
   if (item != nullptr) {
     QList<QQuickItem*> children = item->childItems();
     cl_object l_children = ECL_NIL;
-    Q_FOREACH (QQuickItem* child, children) {
+    for (QQuickItem* child : qAsConst(children)) {
       l_children = CONS(from_qobject_pointer(child),
                         l_children);
     }
@@ -552,42 +553,67 @@ cl_object reload2() {
   ecl_return1(ecl_process_env(), l_ret);
 }
 
+cl_object qcopy_file(cl_object l_from, cl_object l_to) {
+  /// args: (from to)
+  /// Convenience function for e.g. copying asset files on android, which can't
+  /// be accessed directly from Lisp.
+  ///   (qcopy-file "assets:/lib/asdf.fas" "asdf.fas")
+  bool ok = QFile::copy(toQString(l_from), toQString(l_to));
+  ecl_return1(ecl_process_env(), ok ? ECL_T : ECL_NIL);
+}
+
 cl_object ensure_permissions2(cl_object l_permissions) {
   /// args: (&rest permissions)
-  /// Android only; requests the passed permissions. If granted, it returns
-  /// either the string (only one permission passed) or a list of granted
-  /// permissions.
-  ///   (ensure-permissions "android.permission.ACCESS_FINE_LOCATION")
+  /// Android only; requests the passed permissions. Returns the list of
+  /// granted permissions. If the permission name starts with
+  /// 'android.permission.', a Lisp symbol of the name only can be passed,
+  /// otherwise the full identifier must be passed.
+  ///   (ensure-permissions :access-fine-location)
+  ///   (ensure-permissions "com.android.alarm.permission.SET_ALARM")
   cl_object l_ret = ECL_T;
 #if (defined Q_OS_ANDROID) && (QT_VERSION > 0x050A00) // 5.10
-  QStringList permissions(toQStringList(l_permissions));
-  QStringList granted;
+  typedef QPair<QString, int> StringInt;
+  QList<StringInt> permissions;
+  if (ECL_LISTP(l_permissions)) {
+    int i = 0;
+    for (cl_object l_do_list = l_permissions; l_do_list != ECL_NIL; l_do_list = cl_cdr(l_do_list), i++) {
+      cl_object l_el = cl_car(l_do_list);
+      if (cl_keywordp(l_el) == ECL_T) {
+        QString name(toQString(cl_symbol_name(l_el)));
+        permissions << StringInt(name.replace(QChar('-'), QChar('_'))
+                                     .prepend("android.permission."),
+                                 i);
+      } else {
+        permissions << StringInt(toQString(l_el), i);
+      }
+    }
+  }
+  cl_object l_granted = ECL_NIL;
+  QList<StringInt> deniedSI;
   QStringList denied;
-  Q_FOREACH (QString p, permissions) {
-    if (QtAndroid::checkPermission(p) == QtAndroid::PermissionResult::Granted) {
-      granted << p;
+  for (StringInt p : qAsConst(permissions)) {
+    if (QtAndroid::checkPermission(p.first) == QtAndroid::PermissionResult::Granted) {
+      l_granted = CONS(cl_nth(ecl_make_fixnum(p.second), l_permissions),
+                       l_granted);
     } else {
-      denied << p;
+      deniedSI << p;
+      denied << p.first;
     }
   }
   if (!denied.isEmpty()) {
     QEventLoop loop; // custom sync because requestPermissionsSync() may hang
     QtAndroid::requestPermissions(denied, [&](const QtAndroid::PermissionResultMap& res) {
-      Q_FOREACH (QString p, denied) {
-        if (res[p] == QtAndroid::PermissionResult::Granted) {
-          granted << p;
+      for (StringInt p : qAsConst(deniedSI)) {
+        if (res[p.first] == QtAndroid::PermissionResult::Granted) {
+          l_granted = CONS(cl_nth(ecl_make_fixnum(p.second), l_permissions),
+                           l_granted);
         }
       }
       loop.exit();
     });
     loop.exec(QEventLoop::ExcludeUserInputEvents);
   }
-  if (granted.length() == 1) {
-    l_ret = from_qstring(granted.first());
-  }
-  else {
-    l_ret = from_qstringlist(granted);
-  }
+  l_ret = cl_nreverse(l_granted);
 #endif
   ecl_return1(ecl_process_env(), l_ret);
 }
@@ -678,7 +704,7 @@ static cl_object collectInfo(const QByteArray& type,
   std::sort(info.begin(), info.end(), metaInfoLessThan);
   if (info.size()) {
     *found = true;
-    Q_FOREACH (QByteArray i, info) {
+    for (QByteArray i : qAsConst(info)) {
       l_info = CONS(STRING_COPY(i.constData()), l_info);
     }
   }

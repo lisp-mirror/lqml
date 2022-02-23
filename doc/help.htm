@@ -20,11 +20,13 @@
 
 <b>ensure-permissions (&rest permissions)</b>
 
-  Android only; requests the passed permissions. If granted, it returns
-  either the string (only one permission passed) or a list of granted
-  permissions.
+  Android only; requests the passed permissions. Returns the list of
+  granted permissions. If the permission name starts with
+  'android.permission.', a Lisp symbol of the name only can be passed,
+  otherwise the full identifier must be passed.
 
-    (ensure-permissions "android.permission.ACCESS_FINE_LOCATION")
+    (ensure-permissions :access-fine-location)
+    (ensure-permissions "com.android.alarm.permission.SET_ALARM")
 
 
 <b>find-quick-item (object-name)</b>
@@ -85,6 +87,14 @@
 <b>qchildren (item/name)</b>
 
   Like QML function children().
+
+
+<b>qcopy-file (from to)</b>
+
+  Convenience function for e.g. copying asset files on android, which can't
+  be accessed directly from Lisp.
+
+    (qcopy-file "assets:/lib/asdf.fas" "asdf.fas")
 
 
 <b>qescape (string)</b>

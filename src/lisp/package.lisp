@@ -12,6 +12,7 @@
    #:qapropos
    #:qapropos*
    #:qchildren
+   #:qcopy-file
    #:qfind-child
    #:qml-call
    #:qml-get
