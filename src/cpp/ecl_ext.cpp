@@ -7,6 +7,7 @@
 #include <QLibraryInfo>
 #include <QGuiApplication>
 #include <QThread>
+#include <QFile>
 #include <QQuickItem>
 #include <QQuickView>
 #include <QQmlEngine>
