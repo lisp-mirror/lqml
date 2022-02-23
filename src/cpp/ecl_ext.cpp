@@ -553,16 +553,16 @@ cl_object reload2() {
 }
 
 cl_object ensure_permissions2(cl_object l_permissions) {
-  /// args: (permission/permissions)
-  /// Android only; requests the passed permission, or a list of them.
-  /// Returns the permission if it was granted, or a list of the granted
+  /// args: (&rest permissions)
+  /// Android only; requests the passed permissions. If granted, it returns
+  /// either the string (only one permission passed) or a list of granted
   /// permissions.
   ///   (ensure-permissions "android.permission.ACCESS_FINE_LOCATION")
   cl_object l_ret = ECL_T;
 #if (defined Q_OS_ANDROID) && (QT_VERSION > 0x050A00) // 5.10
   QStringList permissions(toQStringList(l_permissions));
-  QStringList denied;
   QStringList granted;
+  QStringList denied;
   Q_FOREACH (QString p, permissions) {
     if (QtAndroid::checkPermission(p) == QtAndroid::PermissionResult::Granted) {
       granted << p;

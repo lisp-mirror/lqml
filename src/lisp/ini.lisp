@@ -214,8 +214,8 @@
 
 ;;; android
 
-(defun ensure-permissions (permissions)
-  (qrun* (%ensure-permissions (x:ensure-list permissions))))
+(defun ensure-permissions (&rest permissions)
+  (qrun* (%ensure-permissions permissions)))
 
 (defun qlog (arg1 &rest args)
   "args: (arg1 &rest args)

@@ -18,10 +18,10 @@
     (my-qt-function *c++* x y)          ; call from Lisp
 
 
-<b>ensure-permissions (permission/permissions)</b>
+<b>ensure-permissions (&rest permissions)</b>
 
-  Android only; requests the passed permission, or a list of them.
-  Returns the permission if it was granted, or a list of the granted
+  Android only; requests the passed permissions. If granted, it returns
+  either the string (only one permission passed) or a list of granted
   permissions.
 
     (ensure-permissions "android.permission.ACCESS_FINE_LOCATION")
