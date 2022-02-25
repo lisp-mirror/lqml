@@ -12,7 +12,7 @@ android {
   lisp.commands = $$(ECL_IOS)/../ecl-ios-host/bin/ecl \
                   -norc -shell $$PWD/make.lisp
 } else:unix {
-  lisp.commands = ecl -shell $$PWD/make.lisp
+  lisp.commands = /usr/local/bin/ecl -shell $$PWD/make.lisp
 }
 
 lisp.input  = LISP_FILES
