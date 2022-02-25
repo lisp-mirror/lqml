@@ -14,6 +14,6 @@
 ;;; for Slime after copying 'lqml-start-swank.lisp' from LQML sources
 ;;; to your Slime directory, which is assumed to be '~/slime/'
 
-(when (find "-slime" (ext:command-args) :test 'string=)
+(when (find "-slime" (ext:command-args) :test 'search)
   (load "~/slime/lqml-start-swank")) ; for 'slime-connect' from Emacs
 

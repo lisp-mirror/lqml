@@ -3,7 +3,7 @@ Prepare
 -------
 
 If you use Qt versions prior to 5.15, you need to adapt the QML module version
-to your minor Qt version in file `qml/main.qml`.
+to your minor Qt version in all files under `qml/`.
 
 Example: Qt5.**12** => import QtQuick 2.**12**.
 

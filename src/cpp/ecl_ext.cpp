@@ -8,6 +8,7 @@
 #include <QGuiApplication>
 #include <QThread>
 #include <QFile>
+#include <QDir>
 #include <QQuickItem>
 #include <QQuickView>
 #include <QQmlEngine>
@@ -32,6 +33,7 @@ void iniCLFunctions() {
   DEFUN ("%qapropos",           qapropos2,           3)
   DEFUN ("qchildren",           qchildren,           1)
   DEFUN ("qcopy-file",          qcopy_file,          2)
+  DEFUN ("qdirectory",          qdirectory,          1)
   DEFUN ("qescape",             qescape,             1)
   DEFUN ("%qexec",              qexec2,              1)
   DEFUN ("qexit",               qexit,               0)
@@ -330,7 +332,6 @@ cl_object qexec2(cl_object l_milliseconds) {
     LQML::eventLoop->exec();
     return l_milliseconds;
   }
-  QCoreApplication::exit(); // prevent "the event loop is already running"
   QCoreApplication::exec();
   return ECL_T;
 }
@@ -556,11 +557,30 @@ cl_object reload2() {
 
 cl_object qcopy_file(cl_object l_from, cl_object l_to) {
   /// args: (from to)
-  /// Convenience function for e.g. copying asset files on android, which can't
-  /// be accessed directly from Lisp.
+  /// Convenience function for android, for e.g. copying files from 'assets:/',
+  /// which can't be accessed directly from Lisp.
   ///   (qcopy-file "assets:/lib/asdf.fas" "asdf.fas")
   bool ok = QFile::copy(toQString(l_from), toQString(l_to));
   ecl_return1(ecl_process_env(), ok ? ECL_T : ECL_NIL);
+}
+
+cl_object qdirectory(cl_object l_dir) {
+  /// args: (path)
+  /// Convenience function for android, which works also with 'assets:/'
+  /// paths.
+  ///   (qdirectory "assets:/lib")
+  QDir dir(toQString(l_dir));
+  QFileInfoList infos(dir.entryInfoList());
+  cl_object l_files = ECL_NIL;
+  for (QFileInfo info : qAsConst(infos)) {
+    QString path(info.absoluteFilePath());
+    if (info.isDir()) {
+      path.append("/");
+    }
+    l_files = CONS(from_qstring(path), l_files);
+  }
+  l_files = cl_nreverse(l_files);
+  ecl_return1(ecl_process_env(), l_files);
 }
 
 cl_object ensure_permissions2(cl_object l_permissions) {

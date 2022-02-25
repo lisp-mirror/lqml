@@ -7,7 +7,7 @@
 
 ;;; *** (1) byte-compile ASDF system ***
 
-(si:install-bytecodes-compiler)
+(ext:install-bytecodes-compiler)
 
 (when *ql-libs*
   (let ((quicklisp-init (merge-pathnames "quicklisp/setup.lisp"
@@ -34,7 +34,7 @@
 
 ;;; load and prepare cross-compiler
 
-(si:install-c-compiler)
+(ext:install-c-compiler)
 
 (defun cc (&rest args)
   (apply 'concatenate 'string args))

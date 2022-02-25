@@ -13,6 +13,7 @@
    #:qapropos*
    #:qchildren
    #:qcopy-file
+   #:qdirectory
    #:qfind-child
    #:qml-call
    #:qml-get

@@ -10,8 +10,9 @@ Important note
   of any Lisp code next time you do a build.
 
 * **LQML**: any time you upgrade LQML, please purge the build directories in
-  `src/` (see also `src/mkdirs.sh`) and rebuild the whole library for every
-  single platform.
+  `src/`, including `.qmake.stash` in case you use a different Qt version
+  (see also `src/mkdirs.sh`) and rebuild the whole library for every single
+  platform.
 
 
 

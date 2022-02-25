@@ -260,7 +260,6 @@ cl_object from_qstring(const QString& s) {
 
 cl_object from_qstringlist(const QStringList& l) {
   cl_object l_list = ECL_NIL;
-
   for (QString s : qAsConst(l)) {
     l_list = CONS(from_qstring(s), l_list);
   }

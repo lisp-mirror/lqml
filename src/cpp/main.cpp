@@ -77,7 +77,14 @@ int main(int argc, char* argv[]) {
     arguments.removeAll("-norc");
   }
   else {
-    LQML::eval("(x:when-it (probe-file \"~/.eclrc\") (load x:it))");
+#if (defined Q_OS_ANDROID) || (defined Q_OS_IOS)
+    // mobile: don't hang on startup
+    LQML::eval("(x:when-it (probe-file \"~/.eclrc\")"
+               "  (ignore-errors (load x:it)))");
+#else
+    LQML::eval("(x:when-it (probe-file \"~/.eclrc\")"
+               "  (load x:it))");
+#endif
   }
 
 #ifdef INI_LISP
@@ -98,6 +105,10 @@ int main(int argc, char* argv[]) {
       LQML::eval(QString("(load \"%1\")").arg(arg1), true);
     }
   }
+
+#ifdef SWANK
+  slime = true;
+#endif
 
   if (slime) {
     // fallback restart for conditions while processing the Qt event loop

@@ -57,6 +57,7 @@ cl_object pixel_ratio         ();
 cl_object qapropos2           (cl_object, cl_object, cl_object);
 cl_object qchildren           (cl_object);
 cl_object qcopy_file          (cl_object, cl_object);
+cl_object qdirectory          (cl_object);
 cl_object qescape             (cl_object);
 cl_object qexec2              (cl_object);
 cl_object qexit               ();

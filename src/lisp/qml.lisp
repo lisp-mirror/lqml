@@ -160,8 +160,8 @@
 
 ;;; JS calls
 
-(defmacro qjs (method-name item/name &rest arguments)
-  "args: (method-name item/name &rest arguments)
+(defmacro qjs (function item/name &rest arguments)
+  "args: (function item/name &rest arguments)
   Fast and convenient way to call JS functions defined in QML. You may pass
   up to 10 arguments of the following types:
   T, NIL, INTEGER, FLOAT, STRING, VECTOR of octets, and (nested) lists of
@@ -172,9 +172,9 @@
     (qjs |drawLine| *canvas* x1 y1 x2 y2))
     (qjs |addPlanet| *planets* (list :name \"Jupiter\" :src \"img/jupiter.png\"))"
   `(qrun* (qfun (quick-item ,item/name)
-                ,(if (symbolp method-name)
-                     (symbol-name method-name)
-                     method-name)
+                ,(if (symbolp function)
+                     (symbol-name function)
+                     function)
                 ,@arguments)))
 
 ;;; apropos
@@ -184,14 +184,14 @@
       x
       (quick-item x)))
 
-(defun qapropos (name &optional qt-object/name offset)
-  "args: (name &optional qt-object/name)
-  Searches properties, methods, signals, slots for NAME in QObject
-  (e.g. QQuickItem) passed as second argument. QQuickItems can also be passed
-  by their 'objectName'.
+(defun qapropos (string &optional qt-object/name offset)
+  "args: (string &optional qt-object/name)
+  Searches properties, methods, signals, slots for STRING in QObject (e.g.
+  QQuickItem) passed as second argument. A QQuickItem can also be passed by
+  its 'objectName'.
     (qapropos nil *canvas*)
     (qapropos \"color\")"
-  (dolist (sub1 (%qapropos (%string-or-nil name) (%to-qt-object qt-object/name) offset))
+  (dolist (sub1 (%qapropos (%string-or-nil string) (%to-qt-object qt-object/name) offset))
     (format t "~%~%~A~%" (first sub1))
     (dolist (sub2 (rest sub1))
       (format t "~%  ~A~%~%" (first sub2))

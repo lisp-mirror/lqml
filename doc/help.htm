@@ -69,11 +69,11 @@
   given property of all items sharing the same 'objectName'.
 
 
-<b>qapropos (name &optional qt-object/name)</b>
+<b>qapropos (string &optional qt-object/name)</b>
 
-  Searches properties, methods, signals, slots for NAME in QObject
-  (e.g. QQuickItem) passed as second argument. QQuickItems can also be passed
-  by their 'objectName'.
+  Searches properties, methods, signals, slots for STRING in QObject (e.g.
+  QQuickItem) passed as second argument. A QQuickItem can also be passed by
+  its 'objectName'.
 
     (qapropos nil *canvas*)
     (qapropos "color")
@@ -91,10 +91,18 @@
 
 <b>qcopy-file (from to)</b>
 
-  Convenience function for e.g. copying asset files on android, which can't
-  be accessed directly from Lisp.
+  Convenience function for android, for e.g. copying files from 'assets:/',
+  which can't be accessed directly from Lisp.
 
     (qcopy-file "assets:/lib/asdf.fas" "asdf.fas")
+
+
+<b>qdirectory (path)</b>
+
+  Convenience function for android, which works also with 'assets:/'
+  paths.
+
+    (qdirectory "assets:/lib")
 
 
 <b>qescape (string)</b>
@@ -134,7 +142,7 @@
     (qget *quick-view* |width|)
 
 
-<b>qjs (method-name item/name &rest arguments)</b>
+<b>qjs (function item/name &rest arguments)</b>
 
   Fast and convenient way to call JS functions defined in QML. You may pass
   up to 10 arguments of the following types:
