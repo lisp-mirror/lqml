@@ -10,6 +10,16 @@ Example: Qt5.**12** => import QtQuick 2.**12**.
 The version number can be omitted in Qt6.
 
 
+Note
+----
+
+Every Lisp file under `lisp/` and every qml/image/font/whatever file under
+`qml/` is added **automatically** to your Qt project file (both for re-compile
+and adding to resources included in the executable).
+
+So, you only need to **manually** care about the usual ASDF project files in
+`app.asd`.
+
 
 Run desktop
 -----------

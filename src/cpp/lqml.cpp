@@ -7,7 +7,7 @@
 #include <QStringList>
 #include <QDebug>
 
-const char LQML::version[] = "22.2.2"; // Feb 2022
+const char LQML::version[] = "22.2.3"; // Feb 2022
 
 extern "C" void ini_LQML(cl_object);
 
