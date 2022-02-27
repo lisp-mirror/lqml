@@ -31,7 +31,7 @@
                                  " -DANDROID -DPLATFORM_ANDROID -O2 -fPIC -fno-common -D_THREAD_SAFE -I"
                                  *ecl-android* "/build/gmp")
       c::*ld-flags*        (cc "-L" *ecl-android* "/lib -lecl -ldl -lm "
-                                 "-L" *ndk-toolchain* "/sysroot/usr/lib/aarch64-linux-android/")
+                               "-L" *ndk-toolchain* "/sysroot/usr/lib/aarch64-linux-android/")
       c::*ld-rpath*        nil
       c::*ld-shared-flags* (cc "-shared " c::*ld-flags*)
       c::*ld-bundle-flags* c::*ld-shared-flags*)

@@ -3,7 +3,7 @@
 ;;; expects the below environment variables to be set in a script which
 ;;; needs to call this file
 
-(defvar *architecture*  "aarch64-apple-darwin")
+(defvar *architecture* "aarch64-apple-darwin")
 
 (pushnew :ios     *features*)
 (pushnew :aarch64 *features*)

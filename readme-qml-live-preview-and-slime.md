@@ -27,7 +27,7 @@ the tree view on the left, and any change to QML will be shown immediately in
 the running app, while you are typing!
 
 Additionally you may now also run `M-x slime-connect` from Emacs (the Swank
-server should already run, see 'Application Ouput' at the bottom of Qt
+server should already be running, see 'Application Ouput' at the bottom of Qt
 Creator).
 
 [Screenshot](screenshots/qml-live-preview-and-slime.jpg)

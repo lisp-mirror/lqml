@@ -2,10 +2,13 @@
 
 (in-package :qml)
 
+(defun %ensure-permissions (a))
 (defun %js (a b))
 (defun pixel-ratio ())
 (defun %qapropos (a b c))
 (defun qchildren (a))
+(defun qcopy-file (a b))
+(defun qdirectory (a))
 (defun qescape (a))
 (defun %qexec (a))
 (defun qexit ())

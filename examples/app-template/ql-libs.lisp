@@ -1,3 +1,3 @@
 ;;; define here eventual Quicklisp dependencies
-;;; e.g. (ql:quickload :alessandria)
+;;; e.g. (ql:quickload :alexandria)
 

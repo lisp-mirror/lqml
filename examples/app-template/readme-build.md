@@ -36,7 +36,7 @@ $ cd build-android
 $ qmake-android ../app.pro
 $ make apk
 
-$ ./install.sh
+$ ./install-run.sh
 ```
 Log note: for showing only your own messages, see `log.sh`.
 
