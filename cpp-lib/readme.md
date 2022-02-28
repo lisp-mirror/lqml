@@ -19,8 +19,10 @@ Build
 
 ```
 $ cd cpp
-$ qmake lib.pro
+
+$ qmake
 $ make
+
 $ cd ..
 ```
 

@@ -1,4 +1,3 @@
-# changes to these files will re-compile the Lisp library when running 'make'
 LISP_FILES = $$files(lisp/*) app.asd make.lisp
 
 android {

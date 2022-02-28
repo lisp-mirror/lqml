@@ -33,7 +33,7 @@ Build desktop app
 ```
 $ cd build
 
-$ qmake ../app.pro
+$ qmake ..
 $ make
 ```
 
@@ -43,7 +43,7 @@ Build android APK
 ```
 $ cd build-android
 
-$ qmake-android ../app.pro
+$ qmake-android ..
 $ make apk
 
 $ ./install-run.sh
@@ -57,7 +57,7 @@ Build iOS app
 ```
 $ cd build-ios
 
-$ qmake-ios ../app.pro
+$ qmake-ios ..
 
 $ ./xcode.sh
 ```
@@ -65,14 +65,14 @@ The script above first cross-compiles the Lisp code, then opens **Xcode**.
 
 Please note:
 
-* before building the app, go to Build Settings / Build Options and set
+* before building the app, go to 'Build Settings' / 'Build Options' and set
   **Enable Bitcode** to **No**
 
-* if it complains about missing source files when first hitting the Run button,
-  just hit the Run button again (and they will be generated)
+* if it complains about missing source files when first hitting the 'Run'
+  button, just hit the 'Run' button again (and they will be generated)
 
-* using latest Xcode, it may complain about the Legacy Build System; just go to
-  File / Project Settings and select New Build System
+* using latest Xcode, it may complain about the 'Legacy Build System'; just go
+  to 'File' / 'Project Settings' and select 'New Build System'
 
 If you cross-compiled ECL for the simulator, it should work there too, but this
 is currently only tested on **Intel**.
