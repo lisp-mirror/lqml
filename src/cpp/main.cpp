@@ -58,8 +58,10 @@ int main(int argc, char* argv[]) {
     f.setVersion(4, 4);
     view.setFormat(f);
   }
-  view.connect(view.engine(), &QQmlEngine::quit, &app, &QCoreApplication::quit);
-  view.connect(&app, &QGuiApplication::lastWindowClosed, []() { LQML::eval("(qml:qquit)"); });
+  view.connect(view.engine(), &QQmlEngine::quit,
+               &app, &QCoreApplication::quit);
+  view.connect(&app, &QGuiApplication::lastWindowClosed,
+               []() { LQML::eval("(qml:qquit)"); });
 
   LQML lqml(argc, argv, &view);
   if (arguments.contains("-v") || arguments.contains("--version")) {
