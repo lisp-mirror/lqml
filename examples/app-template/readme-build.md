@@ -78,3 +78,14 @@ If you cross-compiled ECL for the simulator, it should work there too, but this
 is currently only tested on **Intel**.
 
 Simulator note: to show the virtual keyboard, use `cmd-k`.
+
+
+Advanced note
+-------------
+For conditions during Qt event processing, a fallback restart is added at
+startup (needed in e.g. Slime).
+
+If you don't want this, define the following in `app.pro`:
+```
+DEFINES += NO_QT_RESTART
+```

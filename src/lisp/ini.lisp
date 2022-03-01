@@ -205,6 +205,11 @@
                                     x))
                               arguments))))
 
+(defun exec-with-qt-restart ()
+  ;; for internal use; for conditions in Slime during Qt event loop processing
+  (loop (with-simple-restart (restart-qt-events "Restart Qt event processing.")
+          (qexec))))
+
 (defun qquit (&optional (exit-status 0) (kill-all-threads t))
   "args: (&optional (exit-status 0) (kill-all-threads t))
   alias: qq

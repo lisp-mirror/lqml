@@ -6,16 +6,9 @@ QML Preview and Slime
 
 This shows how to use **QML Preview** (live QML updates while you are typing).
 
-First you need to apply 2 small changes:
-
-* edit `lisp/main.lisp` of an example, and add this line at the end:
+* edit `lisp/main.lisp` of an example, and append this line:
 ```
 (load "~/slime/lqml-start-swank.lisp")
-```
-
-* edit `app.pro` and change `DEFINES` to:
-```
-DEFINES += INI_LISP SWANK
 ```
 * open `app.pro` in **Qt Creator**; under 'Projects' (menu on the left) /
   'Configure Project' choose 'Debug' and change the 'Build directory' to

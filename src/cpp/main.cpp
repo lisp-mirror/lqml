@@ -19,6 +19,19 @@
   extern "C" void ini_app(cl_object);
 #endif
 
+#ifdef INI_ECL_CONTRIB
+  // for iOS (static lib)
+  extern "C" {
+    void init_lib_ASDF(cl_object);
+    void init_lib_DEFLATE(cl_object);
+    void init_lib_ECL_CDB(cl_object);
+    void init_lib_ECL_HELP(cl_object);
+    void init_lib_QL_MINITAR(cl_object);
+    void init_lib_SOCKETS(cl_object);
+    void init_lib_ECL_CURL(cl_object);
+  }
+#endif
+
 int catch_all_qexec() {
   int ret = 0;
   CL_CATCH_ALL_BEGIN(ecl_process_env()) {
@@ -46,6 +59,7 @@ int main(int argc, char* argv[]) {
     view.setFormat(f);
   }
   view.connect(view.engine(), &QQmlEngine::quit, &app, &QCoreApplication::quit);
+  view.connect(&app, &QGuiApplication::lastWindowClosed, []() { LQML::eval("(qml:qquit)"); });
 
   LQML lqml(argc, argv, &view);
   if (arguments.contains("-v") || arguments.contains("--version")) {
@@ -87,11 +101,26 @@ int main(int argc, char* argv[]) {
 #endif
   }
 
+#ifdef INI_ECL_CONTRIB
+  // for iOS (static lib); ASDF is loaded on demand (slow)
+  ecl_init_module(NULL, init_lib_DEFLATE);
+  ecl_init_module(NULL, init_lib_ECL_CDB);
+  ecl_init_module(NULL, init_lib_ECL_HELP);
+  ecl_init_module(NULL, init_lib_QL_MINITAR);
+  ecl_init_module(NULL, init_lib_SOCKETS);
+  ecl_init_module(NULL, init_lib_ECL_CURL);
+#endif
+
 #ifdef INI_LISP
   ecl_init_module(NULL, ini_app);
 #endif
 
+#ifdef NO_QT_RESTART
   bool slime = false;
+#else
+  bool slime = true;
+#endif
+
   if (arguments.contains("-slime")
   || (arguments.indexOf(QRegularExpression(".*start-swank.*")) != -1)) {
     arguments.removeAll("-slime");
@@ -99,22 +128,14 @@ int main(int argc, char* argv[]) {
   }
 
   // load Lisp file
-  if (arguments.length() > 1) {
-    QString arg1(QDir::fromNativeSeparators(arguments.at(1)));
-    if (arg1.endsWith(".lisp")) {
-      LQML::eval(QString("(load \"%1\")").arg(arg1), true);
-    }
+  QStringList lisp = arguments.filter(".lisp");
+  if (!lisp.isEmpty()) {
+    QString file = QDir::fromNativeSeparators(lisp.first());
+    LQML::eval(QString("(load \"%1\")").arg(file), true);
   }
 
-#ifdef SWANK
-  slime = true;
-#endif
-
   if (slime) {
-    // fallback restart for conditions while processing the Qt event loop
-    LQML::eval("(loop (with-simple-restart (restart-qt-events \"Restart Qt event processing.\")"
-               "        (qexec)))",
-               true);
+    LQML::eval("(qml::exec-with-qt-restart)", true);
     return 0;
   }
 
