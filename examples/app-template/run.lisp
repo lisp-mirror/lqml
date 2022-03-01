@@ -11,9 +11,17 @@
       |x| 75
       |y| 75)
 
+(defun option (name)
+  (find name (ext:command-args) :test 'search))
+
+;;; trivial auto reload of all QML files after saving any change
+
+(when (option "-auto")
+  (load "auto-reload-qml"))
+
 ;;; for Slime after copying 'lqml-start-swank.lisp' from LQML sources
 ;;; to your Slime directory, which is assumed to be '~/slime/'
 
-(when (find "-slime" (ext:command-args) :test 'search)
+(when (option "-slime")
   (load "~/slime/lqml-start-swank")) ; for 'slime-connect' from Emacs
 
