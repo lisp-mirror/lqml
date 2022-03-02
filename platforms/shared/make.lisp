@@ -36,6 +36,8 @@
 
 (ext:install-c-compiler)
 
+(setf *features* (remove :interpreter *features*))
+
 (defun cc (&rest args)
   (apply 'concatenate 'string args))
 

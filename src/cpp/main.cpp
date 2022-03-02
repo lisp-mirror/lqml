@@ -22,7 +22,6 @@
 #ifdef INI_ECL_CONTRIB
   // for iOS (static lib)
   extern "C" {
-    void init_lib_ASDF(cl_object);
     void init_lib_DEFLATE(cl_object);
     void init_lib_ECL_CDB(cl_object);
     void init_lib_ECL_HELP(cl_object);
@@ -104,7 +103,7 @@ int main(int argc, char* argv[]) {
   }
 
 #ifdef INI_ECL_CONTRIB
-  // for iOS (static lib); ASDF is loaded on demand (slow)
+  // for iOS; ASDF is loaded on demand (slow)
   ecl_init_module(NULL, init_lib_DEFLATE);
   ecl_init_module(NULL, init_lib_ECL_CDB);
   ecl_init_module(NULL, init_lib_ECL_HELP);

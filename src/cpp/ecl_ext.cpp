@@ -578,7 +578,7 @@ cl_object qdirectory(cl_object l_dir) {
   /// paths.
   ///   (qdirectory "assets:/lib")
   QDir dir(toQString(l_dir));
-  QFileInfoList infos(dir.entryInfoList());
+  QFileInfoList infos(dir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot));
   cl_object l_files = ECL_NIL;
   for (QFileInfo info : qAsConst(infos)) {
     QString path(info.absoluteFilePath());
