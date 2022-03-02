@@ -6,7 +6,8 @@
    #:*history-forward*
    #:*progress*
    #:*repl-input*
-   #:*repl-output*))
+   #:*repl-output*
+   #:*repl-model*))
 
 (in-package :ui)
 
@@ -16,3 +17,4 @@
 (defparameter *progress*        "progress")
 (defparameter *repl-input*      "repl_input")
 (defparameter *repl-output*     "repl_output")
+(defparameter *repl-model*      "repl_model")

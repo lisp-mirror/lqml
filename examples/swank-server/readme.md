@@ -40,6 +40,3 @@ means:
 * install a fresh copy of Quicklisp on some desktop device, and copy over the
   whole directory `quicklisp` under `platforms/ios/assets/Library/` of this
   example
-
-* after installing the app on the iOS device, command `:q` will then simply
-  load `quicklisp/setup` from the locally installed version

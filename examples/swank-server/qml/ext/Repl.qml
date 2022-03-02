@@ -1,7 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import Lisp 1.0
-import "."
 
 Item {
   id: repl
@@ -34,25 +33,44 @@ Item {
       height: repl.parent.height / 4
       color: "#101010"
 
-      Flickable2 {
-        id: flick
-        objectName: "flick_output"
+      ListView {
+        id: replOutput
+        objectName: "repl_output"
         anchors.fill: parent
-        contentWidth: output.paintedWidth
-        contentHeight: output.paintedHeight
+        contentWidth: parent.width * 4
+        clip: true
+        model: replModel
+        flickableDirection: Flickable.HorizontalAndVerticalFlick
 
-        TextEdit {
-          id: output
-          objectName: "repl_output"
-          width: flick.width
-          height: flick.height
-          textMargin: 4
-          textFormat: TextEdit.RichText
-          font.pixelSize: 16
-          color: "#c0c0c0"
-          readOnly: true
+        delegate: Column {
+          Rectangle {
+            width: replOutput.contentWidth
+            height: 1
+            color: "#707070"
+            visible: mLine
+          }
 
-          onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
+          Text {
+            x: 2
+            padding: 2
+            textFormat: Text.PlainText
+            font.family: fontHack.name
+            font.pixelSize: 16
+            font.bold: mBold
+            text: mText
+            color: mColor
+          }
+        }
+      }
+
+      ListModel {
+        id: replModel
+        objectName: "repl_model"
+
+        function appendText(data) {
+          append(data)
+          replOutput.contentX = 0
+          replOutput.positionViewAtEnd()
         }
       }
     }
@@ -65,8 +83,8 @@ Item {
         objectName: "repl_input"
         width: repl.parent.width - 2 * back.width
         font.family: fontHack.name
-        font.bold: true
         font.pixelSize: 16
+        font.bold: true
         color: "#c0c0c0"
         inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText
         focus: show.checked

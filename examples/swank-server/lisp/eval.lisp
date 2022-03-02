@@ -33,14 +33,13 @@
         (if *prompt*
             (let ((pkg (if (zerop n) "QML-USER" (current-package-name)))
                   (counter (princ-to-string (incf n))))
-              (format t "~%~A [~A] ~A~%~A"
+              (format t "~A [~A]~%~A"
                       pkg
                       counter
-                      (make-string (- 50 (length counter) (length pkg)) :initial-element #\-)
                       str))
-            (format t "~A~%~%~A" #.(make-string 50 :initial-element #\_) str))
+            (format t "~%~%~A" str))
         ;; run eval in its own thread, so UI will remain responsive
-        (update-output)
+        (update-output t)
         (when progress
           (show-progress-bar))
         (qsingle-shot 50 (lambda ()
@@ -48,6 +47,7 @@
                                  (mp:process-run-function "LQML REPL top-level"
                                                           (lambda () (do-eval str))))))))))
 
+(defvar *color-text*       "#c0c0c0")
 (defvar *color-values*     "#80b0ff")
 (defvar *color-read-error* "orange")
 (defvar *color-error*      "#ff8080")
@@ -81,8 +81,7 @@
 
 (defun eval-exited ()
   (update-output)
-  (show-progress-bar nil)
-  (q> |contentX| ui:*flick-output* 0))
+  (show-progress-bar nil))
 
 (defun show-error (error color)
   (let ((e1 (prin1-to-string error))
@@ -96,32 +95,22 @@
 
 ;;; output
 
-(defun update-output ()
-  (let ((chunk (get-output-stream-string *output-buffer*)))
-    (unless (x:empty-string chunk)
-      (let ((text (x:string-substitute "<br>" (string #\Newline) (qescape chunk))))
-        ;; "insert" is cleaner with formatting than "append"
-        (q! |insert| ui:*repl-output*
-            (q< |length| ui:*repl-output*)
-            (format nil "<pre><font face='Hack'>~A</font></pre>"
-                    (x:if-it (search "[LQML:err]" text)
-                             (let ((error-text (subseq text x:it)))
-                               (x:string-substitute (format nil "<font color='~A'>~A</font>"
-                                                            *color-error*
-                                                            error-text)
-                                                    error-text
-                                                    text))
-                             text))))
-      (q> |cursorPosition| ui:*repl-output*
-          (q< |length| ui:*repl-output*)))))
+(defun update-output (&optional line)
+  (let ((text (get-output-stream-string *output-buffer*)))
+    (unless (x:empty-string text)
+      (let ((err (search "[LQML:err]" text)))
+      (qjs |appendText| ui:*repl-model*
+           (list :m-text  (if err (subseq text err) text)
+                 :m-color (if err *color-error* *color-text*)
+                 :m-bold  nil
+                 :m-line  line))))))
 
-(defun append-output (text &optional (color "#c0c0c0") bold)
-  (q! |append| ui:*repl-output*
-      (format nil "<pre><font face='Hack' color='~A'>~A~A~A</font></pre>"
-              color
-              (if bold "<b>" "")
-              (x:string-substitute "<br>" (string #\Newline) (qescape text))
-              (if bold "</b>" ""))))
+(defun append-output (text &optional (color *color-text*) bold)
+  (qjs |appendText| ui:*repl-model*
+       (list :m-text  text
+             :m-color color
+             :m-bold  bold
+             :m-line  nil)))
 
 ;;; command history
 
