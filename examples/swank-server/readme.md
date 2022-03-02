@@ -8,6 +8,10 @@ $ cd ..
 $ ./copy.sh swank-server
 ```
 
+See also [../../slime/src/readme-sources](../../slime/src/readme-sources.md) for
+installing the Slime sources where this example can find them.
+
+
 
 Info
 ----
