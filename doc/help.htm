@@ -250,6 +250,16 @@
   For the PLURAL-NUMBER, see Qt Assistant.
 
 
+<b>view-status-changed (status)</b>
+
+  Redefine this function if you want to be notified on status changes of
+  QQuickView, e.g. after a RELOAD.
+
+    (defun qml:view-status-changed (status)
+      (when (= 1 status)
+        (populate-item-model)))
+
+
 </pre>
 </body>
 </html>

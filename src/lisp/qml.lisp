@@ -71,6 +71,15 @@
   Reloads all QML files, clearing the cache."
   (qrun* (%reload)))
 
+(defun view-status-changed (status)
+  "args: (status)
+  Redefine this function if you want to be notified on status changes of
+  QQuickView, e.g. after a RELOAD.
+    (defun qml:view-status-changed (status)
+      (when (= 1 status)
+        (populate-item-model)))"
+  nil)
+
 ;;; get/set QML properties, call QML methods (through JS)
 
 (defun qml-get (item/name property-name)

@@ -58,6 +58,14 @@ void iniCLFunctions() {
   DEFUN ("%reload",             reload2,             0)
   DEFUN ("root-item",           root_item,           0)
   DEFUN ("%set-shutdown-p",     set_shutdown_p,      1)
+
+  STATIC_SYMBOL_PKG (s_view_status_changed, "VIEW-STATUS-CHANGED", "QML")
+  LQML::quickView->connect(LQML::quickView, &QQuickView::statusChanged,
+                           [](QQuickView::Status status) {
+                             cl_funcall(2,
+                                        s_view_status_changed,
+                                        ecl_make_fixnum(static_cast<int>(status)));
+                           });
 }
 
 

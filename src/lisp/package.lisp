@@ -50,6 +50,7 @@
    #:reload
    #:root-item
    #:tr
+   #:view-status-changed
    #:!))
 
 (defpackage :qml-user

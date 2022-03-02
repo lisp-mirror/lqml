@@ -4,11 +4,11 @@
 
 (in-package :qml-user)
 
-(defun reload-qml ()
-  (qml:reload)
-  ;; any ini code goes here:
-  ;;(qsingle-shot 250 'populate-item-model)
-  )
+(defun qml:view-status-changed (status)
+  (when (= 1 status)
+    ;; any ini code goes here
+    ;;(app:populate-item-model))
+    ))
 
 (let ((secs 0)
       files)
@@ -21,7 +21,7 @@
         (incf curr (file-write-date file)))
       (when (/= secs curr)
         (unless (zerop secs)
-          (reload-qml))
+          (qml:reload))
         (setf secs curr)))
     (qsingle-shot 250 'watch-files)))
 
