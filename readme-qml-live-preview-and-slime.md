@@ -1,4 +1,9 @@
 
+*Please note: the below may be convenient for sketching; during development,
+the simple `-auto` option of `lqml run.lisp` may be more appropriate, because
+it allows for re-initialization (calling Lisp code) after reloading.*
+
+
 QML Preview and Slime
 ---------------------
 
@@ -23,7 +28,7 @@ the tree view on the left, and any change to QML will be shown immediately in
 the running app.
 
 Additionally you may also run `M-x slime-connect` from Emacs (the Swank server
-should already be running, see 'Application Ouput' at the bottom of Qt
+should already be running, see 'Application Output' at the bottom of Qt
 Creator).
 
 [Screenshot](screenshots/qml-live-preview-and-slime.jpg)
