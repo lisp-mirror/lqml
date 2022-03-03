@@ -99,11 +99,11 @@
   (let ((text (get-output-stream-string *output-buffer*)))
     (unless (x:empty-string text)
       (let ((err (search "[LQML:err]" text)))
-      (qjs |appendText| ui:*repl-model*
-           (list :m-text  (if err (subseq text err) text)
-                 :m-color (if err *color-error* *color-text*)
-                 :m-bold  nil
-                 :m-line  line))))))
+        (qjs |appendText| ui:*repl-model*
+             (list :m-text  (if err (subseq text err) text)
+                   :m-color (if err *color-error* *color-text*)
+                   :m-bold  nil
+                   :m-line  line))))))
 
 (defun append-output (text &optional (color *color-text*) bold)
   (qjs |appendText| ui:*repl-model*

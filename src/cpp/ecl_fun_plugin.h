@@ -117,8 +117,7 @@ T toFloat(cl_object l_num) {
   T f = 0;
   if (ECL_SINGLE_FLOAT_P(l_num)) {
     f = sf(l_num);
-  }
-  else if (ECL_DOUBLE_FLOAT_P(l_num)) {
+  } else if (ECL_DOUBLE_FLOAT_P(l_num)) {
     f = df(l_num);
   }
 #ifdef ECL_LONG_FLOAT
@@ -128,13 +127,11 @@ T toFloat(cl_object l_num) {
 #endif
   else if (cl_integerp(l_num) == ECL_T) {
     f = fixint(l_num);
-  }
-  else {
+  } else {
     cl_object l_f = cl_float(1, l_num);
     if (ECL_DOUBLE_FLOAT_P(l_f)) {
       f = df(l_f);
-    }
-    else if (ECL_SINGLE_FLOAT_P(l_f)) {
+    } else if (ECL_SINGLE_FLOAT_P(l_f)) {
       f = sf(l_f);
     }
 #ifdef ECL_LONG_FLOAT
@@ -160,8 +157,7 @@ QByteArray toCString(cl_object l_str) {
     if (ECL_BASE_STRING_P(l_str)) {
       ba = QByteArray(reinterpret_cast<char*>(l_str->base_string.self),
                       l_str->base_string.fillp);
-    }
-    else {
+    } else {
       uint l = l_str->string.fillp;
       ba.resize(l);
       ecl_character* l_s = l_str->string.self;
@@ -179,8 +175,7 @@ QString toQString(cl_object l_str) {
     if (ECL_BASE_STRING_P(l_str)) {
       s = QString::fromLatin1(reinterpret_cast<char*>(l_str->base_string.self),
                               l_str->base_string.fillp);
-    }
-    else {
+    } else {
       uint l = l_str->string.fillp;
       s.resize(l);
       ecl_character* l_s = l_str->string.self;
@@ -209,25 +204,19 @@ QVariant toQVariant(cl_object l_arg, int type) {
     default:
     if (cl_integerp(l_arg) == ECL_T) {              // int
       var = QVariant(toInt(l_arg));
-    }
-    else if (cl_floatp(l_arg) == ECL_T) {           // double
+    } else if (cl_floatp(l_arg) == ECL_T) {         // double
       var = QVariant(toFloat<double>(l_arg));
-    }
-    else if (cl_stringp(l_arg) == ECL_T) {          // string
+    } else if (cl_stringp(l_arg) == ECL_T) {        // string
       var = QVariant(toQString(l_arg));
-    }
-    else if (l_arg == ECL_T) {                      // true
+    } else if (l_arg == ECL_T) {                    // true
       var = QVariant(true);
-    }
-    else if (l_arg == ECL_NIL) {                    // false
+    } else if (l_arg == ECL_NIL) {                  // false
       var = QVariant(false);
-    }
-    else if (cl_listp(l_arg) == ECL_T) {            // list
+    } else if (cl_listp(l_arg) == ECL_T) {          // list
       var = (cl_keywordp(cl_first(l_arg)) == ECL_T)
             ? toQVariantMap(l_arg)
             : toQVariantList(l_arg);
-    }
-    else {                                          // default: undefined
+    } else {                                        // default: undefined
       var = QVariant();
     }
     break;

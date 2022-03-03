@@ -90,8 +90,7 @@ int main(int argc, char* argv[]) {
   // load .eclrc
   if (arguments.contains("-norc")) {
     arguments.removeAll("-norc");
-  }
-  else {
+  } else {
 #if (defined Q_OS_ANDROID) || (defined Q_OS_IOS)
     // mobile: don't hang on startup
     LQML::eval("(x:when-it (probe-file \"~/.eclrc\")"

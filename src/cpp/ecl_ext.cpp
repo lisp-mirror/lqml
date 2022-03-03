@@ -82,8 +82,7 @@ void error_msg(const char* fun, cl_object l_args) {
                STRING("~%[LQML:error] ~A ~{~S~^ ~}~%"),
                STRING(fun),
                l_args);
-  }
-  else {
+  } else {
     STATIC_SYMBOL (s_error_output, "*ERROR-OUTPUT*")
     cl_format(4,
               cl_symbol_value(s_error_output),
@@ -143,8 +142,7 @@ cl_object qset2(cl_object l_obj, cl_object l_args) {
       QVariant var;
       if (mp.isEnumType()) {
         var = toInt(l_val);
-      }
-      else {
+      } else {
 #if QT_VERSION < 0x060000
         var = toQVariant(l_val, mp.type());
 #else
@@ -294,8 +292,7 @@ cl_object qtranslate(cl_object l_con, cl_object l_src, cl_object l_n) {
   cl_object l_ret;
   if (n == -1) {
     l_ret = from_qstring(QCoreApplication::translate(context, source));
-  }
-  else {
+  } else {
     l_ret = from_qstring(QCoreApplication::translate(context, source, 0, n));
   }
   ecl_return1(ecl_process_env(), l_ret);
@@ -389,8 +386,7 @@ cl_object qrun_on_ui_thread2(cl_object l_function_or_closure, cl_object l_blocki
       // direct call
       LQML::me->runOnUiThread(l_function_or_closure);
       return ECL_T;
-    }
-    else {
+    } else {
       // queued call in main event loop (GUI thread)
       QMetaObject::invokeMethod(LQML::me,
                                 "runOnUiThread",
