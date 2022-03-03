@@ -143,7 +143,7 @@
 #+(or android ios)
 (progn
   ;; be careful not to use :s, :q in your mobile app code
-  ;; simulator note: wrap :s and :q in qrun* (would crash otherwise)
+  ;; ios simulator note: wrap :s and :q in qrun* (would crash otherwise)
   (define-symbol-macro :s (start-swank))
   (define-symbol-macro :q (quicklisp)))
 

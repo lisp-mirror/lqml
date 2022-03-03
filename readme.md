@@ -30,7 +30,6 @@ port still lacks significant parts of mobile (as of Qt6.2).
 TODO
 ----
 
-* add Swank server on mobile
 * add sokoban example
 * add CL REPL example
 * add Windows platform
