@@ -48,3 +48,12 @@ means:
 * install a fresh copy of Quicklisp on some desktop device, and copy over the
   whole directory `quicklisp` under `platforms/ios/assets/Library/` of this
   example
+
+
+
+TODO
+----
+
+* add QML auto reload on mobile (easy to implement even without Swank, a local
+  trivial web server like `python3 -m http.server 8080` and periodic polling
+  from the mobile device is sufficient to implement it)
