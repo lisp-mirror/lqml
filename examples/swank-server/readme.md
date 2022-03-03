@@ -21,8 +21,16 @@ Meant for mobile only. Provides both a **Swank server** and **Quicklisp**.
 A simple REPL is integrated in order to start Swank with `:s`, and enable
 Quicklisp with `:q`.
 
+In the **iOS simulator** you need to run `(qrun* :s)` and `(qrun* :q)` instead,
+otherwise the app will crash.
+
 The most convenient way to connect from Slime is entering the IP address of the
-mobile device after `M-x slime-connect`.
+mobile device after `M-x slime-connect`. You may need to detach your device
+from USB for this to work.
+
+**Quicklisp** note: it's always preferable to install Quicklisp and any library
+from Slime on the desktop connected to the mobile device. Otherwise you don't
+see the progress or any eventual problem during the process.
 
 
 

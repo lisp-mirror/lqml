@@ -79,6 +79,7 @@
     (in-package :qml-user))
   :asdf)
 
+#+(or android ios)
 (defun ensure-asdf ()
   (unless (find-package :asdf)
     #+android
@@ -153,28 +154,25 @@
               'stop-swank
               'quicklisp))
 
-;;; adapt paths to mobile specific values
+#+ios
+(progn
+  ;; adapt paths to iOS specific values
+  (defvar *user-homedir-pathname-orig* (symbol-function 'user-homedir-pathname))
 
-(ext:package-lock :common-lisp nil)
+  (ext:package-lock :common-lisp nil)
 
-(defvar *user-homedir-pathname-orig* (symbol-function 'user-homedir-pathname))
+  (defun cl:user-homedir-pathname (&optional host)
+    (merge-pathnames "Library/" (funcall *user-homedir-pathname-orig* host)))
 
-(defun cl:user-homedir-pathname (&optional host)
-  #+ios
-  (merge-pathnames "Library/" (funcall *user-homedir-pathname-orig* host)
-  #-ios
-  *default-pathname-defaults*))
+  (ext:package-lock :common-lisp t)
 
-(ext:package-lock :common-lisp t)
-
-#+ios ; for ASDF
-(dolist (el '(("XDG_DATA_HOME"   . "")
-              ("XDG_CONFIG_HOME" . "")
-              ("XDG_DATA_DIRS"   . "")
-              ("XDG_CONFIG_DIRS" . "")
-              ("XDG_CACHE_HOME"  . ".cache")))
-  (ext:setenv (car el) (namestring (merge-pathnames (cdr el)
-                                                    (user-homedir-pathname)))))
+  (dolist (el '(("XDG_DATA_HOME"   . "")
+                ("XDG_CONFIG_HOME" . "")
+                ("XDG_DATA_DIRS"   . "")
+                ("XDG_CONFIG_DIRS" . "")
+                ("XDG_CACHE_HOME"  . ".cache")))
+    (ext:setenv (car el) (namestring (merge-pathnames (cdr el)
+                                                      (user-homedir-pathname))))))
 
 ;;; ini
 
