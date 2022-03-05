@@ -3,12 +3,12 @@
 (in-package :qml)
 
 #+(or android ios)
-(defvar *remote-ip* #+(and (not interpreter (or ios android)))
+(defvar *remote-ip* #-interpreter
                     (format nil "http://~A:8080/"
                             #.(progn
-                                (format *query-io* "~%Please enter WiFi IP of desktop computer: " *query-io*)
-                                (read-line *query-io*)))
-                    #-(or ios android) "http://localhost:8080/")
+                                (terpri *query-io*)
+                                (princ "Please enter WiFi IP of desktop computer: " *query-io*)
+                                (read-line *query-io*))))
 
 #+(or android ios)
 (defun qml:view-status-changed (status)
