@@ -76,8 +76,8 @@ need to run `./log.sh` in your `build-android/` directory.
 
 
 
-Important note for mobile
--------------------------
+Important notes for mobile
+--------------------------
 
 Please remember that installing a new version of your app on mobile will
 **keep all app data** present on the device.
@@ -88,3 +88,6 @@ replaced if you increment `+app-version+` in `lisp/swank-quicklisp.lisp`.
 
 A simple way to guarantee a clean install is simply uninstalling the app first,
 both on the device and on the emulator (android) or simulator (iOS).
+
+If your local web server doesn't seem to work, please check your firewall
+settings.
