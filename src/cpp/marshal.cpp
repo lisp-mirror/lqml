@@ -1,4 +1,5 @@
 #include "marshal.h"
+#include <QUrl>
 #include <QVariant>
 #include <QObject>
 
@@ -138,10 +139,11 @@ TO_QT_FLOAT_4 (QRectF)
 QVariant toQVariant(cl_object l_arg, int type) {
   QVariant var;
   switch (type) {
-    case QMetaType::QByteArray: var = toQByteArray(l_arg); break;
-    case QMetaType::QPointF:    var = toQPointF(l_arg);    break;
-    case QMetaType::QRectF:     var = toQRectF(l_arg);     break;
-    case QMetaType::QSizeF:     var = toQSizeF(l_arg);     break;
+    case QMetaType::QByteArray: var = toQByteArray(l_arg);    break;
+    case QMetaType::QPointF:    var = toQPointF(l_arg);       break;
+    case QMetaType::QRectF:     var = toQRectF(l_arg);        break;
+    case QMetaType::QSizeF:     var = toQSizeF(l_arg);        break;
+    case QMetaType::QUrl:       var = QUrl(toQString(l_arg)); break;
     default:
     if (cl_integerp(l_arg) == ECL_T) {              // int
       var = QVariant(toInt(l_arg));
@@ -162,7 +164,6 @@ QVariant toQVariant(cl_object l_arg, int type) {
     } else {                                        // default: undefined
       var = QVariant();
     }
-    break;
   }
   return var;
 }
@@ -276,7 +277,8 @@ cl_object from_qvariant(const QVariant& var) {
     case QMetaType::QPointF:    l_obj = from_qpointf(var.toPointF());                 break;
     case QMetaType::QRectF:     l_obj = from_qrectf(var.toRectF());                   break;
     case QMetaType::QSizeF:     l_obj = from_qsizef(var.toSizeF());                   break;
-    case QMetaType::QString:    l_obj = from_qstring(var.toString());                 break;
+    case QMetaType::QString:
+    case QMetaType::QUrl:       l_obj = from_qstring(var.toString());                 break;
     // special case (can be nested)
     case QMetaType::QVariantList:
       QVariantList list(var.value<QVariantList>());

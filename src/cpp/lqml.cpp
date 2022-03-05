@@ -7,7 +7,7 @@
 #include <QStringList>
 #include <QDebug>
 
-const char LQML::version[] = "22.3.1"; // Mar 2022
+const char LQML::version[] = "22.3.2"; // Mar 2022
 
 extern "C" void ini_LQML(cl_object);
 
@@ -101,7 +101,6 @@ void LQML::ignoreIOStreams() {
 }
     
 void LQML::exec(lisp_ini ini, const QByteArray& expression, const QByteArray& package) {
-  // see my_app example
   ecl_init_module(NULL, ini);
   eval(QString("(in-package :%1)").arg(QString(package)));
   eval(expression);

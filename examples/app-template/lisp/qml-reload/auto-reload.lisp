@@ -4,17 +4,17 @@
 
 (in-package :qml-user)
 
+(defvar *dir* *load-truename*)
+
 (defun qml:view-status-changed (status)
   (when (= 1 status)
-    ;; any ini code goes here
-    ;;(app:populate-item-model))
-    ))
+    (load (merge-pathnames "on-reloaded" *dir*))))
 
 (let ((secs 0)
       files)
   (defun watch-files ()
     (unless files
-      (dolist (file (directory "qml/**/*.qml"))
+      (dolist (file (directory (merge-pathnames "../../qml/**/*.qml" *dir*)))
         (push file files)))
     (let ((curr 0))
       (dolist (file files)
@@ -26,3 +26,4 @@
     (qsingle-shot 250 'watch-files)))
 
 (watch-files)
+

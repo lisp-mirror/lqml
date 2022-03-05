@@ -44,12 +44,12 @@
     (if (probe-file to)
         (format t "~&skipping existing file: ~A" to)
         (progn
-          (format t "~&copying file: ~A" to)
+          (format t "~&copying file:           ~A" to)
           (ensure-directories-exist to)
           (unless (copy-file from to)
             (error "File ~A could not be copied." to))
           #+unix
-          (when (string= "sh" (pathname-type to))
+          (when (find (pathname-type to) '("sh" "py") :test 'string=)
             (ext:run-program "chmod" (list "+x" to)))))))
 
 (terpri)

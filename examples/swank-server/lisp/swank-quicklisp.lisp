@@ -58,7 +58,6 @@
       (princ +app-version+ s))
     (values)))
 
-#+(or android ios)
 (defun %sym (symbol package)
   (intern (symbol-name symbol) package))
 
@@ -67,13 +66,11 @@
 #+ios
 (defun load-asdf ()
   (unless (find-package :asdf)
-    ;; needed for ASDF
+    ;; needed for ASDF and Quicklisp
     (setf (logical-pathname-translations "SYS")
           (list (list "sys:**;*.*"
-                      (merge-pathnames "**/*.*" (user-homedir-pathname)))))
-    ;; needed for Quicklisp
-    (setf (logical-pathname-translations "HOME")
-          (list (list "home:**;*.*"
+                      (merge-pathnames "**/*.*" (user-homedir-pathname)))
+                (list "home:**;*.*"
                       (merge-pathnames "**/*.*" (user-homedir-pathname)))))
     (ffi:c-inline nil nil :void "ecl_init_module(NULL, init_lib_ASDF)" :one-liner t)
     (in-package :qml-user))

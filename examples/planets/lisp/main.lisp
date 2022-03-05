@@ -19,6 +19,7 @@
 ;;;
 ;;;   (q! |remove| *planets* 0)
 ;;;   (q! |clear| *planets*)
+;;;   (q! |setProperty| 0 "name" "First")
 
 (defun populate-item-model ()
   (q! |clear| *planets*)

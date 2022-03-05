@@ -29,7 +29,7 @@ mobile device after `M-x slime-connect`. You may need to detach your device
 from USB for this to work.
 
 **Quicklisp** note: it's always preferable to install Quicklisp and any library
-from Slime on the desktop connected to the mobile device. Otherwise you don't
+from Slime on the desktop connected to the mobile device. Otherwise you won't
 see the progress or any eventual problem during the process.
 
 
@@ -51,9 +51,25 @@ means:
 
 
 
-TODO
-----
+QML auto reload on mobile
+-------------------------
 
-* add QML auto reload on mobile (easy to implement even without Swank, a local
-  trivial web server like `python3 -m http.server 8080` and periodic polling
-  from the mobile device is sufficient to implement it)
+If you compile for mobile, it will ask for the **Wifi IP** of your desktop
+computer (currently hard coded into the app).
+
+After installing and launching the app, just run this script from your example
+directory:
+```
+./web-server.sh
+```
+It requires Python 3 and the cgi module, which are probably already installed
+on your computer.
+
+You may now edit any QML file on the desktop computer, and upon saving, all of
+QML will be reloaded automatically. After reloading, the following file will be
+loaded for eventual re-initialization on Lisp side:
+```
+lisp/qml-reload/on-reloaded.lisp
+```
+For **android**, in order to see the debug output of eventual QML errors, you
+need to run `./log.sh` in your `build-android/` directory.

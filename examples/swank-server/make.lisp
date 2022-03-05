@@ -93,3 +93,12 @@
   (defvar *epilogue-code* nil)
   (load "platforms/shared/make"))
 
+;;; byte compile curl (delayed load)
+
+#+(or android ios)
+(progn
+  (require :ecl-curl)
+  (ext:install-bytecodes-compiler)
+  (compile-file (cc *current* "/lisp/curl.lisp")
+                :output-file (cc *current* "/lisp/" *assets* "curl.fasc")))
+

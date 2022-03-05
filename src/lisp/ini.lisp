@@ -49,12 +49,12 @@
   (format nil "%~A%" (gensym)))
 
 (defun qexec (&optional ms)
-  (%qexec ms))
+  (qrun* (%qexec ms)))
 
 (defun qsleep (seconds)
   "args: (seconds)
   Similar to SLEEP, but continuing to process Qt events."
-  (%qexec (floor (* 1000 seconds)))
+  (qrun* (%qexec (floor (* 1000 seconds))))
   nil)
 
 (defmacro qsingle-shot (milliseconds function)
@@ -191,19 +191,19 @@
   (%qinvoke-method object function-name arguments))
 
 (defmacro qget (object name)
-  `(%qget ,object ,(if (symbolp name)
-                       (symbol-name name)
-                       name)))
+  `(qrun* (%qget ,object ,(if (symbolp name)
+                         (symbol-name name)
+                         name))))
 
 (defmacro qset (object &rest arguments)
   (assert (evenp (length arguments)))
-  `(%qset ,object ',(let (name)
-                      (mapcar (lambda (x)
-                                (setf name (not name))
-                                (if (and name (symbolp x))
-                                    (symbol-name x)
-                                    x))
-                              arguments))))
+  `(qrun* (%qset ,object (list ,@(let (name)
+                                   (mapcar (lambda (x)
+                                             (setf name (not name))
+                                             (if (and name (symbolp x))
+                                                 (symbol-name x)
+                                                 x))
+                                           arguments))))))
 
 (defun exec-with-qt-restart ()
   ;; for internal use; for conditions in Slime during Qt event loop processing
@@ -218,7 +218,7 @@
   normal program exit."
   (declare (ignore kill-all-threads)) ; only here to be equivalent to EXT:QUIT 
   (assert (typep exit-status 'fixnum))
-  (%qquit exit-status))
+  (qrun* (%qquit exit-status)))
 
 ;;; android
 

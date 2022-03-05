@@ -32,13 +32,13 @@ public:
   static LQML* me;
   static QQuickView* quickView;
 
-  void exec(lisp_ini, const QByteArray& = "nil", const QByteArray& = "qml-user"); // see my_app example
+  void exec(lisp_ini, const QByteArray& = "nil", const QByteArray& = "qml-user");
   void ignoreIOStreams();
     
   void printVersion() {
     eval("(multiple-value-bind (lqml qt)"
          "    (qml:qversion)"
-         "  (format t \"LQML ~A (ECL ~A, Qt ~A)~%\" lqml (lisp-implementation-version) qt))");
+         "  (format t \"LQML ~A (ECL ~A, Qt ~A)~%~%\" lqml (lisp-implementation-version) qt))");
   }
 
   Q_INVOKABLE void runOnUiThread(void*);

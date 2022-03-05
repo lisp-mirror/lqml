@@ -65,9 +65,12 @@ int main(int argc, char* argv[]) {
   LQML lqml(argc, argv, &view);
   if (arguments.contains("-v") || arguments.contains("--version")) {
     lqml.printVersion();
-    std::cout << std::endl;
     exit(0);
   }
+
+#ifdef Q_OS_WIN
+    lqml.ignoreIOStreams();
+#endif
 
   new QQmlFileSelector(view.engine(), &view);
   QString qml("qml/main.qml");
@@ -116,15 +119,15 @@ int main(int argc, char* argv[]) {
 #endif
 
 #ifdef NO_QT_RESTART
-  bool slime = false;
+  bool qtRestart = false;
 #else
-  bool slime = true;
+  bool qtRestart = true;
 #endif
 
   if (arguments.contains("-slime")
   || (arguments.indexOf(QRegularExpression(".*start-swank.*")) != -1)) {
     arguments.removeAll("-slime");
-    slime = true;
+    qtRestart = true;
   }
 
   // load Lisp file
@@ -134,7 +137,7 @@ int main(int argc, char* argv[]) {
     LQML::eval(QString("(load \"%1\")").arg(file), true);
   }
 
-  if (slime) {
+  if (qtRestart) {
     LQML::eval("(qml::exec-with-qt-restart)", true);
     return 0;
   }

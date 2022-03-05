@@ -17,7 +17,7 @@
 ;;; trivial auto reload of all QML files after saving any change
 
 (when (option "-auto")
-  (load "auto-reload-qml"))
+  (load "lisp/qml-reload/auto-reload"))
 
 ;;; for Slime after copying 'lqml-start-swank.lisp' from LQML sources
 ;;; to your Slime directory, which is assumed to be '~/slime/'

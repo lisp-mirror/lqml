@@ -1,7 +1,12 @@
 
-*Please note: the below may be convenient for sketching; during development,
-the simple `-auto` option of `lqml run.lisp` may be more appropriate, because
-it allows for re-initialization (calling Lisp code) after reloading.*
+*Please note: the below may be convenient for sketching -- but during
+development, the simple `-auto` option of `lqml run.lisp` may be more
+appropriate, because it allows for re-initialization (calling Lisp code) after
+reloading QML.*
+
+*The above method also works on mobile, please see example `swank-server`. It
+doesn't depend on Swank, and should therefore also be stable (it uses a local
+trivial web server).*
 
 
 QML Preview and Slime

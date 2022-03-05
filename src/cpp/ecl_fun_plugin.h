@@ -6,6 +6,9 @@
 #ifndef ECL_FUN_PLUGIN
 #define ECL_FUN_PLUGIN
 
+#undef SLOT
+
+#include <QUrl>
 #include <QVariant>
 #include <QObject>
 #include <ecl/ecl.h>
@@ -169,6 +172,18 @@ QByteArray toCString(cl_object l_str) {
   return ba;
 }
 
+QByteArray toQByteArray(cl_object l_vec) {
+  QByteArray ba;
+  if (ECL_VECTORP(l_vec)) {
+    int len = LEN(l_vec);
+    ba.resize(len);
+    for (int i = 0; i < len; i++) {
+      ba[i] = toInt(ecl_aref(l_vec, i));
+    }
+  }
+  return ba;
+}
+
 QString toQString(cl_object l_str) {
   QString s;
   if (ECL_STRINGP(l_str)) {
@@ -198,9 +213,11 @@ QVariantList toQVariantList(cl_object);
 QVariant toQVariant(cl_object l_arg, int type) {
   QVariant var;
   switch (type) {
-    case QMetaType::QPointF: var = toQPointF(l_arg); break;
-    case QMetaType::QRectF:  var = toQRectF(l_arg);  break;
-    case QMetaType::QSizeF:  var = toQSizeF(l_arg);  break;
+    case QMetaType::QByteArray: var = toQByteArray(l_arg);    break;
+    case QMetaType::QPointF:    var = toQPointF(l_arg);       break;
+    case QMetaType::QRectF:     var = toQRectF(l_arg);        break;
+    case QMetaType::QSizeF:     var = toQSizeF(l_arg);        break;
+    case QMetaType::QUrl:       var = QUrl(toQString(l_arg)); break;
     default:
     if (cl_integerp(l_arg) == ECL_T) {              // int
       var = QVariant(toInt(l_arg));
@@ -216,10 +233,11 @@ QVariant toQVariant(cl_object l_arg, int type) {
       var = (cl_keywordp(cl_first(l_arg)) == ECL_T)
             ? toQVariantMap(l_arg)
             : toQVariantList(l_arg);
+    } else if (cl_vectorp(l_arg) == ECL_T) {        // vector (of octets)
+      var = QVariant(toQByteArray(l_arg));
     } else {                                        // default: undefined
       var = QVariant();
     }
-    break;
   }
   return var;
 }
@@ -298,7 +316,8 @@ cl_object from_qvariant(const QVariant& var) {
     case QMetaType::QPointF:    l_obj = from_qpointf(var.toPointF());                 break;
     case QMetaType::QRectF:     l_obj = from_qrectf(var.toRectF());                   break;
     case QMetaType::QSizeF:     l_obj = from_qsizef(var.toSizeF());                   break;
-    case QMetaType::QString:    l_obj = from_qstring(var.toString());                 break;
+    case QMetaType::QString:
+    case QMetaType::QUrl:       l_obj = from_qstring(var.toString());                 break;
     // special case (can be nested)
     case QMetaType::QVariantList:
       QVariantList list(var.value<QVariantList>());
