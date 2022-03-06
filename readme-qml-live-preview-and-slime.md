@@ -41,3 +41,7 @@ should already be running, see 'Application Output' at the bottom of Qt
 Creator).
 
 [Screenshot](screenshots/qml-live-preview-and-slime.jpg)
+
+*So, this is certainly a nice feature of Qt Creator, but personally I prefer
+the simple `lqml run.lisp -auto` variant, which doesn't need compilation, and
+-- more importantly -- can run Lisp code after a QML reload.*
