@@ -8,9 +8,9 @@ reloading QML.*
 doesn't depend on Swank, and should therefore also be stable (it uses a local
 trivial web server).*
 
-*You may even run both the desktop and mobile device auto reload simultaneously
-(`swank-server` example only), because they both watch/load the same QML
-sources.*
+*You may even run both desktop and (one or more) mobile device auto reloads
+simultaneously (`swank-server` example only), because they all watch/load the
+same QML sources, if they point to the same desktop IP*
 
 
 QML Preview and Slime

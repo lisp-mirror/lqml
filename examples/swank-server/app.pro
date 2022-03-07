@@ -57,6 +57,7 @@ ios {
 }
 
 LIBS    += -llqml -llisp -Ltmp -lapp
+HEADERS += ../../src/cpp/main.h
 SOURCES += ../../src/cpp/main.cpp
 
 RESOURCES = $$files(qml/*)

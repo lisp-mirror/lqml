@@ -1,3 +1,6 @@
+#include "main.h"
+#include "lqml.h"
+#include "qml_ext.h"
 #include <QDir>
 #include <QGuiApplication>
 #include <QTimer>
@@ -6,8 +9,6 @@
 #include <QQmlFileSelector>
 #include <QQuickView>
 #include <iostream>
-#include "lqml.h"
-#include "qml_ext.h"
 
 #ifdef Q_OS_MACOS
 #define ADD_MACOS_BUNDLE_IMPORT_PATH \
@@ -49,7 +50,8 @@ int main(int argc, char* argv[]) {
   app.setApplicationName(QFileInfo(app.applicationFilePath()).baseName());
   QStringList arguments(QCoreApplication::arguments());
 
-  QQuickView view;
+  Engine engine;
+  QQuickView view(&engine, nullptr);
   ADD_MACOS_BUNDLE_IMPORT_PATH
   view.engine()->addImportPath(QStringLiteral(":/"));
   if (qEnvironmentVariableIntValue("QT_QUICK_CORE_PROFILE")) {
@@ -65,6 +67,7 @@ int main(int argc, char* argv[]) {
 
   Lisp lisp;
   view.engine()->rootContext()->setContextProperty("Lisp", &lisp);
+  view.engine()->rootContext()->setContextProperty("Engine", &engine);
 
   LQML lqml(argc, argv, &view);
   if (arguments.contains("-v") || arguments.contains("--version")) {

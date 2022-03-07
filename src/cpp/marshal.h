@@ -1,5 +1,4 @@
-#ifndef MARSHAL_H
-#define MARSHAL_H
+#pragma once
 
 #undef SLOT
 
@@ -99,5 +98,3 @@ cl_object from_qobject_pointer(QObject*);
 QString toCamelCase(const QString&);
 
 QT_END_NAMESPACE
-
-#endif

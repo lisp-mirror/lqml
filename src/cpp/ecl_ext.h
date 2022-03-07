@@ -1,5 +1,4 @@
-#ifndef ECL_EXT_H
-#define ECL_EXT_H
+#pragma once
 
 #undef SLOT
 
@@ -87,5 +86,3 @@ void iniCLFunctions();
 void error_msg(const char*, cl_object);
 
 QT_END_NAMESPACE
-
-#endif

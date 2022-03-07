@@ -1,5 +1,4 @@
-#ifndef SINGLE_SHOT_H
-#define SINGLE_SHOT_H
+#pragma once
 
 #undef SLOT
 
@@ -22,5 +21,3 @@ protected:
 };
 
 QT_END_NAMESPACE
-
-#endif

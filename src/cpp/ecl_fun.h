@@ -1,8 +1,7 @@
 // header to be included in external Qt libraries
 // for calling ECL functions from Qt
 
-#ifndef ECL_FUN_H
-#define ECL_FUN_H
+#pragma once
 
 #include <QVariant>
 
@@ -28,5 +27,3 @@ extern QVariant ecl_fun(
   const QVariant& = QVariant());
 
 QT_END_NAMESPACE
-
-#endif

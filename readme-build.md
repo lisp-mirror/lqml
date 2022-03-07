@@ -14,6 +14,10 @@ Important note
   (see also `src/mkdirs.sh`) and rebuild the whole library for every single
   platform.
 
+You may find that an example won't work anymore after upgrading LQML. This is
+probably due to internal changes, so you better wipe off the whole example and
+start over.
+
 
 
 Build executable

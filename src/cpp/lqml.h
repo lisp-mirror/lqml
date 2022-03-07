@@ -1,5 +1,4 @@
-#ifndef LQML_H
-#define LQML_H
+#pragma once
 
 #undef SLOT
 
@@ -49,4 +48,3 @@ public Q_SLOTS:
 
 QT_END_NAMESPACE
 
-#endif

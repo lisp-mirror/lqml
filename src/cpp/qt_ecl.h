@@ -1,5 +1,4 @@
-#ifndef QT_ECL_H
-#define QT_ECL_H
+#pragma once
 
 #include <QVariant>
 
@@ -25,5 +24,3 @@ QVariant ecl_fun(
   const QVariant& = QVariant());
 
 QT_END_NAMESPACE
-
-#endif

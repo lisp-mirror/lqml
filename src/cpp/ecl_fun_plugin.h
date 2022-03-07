@@ -3,8 +3,7 @@
 //
 // does not depend on LQML
 
-#ifndef ECL_FUN_PLUGIN
-#define ECL_FUN_PLUGIN
+#pragma once
 
 #undef SLOT
 
@@ -439,5 +438,3 @@ QVariant ecl_fun(const QByteArray& pkgFun,
 }
 
 QT_END_NAMESPACE
-
-#endif

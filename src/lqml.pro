@@ -27,7 +27,8 @@ HEADERS += \
   cpp/qml_ext.h \
   cpp/lqml.h \
   cpp/qt_ecl.h \
-  cpp/single_shot.h
+  cpp/single_shot.h \
+  cpp/main.h
 
 SOURCES += \
   cpp/marshal.cpp \

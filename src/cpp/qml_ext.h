@@ -1,5 +1,4 @@
-#ifndef QML_EXT_H
-#define QML_EXT_H
+#pragma once
 
 #include <QtQml>
 
@@ -36,5 +35,3 @@ public:
 };
 
 QT_END_NAMESPACE
-
-#endif
