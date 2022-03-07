@@ -7,6 +7,7 @@
 #include <QQuickView>
 #include <iostream>
 #include "lqml.h"
+#include "qml_ext.h"
 
 #ifdef Q_OS_MACOS
 #define ADD_MACOS_BUNDLE_IMPORT_PATH \
@@ -61,6 +62,9 @@ int main(int argc, char* argv[]) {
                &app, &QCoreApplication::quit);
   view.connect(&app, &QGuiApplication::lastWindowClosed,
                []() { LQML::eval("(qml:qquit)"); });
+
+  Lisp lisp;
+  view.engine()->rootContext()->setContextProperty("Lisp", &lisp);
 
   LQML lqml(argc, argv, &view);
   if (arguments.contains("-v") || arguments.contains("--version")) {
@@ -131,9 +135,9 @@ int main(int argc, char* argv[]) {
   }
 
   // load Lisp file
-  QStringList lisp = arguments.filter(".lisp");
-  if (!lisp.isEmpty()) {
-    QString file = QDir::fromNativeSeparators(lisp.first());
+  QStringList files = arguments.filter(".lisp");
+  if (!files.isEmpty()) {
+    QString file = QDir::fromNativeSeparators(files.first());
     LQML::eval(QString("(load \"%1\")").arg(file), true);
   }
 

@@ -1,5 +1,4 @@
 #include "lqml.h"
-#include "qml_ext.h"
 #include "ecl_ext.h"
 #include <iostream>
 #include <QCoreApplication>
@@ -39,7 +38,6 @@ static void logMessageHandler(QtMsgType, const QMessageLogContext& context, cons
 LQML::LQML(int argc, char* argv[], QQuickView* view) : QObject() {
   me = this;
   quickView = view;
-  iniQml();
 #ifdef Q_OS_ANDROID
   qInstallMessageHandler(logMessageHandler); // see above
 #endif

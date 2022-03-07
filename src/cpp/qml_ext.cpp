@@ -4,18 +4,6 @@
 
 QT_BEGIN_NAMESPACE
 
-static Lisp* lisp = 0;
-
-static QObject* lisp_provider(QQmlEngine*, QJSEngine*) { return lisp; }
-
-QObject* iniQml() {
-  if (!lisp) {
-    lisp = new Lisp;
-    qmlRegisterSingletonType<Lisp>("Lisp", 1, 0, "Lisp", lisp_provider);
-  }
-  return lisp;
-}
-
 static QVariant qmlApply(QObject* caller,
                          const QString& function,
                          const QVariantList& arguments) {

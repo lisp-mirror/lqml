@@ -1,7 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import "ext/" as Ext
-import Lisp 1.0
 
 Item {
   width: 300

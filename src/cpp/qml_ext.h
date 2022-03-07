@@ -5,8 +5,6 @@
 
 QT_BEGIN_NAMESPACE
 
-QObject* iniQml();
-
 class Lisp : public QObject {
   Q_OBJECT
 
