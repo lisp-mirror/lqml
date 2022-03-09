@@ -173,9 +173,11 @@
              ~% :q  (quicklisp)")
   (values))
 
-(progn
+(defun ini ()
+  (x:while (not (find-quick-item ui:*repl-model*))
+    (qsleep 0.5))
   (ini-streams)
-  (qlater (lambda ()
-            (in-package :qml-user)
-            (eval-in-thread "(qml::help)" nil))))
+  (in-package :qml-user)
+  (eval-in-thread "(qml::help)" nil))
 
+(qlater 'ini)
