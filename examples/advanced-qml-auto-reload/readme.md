@@ -23,7 +23,7 @@ It adds a QML `SwipeView` with 3 pages, to demonstrate how to reload single
 QML pages, without reloading the whole UI. This is important for nested UI
 pages, in order to not lose your current view in the UI.
 
-Without the aboce feature, you would always land on the main view after
+Without the above feature, you would always land on the main view after
 reloading QML.
 
 
