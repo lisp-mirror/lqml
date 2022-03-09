@@ -4,6 +4,7 @@
 #include <QCoreApplication>
 #include <QTimer>
 #include <QStringList>
+#include <QQuickView>
 #include <QDebug>
 
 const char LQML::version[] = "22.3.3"; // Mar 2022
@@ -49,6 +50,8 @@ LQML::LQML(int argc, char* argv[], QQuickView* view) : QObject() {
   eval("(in-package :qml-user)");
   eval(QString("(setf qml:*quick-view* (qml:qt-object %1))")
               .arg(reinterpret_cast<quintptr>(view)));
+  eval(QString("(setf qml:*engine* (qml:qt-object %1))")
+              .arg(reinterpret_cast<quintptr>(view->engine())));
 }
 
 LQML::~LQML() {

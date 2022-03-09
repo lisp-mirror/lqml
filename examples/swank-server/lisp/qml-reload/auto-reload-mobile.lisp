@@ -3,12 +3,17 @@
 (in-package :qml)
 
 #+(or android ios)
-(defvar *remote-ip* #-interpreter
-                    (format nil "http://~A:8080/"
-                            #.(progn
-                                (terpri *query-io*)
-                                (princ "Please enter WiFi IP of desktop computer: " *query-io*)
-                                (read-line *query-io*))))
+(defun remote-ip ()
+  (terpri *query-io*)
+  (princ "Please enter WiFi IP of desktop computer (hit RET to skip): "
+         *query-io*)
+  (let ((ip (read-line *query-io*)))
+    (unless (x:empty-string ip)
+      (format nil "http://~A:8080/" ip))))
+
+#+(or android ios)
+(defvar *remote-ip* #+interpreter nil
+                    #-interpreter #.(remote-ip))
 
 #+(or android ios)
 (defun qml:view-status-changed (status)
@@ -35,7 +40,9 @@
           (if ini
               (progn
                 (setf ini nil)
-                (qset *quick-view* |source| (x:cc *remote-ip* "qml/main.qml")))
+                (qset *engine* |baseUrl| *remote-ip*)
+                (let ((src (qget *quick-view* |source|)))
+                  (qset *quick-view* |source| (subseq src #.(length "qrc:///")))))
               (qml:reload)))
         (setf secs curr)))
     (qsingle-shot 250 'auto-reload-qml)))

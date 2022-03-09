@@ -79,6 +79,27 @@ int main(int argc, char* argv[]) {
     lqml.ignoreIOStreams();
 #endif
 
+  // load .eclrc
+  if (arguments.contains("-norc")) {
+    arguments.removeAll("-norc");
+  } else {
+#if (defined Q_OS_ANDROID) || (defined Q_OS_IOS)
+    // mobile: don't hang on startup
+    LQML::eval("(x:when-it (probe-file \"~/.eclrc\")"
+               "  (ignore-errors (load x:it)))");
+#else
+    LQML::eval("(x:when-it (probe-file \"~/.eclrc\")"
+               "  (load x:it))");
+#endif
+  }
+
+  // load Lisp file
+  QStringList files = arguments.filter(".lisp");
+  if (!files.isEmpty()) {
+    QString file = QDir::fromNativeSeparators(files.first());
+    LQML::eval(QString("(load \"%1\")").arg(file), true);
+  }
+
   new QQmlFileSelector(view.engine(), &view);
   QString qml("qml/main.qml");
   QUrl url;
@@ -94,20 +115,6 @@ int main(int argc, char* argv[]) {
     view.show();
 #else
     QTimer::singleShot(0, &view, &QQuickView::show);
-#endif
-  }
-
-  // load .eclrc
-  if (arguments.contains("-norc")) {
-    arguments.removeAll("-norc");
-  } else {
-#if (defined Q_OS_ANDROID) || (defined Q_OS_IOS)
-    // mobile: don't hang on startup
-    LQML::eval("(x:when-it (probe-file \"~/.eclrc\")"
-               "  (ignore-errors (load x:it)))");
-#else
-    LQML::eval("(x:when-it (probe-file \"~/.eclrc\")"
-               "  (load x:it))");
 #endif
   }
 
@@ -135,13 +142,6 @@ int main(int argc, char* argv[]) {
   || (arguments.indexOf(QRegularExpression(".*start-swank.*")) != -1)) {
     arguments.removeAll("-slime");
     qtRestart = true;
-  }
-
-  // load Lisp file
-  QStringList files = arguments.filter(".lisp");
-  if (!files.isEmpty()) {
-    QString file = QDir::fromNativeSeparators(files.first());
-    LQML::eval(QString("(load \"%1\")").arg(file), true);
   }
 
   if (qtRestart) {

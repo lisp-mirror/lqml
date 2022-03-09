@@ -60,7 +60,7 @@
         (let ((name (namestring *load-truename*)))
           (subseq name
                   (length (namestring *default-pathname-defaults*))
-                  (position #\/ name :from-end t))))
+                  (1+ (position #\/ name :from-end t)))))
 
 ;; load all LQML symbols
 (dolist (file (list "package" "x" "ecl-ext" "ini" "qml"))
@@ -71,11 +71,11 @@
   (asdf:make-build "app"
                    :monolithic t
                    :type :static-library
-                   :move-here (cc *current* "/build/tmp/")
+                   :move-here (cc *current* "build/tmp/")
                    :init-name "ini_app")
-  (let* ((from (cc *current* "/build/tmp/app--all-systems.a"))
+  (let* ((from (cc *current* "build/tmp/app--all-systems.a"))
          (to   "libapp.a")
-         (to*  (cc *current* "/build/tmp/" to)))
+         (to*  (cc *current* "build/tmp/" to)))
     (when (probe-file to*)
       (delete-file to*))
     (rename-file from to)))
@@ -84,9 +84,9 @@
 (progn
   (pushnew :interpreter *features*)
   (defvar *asdf-system*   "app")
-  (defvar *ql-libs*       (cc *current* "/ql-libs.lisp"))
+  (defvar *ql-libs*       (cc *current* "ql-libs.lisp"))
   (defvar *init-name*     "ini_app")
-  (defvar *library-name*  (format nil "~A/build-~A/tmp/app"
+  (defvar *library-name*  (format nil "~Abuild-~A/tmp/app"
                                   *current*
                                   #+android "android"
                                   #+ios     "ios"))
@@ -99,6 +99,6 @@
 (progn
   (require :ecl-curl)
   (ext:install-bytecodes-compiler)
-  (compile-file (cc *current* "/lisp/curl.lisp")
-                :output-file (cc *current* "/lisp/" *assets* "curl.fasc")))
+  (compile-file (cc *current* "lisp/curl.lisp")
+                :output-file (cc *current* "lisp/" *assets* "curl.fasc")))
 

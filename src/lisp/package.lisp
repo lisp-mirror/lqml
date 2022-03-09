@@ -3,6 +3,7 @@
   (:export
    #:*break-on-errors*
    #:*quick-view*
+   #:*engine*
    #:*root-item*
    #:*caller*
    #:define-qt-wrappers

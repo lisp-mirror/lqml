@@ -1,6 +1,7 @@
 (in-package :qml)
 
-(defvar *quick-view* nil) ; is set in 'lqml.cpp' on startup
+(defvar *quick-view* nil) ; QQuickView - is set in 'lqml.cpp' on startup
+(defvar *engine*     nil) ; QQmlEngine - (see above)
 (defvar *caller*     nil)
 (defvar *root-item*  nil) ; see note in 'find-quick-item'
 
