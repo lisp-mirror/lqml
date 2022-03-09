@@ -5,7 +5,7 @@ Prepare
 Please copy the app template files first:
 ```
 $ cd ..
-$ ./copy.sh swank-server
+$ ./copy.sh advanced-qml-auto-reload
 ```
 
 See also [../../slime/src/readme-sources](../../slime/src/readme-sources.md) for
@@ -16,59 +16,38 @@ installing the Slime sources where this example can find them.
 Info
 ----
 
-Meant for mobile only. Provides both a **Swank server** and **Quicklisp**.
+This is simply an extended version of example **swank-sevrer** of the parent
+directory.
 
-A simple REPL is integrated in order to start Swank with `:s`, and enable
-Quicklisp with `:q`.
+It adds a QML `SwipeView` with 3 pages, to demonstrate how to reload single
+QML pages, without reloading the whole UI. This is important for nested UI
+pages, in order to not lose your current view in the UI.
 
-In the **iOS simulator** you need to run `(qrun* :s)` and `(qrun* :q)` instead,
-otherwise the app will crash.
-
-The most convenient way to connect from Slime is entering the IP address of the
-mobile device after `M-x slime-connect`. You may need to detach your device
-from USB for this to work.
-
-**Quicklisp** note: it's always preferable to install Quicklisp and any library
-from Slime on the desktop connected to the mobile device. Otherwise you won't
-see the progress or any eventual problem during the process.
+Without the aboce feature, you would always land on the main view after
+reloading QML.
 
 
 
-Quicklisp note
---------------
-
-On **andoid**, Quicklisp is directly downloaded and installed.
-
-On **iOS** the above method would crash ECL; this seems to be caused by the
-limited stack size on iOS.
-
-So, in order to use Quicklisp on iOS, you need to bring it yourself, which
-means:
-
-* install a fresh copy of Quicklisp on some desktop device, and copy over the
-  whole directory `quicklisp` under `platforms/ios/assets/Library/` of this
-  example
-
-
-
-QML auto reload on mobile
--------------------------
+QML single file auto reload on mobile
+-------------------------------------
 
 If you compile for mobile, it will ask for the **Wifi IP** of your desktop
 computer (currently hard coded into the app). If you just hit RET, auto
 reloading will be disabled.
 
-After installing and launching the app, just run this script from your example
-directory:
+N.B: **Before** installing and launching the app, just run this script from
+your example directory:
 ```
 ./web-server.sh
 ```
 It requires Python 3 and the cgi module, which are probably already installed
 on your computer.
 
-You may now edit any QML file on the desktop computer, and upon saving, all of
-QML will be reloaded automatically. After reloading, the following file will be
-loaded for eventual re-initialization on Lisp side:
+You may now edit any QML file on the desktop computer, and upon saving, only
+the saved file will be reloaded.
+
+Only if you edit and save `qml/main.qml` the following file will be loaded for
+eventual re-initialization on Lisp side:
 ```
 lisp/qml-reload/on-reloaded.lisp
 ```
@@ -76,12 +55,12 @@ For **android**, in order to see the debug output of eventual QML errors, you
 need to run `./log.sh` in your `build-android/` directory.
 
 If you don't want auto reload enabled (would block the app if the web server
-isn't reachable), comment out `auto-reload-qml` in `lisp/main.lisp`.
+isn't reachable), you need to rebuild the app and skip entering an IP during
+the build process, see above.
 
 Both desktop and mobile auto reload can also be run **simultaneously**, since
 they share the QML source files. Any number of mobile devices may be connected,
 if they are in the same WiFi and point to the same desktop IP.
-
 
 
 Important notes for mobile

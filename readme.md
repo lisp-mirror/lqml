@@ -9,6 +9,24 @@ cross-platform apps. The same sources can be used to build executables for both
 desktop (Linux/macOS) and mobile (android/iOS).
 
 
+QML auto reload
+---------------
+
+A new feature is auto reloading of QML files after saving any changes. This
+works both on the desktop and on mobile.
+
+As a concrete example, you may have running your app on the desktop, and have
+both an android mobile device plus an iOS mobile device pointing to the IP of
+the desktop. Now you will see any change to QML on all 3 screens
+simultaneoulsy.
+
+This even works (with some limitations, and only in this
+[advanced example](examples/advanced-qml-auto-reload/)) at QML file level,
+which means: only the QML file currently edited is reloaded, preserving the
+state of all other QML files, and more importantly, the current view in case
+of nested page structures.
+
+
 License
 -------
 
