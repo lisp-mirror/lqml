@@ -41,9 +41,10 @@
       (setf load nil)
       (require :ecl-curl)
       (load "curl"))
-    (let ((curr/file (x:split (funcall (%sym 'curl :qml)
-                                       (x:cc *remote-ip* "cgi-bin/qml-last-modified.py"))
-                              #.(coerce (list #\Return #\Newline) 'string))))
+    (let ((curr/file (ignore-errors (x:split (funcall (%sym 'curl :qml)
+                                                      (x:cc *remote-ip*
+                                                            "cgi-bin/qml-last-modified.py"))
+                                             #.(coerce (list #\Return #\Newline) 'string)))))
       (when (= 2 (length curr/file))
         (destructuring-bind (curr file)
             curr/file

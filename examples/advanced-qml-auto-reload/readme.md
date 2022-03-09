@@ -16,7 +16,7 @@ installing the Slime sources where this example can find them.
 Info
 ----
 
-This is simply an extended version of example **swank-sevrer** of the parent
+This is simply an extended version of example **swank-server** of the parent
 directory.
 
 It adds a QML `SwipeView` with 3 pages, to demonstrate how to reload single
@@ -35,8 +35,8 @@ If you compile for mobile, it will ask for the **Wifi IP** of your desktop
 computer (currently hard coded into the app). If you just hit RET, auto
 reloading will be disabled.
 
-N.B: **Before** installing and launching the app, just run this script from
-your example directory:
+After installing and launching the app, just run this script from your example
+directory:
 ```
 ./web-server.sh
 ```
