@@ -6,6 +6,7 @@ import ".ext/" as Ext        // for single file auto reload (development)
 Rectangle {
   width: 300
   height: 500
+  objectName: "main"
   color: "black"
 
   SwipeView {
