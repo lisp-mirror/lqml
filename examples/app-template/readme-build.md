@@ -74,6 +74,11 @@ Please note:
 * using latest Xcode, it may complain about the 'Legacy Build System'; just go
   to 'File' / 'Project Settings' and select 'New Build System'
 
+* you only need to run `qmake-ios` again after you added/removed files to the
+  project; after every `qmake-ios`, the above steps need to be repeated; if you
+  only edited e.g. some QML file, you need to run 'Product / Clean Build
+  Folder' in order to have the changes compiled into the app
+
 If you cross-compiled ECL for the simulator, it should work there too, but this
 is currently only tested on **Intel**.
 
