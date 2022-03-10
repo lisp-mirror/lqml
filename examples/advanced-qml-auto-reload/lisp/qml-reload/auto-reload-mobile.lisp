@@ -20,12 +20,16 @@
                     #-interpreter #.(remote-ip))
 
 #+(or android ios)
+(defun load-on-reloaded ()
+  (load (make-string-input-stream
+         (funcall (%sym 'curl :qml)
+                  (x:cc *remote-ip* "lisp/qml-reload/on-reloaded.lisp")))))
+
+#+(or android ios)
 (defun qml:view-status-changed (status)
   (when (and (= 1 status)
              (reload-main-p))
-    (load (make-string-input-stream
-           (funcall (%sym 'curl :qml)
-                    (x:cc *remote-ip* "lisp/qml-reload/on-reloaded.lisp"))))))
+    (load-on-reloaded)))
 
 #+(or android ios)
 (defun reload-main-p ()
@@ -56,7 +60,9 @@
                   (setf ini nil)
                   (qset *engine* |baseUrl| *remote-ip*)
                   (let ((src (qget *quick-view* |source|)))
-                    (qset *quick-view* |source| (subseq src #.(length "qrc:///")))))
+                    ;; this causes an initial reload of everything
+                    (qset *quick-view* |source| (subseq src #.(length "qrc:///")))
+                    (load-on-reloaded)))
                 (if (reload-main-p)
                     (qml:reload)
                     (qjs |reload| *edited-file*)))
