@@ -69,8 +69,9 @@
     ;; needed for ASDF and Quicklisp
     (setf (logical-pathname-translations "SYS")
           (list (list "sys:**;*.*"
-                      (merge-pathnames "**/*.*" (user-homedir-pathname)))
-                (list "home:**;*.*"
+                      (merge-pathnames "**/*.*" (user-homedir-pathname)))))
+    (setf (logical-pathname-translations "HOME")
+          (list (list "home:**;*.*"
                       (merge-pathnames "**/*.*" (user-homedir-pathname)))))
     (ffi:c-inline nil nil :void "ecl_init_module(NULL, init_lib_ASDF)" :one-liner t)
     (in-package :qml-user))
