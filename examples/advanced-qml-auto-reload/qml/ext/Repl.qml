@@ -54,7 +54,6 @@ Item {
             padding: 2
             textFormat: Text.PlainText
             font.family: fontHack.name
-            font.pixelSize: 16
             font.bold: mBold
             text: mText
             color: mColor
@@ -82,7 +81,6 @@ Item {
         objectName: "repl_input"
         width: repl.parent.width - 2 * back.width
         font.family: fontHack.name
-        font.pixelSize: 16
         font.bold: true
         color: "#c0c0c0"
         inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText
