@@ -75,8 +75,8 @@ lisp/qml-reload/on-reloaded.lisp
 For **android**, in order to see the debug output of eventual QML errors, you
 need to run `./log.sh` in your `build-android/` directory.
 
-If you don't want auto reload enabled (would block the app if the web server
-isn't reachable), comment out `auto-reload-qml` in `lisp/main.lisp`.
+If you don't want auto reload enabled, comment out `auto-reload-qml` in
+`lisp/main.lisp`.
 
 Both desktop and mobile auto reload can also be run **simultaneously**, since
 they share the QML source files. Any number of mobile devices may be connected,
