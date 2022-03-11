@@ -1,4 +1,11 @@
 
+Demo
+----
+
+A small demo can be found here: [short video clip](http://cl-repl.org/lqml.htm)
+
+
+
 Prepare
 -------
 

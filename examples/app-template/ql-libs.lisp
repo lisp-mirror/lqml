@@ -1,3 +1,3 @@
-;;; define here eventual Quicklisp dependencies
+;;; define here how to load eventual dependencies
 ;;; e.g. (ql:quickload :alexandria)
 
