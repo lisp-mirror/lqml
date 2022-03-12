@@ -65,3 +65,11 @@ The best example to take as a template for development on mobile is
 [examples/advanced-qml-auto-reload](examples/advanced-qml-auto-reload).
 
 Please see `readme` and `readme-build` of that example.
+
+
+iOS icons
+---------
+
+Since adding an app icon requires an asset catalog with many different sizes,
+it's convenient to automate this process. In the App Store you find 'Asset
+Catalog Creator', which is free for basic use like creating app icons.

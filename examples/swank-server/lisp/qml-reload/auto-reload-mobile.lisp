@@ -16,11 +16,17 @@
                     #-interpreter #.(remote-ip))
 
 #+(or android ios)
+(defun load* (file)
+  (load (make-string-input-stream
+         (funcall (%sym 'curl :qml)
+                  (x:cc *remote-ip* file)))))
+
+(export 'load*)
+
+#+(or android ios)
 (defun qml:view-status-changed (status)
   (when (= 1 status)
-    (load (make-string-input-stream
-           (funcall (%sym 'curl :qml)
-                    (x:cc *remote-ip* "lisp/qml-reload/on-reloaded.lisp"))))))
+    (load* "lisp/qml-reload/on-reloaded.lisp")))
 
 #+(or android ios)
 (let ((load t)

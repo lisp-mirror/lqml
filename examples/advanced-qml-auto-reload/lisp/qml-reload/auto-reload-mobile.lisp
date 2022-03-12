@@ -20,10 +20,16 @@
                     #-interpreter #.(remote-ip))
 
 #+(or android ios)
-(defun load-on-reloaded ()
+(defun load* (file)
   (load (make-string-input-stream
          (funcall (%sym 'curl :qml)
-                  (x:cc *remote-ip* "lisp/qml-reload/on-reloaded.lisp")))))
+                  (x:cc *remote-ip* file)))))
+
+(export 'load*)
+
+#+(or android ios)
+(defun load-on-reloaded ()
+  (load* "lisp/qml-reload/on-reloaded.lisp"))
 
 #+(or android ios)
 (defun qml:view-status-changed (status)
@@ -33,8 +39,11 @@
 
 #+(or android ios)
 (defun reload-main-p ()
-  (or *reload-all*
-      (string= "main.qml" *edited-file*)))
+  (prog1
+      (or *reload-all*
+          (string= "main.qml" *edited-file*))
+    (when (eql :once *reload-all*)
+      (setf *reload-all* nil))))
 
 #+(or android ios)
 (let ((load t)
@@ -45,10 +54,11 @@
       (setf load nil)
       (require :ecl-curl)
       (load "curl"))
-    (let ((curr/file (ignore-errors (x:split (funcall (%sym 'curl :qml)
-                                                      (x:cc *remote-ip*
-                                                            "cgi-bin/qml-last-modified.py"))
-                                             #.(coerce (list #\Return #\Newline) 'string)))))
+    (let ((curr/file (ignore-errors
+                      (x:split (funcall (%sym 'curl :qml)
+                                        (x:cc *remote-ip*
+                                              "cgi-bin/qml-last-modified.py"))
+                               #.(coerce (list #\Return #\Newline) 'string)))))
       (when (= 2 (length curr/file))
         (destructuring-bind (curr file)
             curr/file
@@ -62,7 +72,7 @@
                   (let ((src (qget *quick-view* |source|)))
                     ;; this causes an initial reload of everything
                     (qset *quick-view* |source| (subseq src #.(length "qrc:///")))
-                    (load-on-reloaded)))
+                    (setf *reload-all* :once)))
                 (if (reload-main-p)
                     (qml:reload)
                     (qjs |reload| *edited-file*)))
