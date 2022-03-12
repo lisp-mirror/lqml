@@ -19,8 +19,8 @@ register with an email.
 
 Make sure to select the following in the online installer (assuming Linux):
 
-[Qt5.15 Image Formats](doc/img/qt-image-formats.png)
-[Qt5.15 Desktop, Android](doc/img/qt-desktop-android.png)
+* [Qt5.15 Image Formats](doc/img/qt-image-formats.png)
+* [Qt5.15 Desktop, Android](doc/img/qt-desktop-android.png)
 
 Even on Linux you really want the online installer. Yes it's a 1 GB download,
 but it brings all the examples, demos, tutorials, documentation, Qt Designer,
