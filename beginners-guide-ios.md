@@ -55,8 +55,8 @@ You may now try to run a desktop example, to see if it works. Every example has
 a readme which explains everything.
 
 
-Install example on android device
----------------------------------
+Install example on iOS device
+-----------------------------
 
 The best example to take as a template for development on mobile is
 [examples/advanced-qml-auto-reload](examples/advanced-qml-auto-reload).
