@@ -49,7 +49,11 @@ Build for iOS Simulator (optional)
 Note: only tested on **Intel**.
 
 For this to work, you will need to upgrade your **gmp** library to the latest
-version (tested with gmp 6.2.1). Just substitute it in `src/gmp`.
+version (tested with gmp 6.2.1). Just substitute it in `src/gmp/`:
+
+* download [gmp](https://gmplib.org/download/gmp/gmp-6.2.1.tar.xz)
+
+* extract it with `tar -xvf gmp-6.2.1.tar.xz` and replace the version in `src/gmp/`
 
 * run second script again, passing **sim**
 ```

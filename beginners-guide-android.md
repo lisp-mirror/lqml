@@ -33,7 +33,7 @@ Cross-compile ECL
 -----------------
 
 Next step is cross-compiling ECL. See
-[readne-prepare-android](readme-prepare-android.md).
+[readme-prepare-android](readme-prepare-android.md).
 
 
 Build LQML
