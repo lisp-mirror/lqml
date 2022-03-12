@@ -10,7 +10,10 @@ other places.
 Xcode
 -----
 
-You should always use latest Xcode. If you want a specific version, see:
+You should always use latest Xcode. Officially Qt5.15 only supports Xcode 11,
+but personal experience has shown that both Xcode 12 and 13 work without
+problems, so you can ignore the warnings that will be shown. For iOS 15 you
+need Xcode 13. If you want a specific version, see:
 [Xcode Releases](https://xcodereleases.com). Prepare for a 10 GB download.
 You'll need a (free) **Apple ID**, which is required anyway for deployment to
 devices.
@@ -42,7 +45,7 @@ Cross-compile ECL
 -----------------
 
 Next step is cross-compiling ECL. See
-[readne-prepare-ios](readme-prepare-ios.md).
+[readme-prepare-ios](readme-prepare-ios.md).
 
 
 Build LQML
