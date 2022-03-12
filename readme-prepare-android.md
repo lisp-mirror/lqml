@@ -3,7 +3,7 @@ Install android development tools
 
 A good description of what you'll need can be found here:
 
-[http://doc.qt.io/qt-5/androidgs.html](http://doc.qt.io/qt-5/androidgs.html)
+[doc.qt.io/qt-5/android-getting-started](https://doc.qt.io/qt-5/android-getting-started.html)
 
 You don't need Android Studio, so search for **command line tools** on the SDK
 download page.
