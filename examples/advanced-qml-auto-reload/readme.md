@@ -72,9 +72,12 @@ Important notes for mobile
 Please remember that installing a new version of your app on mobile will
 **keep all app data** present on the device.
 
-So, if you changed e.g. `lisp/curl.lisp`, a simple update will not replace
-that file, because it has been copied from the assets directory, and is only
-replaced if you increment `+app-version+` in `lisp/swank-quicklisp.lisp`.
+So, if you changed e.g. `lisp/curl.lisp` (loaded on demand, not compiled into
+the app), a simple update will not replace that file, because it has been
+copied from the assets directory, and is only replaced if you increment
+`+app-version+` in `lisp/swank-quicklisp.lisp`.
+
+The same goes for all files under `./platforms/.../assets/...`.
 
 A simple way to guarantee a clean install is simply uninstalling the app first,
 both on the device and on the emulator (android) or simulator (iOS).
