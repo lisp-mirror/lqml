@@ -16,7 +16,7 @@ lisp.output = tmp/libapp.a
 QMAKE_EXTRA_COMPILERS += lisp
 PRE_TARGETDEPS        += tmp/libapp.a
 
-QT          += quick qml
+QT          += quick qml network
 TEMPLATE    = app
 CONFIG      += no_keywords release
 DEFINES     += INI_LISP

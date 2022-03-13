@@ -13,8 +13,7 @@
   (let ((quicklisp-init (merge-pathnames "quicklisp/setup.lisp"
                                          (user-homedir-pathname))))
     (when (probe-file quicklisp-init)
-      (load quicklisp-init)))
-  (load *ql-libs*))
+      (load quicklisp-init))))
 
 ;;; load ASDF system and collect file names
 
@@ -25,6 +24,8 @@
     (push (subseq source 0 (position #\. source :from-end t))
           *source-files*))
   (asdf::perform-lisp-load-fasl o c))
+
+(load *ql-libs*) ; eventual dependencies
 
 (asdf:load-system *asdf-system*)
 
