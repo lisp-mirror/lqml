@@ -25,6 +25,11 @@ Build executable
 
 Currently still using qmake, will eventually be ported to CMake.
 
+You probably want to create an alias for qmake, like:
+```
+alias qmake='<path-to-qt>/<compiler>/bin/qmake'
+```
+
 Please make sure you have both latest **ECL** (from development branch) and
 either **Qt5.15** or **Qt6** installed (see [readme-qt](readme-qt.md)).
 
