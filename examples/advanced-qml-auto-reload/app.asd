@@ -1,6 +1,6 @@
 (defsystem :app
   :serial t
-  :depends-on (:alexandria)
+  :depends-on ()
   :components ((:file "lisp/package")
                (:file "lisp/ui-vars")
                (:file "lisp/swank-quicklisp")
