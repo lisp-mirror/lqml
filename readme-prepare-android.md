@@ -23,6 +23,12 @@ Put this in e.g. `~/.bashrc`:
 
   alias qmake-android='<path-to-qt5.15>/android/bin/qmake'
 ```
+Add the path of the platform tools (`.../sdk/platforms-tools`) to your path, so
+we can use `adb`:
+```
+  export PATH=$PATH:/<path-to-platform-tools>
+```
+
 (Use `source ~/.basrhc` to make new environment variables take effect
 immediately in your current terminal session.)
 
