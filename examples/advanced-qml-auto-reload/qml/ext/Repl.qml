@@ -3,11 +3,10 @@ import QtQuick.Controls 2.15
 
 Item {
   id: repl
-  z: 2
+  z: 1
   anchors.fill: parent
 
   Row {
-    z: 1
     anchors.right: parent.right
 
     Text {
