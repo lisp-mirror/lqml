@@ -15,6 +15,8 @@ immediately in your current terminal session.)
 Build cross-compiled ECL for iOS
 --------------------------------
 
+As of March 2022, please use latest ECL from development branch.
+
 * extract a fresh copy of the ECL sources in e.g. `~/ecl`, and rename
   `ecl-21.2.1` to `ios`
 * copy the 2 scripts from [platforms/ios/build-ecl/](platforms/ios/build-ecl/)

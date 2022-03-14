@@ -21,9 +21,7 @@
 
 #+(or android ios)
 (defun load* (file)
-  (load (make-string-input-stream
-         (funcall (%sym 'curl :qml)
-                  (x:cc *remote-ip* file)))))
+  (load (make-string-input-stream (curl (x:cc *remote-ip* file)))))
 
 (export 'load*)
 
@@ -46,18 +44,11 @@
       (setf *reload-all* nil))))
 
 #+(or android ios)
-(let ((load t)
-      (secs 0)
+(let ((secs 0)
       (ini t))
   (defun auto-reload-qml ()
-    (when load
-      (setf load nil)
-      (require :ecl-curl)
-      (load "curl"))
     (let ((curr/file (ignore-errors
-                      (x:split (funcall (%sym 'curl :qml)
-                                        (x:cc *remote-ip*
-                                              "cgi-bin/qml-last-modified.py"))
+                      (x:split (curl (x:cc *remote-ip* "cgi-bin/qml-last-modified.py"))
                                #.(coerce (list #\Return #\Newline) 'string)))))
       (when (= 2 (length curr/file))
         (destructuring-bind (curr file)

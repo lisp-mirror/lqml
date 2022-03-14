@@ -90,9 +90,10 @@ Important notes for mobile
 Please remember that installing a new version of your app on mobile will
 **keep all app data** present on the device.
 
-So, if you changed e.g. `lisp/curl.lisp`, a simple update will not replace
-that file, because it has been copied from the assets directory, and is only
-replaced if you increment `+app-version+` in `lisp/swank-quicklisp.lisp`.
+So, if you changed e.g. your Slime version under `platforms/<platform>/assets/,
+an update will not replace those files, because they have been copied from the
+assets on the first start of the app. If you want to replace them, you need to
+increase `+app-version+` in `lisp/swank-quicklisp.lisp`.
 
 A simple way to guarantee a clean install is simply uninstalling the app first,
 both on the device and on the emulator (android) or simulator (iOS).

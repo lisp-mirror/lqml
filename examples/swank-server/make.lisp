@@ -68,38 +68,31 @@
   (load (merge-pathnames file "src/lisp/")))
 
 #-(or android ios)
-(progn
-  (asdf:make-build "app"
-                   :monolithic t
-                   :type :static-library
-                   :move-here (cc *current* "build/tmp/")
-                   :init-name "ini_app")
-  (let* ((from (cc *current* "build/tmp/app--all-systems.a"))
-         (to   "libapp.a")
-         (to*  (cc *current* "build/tmp/" to)))
-    (when (probe-file to*)
-      (delete-file to*))
-    (rename-file from to)))
+(asdf:make-build "app"
+                 :monolithic t
+                 :type :static-library
+                 :move-here (cc *current* "build/tmp/")
+                 :init-name "ini_app")
 
 #+(or android ios)
 (progn
   (pushnew :interpreter *features*)
-  (defvar *asdf-system*   "app")
-  (defvar *ql-libs*       (cc *current* "ql-libs.lisp"))
-  (defvar *init-name*     "ini_app")
-  (defvar *library-name*  (format nil "~Abuild-~A/tmp/app"
-                                  *current*
-                                  #+android "android"
-                                  #+ios     "ios"))
-  (defvar *epilogue-code* nil)
+  (defvar *asdf-system*  "app")
+  (defvar *ql-libs*      (cc *current* "ql-libs.lisp"))
+  (defvar *init-name*    "ini_app")
+  (defvar *library-path* (format nil "~Abuild-~A/tmp/"
+                                 *current*
+                                 #+android "android"
+                                 #+ios     "ios"))
+  (defvar *require*      (list :ecl-curl))
   (load "platforms/shared/make"))
 
-;;; byte compile curl (delayed load)
-
-#+(or android ios)
-(progn
-  (require :ecl-curl)
-  (ext:install-bytecodes-compiler)
-  (compile-file (cc *current* "lisp/curl.lisp")
-                :output-file (cc *current* "lisp/" *assets* "curl.fasc")))
-
+;; rename lib
+(let* ((from #-(or android ios) (cc *current* "build/tmp/app--all-systems.a")
+             #+(or android ios) (cc *library-path* "app--all-systems.a"))
+       (to   "libapp.a")
+       (to*  #-(or android ios) (cc *current* "build/tmp/" to)
+             #+(or android ios) (cc *library-path* to)))
+  (when (probe-file to*)
+    (delete-file to*))
+  (rename-file from to))

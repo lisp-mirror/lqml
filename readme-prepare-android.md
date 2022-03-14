@@ -38,8 +38,7 @@ Build cross-compiled ECL for android
 ------------------------------------
 
 To build the cross-compiled ECL **aarch64**, just use the 2 scripts included in
-this project. As of February 2022, please use latest ECL from development
-branch.
+this project. As of March 2022, please use latest ECL from development branch.
 
 * extract a fresh copy of the ECL sources in e.g. `~/ecl`, and rename
   `ecl-21.2.1` to `android`

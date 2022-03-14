@@ -1,9 +1,23 @@
 ;;; cross-compile ASDF system, using the byte-codes compiler
 ;;; as an intermediate step
 
-;; optional vars, to be set in 'make.lisp' in your app dir
-(defvar *epilogue-code* nil)
-(defvar *ql-libs*       nil)
+(in-package :cl-user)
+
+(dolist (lib *require*)
+  (require lib))
+
+;; optional, to be set in 'make.lisp' in your app dir
+(defvar *ql-libs* nil)
+
+(defun cc (&rest args)
+  (apply 'concatenate 'string args))
+
+(let* ((cache (namestring asdf:*user-cache*))
+       (p (search "/ecl" cache)))
+  (setf asdf:*user-cache*
+        (pathname (cc (subseq cache 0 p)
+                      "/ecl-" #+android "android" #+ios "ios"
+                      (subseq cache (+ 4 p))))))
 
 ;;; *** (1) byte-compile ASDF system ***
 
@@ -15,21 +29,11 @@
     (when (probe-file quicklisp-init)
       (load quicklisp-init))))
 
-;;; load ASDF system and collect file names
+;;; load ASDF system
 
-(defvar *source-files* nil)
-
-(defmethod asdf:perform ((o asdf:load-op) (c asdf:cl-source-file))
-  (let ((source (namestring (asdf:component-pathname c))))
-    (push (subseq source 0 (position #\. source :from-end t))
-          *source-files*))
-  (asdf::perform-lisp-load-fasl o c))
-
-(load *ql-libs*) ; eventual dependencies
+(load *ql-libs*) ; eventual, not yet installed dependencies
 
 (asdf:load-system *asdf-system*)
-
-(setf *source-files* (nreverse *source-files*))
 
 ;;; *** (2) cross-compile ***
 
@@ -38,9 +42,6 @@
 (ext:install-c-compiler)
 
 (setf *features* (remove :interpreter *features*))
-
-(defun cc (&rest args)
-  (apply 'concatenate 'string args))
 
 #+(or android ios)
 (load (merge-pathnames (format nil "platforms/~A/cross-compile"
@@ -58,29 +59,19 @@
 
 (load (merge-pathnames "src/lisp/tr.lisp")) ; i18n
 
-(setf *break-on-signals* 'error)
+(in-package :asdf/lisp-action)
 
-;;; compile/link manually (byte-compiled version is already loaded)
+(defmethod asdf:perform ((o asdf:load-op) (c asdf:cl-source-file))
+  (if-let (fasl (first (input-files o c)))
+    (progn
+      ;; load above compiled .fasc instead of cross-compiled .fas
+      (setf fasl (cl-user::cc (namestring fasl) "c"))
+      (load fasl))))
 
-(defvar *object-files* nil)
+(in-package :cl-user)
 
-(dolist (file *source-files*)
-  (let ((src (cc file ".lisp"))
-        (obj (merge-pathnames (format nil "src/.cache/ecl~A-~A/~A.o"
-                                      (lisp-implementation-version)
-                                      *architecture*
-                                      file))))
-    (when (or (not (probe-file obj))
-              (> (file-write-date src)
-                 (file-write-date obj)))
-      (ensure-directories-exist obj)
-      (compile-file src :output-file obj :system-p t))
-    (push obj *object-files*)))
-
-(setf *object-files* (nreverse *object-files*))
-
-(c:build-static-library *library-name*
-                        :lisp-files    *object-files*
-                        :init-name     *init-name*
-                        :epilogue-code *epilogue-code*)
-
+(asdf:make-build *asdf-system*
+                 :monolithic t
+                 :type       :static-library
+                 :move-here  *library-path*
+                 :init-name  *init-name*)

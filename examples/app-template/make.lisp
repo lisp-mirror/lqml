@@ -1,3 +1,5 @@
+;;; check target
+
 (let ((arg (first (ext:command-args))))
   (mapc (lambda (name feature)
           (when (search name arg)
@@ -27,28 +29,31 @@
   (apply 'concatenate 'string args))
 
 #-(or android ios)
-(progn
-  (asdf:make-build "app"
-                   :monolithic t
-                   :type :static-library
-                   :move-here (cc *current* "build/tmp/")
-                   :init-name "ini_app")
-  (let* ((from (cc *current* "build/tmp/app--all-systems.a"))
-         (to   "libapp.a")
-         (to*  (cc *current* "build/tmp/" to)))
-    (when (probe-file to*)
-      (delete-file to*))
-    (rename-file from to)))
+(asdf:make-build "app"
+                 :monolithic t
+                 :type :static-library
+                 :move-here (cc *current* "build/tmp/")
+                 :init-name "ini_app")
 
 #+(or android ios)
 (progn
-  (defvar *asdf-system*   "app")
-  (defvar *ql-libs*       (cc *current* "ql-libs.lisp"))
-  (defvar *init-name*     "ini_app")
-  (defvar *library-name*  (format nil "~Abuild-~A/tmp/app"
-                                  *current*
-                                  #+android "android"
-                                  #+ios     "ios"))
-  (defvar *epilogue-code* nil)
+  (pushnew :interpreter *features*)
+  (defvar *asdf-system*  "app")
+  (defvar *ql-libs*      (cc *current* "ql-libs.lisp"))
+  (defvar *init-name*    "ini_app")
+  (defvar *library-path* (format nil "~Abuild-~A/tmp/"
+                                 *current*
+                                 #+android "android"
+                                 #+ios     "ios"))
+  (defvar *require*      (list :ecl-curl))
   (load "platforms/shared/make"))
 
+;; rename lib
+(let* ((from #-(or android ios) (cc *current* "build/tmp/app--all-systems.a")
+             #+(or android ios) (cc *library-path* "app--all-systems.a"))
+       (to   "libapp.a")
+       (to*  #-(or android ios) (cc *current* "build/tmp/" to)
+             #+(or android ios) (cc *library-path* to)))
+  (when (probe-file to*)
+    (delete-file to*))
+  (rename-file from to))
