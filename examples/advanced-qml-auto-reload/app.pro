@@ -31,9 +31,14 @@ linux: LIBS += -L../../../platforms/linux/lib
 macx:  LIBS += -L../../../platforms/macos/lib
 
 android {
+  DEFINES     += INI_ECL_CONTRIB
   QT          += androidextras
   INCLUDEPATH = $$(ECL_ANDROID)/include
+  ECL_VERSION = $$lower($$system($ECL_ANDROID/../ecl-android-host/bin/ecl -v))
+  ECL_VERSION = $$replace(ECL_VERSION, " ", "-")
   LIBS        = -L$$(ECL_ANDROID)/lib -lecl
+  LIBS        += -L$$(ECL_ANDROID)/lib/$$ECL_VERSION
+  LIBS        += -lecl-help -ldeflate -lecl-cdb -lecl-curl -lql-minitar -lsockets
   LIBS        += -L../../../platforms/android/lib
 
   ANDROID_ABIS               = "arm64-v8a"
