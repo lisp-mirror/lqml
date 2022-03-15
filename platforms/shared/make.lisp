@@ -59,16 +59,55 @@
 
 (load (merge-pathnames "src/lisp/tr.lisp")) ; i18n
 
+;;; --- ASDF hack begin ---
+
 (in-package :asdf/lisp-action)
 
 (defmethod asdf:perform ((o asdf:load-op) (c asdf:cl-source-file))
   (if-let (fasl (first (input-files o c)))
     (progn
-      ;; load above compiled .fasc instead of cross-compiled .fas
+      ;; load above compiled *.fasc instead of cross-compiled *.fas
       (setf fasl (cl-user::cc (namestring fasl) "c"))
       (load fasl))))
 
+(in-package :uiop/lisp-build)
+
+(defun* (compile-file*) (input-file &rest keys
+                                    &key (compile-check *compile-check*) output-file warnings-file
+                                    object-file
+                                    &allow-other-keys)
+    (when (and object-file (equal (compile-file-type) (pathname object-file)))
+      (format t "Whoa, some funky ASDF upgrade switched ~S calling convention for ~S and ~S~%"
+              'compile-file* output-file object-file)
+      (rotatef output-file object-file))
+    (let* ((keywords (remove-plist-keys
+                      `(:output-file :compile-check :warnings-file :object-file) keys))
+           (output-file
+             (or output-file
+                 (apply 'compile-file-pathname* input-file :output-file output-file keywords)))
+           (physical-output-file (physicalize-pathname output-file))
+           (object-file
+             (unless (use-ecl-byte-compiler-p)
+               (or object-file
+                   (compile-file-pathname output-file :type :object)))))
+      (multiple-value-bind (output-truename warnings-p failure-p)
+          (with-enough-pathname (input-file :defaults *base-build-directory*)
+            (with-saved-deferred-warnings (warnings-file :source-namestring (namestring input-file))
+              (with-muffled-compiler-conditions ()
+                ;; cross-compile *.o file without even trying to build useless
+                ;; cross-compiled *.fas file, which would give a 'ld' error
+                ;; when cross-compiling for iOS (wrong flags)
+                (if (or (not (probe-file object-file))
+                        (> (file-write-date input-file)
+                           (file-write-date object-file)))
+                    (apply 'compile-file input-file
+                           :output-file (list* object-file :system-p t keywords))
+                    object-file))))
+        (values output-truename warnings-p failure-p))))
+
 (in-package :cl-user)
+
+;;; --- ASDF hack end ---
 
 (asdf:make-build *asdf-system*
                  :monolithic t
