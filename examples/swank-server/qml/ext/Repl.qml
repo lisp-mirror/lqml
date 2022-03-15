@@ -8,6 +8,7 @@ Item {
 
   Row {
     anchors.right: parent.right
+    z: 1
 
     Text {
       text: "REPL"
