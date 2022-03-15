@@ -1,5 +1,8 @@
 (in-package :qml)
 
+#-(or android ios)
+(require :ecl-curl)
+
 (defun curl (url)
   "args: (url)
   Trivial download of UTF-8 encoded files, or binary files."

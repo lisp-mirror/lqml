@@ -63,16 +63,17 @@
                   (length (namestring *default-pathname-defaults*))
                   (1+ (position #\/ name :from-end t)))))
 
-;; load all LQML symbols
-(dolist (file (list "package" "x" "ecl-ext" "ini" "qml"))
+(dolist (file (list "package" "x" "ecl-ext" "ini" "qml")) ; load LQML symbols
   (load (merge-pathnames file "src/lisp/")))
 
 #-(or android ios)
-(asdf:make-build "app"
-                 :monolithic t
-                 :type :static-library
-                 :move-here (cc *current* "build/tmp/")
-                 :init-name "ini_app")
+(progn
+  (require :ecl-curl)
+  (asdf:make-build "app"
+                   :monolithic t
+                   :type :static-library
+                   :move-here (cc *current* "build/tmp/")
+                   :init-name "ini_app"))
 
 #+(or android ios)
 (progn
@@ -87,7 +88,8 @@
   (defvar *require*      (list :ecl-curl))
   (load "platforms/shared/make"))
 
-;; rename lib
+;;; rename lib
+
 (let* ((from #-(or android ios) (cc *current* "build/tmp/app--all-systems.a")
              #+(or android ios) (cc *library-path* "app--all-systems.a"))
        (to   "libapp.a")

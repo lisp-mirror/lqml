@@ -19,9 +19,13 @@ PRE_TARGETDEPS        += tmp/libapp.a
 QT          += quick qml
 TEMPLATE    = app
 CONFIG      += no_keywords release
-DEFINES     += INI_LISP
+DEFINES     += INI_LISP INI_ECL_CONTRIB
 INCLUDEPATH = /usr/local/include
+ECL_VERSION = $$lower($$system(ecl -v))
+ECL_VERSION = $$replace(ECL_VERSION, " ", "-")
 LIBS        = -L/usr/local/lib -lecl
+LIBS        += -L/usr/local/lib/$$ECL_VERSION
+LIBS        += -lecl-help -ldeflate -lecl-cdb -lecl-curl -lql-minitar -lsockets
 DESTDIR     = .
 TARGET      = app
 OBJECTS_DIR = tmp
@@ -31,7 +35,6 @@ linux: LIBS += -L../../../platforms/linux/lib
 macx:  LIBS += -L../../../platforms/macos/lib
 
 android {
-  DEFINES     += INI_ECL_CONTRIB
   QT          += androidextras
   INCLUDEPATH = $$(ECL_ANDROID)/include
   ECL_VERSION = $$lower($$system($ECL_ANDROID/../ecl-android-host/bin/ecl -v))
@@ -47,7 +50,6 @@ android {
 }
 
 ios {
-  DEFINES     += INI_ECL_CONTRIB
   INCLUDEPATH = $$(ECL_IOS)/include
   ECL_VERSION = $$lower($$system($ECL_IOS/../ecl-ios-host/bin/ecl -v))
   ECL_VERSION = $$replace(ECL_VERSION, " ", "-")
