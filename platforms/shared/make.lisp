@@ -1,5 +1,11 @@
-;;; cross-compile ASDF system, using the byte-codes compiler
-;;; as an intermediate step
+;;; cross-compile ASDF system, using the byte-codes compiler as an intermediate
+;;; step; this requires an ASDF hack, but won't even try to build useless
+;;; cross-compiled *.fas files -- we load byte-compiled *.fasc files instead
+;;;
+;;; this is both faster and avoids a 'ld' error when cross-compiling for iOS
+;;; (unknown flags for static build)
+;;;
+;;; tested with quite a few Quicklisp libs
 
 (in-package :cl-user)
 
