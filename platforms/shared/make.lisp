@@ -103,12 +103,16 @@
                 ;; cross-compile *.o file without even trying to build useless
                 ;; cross-compiled *.fas file, which would give a 'ld' error
                 ;; when cross-compiling for iOS (wrong flags)
-                (if (or (not (probe-file object-file))
-                        (> (file-write-date input-file)
-                           (file-write-date object-file)))
-                    (apply 'compile-file input-file
-                           :output-file (list* object-file :system-p t keywords))
-                    object-file))))
+                (when (or (not (probe-file object-file))
+                          (> (file-write-date input-file)
+                             (file-write-date object-file)))
+                  (apply 'compile-file input-file
+                         :output-file (list* object-file :system-p t keywords)))
+                  (let ((name (namestring object-file)))
+                    (setf name (cl-user::cc (subseq name 0 (1- (length name))) "fas"))
+                    ;; create dummy to make ASDF happy
+                    (open name :direction :probe :if-does-not-exist :create)
+                    (pathname name)))))
         (values output-truename warnings-p failure-p))))
 
 (in-package :cl-user)
