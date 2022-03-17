@@ -16,8 +16,8 @@ Important note
   platform.
 
 You may find that an example won't work anymore after upgrading LQML. This is
-probably due to internal changes, so you better wipe off the whole example and
-start over.
+probably due to internal changes (to the app template files), so you better
+wipe off the whole example and start over.
 
 
 
