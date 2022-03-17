@@ -243,11 +243,9 @@
                  #+ios     "assets/")
 
 #+ios
-(defvar *bundle-root* (namestring *default-pathname-defaults*))
-
-#+ios
 (progn
   ;; adapt paths to iOS specific values
+  (defvar *bundle-root*                *default-pathname-defaults*)
   (defvar *user-homedir-pathname-orig* (symbol-function 'user-homedir-pathname))
 
   (ext:package-lock :common-lisp nil)
@@ -304,11 +302,14 @@
                       (merge-pathnames "**/*.*" (user-homedir-pathname)))))
     (setf (logical-pathname-translations "HOME")
           (list (list "home:**;*.*"
-                      (merge-pathnames "**/*.*" (user-homedir-pathname)))))
+                      (merge-pathnames "**/*.*" (user-homedir-pathname))))))
+  (unless (probe-file (merge-pathnames "encodings/"))
+    #+ios
     (let ((dir (namestring (merge-pathnames *assets* *bundle-root*))))
-      (copy-asset-files dir dir)))
-  #+android
-  (copy-asset-files))
+      (copy-asset-files dir dir))
+    #+android
+    (unless (probe-file (merge-pathnames "encodings/"))
+      (copy-asset-files))))
 
 ;;; alias
 
