@@ -1,5 +1,4 @@
-;;; check target
-
+;; check target
 (let ((arg (first (ext:command-args))))
   (mapc (lambda (name feature)
           (when (search name arg)
@@ -21,8 +20,7 @@
                   (length (namestring *default-pathname-defaults*))
                   (1+ (position #\/ name :from-end t)))))
 
-;; load all LQML symbols
-(dolist (file (list "package" "x" "ecl-ext" "ini" "qml"))
+(dolist (file (list "package" "x" "ecl-ext" "ini" "qml")) ; load LQML symbols
   (load (merge-pathnames file "src/lisp/")))
 
 (defun cc (&rest args)

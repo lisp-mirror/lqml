@@ -175,7 +175,5 @@
 
 (progn
   (ini-streams)
-  (qlater (lambda ()
-            (in-package :qml-user)
-            (eval-in-thread "(qml::help)" nil))))
-
+  (in-package :qml-user)
+  (eval-in-thread "(qml::help)" nil))

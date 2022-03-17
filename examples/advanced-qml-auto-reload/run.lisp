@@ -25,4 +25,3 @@
 (when (option "-slime")
   (load "~/slime/lqml-start-swank")) ; for 'slime-connect' from Emacs
 
-(load "qml/.create-qml-loaders.lisp")

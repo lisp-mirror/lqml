@@ -8,7 +8,12 @@
 #include <QQmlEngine>
 #include <QQmlFileSelector>
 #include <QQuickView>
+#include <QtDebug>
 #include <iostream>
+
+#ifdef INI_WEBVIEW
+  #include <QtWebView>
+#endif
 
 #ifdef Q_OS_MACOS
 #define ADD_MACOS_BUNDLE_IMPORT_PATH \
@@ -32,6 +37,10 @@
   }
 #endif
 
+#ifdef INI_ASDF
+  extern "C" void init_lib_ASDF(cl_object);
+#endif
+
 int catch_all_qexec() {
   int ret = 0;
   CL_CATCH_ALL_BEGIN(ecl_process_env()) {
@@ -43,6 +52,9 @@ int catch_all_qexec() {
 
 int main(int argc, char* argv[]) {
   QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+#ifdef INI_WEBVIEW
+  QtWebView::initialize();
+#endif
   QGuiApplication app(argc, argv);
   //app.setOrganizationName("MyProject");
   //app.setOrganizationDomain("my.org");
@@ -74,31 +86,6 @@ int main(int argc, char* argv[]) {
     exit(0);
   }
 
-#ifdef Q_OS_WIN
-    lqml.ignoreIOStreams();
-#endif
-
-  // load .eclrc
-  if (arguments.contains("-norc")) {
-    arguments.removeAll("-norc");
-  } else {
-#if (defined Q_OS_ANDROID) || (defined Q_OS_IOS)
-    // mobile: don't hang on startup
-    LQML::eval("(x:when-it (probe-file \"~/.eclrc\")"
-               "  (ignore-errors (load x:it)))");
-#else
-    LQML::eval("(x:when-it (probe-file \"~/.eclrc\")"
-               "  (load x:it))");
-#endif
-  }
-
-  // load Lisp file
-  QStringList files = arguments.filter(".lisp");
-  if (!files.isEmpty()) {
-    QString file = QDir::fromNativeSeparators(files.first());
-    LQML::eval(QString("(load \"%1\")").arg(file), true);
-  }
-
   new QQmlFileSelector(view.engine(), &view);
   QString qml("qml/main.qml");
   QUrl url;
@@ -110,15 +97,19 @@ int main(int argc, char* argv[]) {
   view.setSource(url);
   if (view.status() != QQuickView::Error) {
     view.setResizeMode(QQuickView::SizeRootObjectToView);
-#if (defined Q_OS_ANDROID) || (defined Q_OS_IOS)
     view.show();
-#else
-    QTimer::singleShot(0, &view, &QQuickView::show);
-#endif
   }
 
+#ifdef Q_OS_WIN
+    // uncomment for apps without console
+    //lqml.ignoreIOStreams();
+#endif
+
+#if (defined Q_OS_ANDROID) || (defined Q_OS_IOS)
+  LQML::eval("(qml::%ini-mobile)");
+#endif
+
 #ifdef INI_ECL_CONTRIB
-  // ASDF is loaded on demand (slow)
   ecl_init_module(NULL, init_lib_DEFLATE);
   ecl_init_module(NULL, init_lib_ECL_CDB);
   ecl_init_module(NULL, init_lib_ECL_HELP);
@@ -126,6 +117,42 @@ int main(int argc, char* argv[]) {
   ecl_init_module(NULL, init_lib_SOCKETS);
   ecl_init_module(NULL, init_lib_ECL_CURL);
 #endif
+
+#ifdef INI_ASDF
+  ecl_init_module(NULL, init_lib_ASDF);
+#endif
+
+#ifdef INI_SSL
+  #ifdef Q_OS_ANDROID
+    // ssl libs need to be loaded manually
+    LQML::eval("(ffi:load-foreign-library \"libcrypto.so\")");
+    LQML::eval("(ffi:load-foreign-library \"libssl.so\")");
+  #endif
+  LQML::eval("(push :cl+ssl-foreign-libs-already-loaded *features*)");
+#endif
+
+  // load .eclrc
+  if (arguments.contains("-norc")) {
+    arguments.removeAll("-norc");
+  } else {
+#if (defined Q_OS_ANDROID) || (defined Q_OS_IOS)
+    // mobile: don't hang on startup
+    LQML::eval("(x:when-it (probe-file \"~/.eclrc\")"
+               "  (ignore-errors (load x:it)))");
+#else
+  #ifndef DESKTOP_APP
+    LQML::eval("(x:when-it (probe-file \"~/.eclrc\")"
+               "  (load x:it))");
+  #endif
+#endif
+  }
+
+  // load Lisp file
+  QStringList files = arguments.filter(".lisp");
+  if (!files.isEmpty()) {
+    QString file = QDir::fromNativeSeparators(files.first());
+    LQML::eval(QString("(load \"%1\")").arg(file), true);
+  }
 
 #ifdef INI_LISP
   ecl_init_module(NULL, ini_app);

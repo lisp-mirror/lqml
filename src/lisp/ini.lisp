@@ -236,6 +236,80 @@
              (apply 'format nil arg1 args)
              (x:join (mapcar 'princ-to-string (cons arg1 args))))))
 
+;;; mobile ini
+
+#+(or android ios)
+(defvar *assets* #+android "assets:/lib/"
+                 #+ios     "assets/")
+
+#+ios
+(defvar *bundle-root* (namestring *default-pathname-defaults*))
+
+#+ios
+(progn
+  ;; adapt paths to iOS specific values
+  (defvar *user-homedir-pathname-orig* (symbol-function 'user-homedir-pathname))
+
+  (ext:package-lock :common-lisp nil)
+
+  (defun cl:user-homedir-pathname (&optional host)
+    (merge-pathnames "Library/" (funcall *user-homedir-pathname-orig* host)))
+
+  (ext:package-lock :common-lisp t)
+
+  (dolist (el '(("XDG_DATA_HOME"   . "")
+                ("XDG_CONFIG_HOME" . "")
+                ("XDG_DATA_DIRS"   . "")
+                ("XDG_CONFIG_DIRS" . "")
+                ("XDG_CACHE_HOME"  . ".cache")))
+    (ext:setenv (car el) (namestring (merge-pathnames (cdr el)
+                                                      (user-homedir-pathname))))))
+
+#+(or android ios)
+(defun copy-asset-files (&optional (dir-name *assets*) origin)
+  "Copy asset files to home directory."
+  (flet ((directory-p (path)
+           (x:ends-with "/" path))
+         (translate (name)
+           #+android
+           (if (x:starts-with *assets* name)
+               (subseq name (length *assets*))
+               name)
+           #+ios
+           (namestring
+	    (merge-pathnames (x:cc "../" (subseq name (length origin)))))))
+    (ensure-directories-exist (translate dir-name))
+    ;; note: both QDIRECTORY and QCOPY-FILE are prepared for accessing
+    ;; APK asset files, which can't be accessed directly from Lisp
+    (dolist (from (qdirectory dir-name))
+      (if (directory-p from)
+          (copy-asset-files from origin)
+          (let ((to (translate from)))
+            (when (probe-file to)
+              (delete-file to))
+            (unless (qcopy-file from to)
+              (qlog "Error copying asset file: ~S" from)
+              (return-from copy-asset-files))))))
+  t)
+
+#+(or android ios)
+(defun %ini-mobile ()
+  ;; internal use, see 'main.cpp'
+  (ext:install-bytecodes-compiler)
+  #+ios
+  (progn
+    (setf *default-pathname-defaults* (user-homedir-pathname))
+    (setf (logical-pathname-translations "SYS")
+          (list (list "sys:**;*.*"
+                      (merge-pathnames "**/*.*" (user-homedir-pathname)))))
+    (setf (logical-pathname-translations "HOME")
+          (list (list "home:**;*.*"
+                      (merge-pathnames "**/*.*" (user-homedir-pathname)))))
+    (let ((dir (namestring (merge-pathnames *assets* *bundle-root*))))
+      (copy-asset-files dir dir)))
+  #+android
+  (copy-asset-files))
+
 ;;; alias
 
 (defmacro alias (s1 s2)

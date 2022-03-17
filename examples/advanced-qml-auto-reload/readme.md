@@ -9,7 +9,12 @@ A small demo can be found here: [short video clip](http://cl-repl.org/lqml.htm)
 Prepare
 -------
 
-Please copy the app template files first:
+Run this script once, and every time after adding new qml files:
+```
+$ ./ini-reload.sh
+```
+
+Copy the app template files:
 ```
 $ cd ..
 $ ./copy.sh advanced-qml-auto-reload

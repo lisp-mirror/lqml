@@ -19,7 +19,7 @@ PRE_TARGETDEPS        += tmp/libapp.a
 QT          += quick qml
 TEMPLATE    = app
 CONFIG      += no_keywords release
-DEFINES     += INI_LISP # NO_QT_RESTART
+DEFINES     = DESKTOP_APP INI_LISP
 INCLUDEPATH = /usr/local/include
 LIBS        = -L/usr/local/lib -lecl
 DESTDIR     = .
@@ -32,6 +32,7 @@ macx:  LIBS += -L../../../platforms/macos/lib
 
 android {
   QT          += androidextras
+  DEFINES     -= DESKTOP_APP
   INCLUDEPATH = $$(ECL_ANDROID)/include
   LIBS        = -L$$(ECL_ANDROID)/lib -lecl
   LIBS        += -L../../../platforms/android/lib
@@ -42,6 +43,7 @@ android {
 }
 
 ios {
+  DEFINES     -= DESKTOP_APP
   INCLUDEPATH = $$(ECL_IOS)/include
   LIBS        = -L$$(ECL_IOS)/lib -lecl
   LIBS        += -leclatomic -leclffi -leclgc -leclgmp

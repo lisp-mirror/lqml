@@ -2,5 +2,5 @@
 
 (in-package :qml-user)
 
-;; delay needed here
-(qsingle-shot 500 (lambda () (eval:eval-in-thread "(qml::help)"))) ; show help in REPL
+;; delay needed here because of initial reload
+(qsingle-shot 1000 (lambda () (eval:eval-in-thread "(qml::help)"))) ; show help in REPL

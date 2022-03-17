@@ -19,7 +19,7 @@ PRE_TARGETDEPS        += tmp/libapp.a
 QT          += quick qml
 TEMPLATE    = app
 CONFIG      += no_keywords release
-DEFINES     += INI_LISP INI_ECL_CONTRIB
+DEFINES     += DESKTOP_APP INI_LISP INI_ECL_CONTRIB
 INCLUDEPATH = /usr/local/include
 ECL_VERSION = $$lower($$system(ecl -v))
 ECL_VERSION = $$replace(ECL_VERSION, " ", "-")
@@ -36,12 +36,14 @@ macx:  LIBS += -L../../../platforms/macos/lib
 
 android {
   QT          += androidextras
+  DEFINES     += INI_ASDF
+  DEFINES     -= DESKTOP_APP
   INCLUDEPATH = $$(ECL_ANDROID)/include
   ECL_VERSION = $$lower($$system($ECL_ANDROID/../ecl-android-host/bin/ecl -v))
   ECL_VERSION = $$replace(ECL_VERSION, " ", "-")
   LIBS        = -L$$(ECL_ANDROID)/lib -lecl
   LIBS        += -L$$(ECL_ANDROID)/lib/$$ECL_VERSION
-  LIBS        += -lecl-help -ldeflate -lecl-cdb -lecl-curl -lql-minitar -lsockets
+  LIBS        += -lasdf -lecl-help -ldeflate -lecl-cdb -lecl-curl -lql-minitar -lsockets
   LIBS        += -L../../../platforms/android/lib
 
   ANDROID_ABIS               = "arm64-v8a"
@@ -50,6 +52,8 @@ android {
 }
 
 ios {
+  DEFINES     += INI_ASDF
+  DEFINES     -= DESKTOP_APP
   INCLUDEPATH = $$(ECL_IOS)/include
   ECL_VERSION = $$lower($$system($ECL_IOS/../ecl-ios-host/bin/ecl -v))
   ECL_VERSION = $$replace(ECL_VERSION, " ", "-")

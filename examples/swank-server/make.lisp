@@ -30,16 +30,9 @@
     (let ((to (cc *assets* "quicklisp/local-projects/slime/")))
       (ensure-directories-exist to)
       (shell (cc "cp -r ../../../slime/src/* " to))))
-  #+android
-  (let ((lib (cc (ext:getenv "ECL_ANDROID") "/lib/ecl-*/")))
-    (shell (cc "cp -f " lib "asdf.fas " *assets*))
-    (shell (cc (ext:getenv "ANDROID_NDK_TOOLCHAIN") "/bin/aarch64-linux-android-strip " (cc *assets* "asdf.fas")))
-    (unless (probe-file (cc *assets* "encodings"))
-      (shell (cc "cp " lib "*.doc " *assets*))
-      (shell (cc "cp -r " lib "encodings " *assets*))))
-  #+ios
   (unless (probe-file (cc *assets* "encodings"))
-    (let ((lib (cc (ext:getenv "ECL_IOS") "/lib/ecl-*/")))
+    (let ((lib (cc (ext:getenv #+android "ECL_ANDROID" #+ios "ECL_IOS")
+                   "/lib/ecl-*/")))
       (shell (cc "cp " lib "*.doc " *assets*))
       (shell (cc "cp -r " lib "encodings " *assets*)))))
 

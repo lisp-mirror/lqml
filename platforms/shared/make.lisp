@@ -9,11 +9,12 @@
 
 (in-package :cl-user)
 
-(dolist (lib *require*)
-  (require lib))
-
 ;; optional, to be set in 'make.lisp' in your app dir
 (defvar *ql-libs* nil)
+(defvar *require* nil)
+
+(dolist (lib *require*)
+  (require lib))
 
 (defun cc (&rest args)
   (apply 'concatenate 'string args))
@@ -33,11 +34,10 @@
   (let ((quicklisp-init (merge-pathnames "quicklisp/setup.lisp"
                                          (user-homedir-pathname))))
     (when (probe-file quicklisp-init)
-      (load quicklisp-init))))
+      (load quicklisp-init)))
+  (load *ql-libs*)) ; eventual, not yet installed dependencies
 
 ;;; load ASDF system
-
-(load *ql-libs*) ; eventual, not yet installed dependencies
 
 (asdf:load-system *asdf-system*)
 
@@ -65,20 +65,22 @@
 
 (load (merge-pathnames "src/lisp/tr.lisp")) ; i18n
 
+;;; --- HACK begin ---
+
 (in-package :asdf/lisp-action)
 
 (defmethod asdf:perform ((o asdf:load-op) (c asdf:cl-source-file))
   (if-let (fasl (first (input-files o c)))
-    (progn
-      ;; load above compiled *.fasc instead of cross-compiled *.fas
-      (setf fasl (cl-user::cc (namestring fasl) "c"))
-      (load fasl))))
+    ;; load above compiled *.fasc instead of cross-compiled *.fas
+    (load (cl-user::cc (namestring fasl) "c"))))
 
 (in-package :cl-user)
 
 (defun c:build-fasl (file &rest _)
   ;; do nothing (not needed when cross-compiling)
   file)
+
+;;; --- HACK end ---
 
 (asdf:make-build *asdf-system*
                  :monolithic t
