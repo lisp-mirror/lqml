@@ -39,14 +39,14 @@
 ;;; rename lib
 
 (let* ((from (format nil "platforms/~A/lib/lqml--all-systems.a"
-                     #+(and linux (not android)) "linux"
-                     #+darwin  "macos"
+                     #+(and linux  (not android)) "linux"
+                     #+(and darwin (not ios))     "macos"
                      #+android "android"
                      #+ios     "ios"))
        (to   "liblisp.a")
        (to*  (format nil "platforms/~A/lib/~A"
-                     #+(and linux (not android)) "linux"
-                     #+darwin  "macos"
+                     #+(and linux  (not android)) "linux"
+                     #+(and darwin (not ios))     "macos"
                      #+android "android"
                      #+ios     "ios"
                      to)))
