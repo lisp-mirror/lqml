@@ -54,10 +54,23 @@ Log note: for showing only your own messages, see `log.sh`.
 
 Build iOS app
 -------------
+
+**Important notes**: the Qt Xcode integration is not perfect, which means: when
+you include asset files (like in example `swank-server`), they may not be
+copied to the build directory, the first time you build the app.
+
+So, it's a good idea to run `qmake-ios` twice before building the app.
+
+The first build after a `qmake-ios` will almost always fail (missing files):
+just run 'Build' (from Xcode) again, and the missing files will be created.
+
+You also need to check the console from where you launched `./xcode.sh` for
+eventual errors compiling the Lisp code.
 ```
 $ cd build-ios
 
 $ qmake-ios ..
+$ qmake-ios .. # run twice
 
 $ ./xcode.sh
 ```
