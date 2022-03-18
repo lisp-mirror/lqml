@@ -92,8 +92,7 @@ Please remember that installing a new version of your app on mobile will
 
 So, if you changed e.g. your Slime version under `platforms/<platform>/assets/,
 an update will not replace those files, because they have been copied from the
-assets on the first start of the app. If you want to replace them, you need to
-increase `+app-version+` in `lisp/swank-quicklisp.lisp`.
+assets on the very first start of the app.
 
 A simple way to guarantee a clean install is simply uninstalling the app first,
 both on the device and on the emulator (android) or simulator (iOS).
