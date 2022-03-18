@@ -8,6 +8,10 @@ DESTDIR     = .
 OBJECTS_DIR = ./tmp
 MOC_DIR     = ./tmp
 
+# optional (Qt WebEngine)
+#QT          += webview
+#DEFINES     += INI_WEBVIEW
+
 linux {
   LIBS        += -L../../platforms/linux/lib
   target.path = /usr/bin

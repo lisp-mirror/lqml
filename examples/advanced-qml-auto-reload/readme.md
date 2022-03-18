@@ -9,11 +9,6 @@ A small demo can be found here: [short video clip](http://cl-repl.org/lqml.htm)
 Prepare
 -------
 
-Run this script once, and every time after adding new qml files:
-```
-$ ./ini-reload.sh
-```
-
 Copy the app template files:
 ```
 $ cd ..
@@ -27,6 +22,11 @@ for installing the Slime sources where this example can find them.
 
 Info
 ----
+
+After adding new qml files, you need to run this script:
+```
+$ ./ini-reload.sh
+```
 
 This is simply an extended version of example **swank-server** of the parent
 directory.
