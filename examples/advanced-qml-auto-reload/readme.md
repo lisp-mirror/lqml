@@ -20,8 +20,8 @@ $ cd ..
 $ ./copy.sh advanced-qml-auto-reload
 ```
 
-See also [../../slime/src/readme-sources](../../slime/src/readme-sources.md) for
-installing the Slime sources where this example can find them.
+See also [../../slime/src/readme-sources](../../slime/src/readme-sources.md)
+for installing the Slime sources where this example can find them.
 
 
 

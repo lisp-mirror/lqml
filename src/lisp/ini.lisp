@@ -239,6 +239,9 @@
 ;;; mobile ini
 
 #+(or android ios)
+(pushnew :mobile *features*)
+
+#+mobile
 (defvar *assets* #+android "assets:/lib/"
                  #+ios     "assets/")
 
@@ -263,7 +266,7 @@
     (ext:setenv (car el) (namestring (merge-pathnames (cdr el)
                                                       (user-homedir-pathname))))))
 
-#+(or android ios)
+#+mobile
 (defun copy-asset-files (&optional (dir-name *assets*) origin)
   "Copy asset files to home directory."
   (flet ((directory-p (path)
@@ -290,7 +293,7 @@
               (return-from copy-asset-files))))))
   t)
 
-#+(or android ios)
+#+mobile
 (defun %ini-mobile ()
   ;; internal use, see 'main.cpp'
   (ext:install-bytecodes-compiler)

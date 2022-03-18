@@ -6,6 +6,9 @@
         (list "/ecl-android/" "/ecl-ios/")
         (list :android :ios)))
 
+#+(or android ios)
+(pushnew :mobile *features*)
+
 (require :asdf)
 
 (push (merge-pathnames "../")
@@ -26,14 +29,14 @@
 (defun cc (&rest args)
   (apply 'concatenate 'string args))
 
-#-(or android ios)
+#-mobile
 (asdf:make-build "app"
                  :monolithic t
                  :type :static-library
                  :move-here (cc *current* "build/tmp/")
                  :init-name "ini_app")
 
-#+(or android ios)
+#+mobile
 (progn
   (pushnew :interpreter *features*)
   (defvar *asdf-system*  "app")
@@ -47,11 +50,11 @@
   (load "platforms/shared/make"))
 
 ;; rename lib
-(let* ((from #-(or android ios) (cc *current* "build/tmp/app--all-systems.a")
-             #+(or android ios) (cc *library-path* "app--all-systems.a"))
+(let* ((from #-mobile (cc *current* "build/tmp/app--all-systems.a")
+             #+mobile (cc *library-path* "app--all-systems.a"))
        (to   "libapp.a")
-       (to*  #-(or android ios) (cc *current* "build/tmp/" to)
-             #+(or android ios) (cc *library-path* to)))
+       (to*  #-mobile (cc *current* "build/tmp/" to)
+             #+mobile (cc *library-path* to)))
   (when (probe-file to*)
     (delete-file to*))
   (rename-file from to))

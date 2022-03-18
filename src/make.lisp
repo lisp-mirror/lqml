@@ -7,6 +7,9 @@
         (list "/ecl-android/" "/ecl-ios/")
         (list :android :ios)))
 
+#+(or android ios)
+(pushnew :mobile *features*)
+
 ;;; compile ASDF system
 
 (require :asdf)
@@ -17,7 +20,7 @@
 (setf *default-pathname-defaults*
       (merge-pathnames "../../")) ; LQML root
 
-#-(or android ios)
+#-mobile
 (asdf:make-build "lqml"
                  :monolithic t
                  :type :static-library
@@ -26,7 +29,7 @@
                                     #+darwin "macos")
                  :init-name "ini_LQML")
 
-#+(or android ios)
+#+mobile
 (progn
   (pushnew :interpreter  *features*)
   (defvar *asdf-system*  "lqml")

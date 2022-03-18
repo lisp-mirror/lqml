@@ -5,6 +5,7 @@ import "ext/" as Ext
 Item {
   width: 300
   height: 500
+  objectName: "main"
 
   Ext.Repl {}
 

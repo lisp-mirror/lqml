@@ -2,7 +2,7 @@
 
 (in-package :qml)
 
-#+(and (or android ios) (not interpreter))
+#-interpreter
 (ffi:clines "extern void init_lib_ASDF(cl_object);")
 
 (defun %sym (symbol package)
@@ -10,14 +10,12 @@
 
 ;;; Quicklisp setup
 
-#+(or android ios)
 (defun ensure-asdf ()
   (unless (find-package :asdf)
     (ffi:c-inline nil nil :void "ecl_init_module(NULL, init_lib_ASDF)" :one-liner t)
     (in-package :qml-user))
   :asdf)
 
-#+(or android ios)
 (defun quicklisp ()
   (ensure-asdf)
   (unless (find-package :quicklisp)
@@ -36,7 +34,6 @@
 
 ;;; Swank setup
 
-#+(or android ios)
 (defun swank/create-server (interface port dont-close style)
   (funcall (%sym 'create-server :swank)
            :interface interface
@@ -44,7 +41,6 @@
            :dont-close dont-close
            :style style))
 
-#+(or android ios)
 (defun start-swank (&key (port 4005) (interface "0.0.0.0") (style :spawn)
                          (load-contribs t) (setup t) (delete t) (quiet t)
                          (dont-close t) log-events)
@@ -64,20 +60,17 @@
        "SLIME-listener"
        (lambda () (swank/create-server interface port dont-close style)))))
 
-#+(or android ios)
 (defun stop-swank (&optional (port 4005))
   (when (find-package :swank)
     (funcall (%sym 'stop-server :swank) port)
     :stopped))
 
-#+(or android ios)
 (progn
   ;; be careful not to use :s, :q in your mobile app code
   ;; ios simulator note: wrap :s and :q in qrun* (would crash otherwise)
   (define-symbol-macro :s (start-swank))
   (define-symbol-macro :q (quicklisp)))
 
-#+(or android ios)
 (export (list #+ios
               'start-swank
               'stop-swank

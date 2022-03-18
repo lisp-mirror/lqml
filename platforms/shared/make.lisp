@@ -49,7 +49,6 @@
 
 (setf *features* (remove :interpreter *features*))
 
-#+(or android ios)
 (load (merge-pathnames (format nil "platforms/~A/cross-compile"
                                #+android "android"
                                #+ios     "ios")))

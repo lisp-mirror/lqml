@@ -2,11 +2,9 @@
 
 (in-package :qml)
 
-#+(or android ios)
 (defvar *reload-all*  nil)
 (defvar *edited-file* nil)
 
-#+(or android ios)
 (defun remote-ip ()
   (terpri *query-io*)
   (princ "Please enter WiFi IP of desktop computer (hit RET to skip): "
@@ -15,27 +13,20 @@
     (unless (x:empty-string ip)
       (format nil "http://~A:8080/" ip))))
 
-#+(or android ios)
 (defvar *remote-ip* #+interpreter nil
                     #-interpreter #.(remote-ip))
 
-#+(or android ios)
 (defun load* (file)
   (load (make-string-input-stream (curl (x:cc *remote-ip* file)))))
 
-(export 'load*)
-
-#+(or android ios)
 (defun load-on-reloaded ()
   (load* "lisp/qml-reload/on-reloaded.lisp"))
 
-#+(or android ios)
 (defun qml:view-status-changed (status)
   (when (and (= 1 status)
              (reload-main-p))
     (load-on-reloaded)))
 
-#+(or android ios)
 (defun reload-main-p ()
   (prog1
       (or *reload-all*
@@ -43,7 +34,6 @@
     (when (eql :once *reload-all*)
       (setf *reload-all* nil))))
 
-#+(or android ios)
 (let ((secs 0)
       (ini t))
   (defun auto-reload-qml ()
@@ -70,5 +60,6 @@
             (setf secs curr)))))
     (qsingle-shot 250 'auto-reload-qml)))
 
-#+(or android ios)
-(export 'auto-reload-qml)
+(export
+ (list 'load*
+       'auto-reload-qml))
