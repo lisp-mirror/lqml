@@ -1,6 +1,5 @@
-# build the host ECL, which will then be used
-# to build the cross-compiled Android version
-# (assumes a 64bit platform)
+# build the host ECL, which will then be used to build the cross-compiled
+# android version (assuming 64bit)
 
 ./configure CFLAGS="-g -O2" LDFLAGS="-g -O2" CC=clang \
             --prefix=`pwd`/ecl-android-host \

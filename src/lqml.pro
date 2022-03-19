@@ -8,7 +8,7 @@ DESTDIR     = .
 OBJECTS_DIR = ./tmp
 MOC_DIR     = ./tmp
 
-# optional (Qt WebEngine)
+# optional (requires Qt WebEngine to be installed)
 #QT          += webview
 #DEFINES     += INI_WEBVIEW
 

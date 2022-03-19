@@ -37,8 +37,7 @@ QVariant Lisp::call(const QJSValue& caller_or_function,
   if (caller_or_function.isQObject()) {
     caller = caller_or_function.toQObject();
     function = function_or_arg0.toString();
-  }
-  else if (caller_or_function.isString()) {
+  } else if (caller_or_function.isString()) {
     function = caller_or_function.toString();
     if (!function_or_arg0.isUndefined()) {
       arguments << function_or_arg0.toVariant();

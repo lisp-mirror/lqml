@@ -90,8 +90,8 @@ Important notes for mobile
 Please remember that installing a new version of your app on mobile will
 **keep all app data** present on the device.
 
-So, if you changed e.g. your Slime version under `platforms/<platform>/assets/,
-an update will not replace those files, because they have been copied from the
+So, if you changed e.g. your Slime version under `platforms/.../assets/`, an
+update will not replace those files, because they have been copied from the
 assets on the very first start of the app.
 
 A simple way to guarantee a clean install is simply uninstalling the app first,

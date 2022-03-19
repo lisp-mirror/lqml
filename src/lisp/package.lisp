@@ -57,4 +57,4 @@
 (defpackage :qml-user
   (:use :cl :qml))
 
-(pushnew :qml *features*)
+(pushnew :lqml *features*)

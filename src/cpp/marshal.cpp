@@ -5,6 +5,15 @@
 
 QT_BEGIN_NAMESPACE
 
+static void warning_msg(const char* message, cl_object l_args) {
+  STATIC_SYMBOL (s_error_output, "*ERROR-OUTPUT*")
+  cl_format(4,
+            cl_symbol_value(s_error_output),
+            STRING("~%[LQML:warning] ~A ~S~%"),
+            STRING(message),
+            l_args);
+}
+
 // *** Lisp to Qt ***
 
 template<typename T>
@@ -194,12 +203,17 @@ QString toCamelCase(const QString& name) {
 QVariant toQVariantMap(cl_object l_list) {
   // special case for JS dictionary, for e.g. populating a Model in QML
   QVariantMap map;
-  if (cl_keywordp(cl_first(l_list)) == ECL_T) {
-    cl_object l_do_args = l_list;
-    while (l_do_args != ECL_NIL) {
-      map.insert(toCamelCase(toQString(cl_symbol_name(cl_first(l_do_args))).toLower()),
+  cl_object l_do_args = l_list;
+  while (l_do_args != ECL_NIL) {
+    cl_object l_keyword = cl_first(l_do_args);
+    if (cl_keywordp(l_keyword) == ECL_T) {
+      map.insert(toCamelCase(toQString(cl_symbol_name(l_keyword)).toLower()),
                  toQVariant(cl_second(l_do_args)));
       l_do_args = cl_cddr(l_do_args);
+    } else {
+      // might not be an error, e.g. unintended return value of Lisp.call()
+      warning_msg("conversion to QVariantMap failed", l_list);
+      break;
     }
   }
   return map;

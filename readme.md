@@ -48,6 +48,7 @@ port still lacks significant parts of mobile (as of Qt6.2).
 TODO
 ----
 
+* add CLOG example, using a QML `WebSocketServer` (just for the fun of it)
 * add sokoban example
 * add CL REPL example
 * add Windows platform

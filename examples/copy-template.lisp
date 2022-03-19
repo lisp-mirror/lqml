@@ -35,7 +35,6 @@
         (= (file-length in)
            (file-length out))))))
 
-
 (dolist (file (directory "app-template/**/*.*"))
   (let* ((from (namestring file))
          (to (string-substitute (format nil "/~A/" *name*)
