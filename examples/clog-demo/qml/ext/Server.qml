@@ -44,7 +44,7 @@ Rectangle {
           case WebSocket.Error:  state = "error"; break
           default: return
         }
-        log({ message: "[status] " + state, error: status === WebSocket.Error})
+        log({ message: "[status] " + state, error: (status === WebSocket.Error) })
         if (status === WebSocket.Closed) {
           Lisp.call(webSocket, "clog-connection:server/on-close")               // call CLOG
         }
