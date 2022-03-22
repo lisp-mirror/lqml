@@ -8,7 +8,9 @@ DESTDIR     = .
 OBJECTS_DIR = ./tmp
 MOC_DIR     = ./tmp
 
-# optional (requires Qt WebEngine to be installed)
+# optional (uncomment if wanted)
+# for running example 'clog-demo' on the desktop
+# requires Qt WebEngine to be installed
 #QT          += webview
 #DEFINES     += INI_WEBVIEW
 

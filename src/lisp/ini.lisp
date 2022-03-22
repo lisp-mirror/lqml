@@ -48,6 +48,29 @@
 (defun %reference-name ()
   (format nil "%~A%" (gensym)))
 
+(defun qrun-on-ui-thread (function &optional (blocking t))
+  ;; for internal use
+  (%qrun-on-ui-thread function blocking))
+
+(defvar *gui-thread* mp:*current-process*)
+
+(defmacro qrun-on-ui-thread* (&body body)
+  ;; for internal use
+  (let ((values (gensym)))
+    `(if (eql *gui-thread* mp:*current-process*)
+         ,(if (second body)
+              (cons 'progn body)
+              (first body))
+         (let (,values)
+           (qrun (lambda ()
+                   (setf ,values (multiple-value-list ,(if (second body)
+                                                           (cons 'progn body)
+                                                           (first body))))))
+           (values-list ,values)))))
+
+(defmacro qrun* (&body body) ; alias
+  `(qrun-on-ui-thread* ,@body))
+
 (defun qexec (&optional ms)
   (qrun* (%qexec ms)))
 
@@ -118,29 +141,6 @@
     (symbol
       (unless (member x '(t nil))
         (symbol-name x)))))
-
-(defun qrun-on-ui-thread (function &optional (blocking t))
-  ;; for internal use
-  (%qrun-on-ui-thread function blocking))
-
-(defvar *gui-thread* mp:*current-process*)
-
-(defmacro qrun-on-ui-thread* (&body body)
-  ;; for internal use
-  (let ((values (gensym)))
-    `(if (eql *gui-thread* mp:*current-process*)
-         ,(if (second body)
-              (cons 'progn body)
-              (first body))
-         (let (,values)
-           (qrun (lambda ()
-                   (setf ,values (multiple-value-list ,(if (second body)
-                                                           (cons 'progn body)
-                                                           (first body))))))
-           (values-list ,values)))))
-
-(defmacro qrun* (&body body) ; alias
-  `(qrun-on-ui-thread* ,@body))
 
 (defun qfind-children (object &optional object-name class-name)
   ;; for internal use
