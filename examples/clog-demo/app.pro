@@ -59,7 +59,6 @@ ios {
   LIBS        += -leclatomic -leclffi -leclgc -leclgmp
   LIBS        += -L$$(ECL_IOS)/lib/$$ECL_VERSION
   LIBS        += -lasdf -lecl-help -ldeflate -lecl-cdb -lecl-curl -lql-minitar -lsockets
-  LIBS        += -lcrypto -lssl
   LIBS        += -L../../../platforms/ios/lib
 
   assets.files      = $$files($$PWD/platforms/ios/assets)
