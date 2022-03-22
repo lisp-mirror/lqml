@@ -1,4 +1,12 @@
 
+Try it
+------
+
+You can download an APK (android devices) of this example from DropBox:
+[CLOG demo](https://www.dropbox.com/s/h5wy57niq4g12ec/CLOG-demo.apk?dl=0).
+
+
+
 Prepare
 -------
 
@@ -24,10 +32,10 @@ the `lqml` executable.
 Info
 ----
 
-This shows how to run CLOG on mobile. It uses the native web-view on mobile,
-which has some restrictions: to see page 2 of the QML UI, you need to swipe
-at the bottom (where the 'Reload' button is), because swiping the native
-web-view won't work.
+This shows how to run CLOG on mobile. It doesn't need a webserver, but uses a
+simple QML `WebSocketServer` instead. The webview is the native one of the
+mobile device, which has some restrictions: it can't overlap with QML items,
+and things like swiping don't work.
 
 On the second page you can see a log of CLOG messages, and start Swank from the
-REPL.
+REPL. Just connect from Slime using the WiFi IP of the mobile device.
