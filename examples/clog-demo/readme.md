@@ -16,7 +16,7 @@ for installing the Slime sources where this example can find them.
 [CLOG for mobile](https://github.com/pls153/clog).
 
 If you want to run this example on the desktop, you need to uncomment the Qt
-WebEngine dependency in [../../src/lqml.pro](../../src/lqmp.pro) and rebuild
+WebEngine dependency in [../../src/lqml.pro](../../src/lqml.pro) and rebuild
 the `lqml` executable.
 
 
