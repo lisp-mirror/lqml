@@ -18,6 +18,13 @@ Item {
     onClicked: browser.reload()
   }
 
+  Button {
+    anchors.bottom: parent.bottom
+    anchors.right: parent.right
+    text: "log/REPL"
+    onClicked: view.currentIndex = 1
+  }
+
   Rectangle {
     id: busy
     objectName: "busy"

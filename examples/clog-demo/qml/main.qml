@@ -5,8 +5,9 @@ import "ext/" as Ext
 Rectangle {
   width: 400
   height: 650
+  id: main
   objectName: "main"
-  color: "#333"
+  color: "#bbb"
 
   SwipeView {
     id: view
@@ -26,6 +27,13 @@ Rectangle {
     anchors.horizontalCenter: parent.horizontalCenter
     count: view.count
     currentIndex: view.currentIndex
+  }
+
+  Keys.onPressed: {
+    if(event.key === Qt.Key_Back) {
+      event.accepted = true
+      view.currentIndex = Math.max(0, view.currentIndex - 1)
+    }
   }
 
   FontLoader { id: fontIcons;    source: "fonts/fontawesome-webfont.ttf" }
