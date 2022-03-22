@@ -13,6 +13,8 @@
 (defvar *ql-libs* nil)
 (defvar *require* nil)
 
+(pushnew :lqml *features*)
+
 (dolist (lib *require*)
   (require lib))
 
@@ -31,10 +33,14 @@
 (ext:install-bytecodes-compiler)
 
 (when *ql-libs*
-  (let ((quicklisp-init (merge-pathnames "quicklisp/setup.lisp"
-                                         (user-homedir-pathname))))
-    (when (probe-file quicklisp-init)
-      (load quicklisp-init)))
+  (let ((home (user-homedir-pathname)))
+    #+ios
+    (setf home (make-pathname :directory
+                              (remove "Library" (pathname-directory home)
+                                      :test 'string=)))
+    (let ((quicklisp-init (merge-pathnames "quicklisp/setup.lisp" home)))
+      (when (probe-file quicklisp-init)
+        (load quicklisp-init))))
   (load *ql-libs*)) ; eventual, not yet installed dependencies
 
 ;;; load ASDF system
