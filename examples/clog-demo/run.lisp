@@ -9,6 +9,8 @@
 (push (merge-pathnames "./")
       asdf:*central-registry*)
 
+(pushnew :interpreter *features*)
+
 (asdf:operate 'asdf:load-source-op :app)
 
 (setf *features* (remove :mobile *features*))

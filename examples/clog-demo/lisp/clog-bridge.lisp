@@ -14,5 +14,10 @@
 (defun server/on-close ()
   (handle-close-connection 'qml-websocket-server))
 
-(qml:q> |url| ui:*browser* (format nil "file://~A"
-                                   (merge-pathnames "htm/boot.html")))
+(in-package :clog)
+
+(defun boot ()
+  (qml:q> |url| ui:*browser* (format nil "file://~A"
+                                     (merge-pathnames "htm/boot.html"))))
+
+(export 'boot)

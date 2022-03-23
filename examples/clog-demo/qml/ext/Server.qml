@@ -17,7 +17,7 @@ Rectangle {
     property int counter: 0
     property var connection
 
-    function send(message) {                                                    // called from CLOG
+    function send(message) {                                                       // called from CLOG
       connection.sendTextMessage(message)
     }
 
@@ -30,11 +30,11 @@ Rectangle {
       connection = webSocket
       webSocket.objectName = ++counter
       log({ message: "[new] " + counter, error: false })
-      Lisp.call(webSocket, "clog-connection:server/on-new-connection")          // call CLOG
+      Lisp.call(webSocket, "clog-connection:server/on-new-connection")             // call CLOG
 
       webSocket.onTextMessageReceived.connect(function(message) {
         log({ message: message, error: false })
-        Lisp.call(webSocket, "clog-connection:server/on-message", message)      // call CLOG
+        Lisp.call(webSocket, "clog-connection:server/on-message", message)         // call CLOG
       })
 
       webSocket.onStatusChanged.connect(function(status) {
@@ -46,7 +46,7 @@ Rectangle {
         }
         log({ message: "[status] " + state, error: (status === WebSocket.Error) })
         if (status === WebSocket.Closed) {
-          Lisp.call(webSocket, "clog-connection:server/on-close")               // call CLOG
+          Lisp.call(webSocket, "clog-connection:server/on-close")                  // call CLOG
         }
       })
     }
