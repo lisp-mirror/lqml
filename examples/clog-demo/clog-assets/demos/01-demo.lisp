@@ -128,11 +128,12 @@
 	  
 (defun on-click (obj)
   (let ((app     (connection-data-item obj "app-data"))
-	(btn-txt (text obj)))
-  (cond ((equal btn-txt " <-- ") (setf (snake-direction app) :left))
-	((equal btn-txt " --> ") (setf (snake-direction app) :right))
-	((equal btn-txt " -^- ") (setf (snake-direction app) :up))
-	((equal btn-txt " -v- ") (setf (snake-direction app) :down)))))
+        (btn-txt (text obj)))
+    ;; LQML note: ignore whitespace (see hack in 'boot.js')
+    (cond ((search "<--" btn-txt) (setf (snake-direction app) :left))
+          ((search "-->" btn-txt) (setf (snake-direction app) :right))
+          ((search "-^-" btn-txt) (setf (snake-direction app) :up))
+          ((search "-v-" btn-txt) (setf (snake-direction app) :down)))))
 
 (defun start-game (body)
   (let* ((app       (connection-data-item body "app-data"))

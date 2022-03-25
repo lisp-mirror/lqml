@@ -1,6 +1,6 @@
 (defsystem :app
   :serial t
-  :depends-on (:clog) ; requires this fork: https://github.com/pls153/clog
+  :depends-on (#-clog-loaded :clog) ; requires this fork: https://github.com/pls153/clog
   :components ((:file "lisp/package")
                (:file "lisp/ui-vars")
                (:file "lisp/swank-quicklisp")

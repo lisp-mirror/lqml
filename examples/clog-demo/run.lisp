@@ -9,7 +9,8 @@
 (push (merge-pathnames "./")
       asdf:*central-registry*)
 
-(pushnew :interpreter *features*)
+(push :interpreter *features*)
+(push :clog-loaded *features*)
 
 (asdf:operate 'asdf:load-source-op :app)
 
@@ -32,5 +33,3 @@
 
 (when (option "-slime")
   (load "~/slime/lqml-start-swank")) ; for 'slime-connect' from Emacs
-
-(clog-demo-1:start-demo)

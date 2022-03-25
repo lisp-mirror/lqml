@@ -38,9 +38,9 @@
                    "/lib/ecl-*/")))
       (shell (cc "cp " lib "*.doc " *assets*))
       (shell (cc "cp -r " lib "encodings " *assets*))))
-  (unless (probe-file (cc *assets* "htm/"))
-    (shell (cc "cp -r ../clog-assets/htm " *assets*))
-    (shell (cc "cp -r ../clog-assets/*.asd " *assets*))))
+  (shell (cc "rm -r " *assets* "htm/*")) ; may have changed
+  (shell (cc "cp -r ../clog-assets/htm " *assets*))
+  (shell (cc "cp -r ../clog-assets/*.asd " *assets*)))
 
 #+mobile
 (unless (find-swank)

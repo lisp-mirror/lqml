@@ -9,6 +9,10 @@ Rectangle {
   objectName: "main"
   color: "#bbb"
 
+  function log(message) {
+    logPage.addLine(message)
+  }
+
   SwipeView {
     id: view
     objectName: "view"
@@ -17,8 +21,8 @@ Rectangle {
     // page 1: webview (native on mobile)
     Ext.Browser {}
 
-    // page 2: websocket server, log, repl
-    Ext.Server {}
+    // page 2: log, repl
+    Ext.Log { id: logPage }
   }
 
   PageIndicator {
@@ -32,7 +36,11 @@ Rectangle {
   Keys.onPressed: {
     if(event.key === Qt.Key_Back) {
       event.accepted = true
-      view.currentIndex = Math.max(0, view.currentIndex - 1)
+      if (view.currentIndex === 0) {
+        Lisp.call("qml:qquit")
+      } else {
+        view.currentIndex--
+      }
     }
   }
 

@@ -9,6 +9,20 @@ Item {
     width: parent. width
     height: parent.height - reload.height
     visible: !busy.visible
+
+    onLoadingChanged: {
+      if (loadRequest.status === WebView.LoadSucceededStatus) {
+        Lisp.call("clog:webview/on-new-connection")
+      }
+    }
+
+    // hack to get notified from the browser, see 'boot.js'
+    onTitleChanged: {
+      if ((title !== "-") && (title !== "boot.html")) {
+        Lisp.call("clog:webview/on-message", title)
+        main.log(title)
+      }
+    }
   }
 
   Button {
