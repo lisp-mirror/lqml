@@ -42,6 +42,11 @@
   (shell (cc "cp -r ../clog-assets/htm " *assets*))
   (shell (cc "cp -r ../clog-assets/*.asd " *assets*)))
 
+#+ios
+(with-open-file (s (merge-pathnames "htm/js/boot.js" *assets*)
+                   :direction :output :if-exists :append)
+  (write-line "ios = true;" s))
+
 #+mobile
 (unless (find-swank)
   (error "Swank files missing, please see <LQML root>/slime/src/readme-sources.md"))

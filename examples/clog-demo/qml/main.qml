@@ -10,7 +10,7 @@ Rectangle {
   color: "#bbb"
 
   function log(message) {
-    logPage.addLine(message)
+    logPage.log(message)
   }
 
   SwipeView {
