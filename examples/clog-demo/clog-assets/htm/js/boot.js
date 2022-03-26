@@ -104,9 +104,10 @@ $( document ).ready(function() {
     if (location.port != '') { adr = adr + ':' + location.port; }
     adr = adr + '/clog';
     */
-    adr = 'ws://127.0.0.1:8080/'; // for LQML
 
-    if (ios) { 
+    if (ios) {
+        adr = 'ws://127.0.0.1:8080';
+
         try {
             console.log ('connecting to ' + adr);
             _ws = new WebSocket (adr);

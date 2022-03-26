@@ -25,7 +25,10 @@ for installing the Slime sources where this example can find them.
 
 If you want to run this example on the desktop, you need to uncomment the Qt
 WebEngine dependency in [../../src/lqml.pro](../../src/lqml.pro) and rebuild
-the `lqml` executable.
+the `lqml` executable. Additionally you need to clear the ECL cache of CLOG
+(see `~/.cache/common-lisp/ecl-...`), because the CLOG desktop version for LQML
+is different from the standard version (see `#+mobile` in CLOG fork, which is
+also needed on the desktop, if used with LQML).
 
 
 
