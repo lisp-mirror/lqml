@@ -32,10 +32,18 @@ the `lqml` executable.
 Info
 ----
 
-This shows how to run CLOG on mobile. It doesn't need a webserver, but uses a
-simple QML `WebSocketServer` instead. The webview is the native one of the
-mobile device, which has some restrictions: it can't overlap with QML items,
-and things like swiping don't work.
+This shows how to run CLOG on mobile. It uses two different approaches,
+depending on the OS:
+
+* direct calls to the browser to run JS, and a small hack to call back to CLOG
+  on browser events
+
+* a simple local websocket-server; this is needed on iOS, where the above
+  approach doesn't work
+
+The webview is the native one of the mobile device, which has some
+restrictions: it can't overlap with QML items, and things like swiping don't
+work.
 
 On the second page you can see a log of CLOG messages, and start Swank from the
 REPL. Just connect from Slime using the WiFi IP of the mobile device.
