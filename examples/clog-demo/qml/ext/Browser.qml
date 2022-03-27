@@ -11,8 +11,10 @@ Item {
     visible: !busy.visible
 
     onLoadingChanged: {
-      if (loadRequest.status === WebView.LoadSucceededStatus) {
-        Lisp.call("clog:webview/on-new-connection")
+      if (Qt.platform.os !== "ios") {
+        if (loadRequest.status === WebView.LoadSucceededStatus) {
+          Lisp.call("clog:webview/on-new-connection")
+        }
       }
     }
 
