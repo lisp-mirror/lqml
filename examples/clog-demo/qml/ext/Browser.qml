@@ -31,7 +31,12 @@ Item {
     id: reload
     anchors.bottom: parent.bottom
     text: "Reload"
-    onClicked: browser.reload()
+    onClicked: {
+      if (Qt.platform.os !== "ios") {
+        Lisp.call("clog:webview/on-close")
+      }
+      browser.reload()
+    }
   }
 
   Button {

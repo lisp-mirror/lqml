@@ -16,8 +16,6 @@
   (clog-connection::handle-close-connection 'qml-webview))
 
 (defun boot ()
-  #-ios
-  (webview/on-close)
   (qml:q> |url| ui:*browser* (format nil "file://~A"
                                      (merge-pathnames "htm/boot.html"))))
 

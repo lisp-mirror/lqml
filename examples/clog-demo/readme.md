@@ -35,14 +35,14 @@ also needed on the desktop, if used with LQML).
 Info
 ----
 
-This shows how to run CLOG on mobile. It uses two different approaches,
-depending on the OS:
+This shows how to run a CLOG app locally on mobile. It uses two different
+approaches, depending on the OS:
 
-* direct calls to the browser to run JS, and a small hack to call back to CLOG
-  on browser events
+1. direct calls to the browser to run JS, and a small hack to call back to CLOG
+   on browser events
 
-* a simple local websocket-server; this is needed on iOS, where the above
-  approach doesn't work
+2. a simple local websocket-server; this is needed on iOS, where the above
+   approach doesn't work
 
 The webview is the native one of the mobile device, which has some
 restrictions: it can't overlap with QML items, and things like swiping don't
