@@ -1,4 +1,14 @@
 
+Prepare
+-------
+
+Please copy the app template files first:
+```
+$ cd ..
+$ ./copy.sh sokoban
+```
+
+
 Info
 ----
 
