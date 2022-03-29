@@ -43,30 +43,30 @@ QT_BEGIN_NAMESPACE
 #define LIST10(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10) \
     CONS(a1, LIST9(a2, a3, a4, a5, a6, a7, a8, a9, a10))
 
-#define TO_CL_FLOAT_2(cap_name, name, x1, x2) \
+#define TO_CL_2(cap_name, name, make, x1, x2) \
 static cl_object from_##name(const cap_name& q) { \
-  cl_object l_ret = LIST2(ecl_make_doublefloat(q.x1()), ecl_make_doublefloat(q.x2())); \
+  cl_object l_ret = LIST2(make(q.x1()), make(q.x2())); \
   return l_ret; \
 }
 
-#define TO_CL_FLOAT_4(cap_name, name, x1, x2, x3, x4) \
+#define TO_CL_4(cap_name, name, make, x1, x2, x3, x4) \
 static cl_object from_##name(const cap_name& q) { \
-  cl_object l_ret = LIST4(ecl_make_doublefloat(q.x1()), ecl_make_doublefloat(q.x2()), ecl_make_doublefloat(q.x3()), ecl_make_doublefloat(q.x4())); \
+  cl_object l_ret = LIST4(make(q.x1()), make(q.x2()), make(q.x3()), make(q.x4())); \
   return l_ret; \
 }
 
-#define TO_QT_FLOAT_2(name) \
+#define TO_QT_2(name, toX) \
 static name to##name(cl_object x) { \
   if (LISTP(x)) { \
-    return name(toReal(cl_first(x)), toReal(cl_second(x))); \
+    return name(toX(cl_first(x)), toX(cl_second(x))); \
   } \
   return name(); \
 }
 
-#define TO_QT_FLOAT_4(name) \
+#define TO_QT_4(name, toX) \
 static name to##name(cl_object x) { \
   if (LISTP(x)) { \
-    return name(toReal(cl_first(x)), toReal(cl_second(x)), toReal(cl_third(x)), toReal(cl_fourth(x))); \
+    return name(toX(cl_first(x)), toX(cl_second(x)), toX(cl_third(x)), toX(cl_fourth(x))); \
   } \
   return name(); \
 }

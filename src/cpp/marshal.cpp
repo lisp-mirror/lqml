@@ -141,18 +141,30 @@ QStringList toQStringList(cl_object l_list) {
   return l;
 }
 
-TO_QT_FLOAT_2 (QPointF)
-TO_QT_FLOAT_2 (QSizeF)
-TO_QT_FLOAT_4 (QRectF)
+TO_QT_2 (QPoint, toInt)
+TO_QT_2 (QSize,  toInt)
+TO_QT_4 (QRect,  toInt)
+
+TO_QT_2 (QPointF, toFloat)
+TO_QT_2 (QSizeF,  toFloat)
+TO_QT_4 (QRectF,  toFloat)
 
 QVariant toQVariant(cl_object l_arg, int type) {
   QVariant var;
   switch (type) {
     case QMetaType::QByteArray: var = toQByteArray(l_arg);    break;
+    case QMetaType::QPoint:     var = toQPoint(l_arg);        break;
     case QMetaType::QPointF:    var = toQPointF(l_arg);       break;
+    case QMetaType::QRect:      var = toQRect(l_arg);         break;
     case QMetaType::QRectF:     var = toQRectF(l_arg);        break;
+    case QMetaType::QSize:      var = toQSize(l_arg);         break;
     case QMetaType::QSizeF:     var = toQSizeF(l_arg);        break;
     case QMetaType::QUrl:       var = QUrl(toQString(l_arg)); break;
+    case QMetaType::QObjectStar: {
+        QObject* o = toQObjectPointer(l_arg);
+        var = QVariant::fromValue<QObject*>(o);     // QObject*
+      }
+      break;
     default:
     if (cl_integerp(l_arg) == ECL_T) {              // int
       var = QVariant(toInt(l_arg));
@@ -170,8 +182,13 @@ QVariant toQVariant(cl_object l_arg, int type) {
             : toQVariantList(l_arg);
     } else if (cl_vectorp(l_arg) == ECL_T) {        // vector (of octets)
       var = QVariant(toQByteArray(l_arg));
-    } else {                                        // default: undefined
-      var = QVariant();
+    } else {
+      QObject* o = toQObjectPointer(l_arg);
+      if (o != nullptr) {
+        var = QVariant::fromValue<QObject*>(o);     // e.g. QQuickItem*
+      } else {
+        var = QVariant();                           // default: undefined
+      }
     }
   }
   return var;
@@ -270,9 +287,13 @@ cl_object from_qstringlist(const QStringList& l) {
   return l_list;
 }
 
-TO_CL_FLOAT_2 (QPointF, qpointf, x, y)
-TO_CL_FLOAT_2 (QSizeF,  qsizef,  width, height)
-TO_CL_FLOAT_4 (QRectF,  qrectf,  x, y, width, height)
+TO_CL_2 (QPoint, qpoint, ecl_make_fixnum, x, y)
+TO_CL_2 (QSize,  qsize,  ecl_make_fixnum, width, height)
+TO_CL_4 (QRect,  qrect,  ecl_make_fixnum, x, y, width, height)
+
+TO_CL_2 (QPointF, qpointf, ecl_make_doublefloat, x, y)
+TO_CL_2 (QSizeF,  qsizef,  ecl_make_doublefloat, width, height)
+TO_CL_4 (QRectF,  qrectf,  ecl_make_doublefloat, x, y, width, height)
 
 cl_object from_qvariant(const QVariant& var) {
   cl_object l_obj = ECL_NIL;
@@ -281,26 +302,37 @@ cl_object from_qvariant(const QVariant& var) {
 #else
   const int type = var.typeId();
 #endif
-  switch (type) {
-    case QMetaType::Bool:       l_obj = var.toBool() ? ECL_T : ECL_NIL;               break;
-    case QMetaType::Double:     l_obj = ecl_make_doublefloat(var.toDouble());         break;
-    case QMetaType::Int:        l_obj = ecl_make_integer(var.toInt());                break;
-    case QMetaType::UInt:       l_obj = ecl_make_unsigned_integer(var.toUInt());      break;
-    case QMetaType::ULongLong:  l_obj = ecl_make_unsigned_integer(var.toULongLong()); break;
-    case QMetaType::QByteArray: l_obj = from_qbytearray(var.toByteArray());           break;
-    case QMetaType::QPointF:    l_obj = from_qpointf(var.toPointF());                 break;
-    case QMetaType::QRectF:     l_obj = from_qrectf(var.toRectF());                   break;
-    case QMetaType::QSizeF:     l_obj = from_qsizef(var.toSizeF());                   break;
-    case QMetaType::QString:
-    case QMetaType::QUrl:       l_obj = from_qstring(var.toString());                 break;
-    // special case (can be nested)
-    case QMetaType::QVariantList:
-      QVariantList list(var.value<QVariantList>());
-      for (QVariant v : qAsConst(list)) {
-        l_obj = CONS(from_qvariant(v), l_obj);
-      }
-      l_obj = cl_nreverse(l_obj);
-    break;
+  if ((type == QMetaType::QObjectStar) || // QObject*
+      (type >= QMetaType::User)) {        // e.g. QQuickItem*
+    QObject* o = var.value<QObject*>();
+    if (o != nullptr) {
+      l_obj = from_qobject_pointer(o);
+    }
+  } else {
+    switch (type) {
+      case QMetaType::Bool:       l_obj = var.toBool() ? ECL_T : ECL_NIL;               break;
+      case QMetaType::Double:     l_obj = ecl_make_doublefloat(var.toDouble());         break;
+      case QMetaType::Int:        l_obj = ecl_make_integer(var.toInt());                break;
+      case QMetaType::UInt:       l_obj = ecl_make_unsigned_integer(var.toUInt());      break;
+      case QMetaType::ULongLong:  l_obj = ecl_make_unsigned_integer(var.toULongLong()); break;
+      case QMetaType::QByteArray: l_obj = from_qbytearray(var.toByteArray());           break;
+      case QMetaType::QPoint:     l_obj = from_qpoint(var.toPoint());                   break;
+      case QMetaType::QPointF:    l_obj = from_qpointf(var.toPointF());                 break;
+      case QMetaType::QRect:      l_obj = from_qrect(var.toRect());                     break;
+      case QMetaType::QRectF:     l_obj = from_qrectf(var.toRectF());                   break;
+      case QMetaType::QSize:      l_obj = from_qsize(var.toSize());                     break;
+      case QMetaType::QSizeF:     l_obj = from_qsizef(var.toSizeF());                   break;
+      case QMetaType::QString:
+      case QMetaType::QUrl:       l_obj = from_qstring(var.toString());                 break;
+      // special case (can be nested)
+      case QMetaType::QVariantList:
+        QVariantList list(var.value<QVariantList>());
+        for (QVariant v : qAsConst(list)) {
+          l_obj = CONS(from_qvariant(v), l_obj);
+        }
+        l_obj = cl_nreverse(l_obj);
+      break;
+    }
   }
   return l_obj;
 }

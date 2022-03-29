@@ -18,6 +18,7 @@
 (defun %qinvoke-method (a b c))
 (defun %qload-c++ (a b))
 (defun %qlog (a))
+(defun qnull (a))
 (defun %qml-get (a b))
 (defun %qml-set (a b c))
 (defun qobject-name (a))

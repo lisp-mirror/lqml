@@ -49,30 +49,30 @@ QT_BEGIN_NAMESPACE
 #define LIST10(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10) \
     CONS(a1, LIST9(a2, a3, a4, a5, a6, a7, a8, a9, a10))
 
-#define TO_CL_FLOAT_2(cap_name, name, x1, x2) \
+#define TO_CL_2(cap_name, name, make, x1, x2) \
 cl_object from_##name(const cap_name& q) { \
-  cl_object l_ret = LIST2(ecl_make_doublefloat(q.x1()), ecl_make_doublefloat(q.x2())); \
+  cl_object l_ret = LIST2(make(q.x1()), make(q.x2())); \
   return l_ret; \
 }
 
-#define TO_CL_FLOAT_4(cap_name, name, x1, x2, x3, x4) \
+#define TO_CL_4(cap_name, name, make, x1, x2, x3, x4) \
 cl_object from_##name(const cap_name& q) { \
-  cl_object l_ret = LIST4(ecl_make_doublefloat(q.x1()), ecl_make_doublefloat(q.x2()), ecl_make_doublefloat(q.x3()), ecl_make_doublefloat(q.x4())); \
+  cl_object l_ret = LIST4(make(q.x1()), make(q.x2()), make(q.x3()), make(q.x4())); \
   return l_ret; \
 }
 
-#define TO_QT_FLOAT_2(name) \
+#define TO_QT_2(name, toX) \
 name to##name(cl_object x) { \
   if (LISTP(x)) { \
-    return name(toReal(cl_first(x)), toReal(cl_second(x))); \
+    return name(toX(cl_first(x)), toX(cl_second(x))); \
   } \
   return name(); \
 }
 
-#define TO_QT_FLOAT_4(name) \
+#define TO_QT_4(name, toX) \
 name to##name(cl_object x) { \
   if (LISTP(x)) { \
-    return name(toReal(cl_first(x)), toReal(cl_second(x)), toReal(cl_third(x)), toReal(cl_fourth(x))); \
+    return name(toX(cl_first(x)), toX(cl_second(x)), toX(cl_third(x)), toX(cl_fourth(x))); \
   } \
   return name(); \
 }
@@ -201,9 +201,13 @@ QString toQString(cl_object l_str) {
   return s;
 }
 
-TO_QT_FLOAT_2 (QPointF)
-TO_QT_FLOAT_2 (QSizeF)
-TO_QT_FLOAT_4 (QRectF)
+TO_QT_2 (QPoint, toInt)
+TO_QT_2 (QSize,  toInt)
+TO_QT_4 (QRect,  toInt)
+
+TO_QT_2 (QPointF, toFloat)
+TO_QT_2 (QSizeF,  toFloat)
+TO_QT_4 (QRectF,  toFloat)
 
 QVariant     toQVariant(cl_object, int = -1);
 QVariant     toQVariantMap(cl_object);
@@ -213,8 +217,11 @@ QVariant toQVariant(cl_object l_arg, int type) {
   QVariant var;
   switch (type) {
     case QMetaType::QByteArray: var = toQByteArray(l_arg);    break;
+    case QMetaType::QPoint:     var = toQPoint(l_arg);        break;
     case QMetaType::QPointF:    var = toQPointF(l_arg);       break;
+    case QMetaType::QRect:      var = toQRect(l_arg);         break;
     case QMetaType::QRectF:     var = toQRectF(l_arg);        break;
+    case QMetaType::QSize:      var = toQSize(l_arg);         break;
     case QMetaType::QSizeF:     var = toQSizeF(l_arg);        break;
     case QMetaType::QUrl:       var = QUrl(toQString(l_arg)); break;
     default:
@@ -295,9 +302,13 @@ cl_object from_qstring(const QString& s) {
   return l_s;
 }
 
-TO_CL_FLOAT_2 (QPointF, qpointf, x, y)
-TO_CL_FLOAT_2 (QSizeF,  qsizef,  width, height)
-TO_CL_FLOAT_4 (QRectF,  qrectf,  x, y, width, height)
+TO_CL_2 (QPoint, qpoint, ecl_make_fixnum, x, y)
+TO_CL_2 (QSize,  qsize,  ecl_make_fixnum, width, height)
+TO_CL_4 (QRect,  qrect,  ecl_make_fixnum, x, y, width, height)
+
+TO_CL_2 (QPointF, qpointf, ecl_make_doublefloat, x, y)
+TO_CL_2 (QSizeF,  qsizef,  ecl_make_doublefloat, width, height)
+TO_CL_4 (QRectF,  qrectf,  ecl_make_doublefloat, x, y, width, height)
 
 cl_object from_qvariant(const QVariant& var) {
   cl_object l_obj = ECL_NIL;
@@ -312,8 +323,11 @@ cl_object from_qvariant(const QVariant& var) {
     case QMetaType::Int:        l_obj = ecl_make_integer(var.toInt());                break;
     case QMetaType::UInt:       l_obj = ecl_make_unsigned_integer(var.toUInt());      break;
     case QMetaType::ULongLong:  l_obj = ecl_make_unsigned_integer(var.toULongLong()); break;
+    case QMetaType::QPoint:     l_obj = from_qpoint(var.toPoint());                   break;
     case QMetaType::QPointF:    l_obj = from_qpointf(var.toPointF());                 break;
+    case QMetaType::QRect:      l_obj = from_qrect(var.toRect());                     break;
     case QMetaType::QRectF:     l_obj = from_qrectf(var.toRectF());                   break;
+    case QMetaType::QSize:      l_obj = from_qsize(var.toSize());                     break;
     case QMetaType::QSizeF:     l_obj = from_qsizef(var.toSizeF());                   break;
     case QMetaType::QString:
     case QMetaType::QUrl:       l_obj = from_qstring(var.toString());                 break;

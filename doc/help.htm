@@ -188,6 +188,15 @@
     (qlog "x ~A y ~A" x y)
 
 
+<b>qnull (qt-object)</b>
+
+  Only useful if used with UNLESS, in order to check for a valid pointer.
+  Returns T if the argument is not of type QT-OBJECT.
+
+    (unless (qnull ui:*item*)
+      ...)
+
+
 <b>qobject-name (qt-object)</b>
 
   Returns the QObject::objectName() of passed QT-OBJECT.

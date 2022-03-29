@@ -14,7 +14,7 @@ const ws = {
         if (ios) {
             _ws.send(message);
         } else {
-            // hack, seel QML 'onTitleChanged()'
+            // hack, see QML 'onTitleChanged()'
             document.title = message;
             document.title = "-"; // non empty
         }

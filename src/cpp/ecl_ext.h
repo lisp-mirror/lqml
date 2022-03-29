@@ -66,6 +66,7 @@ cl_object qfrom_utf8          (cl_object);
 cl_object qinvoke_method2     (cl_object, cl_object, cl_object);
 cl_object qload_cpp           (cl_object, cl_object);
 cl_object qlog2               (cl_object);
+cl_object qnull               (cl_object);
 cl_object qml_get2            (cl_object, cl_object);
 cl_object qml_set2            (cl_object, cl_object, cl_object);
 cl_object qobject_name        (cl_object);

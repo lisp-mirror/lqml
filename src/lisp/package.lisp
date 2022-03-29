@@ -35,6 +35,7 @@
    #:qlater
    #:qload-c++
    #:qlog
+   #:qnull
    #:qprocess-events
    #:qq
    #:qquit

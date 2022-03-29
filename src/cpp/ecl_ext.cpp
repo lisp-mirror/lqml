@@ -43,6 +43,7 @@ void iniCLFunctions() {
   DEFUN ("%qinvoke-method",     qinvoke_method2,     3)
   DEFUN ("%qload-c++",          qload_cpp,           2)
   DEFUN ("%qlog",               qlog2,               1)
+  DEFUN ("qnull",               qnull,               1)
   DEFUN ("%qml-get",            qml_get2,            2)
   DEFUN ("%qml-set",            qml_set2,            3)
   DEFUN ("qobject-name",        qobject_name,        1)
@@ -130,6 +131,30 @@ cl_object qset2(cl_object l_obj, cl_object l_args) {
   ///   (qset *quick-view* |x| 100 |y| 100)
   QObject* qobject = toQObjectPointer(l_obj);
   if (qobject != nullptr) {
+    QQuickItem* item = qobject_cast<QQuickItem*>(qobject);
+    if (item != nullptr) {
+      QByteArray name(toCString(cl_first(l_args)));
+      cl_object l_val = cl_second(l_args);
+      // special case for QQuickItem to:
+      // * not trigger animations while positioning
+      // * provide 'setParent()' for dynamic items, needed for 'objectName'
+      if (QByteArray("x y parent").indexOf(name) != -1) {
+        if (name == "x") {
+          item->setX(toReal(l_val));
+        } else if (name == "y") {
+          item->setY(toReal(l_val));
+        } else {
+          QObject* o = toQObjectPointer(l_val);
+          QQuickItem* parent = qobject_cast<QQuickItem*>(o);
+          if (parent != nullptr) {
+            // need to set both here
+            item->setParent(parent);
+            item->setParentItem(parent);
+          }
+        }
+        ecl_return2(ecl_process_env(), l_args, ECL_T);
+      }
+    }
     const QMetaObject* mo = qobject->metaObject();
     for (cl_object l_do = l_args; l_do != ECL_NIL; l_do = cl_cddr(l_do)) {
       cl_object l_name = cl_first(l_do);
@@ -404,6 +429,16 @@ cl_object qlog2(cl_object l_msg) {
   // for android logging only; see also 'lqml.cpp::logMessageHandler'
   qDebug() << toQString(l_msg);
   ecl_return1(ecl_process_env(), ECL_NIL);
+}
+
+cl_object qnull(cl_object l_arg) {
+  /// args: (qt-object)
+  /// Only useful if used with UNLESS, in order to check for a valid pointer.
+  /// Returns T if the argument is not of type QT-OBJECT.
+  ///   (unless (qnull ui:*item*)
+  ///     ...)
+  QObject* qobject = toQObjectPointer(l_arg);
+  ecl_return1(ecl_process_env(), (qobject == nullptr) ? ECL_T : ECL_NIL);
 }
 
 cl_object qinvoke_method2(cl_object l_obj, cl_object l_name, cl_object l_args) {
