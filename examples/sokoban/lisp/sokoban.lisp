@@ -70,6 +70,9 @@
     (q> |source| item
         (find-file (format nil "qml/img/~A.png" name)))
     (q> |objectName| item name)
+    ;; add to QObject hirarchy, for 'objectName' to be findable
+    (qset item |parent|
+          (find-quick-item ui:*board*))
     (unless *item-size*
       (setf *item-size* (q< |sourceSize| item)))
     item))
@@ -79,10 +82,7 @@
   (flet ((add (types)
            (dolist (type (x:ensure-list types))
              (let ((item (create-item type)))
-               (push item (cdr (assoc type *items*)))
-               ;; add to QObject hirarchy, for 'objectName' to be findable
-               (qset item |parent|
-                     (find-quick-item ui:*board*))))))
+               (push item (cdr (assoc type *items*)))))))
     (dolist (row (sokoban:maze-text *maze*))
       (x:do-string (char row)
         (unless (char= #\Space char)
