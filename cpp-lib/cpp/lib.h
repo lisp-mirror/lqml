@@ -1,5 +1,4 @@
-#ifndef LIB_H
-#define LIB_H
+#pragma once
 
 #include <QtCore>
 
@@ -25,5 +24,3 @@ public:
 };
 
 QT_END_NAMESPACE
-
-#endif

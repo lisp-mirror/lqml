@@ -8,7 +8,7 @@ Item {
   property Component player: Qt.createComponent("dynamic/Player.qml")
   property Component fixed:  Qt.createComponent("dynamic/Fixed.qml")
 
-  function makeItem(name) {
+  function createItem(name) {
     switch (name) {
       case "object":  return box.createObject()
       case "object2": return box2.createObject()

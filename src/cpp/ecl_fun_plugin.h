@@ -1,7 +1,7 @@
 // all-in-one header to include in Qt plugin source files which want to call
 // ECL functions through 'ecl_fun()'
 //
-// does not depend on LQML
+// independent from the LQML lib -- can be used in any Qt app
 
 #pragma once
 
@@ -397,6 +397,9 @@ QVariant ecl_fun(const QByteArray& pkgFun,
                  const QVariant& a14,
                  const QVariant& a15,
                  const QVariant& a16) {
+  // N.B: always include the package name in ECL function calls from C++, like
+  // 'ecl_fun("cl:format", ...);' to prevent useless error messages from ECL
+  // like "the function NIL is undefined"
   void* symbol = lisp_functions.value(pkgFun);
   if (!symbol) {
     int p = pkgFun.indexOf(':');

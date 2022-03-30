@@ -66,7 +66,7 @@
   
 (defun create-item (type)
   (let* ((name (string-downcase type))
-         (item (qjs |makeItem| ui:*dynamic* name)))
+         (item (qjs |createItem| ui:*dynamic* name)))
     (q> |source| item
         (find-file (format nil "qml/img/~A.png" name)))
     (q> |objectName| item name)
@@ -144,7 +144,6 @@
     (reset-maze)
     (x:do-string (ch (nth (level) sokoban:*solutions*))
       (when *level-changed*
-        (setf *level-changed nil)
         (return-from solve))
       (sokoban:move (case (char-downcase ch)
                       (#\u :north)
