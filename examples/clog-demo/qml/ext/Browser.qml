@@ -3,6 +3,11 @@ import QtQuick.Controls 2.15
 import QtWebView 1.15
 
 Item {
+  Loader {
+    active: (Qt.platform.os === "ios")
+    source: "Server.qml"
+  }
+
   WebView {
     id: browser
     objectName: "browser"
