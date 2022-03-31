@@ -7,6 +7,7 @@ Rectangle {
   id: main
   width: Screen.desktopAvailableWidth
   height: Screen.desktopAvailableHeight
+  color: Qt.darker("lightsteelblue", 1.25)
 
   property bool small: (Math.max(width, height) < 1000)
 

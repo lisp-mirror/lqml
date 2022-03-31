@@ -23,8 +23,8 @@ simultaneoulsy.
 This even works (with some limitations, and only in this
 [advanced example](examples/advanced-qml-auto-reload/)) at QML file level,
 which means: only the QML file currently edited is reloaded, preserving the
-state of all other QML files, and more importantly, the current view in case
-of nested page structures.
+state of all other QML files, and -- more importantly -- the current view in
+case of nested page structures.
 
 
 License
@@ -41,8 +41,8 @@ Only tested with **Qt5.15** and latest **Qt6**. It's recommended to use the new
 Qt online installer (see [doc/get-qt6](doc/get-qt6.md)), where you can choose
 to install different Qt versions side by side, sharing the same Qt Creator.
 
-The **mobile** part is currently only tested with **Qt5.15**, because the Qt6
-port still lacks significant parts of mobile (as of Qt6.2).
+The **mobile** part is currently only tested with **Qt5.15**, because the LGPL
+Qt6 version currently still lacks significant parts of mobile (as of Qt6.2).
 
 
 TODO
