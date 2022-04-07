@@ -115,7 +115,8 @@
 (defun run-or-enqueue (function)
   (if (zerop *running-animations*)
       (funcall function)
-      (setf *function-queue* (nconc *function-queue* (list function)))))
+      (setf *function-queue*
+            (nconc *function-queue* (list function)))))
 
 (defmacro queued (&rest functions)
   "Run passed functions in order, waiting for currently running (or newly

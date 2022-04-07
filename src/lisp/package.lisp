@@ -6,6 +6,7 @@
    #:*engine*
    #:*root-item*
    #:*caller*
+   #:clipboard-text
    #:define-qt-wrappers
    #:ensure-permissions
    #:find-quick-item
@@ -15,6 +16,7 @@
    #:qchildren
    #:qcopy-file
    #:qdirectory
+   #:qeql
    #:qfind-child
    #:qml-call
    #:qml-get
@@ -51,6 +53,7 @@
    #:qt-object-p
    #:reload
    #:root-item
+   #:set-clipboard-text
    #:tr
    #:view-status-changed
    #:!))

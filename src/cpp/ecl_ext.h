@@ -50,6 +50,7 @@ QT_BEGIN_NAMESPACE
 #define LIST10(a1, a2, a3, a4, a5, a6, a7, a8, a9, a10) \
     CONS(a1, LIST9(a2, a3, a4, a5, a6, a7, a8, a9, a10))
 
+cl_object clipboard_text      ();
 cl_object ensure_permissions2 (cl_object);
 cl_object js2                 (cl_object, cl_object);
 cl_object pixel_ratio         ();
@@ -70,7 +71,7 @@ cl_object qnull               (cl_object);
 cl_object qml_get2            (cl_object, cl_object);
 cl_object qml_set2            (cl_object, cl_object, cl_object);
 cl_object qobject_name        (cl_object);
-cl_object qprocess_events     ();
+cl_object qprocess_events2    (cl_object);
 cl_object qquit2              (cl_object);
 cl_object qrun_on_ui_thread2  (cl_object, cl_object);
 cl_object qget2               (cl_object, cl_object);
@@ -81,6 +82,7 @@ cl_object qversion            ();
 cl_object qt_object_info      (cl_object);
 cl_object reload2             ();
 cl_object root_item           ();
+cl_object set_clipboard_text  (cl_object);
 cl_object set_shutdown_p      (cl_object);
 
 void iniCLFunctions();

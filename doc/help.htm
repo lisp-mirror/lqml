@@ -8,6 +8,11 @@
 <h2><pre>LQML</pre></h2>
 <pre>
 
+<b>clipboard-text ()</b>
+
+  Calls QGuiApplication::clipboard()->text().
+
+
 <b>define-qt-wrappers (qt-library &rest what)</b>
 
   Defines Lisp methods for all Qt methods/signals/slots of given library,
@@ -103,6 +108,11 @@
   paths.
 
     (qdirectory "assets:/lib")
+
+
+<b>qeql (qt-object-1 qt-object-2)</b>
+
+  Returns T if passed QT-OBJECTs are pointer equal.
 
 
 <b>qescape (string)</b>
@@ -202,9 +212,10 @@
   Returns the QObject::objectName() of passed QT-OBJECT.
 
 
-<b>qprocess-events ()</b>
+<b>qprocess-events (&optional exclude-user-input)</b>
 
-  Calls QCoreApplication::processEvents().
+  Calls QCoreApplication::processEvents(). Pass T to exclude user input
+  events during event processing.
 
 
 <b>qquit (&optional (exit-status 0) (kill-all-threads t))</b>
@@ -249,6 +260,11 @@
 <b>root-item ()</b>
 
   Returns the root item of the QQuickView.
+
+
+<b>set-clipboard-text (text)</b>
+
+  Calls QGuiApplication::clipboard()->setText().
 
 
 <b>tr (source &optional context plural-number)</b>

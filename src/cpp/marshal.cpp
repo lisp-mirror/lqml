@@ -1,4 +1,5 @@
 #include "marshal.h"
+#include <QColor>
 #include <QUrl>
 #include <QVariant>
 #include <QObject>
@@ -152,14 +153,15 @@ TO_QT_4 (QRectF,  toFloat)
 QVariant toQVariant(cl_object l_arg, int type) {
   QVariant var;
   switch (type) {
-    case QMetaType::QByteArray: var = toQByteArray(l_arg);    break;
-    case QMetaType::QPoint:     var = toQPoint(l_arg);        break;
-    case QMetaType::QPointF:    var = toQPointF(l_arg);       break;
-    case QMetaType::QRect:      var = toQRect(l_arg);         break;
-    case QMetaType::QRectF:     var = toQRectF(l_arg);        break;
-    case QMetaType::QSize:      var = toQSize(l_arg);         break;
-    case QMetaType::QSizeF:     var = toQSizeF(l_arg);        break;
-    case QMetaType::QUrl:       var = QUrl(toQString(l_arg)); break;
+    case QMetaType::QByteArray: var = toQByteArray(l_arg);      break;
+    case QMetaType::QColor:     var = QColor(toQString(l_arg)); break;
+    case QMetaType::QPoint:     var = toQPoint(l_arg);          break;
+    case QMetaType::QPointF:    var = toQPointF(l_arg);         break;
+    case QMetaType::QRect:      var = toQRect(l_arg);           break;
+    case QMetaType::QRectF:     var = toQRectF(l_arg);          break;
+    case QMetaType::QSize:      var = toQSize(l_arg);           break;
+    case QMetaType::QSizeF:     var = toQSizeF(l_arg);          break;
+    case QMetaType::QUrl:       var = QUrl(toQString(l_arg));   break;
     case QMetaType::QObjectStar: {
         QObject* o = toQObjectPointer(l_arg);
         var = QVariant::fromValue<QObject*>(o);     // QObject*
@@ -172,6 +174,8 @@ QVariant toQVariant(cl_object l_arg, int type) {
       var = QVariant(toFloat<double>(l_arg));
     } else if (cl_stringp(l_arg) == ECL_T) {        // string
       var = QVariant(toQString(l_arg));
+    } else if (cl_characterp(l_arg) == ECL_T) {     // char
+      var = QChar(toInt(cl_char_code(l_arg)));
     } else if (l_arg == ECL_T) {                    // true
       var = QVariant(true);
     } else if (l_arg == ECL_NIL) {                  // false
@@ -269,6 +273,11 @@ cl_object from_qbytearray(const QByteArray& ba) {
   return l_vec;
 }
 
+cl_object from_qchar(const QChar& ch) {
+  cl_object l_char = cl_code_char(ecl_make_fixnum(ch.unicode()));
+  return l_char;
+}
+
 cl_object from_qstring(const QString& s) {
   cl_object l_s = ecl_alloc_simple_extended_string(s.length());
   ecl_character* l_p = l_s->string.self;
@@ -316,6 +325,8 @@ cl_object from_qvariant(const QVariant& var) {
       case QMetaType::UInt:       l_obj = ecl_make_unsigned_integer(var.toUInt());      break;
       case QMetaType::ULongLong:  l_obj = ecl_make_unsigned_integer(var.toULongLong()); break;
       case QMetaType::QByteArray: l_obj = from_qbytearray(var.toByteArray());           break;
+      case QMetaType::QChar:      l_obj = from_qchar(var.toChar());                     break;
+      case QMetaType::QColor:     l_obj = from_qstring(var.value<QColor>().name());     break;
       case QMetaType::QPoint:     l_obj = from_qpoint(var.toPoint());                   break;
       case QMetaType::QPointF:    l_obj = from_qpointf(var.toPointF());                 break;
       case QMetaType::QRect:      l_obj = from_qrect(var.toRect());                     break;

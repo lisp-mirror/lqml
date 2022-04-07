@@ -38,6 +38,14 @@
                   "NULL"
                   (format nil "0x~X" address))))))
 
+(defun qeql (object-1 object-2)
+  "args: (qt-object-1 qt-object-2)
+  Returns T if passed QT-OBJECTs are pointer equal."
+  (assert (and (qt-object-p object-1)
+               (qt-object-p object-2)))
+  (= (qt-object-address object-1)
+     (qt-object-address object-2)))
+
 (defmacro ! (fun qt-object &rest args)
   ;; legacy, should not be needed, use DEFINE-QT-WRAPPERS instead
   ;; usage:
@@ -157,10 +165,7 @@
     (define-qt-wrappers *c++* :methods) ; Qt methods only (no slots/signals)
     (my-qt-function *c++* x y)          ; call from Lisp"
   (assert (qt-object-p qt-library))
-  (let ((all-functions (qapropos* nil qt-library))
-        (lispify (not (find :do-not-lispify what))))
-    (setf what (remove-if (lambda (x) (find x '(:do-not-lispify t)))
-                          what))
+  (let ((all-functions (qapropos* nil qt-library)))
     (unless what
       (setf what '(:methods :slots :signals)))
     (dolist (functions (loop :for el :in what :collect
@@ -170,16 +175,19 @@
                                  :key 'first :test 'string=)))
           (let* ((p (position #\( fun))
                  (qt-name (subseq fun (1+ (position #\Space fun :from-end t :end p)) p))
-                 (lisp-name (intern (if lispify
-                                        (with-output-to-string (s)
-                                          (x:do-string (ch qt-name)
-                                            (cond ((upper-case-p ch)
-                                                   (format s "-~C" ch))
-                                                  ((char= #\_ ch)
-                                                   (write-char #\- s))
-                                                  (t
-                                                   (write-char (char-upcase ch) s)))))
-                                        qt-name))))
+                 (qt-name* (let ((name (copy-seq qt-name)))
+                             (when (x:ends-with "2" name)
+                               (setf (char name (1- (length name)))
+                                     #\*))
+                             name))
+                 (lisp-name (intern (with-output-to-string (s)
+                                      (x:do-string (ch qt-name*)
+                                        (cond ((upper-case-p ch)
+                                               (format s "-~C" ch))
+                                              ((char= #\_ ch)
+                                               (write-char #\- s))
+                                              (t
+                                               (write-char (char-upcase ch) s))))))))
             ;; there seems to be no simple way to avoid EVAL here
             ;; (excluding non-portable hacks)
             (eval `(defgeneric ,lisp-name (object &rest arguments)))
@@ -204,6 +212,9 @@
                                                  (symbol-name x)
                                                  x))
                                            arguments))))))
+
+(defun qprocess-events (&optional exclude-user-input)
+  (%qprocess-events exclude-user-input))
 
 (defun exec-with-qt-restart ()
   ;; for internal use; for conditions in Slime during Qt event loop processing
@@ -317,7 +328,7 @@
 ;;; alias
 
 (defmacro alias (s1 s2)
-  `(setf (symbol-function ',s1) (function ,s2)))
+  `(setf (fdefinition ',s1) (function ,s2)))
 
 (alias qfun qinvoke-method)
 (alias qrun qrun-on-ui-thread)

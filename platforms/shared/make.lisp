@@ -43,8 +43,6 @@
         (load quicklisp-init))))
   (load *ql-libs*)) ; eventual, not yet installed dependencies
 
-;;; load ASDF system
-
 (asdf:load-system *asdf-system*)
 
 ;;; *** (2) cross-compile ***

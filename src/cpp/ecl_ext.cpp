@@ -9,6 +9,7 @@
 #include <QThread>
 #include <QFile>
 #include <QDir>
+#include <QClipboard>
 #include <QQuickItem>
 #include <QQuickView>
 #include <QQmlEngine>
@@ -27,6 +28,7 @@ void iniCLFunctions() {
     cl_make_package(1, qml);
   }
   si_select_package(qml);
+  DEFUN ("clipboard-text",      clipboard_text,      0)
   DEFUN ("%ensure-permissions", ensure_permissions2, 1)
   DEFUN ("%js",                 js2,                 2)
   DEFUN ("pixel-ratio",         pixel_ratio,         0)
@@ -47,7 +49,7 @@ void iniCLFunctions() {
   DEFUN ("%qml-get",            qml_get2,            2)
   DEFUN ("%qml-set",            qml_set2,            3)
   DEFUN ("qobject-name",        qobject_name,        1)
-  DEFUN ("qprocess-events",     qprocess_events,     0)
+  DEFUN ("%qprocess-events",    qprocess_events2,    1)
   DEFUN ("%qquit",              qquit2,              1)
   DEFUN ("%qrun-on-ui-thread",  qrun_on_ui_thread2,  2)
   DEFUN ("%qget",               qget2,               2)
@@ -58,6 +60,7 @@ void iniCLFunctions() {
   DEFUN ("qt-object-info",      qt_object_info,      1)
   DEFUN ("%reload",             reload2,             0)
   DEFUN ("root-item",           root_item,           0)
+  DEFUN ("set-clipboard-text",  set_clipboard_text,  1)
   DEFUN ("%set-shutdown-p",     set_shutdown_p,      1)
 
   STATIC_SYMBOL_PKG (s_view_status_changed, "VIEW-STATUS-CHANGED", "QML")
@@ -338,10 +341,15 @@ cl_object qescape(cl_object l_str) {
   ecl_return1(ecl_process_env(), l_ret);
 }
 
-cl_object qprocess_events() {
-  /// args: ()
-  /// Calls QCoreApplication::processEvents().
-  QCoreApplication::processEvents();
+cl_object qprocess_events2(cl_object l_exclude_user_input) {
+  /// args: (&optional exclude-user-input)
+  /// Calls QCoreApplication::processEvents(). Pass T to exclude user input
+  /// events during event processing.
+  if (l_exclude_user_input != ECL_NIL) {
+    QCoreApplication::processEvents(QEventLoop::ExcludeUserInputEvents);
+  } else {
+    QCoreApplication::processEvents();
+  }
   ecl_return1(ecl_process_env(), ECL_T);
 }
 
@@ -592,6 +600,20 @@ cl_object reload2() {
   LQML::quickView->setSource(source);
   cl_object l_ret = from_qstring(source.toString());
   ecl_return1(ecl_process_env(), l_ret);
+}
+
+cl_object clipboard_text() {
+  /// args: ()
+  /// Calls QGuiApplication::clipboard()->text().
+  cl_object l_text = from_qstring(QGuiApplication::clipboard()->text());
+  ecl_return1(ecl_process_env(), l_text);
+}
+
+cl_object set_clipboard_text(cl_object l_text) {
+  /// args: (text)
+  /// Calls QGuiApplication::clipboard()->setText().
+  QGuiApplication::clipboard()->setText(toQString(l_text));
+  ecl_return1(ecl_process_env(), l_text);
 }
 
 cl_object qcopy_file(cl_object l_from, cl_object l_to) {

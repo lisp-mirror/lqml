@@ -2,6 +2,7 @@
 
 (in-package :qml)
 
+(defun clipboard-text ())
 (defun %ensure-permissions (a))
 (defun %js (a b))
 (defun pixel-ratio ())
@@ -33,4 +34,5 @@
 (defun qt-object-info (a))
 (defun %reload ())
 (defun root-item ())
+(defun set-clipboard-text (a))
 (defun %set-shutdown-p (a))

@@ -90,6 +90,7 @@ QObject*     toQObjectPointer(cl_object);
 
 cl_object from_cstring(const QByteArray&);
 cl_object from_qbytearray(const QByteArray&);
+cl_object from_qchar(const QChar&);
 cl_object from_qstring(const QString&);
 cl_object from_qstringlist(const QStringList&);
 cl_object from_qvariant(const QVariant&);
