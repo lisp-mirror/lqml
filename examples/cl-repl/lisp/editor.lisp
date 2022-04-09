@@ -1032,20 +1032,16 @@
         (:eval            (eval-expression)        (timer))
         (:history-back    (history-move "back"))
         (:history-forward (history-move "forward"))
-        (:up              (arrow-pressed :up))
-        (:down            (arrow-pressed :down))
-        (:left            (arrow-pressed :left))
-        (:right           (arrow-pressed :right)))))
+        ((:up :down :left :right)
+         (arrow-pressed button)))))
   (values)) ; no return value to QML
 
 (defun button-pressed-and-helt () ; called from QML
   (let ((button (intern (lispify (q< |objectName| *caller*))
                         :keyword)))
-    (case
-      (:up    (arrow-helt :up))
-      (:down  (arrow-helt :down))
-      (:left  (arrow-helt :left))
-      (:right (arrow-helt :right))))
+    (case button
+      ((:up :down :left :right)
+       (arrow-helt button))))
   (values)) ; no return value to QML
 
 ;;; ini

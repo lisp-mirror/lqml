@@ -16,7 +16,8 @@ StackView {
   property bool skipEnsureVisible: false
 
   function availableHeight() {
-    var h = Math.round(Qt.inputMethod.keyboardRectangle.y / Screen.devicePixelRatio)
+    var h = Math.round(Qt.inputMethod.keyboardRectangle.y /
+                       ((Qt.platform.os === "android") ? Screen.devicePixelRatio : 1))
     return (h === 0) ? main.height : h
   }
 

@@ -18,6 +18,7 @@ Item {
       loader.source = "Message.qml"
     }
     loader.item.text = text
+    main.showKeyboard(false)
     loader.item.open()
   }
 
@@ -31,6 +32,7 @@ Item {
     loader.item.title = title
     loader.item.text = text
     loader.item.callback = callback
+    main.showKeyboard(false)
     loader.item.open()
   }
 }

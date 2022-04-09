@@ -48,7 +48,6 @@ Qt6 version currently still lacks significant parts of mobile (as of Qt6.2).
 TODO
 ----
 
-* add CL REPL example
 * add Windows platform
 * port to CMake
 
