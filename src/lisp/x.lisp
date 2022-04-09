@@ -1,6 +1,7 @@
 (defpackage :x
   (:use :common-lisp)
   (:export
+   #:callback-name
    #:cc
    #:bytes-to-string
    #:d
@@ -128,4 +129,11 @@
 
 (defun string-to-bytes (s)
   (map 'vector 'char-code s))
+
+(defun callback-name (callback)
+  (if (stringp callback)
+      callback
+      (format nil "~A:~A"
+              (package-name (symbol-package callback))
+              (symbol-name callback))))
 

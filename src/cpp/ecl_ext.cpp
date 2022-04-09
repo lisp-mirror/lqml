@@ -80,7 +80,7 @@ void error_msg(const char* fun, cl_object l_args) {
   // for error messages in ECL functions defined in C++
   STATIC_SYMBOL_PKG (s_break_on_errors, "*BREAK-ON-ERRORS*", "QML")
   if (cl_symbol_value(s_break_on_errors) != ECL_NIL) {
-    STATIC_SYMBOL_PKG (s_break, "%BREAK", "QML") // see "ini.lisp"
+    STATIC_SYMBOL_PKG (s_break, "%BREAK", "QML") // see 'ini.lisp'
     cl_funcall(4,
                s_break,
                STRING("~%[LQML:error] ~A ~{~S~^ ~}~%"),
@@ -194,7 +194,7 @@ cl_object qfind_child(cl_object l_obj, cl_object l_name) {
   ecl_process_env()->nvalues = 1;
   QString name(toQString(l_name));
   if (!name.isEmpty()) {
-    QObject* qobject = toQObjectPointer(l_obj);
+    QObject* qobject = (l_obj == ECL_NIL) ? qGuiApp : toQObjectPointer(l_obj);
     if (qobject != nullptr) {
       QObject* obj = qobject->findChild<QObject*>(name);
       if (obj != nullptr) {

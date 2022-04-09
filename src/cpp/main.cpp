@@ -15,6 +15,10 @@
   #include <QtWebView>
 #endif
 
+#ifdef QT_EXTENSION
+  #include "cpp/qt.h"
+#endif
+
 #ifdef Q_OS_MACOS
 #define ADD_MACOS_BUNDLE_IMPORT_PATH \
   view.engine()->addImportPath(app.applicationDirPath() + QStringLiteral("/../PlugIns"));
@@ -52,6 +56,9 @@ int catch_all_qexec() {
 
 int main(int argc, char* argv[]) {
   QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+#ifdef NO_TEXT_HANDLES
+  qputenv("QT_QPA_NO_TEXT_HANDLES", "1");
+#endif
 #ifdef INI_WEBVIEW
   QtWebView::initialize();
 #endif
@@ -146,6 +153,12 @@ int main(int argc, char* argv[]) {
   #endif
 #endif
   }
+
+#ifdef QT_EXTENSION
+  QObject* qt = new QT;
+  qt->setParent(&app);
+  qt->setObjectName("QT");
+#endif
 
   // load Lisp file
   QStringList files = arguments.filter(".lisp");

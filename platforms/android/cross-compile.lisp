@@ -28,8 +28,8 @@
       c::*ar*              (cc *ndk-toolchain* "/bin/aarch64-linux-android-ar")
       c::*ranlib*          (cc *ndk-toolchain* "/bin/aarch64-linux-android-ranlib")
       c::*cc-flags*        (cc (ecl-config "--cflags")
-                                 " -DANDROID -DPLATFORM_ANDROID -O2 -fPIC -fno-common -D_THREAD_SAFE -I"
-                                 *ecl-android* "/build/gmp")
+                               " -DANDROID -DPLATFORM_ANDROID -O2 -fPIC -fno-common -D_THREAD_SAFE -I"
+                               *ecl-android* "/build/gmp")
       c::*ld-flags*        (cc "-L" *ecl-android* "/lib -lecl -ldl -lm "
                                "-L" *ndk-toolchain* "/sysroot/usr/lib/aarch64-linux-android/")
       c::*ld-rpath*        nil

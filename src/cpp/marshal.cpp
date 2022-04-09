@@ -260,7 +260,7 @@ cl_object from_cstring(const QByteArray& s) {
 }
 
 static cl_object make_vector() {
-  STATIC_SYMBOL_PKG (s_make_vector, "%MAKE-VECTOR", "QML") // see "ini.lisp"
+  STATIC_SYMBOL_PKG (s_make_vector, "%MAKE-VECTOR", "QML") // see 'ini.lisp'
   cl_object l_vector = cl_funcall(1, s_make_vector);
   return l_vector;
 }
