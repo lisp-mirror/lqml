@@ -598,26 +598,29 @@
 (defun find-text (text)
   "Selects a regular expression (or plain text) if found, returning both the
   matched text and the position; restarts from top after last match."
-  ;; can't use cl-ppcre here, because Qt method expects a QRegularExpression
-  (unless *plain-text-search*
-    (ensure-qt-regexp)
-    (qt:set-pattern qt:*cpp* *qt-regexp*
-                    text))
-  (let* ((result (qt:find* *qml-document-edit*
-                           (or qreg-exp text)
-                           (q< |cursorPosition| ui:*edit*)))
-         (start (first result))
-         (end (second result)))
-    (if (minusp start)
-        (unless (zerop (q< |cursorPosition| ui:*edit*))
-          (q! |deselect| ui:*edit*)
-          (q> |cursorPosition| ui:*edit* 0)
-          (princ "from top")
-          (find-text text))
-        (progn
-          (q! |select| ui:*edit* start end)
-          (values (third result)
-                  start)))))
+  ;; can't use cl-ppcre here, because Qt method expects a QRegularExpression;
+  ;; ensure running on UI thread, required for return values of 'qt:' methods
+  (qrun* (unless *plain-text-search*
+           (ensure-qt-regexp)
+           (qt:set-pattern qt:*cpp* *qt-regexp*
+                           text))
+         (let* ((result (qt:find* qt:*cpp* *qml-document-edit*
+                                  (if *plain-text-search*
+                                      text
+                                      *qt-regexp*)
+                                  (q< |cursorPosition| ui:*edit*)))
+                (start (first result))
+                (end (second result)))
+           (if (minusp start)
+               (unless (zerop (q< |cursorPosition| ui:*edit*))
+                 (q! |deselect| ui:*edit*)
+                 (q> |cursorPosition| ui:*edit* 0)
+                 (princ "from top")
+                 (find-text text))
+               (progn
+                 (q! |select| ui:*edit* start end)
+                 (values (third result)
+                         start))))))
 
 ;;; eval
 
