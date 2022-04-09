@@ -247,6 +247,12 @@
              (apply 'format nil arg1 args)
              (x:join (mapcar 'princ-to-string (cons arg1 args))))))
 
+;;; ios
+
+(defun disable-clipboard-menu (&optional (disable t))
+  ;; see Qt sources hack in example 'cl-repl'
+  (%disable-clipboard-menu disable))
+
 ;;; mobile ini
 
 #+(or android ios)

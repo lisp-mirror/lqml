@@ -28,40 +28,41 @@ void iniCLFunctions() {
     cl_make_package(1, qml);
   }
   si_select_package(qml);
-  DEFUN ("clipboard-text",      clipboard_text,      0)
-  DEFUN ("%ensure-permissions", ensure_permissions2, 1)
-  DEFUN ("%js",                 js2,                 2)
-  DEFUN ("pixel-ratio",         pixel_ratio,         0)
-  DEFUN ("%qapropos",           qapropos2,           3)
-  DEFUN ("qchildren",           qchildren,           1)
-  DEFUN ("qcopy-file",          qcopy_file,          2)
-  DEFUN ("qdirectory",          qdirectory,          1)
-  DEFUN ("qescape",             qescape,             1)
-  DEFUN ("%qexec",              qexec2,              1)
-  DEFUN ("qexit",               qexit,               0)
-  DEFUN ("qfind-child",         qfind_child,         2)
-  DEFUN ("%qfind-children",     qfind_children2,     3)
-  DEFUN ("qfrom-utf8",          qfrom_utf8,          1)
-  DEFUN ("%qinvoke-method",     qinvoke_method2,     3)
-  DEFUN ("%qload-c++",          qload_cpp,           2)
-  DEFUN ("%qlog",               qlog2,               1)
-  DEFUN ("qnull",               qnull,               1)
-  DEFUN ("%qml-get",            qml_get2,            2)
-  DEFUN ("%qml-set",            qml_set2,            3)
-  DEFUN ("qobject-name",        qobject_name,        1)
-  DEFUN ("%qprocess-events",    qprocess_events2,    1)
-  DEFUN ("%qquit",              qquit2,              1)
-  DEFUN ("%qrun-on-ui-thread",  qrun_on_ui_thread2,  2)
-  DEFUN ("%qget",               qget2,               2)
-  DEFUN ("%qset",               qset2,               2)
-  DEFUN ("%qsingle-shot",       qsingle_shot2,       2)
-  DEFUN ("qtranslate",          qtranslate,          3)
-  DEFUN ("qversion",            qversion,            0)
-  DEFUN ("qt-object-info",      qt_object_info,      1)
-  DEFUN ("%reload",             reload2,             0)
-  DEFUN ("root-item",           root_item,           0)
-  DEFUN ("set-clipboard-text",  set_clipboard_text,  1)
-  DEFUN ("%set-shutdown-p",     set_shutdown_p,      1)
+  DEFUN ("clipboard-text",          clipboard_text,          0)
+  DEFUN ("%disable-clipboard-menu", disable_clipboard_menu2, 1)
+  DEFUN ("%ensure-permissions",     ensure_permissions2,     1)
+  DEFUN ("%js",                     js2,                     2)
+  DEFUN ("pixel-ratio",             pixel_ratio,             0)
+  DEFUN ("%qapropos",               qapropos2,               3)
+  DEFUN ("qchildren",               qchildren,               1)
+  DEFUN ("qcopy-file",              qcopy_file,              2)
+  DEFUN ("qdirectory",              qdirectory,              1)
+  DEFUN ("qescape",                 qescape,                 1)
+  DEFUN ("%qexec",                  qexec2,                  1)
+  DEFUN ("qexit",                   qexit,                   0)
+  DEFUN ("qfind-child",             qfind_child,             2)
+  DEFUN ("%qfind-children",         qfind_children2,         3)
+  DEFUN ("qfrom-utf8",              qfrom_utf8,              1)
+  DEFUN ("%qinvoke-method",         qinvoke_method2,         3)
+  DEFUN ("%qload-c++",              qload_cpp,               2)
+  DEFUN ("%qlog",                   qlog2,                   1)
+  DEFUN ("qnull",                   qnull,                   1)
+  DEFUN ("%qml-get",                qml_get2,                2)
+  DEFUN ("%qml-set",                qml_set2,                3)
+  DEFUN ("qobject-name",            qobject_name,            1)
+  DEFUN ("%qprocess-events",        qprocess_events2,        1)
+  DEFUN ("%qquit",                  qquit2,                  1)
+  DEFUN ("%qrun-on-ui-thread",      qrun_on_ui_thread2,      2)
+  DEFUN ("%qget",                   qget2,                   2)
+  DEFUN ("%qset",                   qset2,                   2)
+  DEFUN ("%qsingle-shot",           qsingle_shot2,           2)
+  DEFUN ("qtranslate",              qtranslate,              3)
+  DEFUN ("qversion",                qversion,                0)
+  DEFUN ("qt-object-info",          qt_object_info,          1)
+  DEFUN ("%reload",                 reload2,                 0)
+  DEFUN ("root-item",               root_item,               0)
+  DEFUN ("set-clipboard-text",      set_clipboard_text,      1)
+  DEFUN ("%set-shutdown-p",         set_shutdown_p,          1)
 
   STATIC_SYMBOL_PKG (s_view_status_changed, "VIEW-STATUS-CHANGED", "QML")
   LQML::quickView->connect(LQML::quickView, &QQuickView::statusChanged,
@@ -698,6 +699,12 @@ cl_object ensure_permissions2(cl_object l_permissions) {
   l_ret = cl_nreverse(l_granted);
 #endif
   ecl_return1(ecl_process_env(), l_ret);
+}
+
+cl_object disable_clipboard_menu2(cl_object l_disable) {
+  // for ios only, see Qt sources hack in example 'cl-repl'
+  qGuiApp->setProperty("disable-clipboard-menu", l_disable != ECL_NIL);
+  ecl_return1(ecl_process_env(), l_disable);
 }
 
 

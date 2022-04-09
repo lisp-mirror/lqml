@@ -59,10 +59,12 @@ Build iOS app
 you include asset files (like in example `swank-server`), they may not be
 copied to the build directory, the first time you build the app.
 
-So, it's a good idea to run `qmake-ios` twice before building the app.
+So, it's a good idea to run `qmake-ios` again if there are any startup problems
+of the app (like asset files not found when launching).
 
-The first build after a `qmake-ios` will almost always fail (missing files):
-just run 'Build' (from Xcode) again, and the missing files will be created.
+The first build after a `qmake-ios` will almost always fail (missing build
+files): don't worry, just run 'Build' (from Xcode) again, and the missing files
+will be created.
 
 You also need to check the console from where you launched `./xcode.sh` for
 eventual errors compiling the Lisp code.
@@ -70,13 +72,12 @@ eventual errors compiling the Lisp code.
 $ cd build-ios
 
 $ qmake-ios ..
-$ qmake-ios .. # run twice
 
 $ ./xcode.sh
 ```
 The script above first cross-compiles the Lisp code, then opens **Xcode**.
 
-Please note:
+Please note (important):
 
 * before building the app, go to 'Build Settings' / 'Build Options' and set
   **Enable Bitcode** to **No**
@@ -96,8 +97,10 @@ is currently only tested on **Intel**.
 Simulator note: to show the virtual keyboard, use `cmd-k`.
 
 
+
 Advanced note
 -------------
+
 For conditions during Qt event processing, a fallback restart is added at
 startup (needed in e.g. Slime).
 
