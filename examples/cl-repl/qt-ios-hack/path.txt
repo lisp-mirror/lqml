@@ -1,0 +1,1 @@
+~/Qt/5.15.2/Src/qtbase/src/plugins/platforms/ios/

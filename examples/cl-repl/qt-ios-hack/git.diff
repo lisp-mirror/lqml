@@ -1,0 +1,36 @@
+diff --git a/mac/qiostextinputoverlay.mm b/qiostextinputoverlay.mm
+old mode 100755
+new mode 100644
+index 3da4ba5..6d371a1
+--- a/mac/qiostextinputoverlay.mm
++++ b/qiostextinputoverlay.mm
+@@ -456,6 +456,9 @@ static void executeBlockWithoutAnimation(Block block)
+ 
+ - (void)setEnabled:(BOOL)enabled
+ {
++    if (qApp->property("disable-clipboard-menu").toBool()) // hack
++        enabled = NO;
++
+     if (enabled == self.enabled)
+         return;
+ 
+@@ -677,6 +680,9 @@ static void executeBlockWithoutAnimation(Block block)
+ 
+ - (void)setEnabled:(BOOL)enabled
+ {
++    if (qApp->property("disable-clipboard-menu").toBool()) // hack
++        enabled = NO;
++
+     if (enabled == self.enabled)
+         return;
+ 
+@@ -901,6 +907,9 @@ static void executeBlockWithoutAnimation(Block block)
+ 
+ - (void)setEnabled:(BOOL)enabled
+ {
++    if (qApp->property("disable-clipboard-menu").toBool()) // hack
++        enabled = NO;
++
+     if (enabled == self.enabled)
+         return;
+ 

@@ -8,6 +8,7 @@
    #:*caller*
    #:clipboard-text
    #:define-qt-wrappers
+   #:disable-clipboard-menu
    #:ensure-permissions
    #:find-quick-item
    #:pixel-ratio

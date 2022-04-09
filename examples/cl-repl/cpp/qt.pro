@@ -1,0 +1,23 @@
+QT          += gui quick
+TEMPLATE    = lib
+CONFIG      += plugin release no_keywords
+DEFINES     += PLUGIN
+INCLUDEPATH = /usr/local/include ../../../src/cpp
+LIBS        = -L/usr/local/lib -lecl
+DESTDIR     = ./
+TARGET      = qt
+OBJECTS_DIR = ./tmp/
+MOC_DIR     = ./tmp/
+
+HEADERS += qt.h
+SOURCES += qt.cpp
+
+linux {
+  LIBS += -L../../../platforms/linux/lib
+}
+
+macx {
+  LIBS += -L../../../platforms/macos/lib
+}
+
+QMAKE_CXXFLAGS += -std=c++17
