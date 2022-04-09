@@ -10,7 +10,8 @@ Dialog {
 
   Text {
     id: message
-    wrapMode: Text.WordWrap
+    width: parent.width // without width word wrap won't work
+    wrapMode: Text.Wrap
   }
 
   onAccepted: Lisp.call(callback, true)
