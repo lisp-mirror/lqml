@@ -7,7 +7,7 @@
 #include <QQuickView>
 #include <QDebug>
 
-const char LQML::version[] = "22.4.1"; // Apr 2022
+const char LQML::version[] = "22.4.2"; // Apr 2022
 
 extern "C" void ini_LQML(cl_object);
 

@@ -658,19 +658,13 @@
                      (print-eval-output :values "kill: eval thread not running")))
                 (t
                  (let ((cmd (cond ((cmd ":h")
-                                   "(qml:help)")
+                                   "(dialogs:help)")
                                   ((cmd ":s")
                                    "(qml:start-swank)")
                                   ((cmd ":q")
                                    "(qml:quicklisp)")
-                                  ((cmd ":a")
-                                   "(require :asdf)")
-                                  ((cmd ":f")
-                                   "(dialogs:get-file-name)")
                                   ((cmd ":c")
                                    "(progn (qml:q! |clear| ui:*output-model*) (values))")
-                                  ((cmd ":r")
-                                   "(editor:reload-qml)")
                                   ((cmd "*")
                                    (format nil "(progn~%  (editor::set-clipboard-text (prin1-to-string *))~%  *)"))
                                   ((x:starts-with ":? " text*)
@@ -1133,7 +1127,8 @@
     (change-font :smaller 3))
   (eval:ini :output       'print-eval-output
             :query-dialog 'dialogs:query-dialog
-            :debug-dialog 'dialogs:debug-dialog))
+            :debug-dialog 'dialogs:debug-dialog)
+  (append-output (format nil "~% :h for help") :bold t))
 
 ;;; quit app
 

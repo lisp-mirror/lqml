@@ -72,7 +72,6 @@
   (define-symbol-macro :q (quicklisp)))
 
 (export
- (list #+ios
-       'start-swank
+ (list 'start-swank
        'stop-swank
        'quicklisp))

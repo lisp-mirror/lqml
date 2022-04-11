@@ -7,9 +7,7 @@ Rectangle {
   height: backButton.height
   color: "#f0f0f0"
 
-  property string label
-
-  signal pressed()
+  property alias label: label.text
 
   Button {
     id: backButton
@@ -27,15 +25,27 @@ Rectangle {
         color: "#007aff"
         text: "\uf104"
       }
+
+      Text {
+        x: 30
+        height: backButton.height * 1.1 // align correction (different font from above)
+        verticalAlignment: Text.AlignVCenter
+        font.weight: Font.DemiBold
+        color: iconBack.color
+        text: "Repl"
+        visible: (Qt.platform.os === "ios")
+      }
+
+      implicitWidth: 90
       color: menuBack.color
     }
 
-    onPressed: parent.pressed()
+    onPressed: Lisp.call("dialogs:exited")
   }
 
   Text {
+    id: label
     anchors.centerIn: parent
-    text: menuBack.label
     font.weight: Font.DemiBold
   }
 }

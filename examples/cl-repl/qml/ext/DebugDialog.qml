@@ -14,12 +14,8 @@ Rectangle {
 
     Ext.MenuBack {
       id: menuBack
+      Layout.fillWidth: true
       label: "Debug Dialog"
-
-      onPressed: {
-        debugInput.text = ":q"
-        Lisp.call("dialogs:exited")
-      }
     }
 
     TextField {

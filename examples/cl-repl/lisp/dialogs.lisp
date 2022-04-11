@@ -5,6 +5,7 @@
    #:debug-dialog
    #:get-file-name
    #:exited
+   #:help
    #:push-dialog
    #:pop-dialog
    #:*file-name*))
@@ -26,8 +27,7 @@
   (disable-clipboard-menu)
   (prog1
       (> (q< |depth| ui:*main*) 1)
-    (qjs |popDialog| ui:*main*)
-    (exited)))
+    (qjs |popDialog| ui:*main*)))
 
 (defun wait-while-transition ()
   ;; needed for evtl. recursive calls
@@ -43,7 +43,6 @@
   (q! |forceActiveFocus| ui:*query-input*)
   (q! |showKeyboard| ui:*main* t) ; needed on recursive calls
   (wait-for-closed)
-  (pop-dialog)
   (qlater (lambda () (editor:ensure-focus :show)))
   (q< |text| ui:*query-input*))
 
@@ -66,18 +65,20 @@
   (q! |forceActiveFocus| ui:*debug-input*)
   (qsingle-shot 500 (lambda () (q! |positionViewAtEnd| ui:*debug-text*)))
   (wait-for-closed)
-  (pop-dialog)
   (qlater (lambda () (editor:ensure-focus :show)))
   (q< |text| ui:*debug-input*))
 
-(let ((exited t))
+(let (waiting)
   (defun wait-for-closed ()
-    (setf exited nil)
+    (setf waiting t)
     ;; busy waiting is safer than suspending a thread, especially on mobile
-    (x:while (not  exited)
-      (qsleep 0.1)))
+    (x:while waiting
+      (qsleep 0.1))
+    (pop-dialog))
   (defun exited () ; called from QML
-    (setf exited t)))
+    (unless waiting
+      (pop-dialog))
+    (setf waiting nil)))
 
 ;; file browser
 
@@ -99,8 +100,9 @@
       (qsingle-shot 500 (lambda () (q! |forceActiveFocus| ui:*path*))))))
 
 (defun directory-p (path)
-  (not (or (pathname-name path)
-           (pathname-type path))))
+  (unless (equal "" path)
+    (not (or (pathname-name path)
+             (pathname-type path)))))
 
 (defun set-file-name (file-name) ; called from QML
   (let ((name (remove-if (lambda (ch) (find ch "*?\\")) file-name)))
@@ -134,3 +136,7 @@
     (unless (x:ends-with "/" url)
       (setf path* (x:cc url "/")))
     (q> |folder| ui:*folder-model* url)))
+
+(defun help ()
+  (push-dialog :help))
+

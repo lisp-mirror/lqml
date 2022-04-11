@@ -33,6 +33,7 @@ StackView {
       case "file":  main.push(dialogFile);  break;
       case "debug": main.push(dialogDebug); break;
       case "query": main.push(dialogQuery); break;
+      case "help":  main.push(dialogHelp);  break;
     }
   }
 
@@ -616,6 +617,7 @@ StackView {
   Ext.FileBrowser { id: dialogFile;  opacity: 0 }
   Ext.QueryDialog { id: dialogQuery; opacity: 0 }
   Ext.DebugDialog { id: dialogDebug; opacity: 0 }
+  Ext.Help        { id: dialogHelp;  opacity: 0 }
 
   Ext.ClipboardMenu {}
 

@@ -26,11 +26,6 @@ Rectangle {
       Ext.MenuBack {
         id: menuBack
 
-        onPressed: {
-          Lisp.call("dialogs:set-file-name", "")
-          Lisp.call("dialogs:pop-dialog")
-        }
-
         Row {
           id: buttonRow
           spacing: 4
