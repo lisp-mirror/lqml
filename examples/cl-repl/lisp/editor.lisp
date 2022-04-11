@@ -848,7 +848,8 @@
                  (setf *file* dialogs:*file-name*)
                  (q> |text| ui:*edit* (read-file *file*))
                  (reset-line-count))))
-        (qmsg (format nil "File does not exist:~%~%~S" dialogs:*file-name*))))
+        (qjs |message| ui:*dialogs*
+             (format nil "File does not exist:~%~%~S" dialogs:*file-name*))))
   (qsingle-shot 250 (lambda () (q! |forceActiveFocus| ui:*edit*))))
 
 ;;; save-file
@@ -861,8 +862,9 @@
              (write-sequence (q< |text| ui:*edit*) s)
              (qt:clear-undo-redo-stacks qt:*cpp* *qml-document-edit*))
            t)
-    (qmsg (format nil "File not saved. Please ensure you have write permissions in:~%~%~S"
-                  file))))
+    (qjs |message| ui:*dialogs*
+         (format nil "File not saved. Please ensure you have write permissions in:~%~%~S"
+                 file))))
 
 (defun confirm-dialog (title text callback)
   (qjs |confirm| ui:*dialogs*
