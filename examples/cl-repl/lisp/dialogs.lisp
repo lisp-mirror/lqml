@@ -35,16 +35,17 @@
     (qsleep 0.1)))
 
 (defun query-dialog (query)
-  (unless (x:empty-string query)
-    (q> |text| ui:*query-text* (string-trim '(#\Newline) query)))
-  (q! |clear| ui:*query-input*)
-  (wait-while-transition)
-  (push-dialog :query)
-  (q! |forceActiveFocus| ui:*query-input*)
-  (q! |showKeyboard| ui:*main* t) ; needed on recursive calls
-  (wait-for-closed)
-  (qlater (lambda () (editor:ensure-focus :show)))
-  (q< |text| ui:*query-input*))
+  (qrun*
+   (unless (x:empty-string query)
+     (q> |text| ui:*query-text* (string-trim '(#\Newline) query)))
+   (q! |clear| ui:*query-input*)
+   (wait-while-transition)
+   (push-dialog :query)
+   (q! |forceActiveFocus| ui:*query-input*)
+   (q! |showKeyboard| ui:*main* t) ; needed on recursive calls
+   (wait-for-closed)
+   (qlater (lambda () (editor:ensure-focus :show)))
+   (q< |text| ui:*query-input*)))
 
 (defun append-debug-output (text color bold)
   (qjs |appendOutput| ui:*debug-model*
@@ -53,20 +54,21 @@
              :m-bold  bold)))
 
 (defun debug-dialog (messages)
-  (q! |clear| ui:*debug-model*)
-  (q> |text| ui:*debug-input* ":q")
-  (dolist (text/color messages)
-    (let* ((text (string-trim '(#\Newline) (car text/color)))
-           (color (cdr text/color))
-           (bold (not (string= "black" color)))) ; boolean
-      (append-debug-output text color bold)))
-  (wait-while-transition)
-  (push-dialog :debug)
-  (q! |forceActiveFocus| ui:*debug-input*)
-  (qsingle-shot 500 (lambda () (q! |positionViewAtEnd| ui:*debug-text*)))
-  (wait-for-closed)
-  (qlater (lambda () (editor:ensure-focus :show)))
-  (q< |text| ui:*debug-input*))
+  (qrun*
+   (q! |clear| ui:*debug-model*)
+   (q> |text| ui:*debug-input* ":q")
+   (dolist (text/color messages)
+     (let* ((text (string-trim '(#\Newline) (car text/color)))
+            (color (cdr text/color))
+            (bold (not (string= "black" color)))) ; boolean
+       (append-debug-output text color bold)))
+   (wait-while-transition)
+   (push-dialog :debug)
+   (q! |forceActiveFocus| ui:*debug-input*)
+   (qsingle-shot 500 (lambda () (q! |positionViewAtEnd| ui:*debug-text*)))
+   (wait-for-closed)
+   (qlater (lambda () (editor:ensure-focus :show)))
+   (q< |text| ui:*debug-input*)))
 
 (let (waiting)
   (defun wait-for-closed ()
@@ -138,5 +140,6 @@
     (q> |folder| ui:*folder-model* url)))
 
 (defun help ()
-  (push-dialog :help))
+  (qrun*
+   (push-dialog :help)))
 

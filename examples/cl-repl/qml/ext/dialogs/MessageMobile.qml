@@ -3,7 +3,7 @@ import QtQuick.Controls 2.15
 
 Dialog {
   anchors.centerIn: parent
-  title: "LQML"
+  title: "Info"
   modal: true
   standardButtons: Dialog.Ok
 
