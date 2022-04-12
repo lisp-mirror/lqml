@@ -11,6 +11,7 @@ the pointer is a `nullptr` if the type doesn't match).
 It also shows how to extend non `QObject` classes with a `QObject`, in order
 to store their pointer values in a `QVariant`.
 
-If we need to return a `QObject` value (not a pointer or primitive value) to
-Lisp, it's simply created on the heap, calling `deleteLater()` on it, which
-should be sufficient in most cases.
+If we need to return a non `QObject` value to Lisp (not a pointer or primitive
+value, but a class like `TextBlock` in this example, that is a `QTextBlock`
+extended with a `QObject`), a new instance is created on the heap, calling
+`deleteLater()` on it, which should be sufficient in most cases.
