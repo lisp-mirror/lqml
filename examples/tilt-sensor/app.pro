@@ -49,6 +49,8 @@ ios {
   LIBS        = -L$$(ECL_IOS)/lib -lecl
   LIBS        += -leclatomic -leclffi -leclgc -leclgmp
   LIBS        += -L../../../platforms/ios/lib
+
+  QMAKE_INFO_PLIST = platforms/ios/Info.plist
 }
 
 LIBS    += -llqml -llisp -Ltmp -lapp
