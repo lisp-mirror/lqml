@@ -30,7 +30,7 @@ Rectangle {
 <h2>Help</h2>
 <table cellpadding=5>
   <tr>
-    <td align=right><b>:?</b></td><td>find regular expression, e.g. <b>:?&nbsp;prin[c1]</b>; hit RET for next match</td>
+    <td align=right><b>:?</b></td><td>find regular expression, e.g.<b> :?&nbsp;prin[c1]</b>; hit RET for next match</td>
   </tr>
   <tr>
     <td align=right><b>*</b></td><td>copy eval value to clipboard</td>
@@ -45,7 +45,7 @@ Rectangle {
     <td align=right><b>:k</b></td><td>kill eval thread (long running task)</td>
   </tr>
   <tr>
-    <td align=right><b>double SPC</b></td><td>auto completion, e.g. <b>m-v-b</b></td>
+    <td align=right><b>double SPC</b></td><td>auto completion, e.g.<b> m-v-b</b></td>
   </tr>
   <tr>
     <td align=right><b>tap and hold</b></td><td>in editor to select/copy/paste/eval s-expression, e.g. on <b>defun</b></td>

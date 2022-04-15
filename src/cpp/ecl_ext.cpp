@@ -482,7 +482,7 @@ cl_object qinvoke_method2(cl_object l_obj, cl_object l_name, cl_object l_args) {
     cl_object l_ret = from_qvariant(ret);
     return l_ret;
   }
-  error_msg("QJS", LIST3(l_obj, l_name, l_args));
+  error_msg("QINVOKE-METHOD", LIST3(l_obj, l_name, l_args));
   return ECL_NIL;
 }
 
