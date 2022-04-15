@@ -68,7 +68,6 @@ Rectangle {
     interval: 30
     repeat: true
 
-    // reversed: x axis changes y position, y axis changes x position
-    onTriggered: Lisp.call("maze:move", tilt.reading.yRotation, tilt.reading.xRotation)
+    onTriggered: Lisp.call("maze:move", tilt.reading.xRotation, tilt.reading.yRotation)
   }
 }

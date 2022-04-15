@@ -13,8 +13,10 @@
                           +w+)))
            (normalize (x)
              (* (to-pos x) +w+)))
-    (let* ((dx (min (* 0.2 x-rotation) (1- +w+)))
-           (dy (min (* 0.2 y-rotation) (1- +w+)))
+    ;; x axis rotation changes y
+    ;; y axis rotation changes x
+    (let* ((dx (min (* 0.2 y-rotation) (1- +w+)))
+           (dy (min (* 0.2 x-rotation) (1- +w+)))
            (add-x (add dx))
            (add-y (add dy)))
       (if (aref *maze*
