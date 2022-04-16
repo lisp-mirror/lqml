@@ -4,9 +4,9 @@ development, the simple `-auto` option of `lqml run.lisp` may be more
 appropriate, because it allows for re-initialization (calling Lisp code) after
 reloading QML.*
 
-*The above method also works on mobile, please see example `swank-server`. It
-doesn't depend on Swank, and should therefore also be stable (it uses a local
-trivial web server).*
+*The above method also works on mobile, please see example
+`advanced-qml-auto-realod`. It doesn't depend on Swank, and should therefore
+also be stable (it uses a local trivial web server).*
 
 *You may even run both desktop and (one or more) mobile device auto reloads
 simultaneously (`swank-server` example only), because they all watch/load the

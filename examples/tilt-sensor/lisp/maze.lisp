@@ -51,7 +51,7 @@
       (set-visible x y (aref *maze* x y)))))
 
 (defun new-maze ()
-  (setf *maze* (make-array (list (1+ *width*) (1+ *height*))
+  (setf *maze* (make-array (list *width* *height*)
                            :initial-element t))
   (display-maze)
   (qlater 'generate-maze))

@@ -5,6 +5,8 @@
 (defvar *x*)         ; ball x
 (defvar *y*)         ; ball y
 
+(defvar *max-x* (* (1- *width*) +w+))
+
 (defun move (x-rotation y-rotation) ; called from QML
   (labels ((add (x)
              (truncate (signum x)))
@@ -19,6 +21,7 @@
            (dy (min (* 0.2 x-rotation) (1- +w+)))
            (add-x (add dx))
            (add-y (add dy)))
+      (setf *x* (min *x* *max-x*)) ; don't lose ball (initial x)
       (if (aref *maze*
                 (+ add-x (to-pos *x*))
                 (to-pos *y*))
