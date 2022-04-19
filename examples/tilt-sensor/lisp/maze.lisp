@@ -15,8 +15,8 @@
     (dotimes (c 4)
       (let* ((cd (mod (+ c d) 4))
              (dv (case cd
-                   (0 (list 1 0))
-                   (1 (list 0 1))
+                   (0 (list 0 1))
+                   (1 (list 1 0))
                    (2 (list -1 0))
                    (t (list 0 -1))))
              (x1 (+ x (car dv)))

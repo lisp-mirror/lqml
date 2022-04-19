@@ -3,6 +3,7 @@
 (in-package :qml)
 
 (defun clipboard-text ())
+(defun %disable_clipboard_menu (a))
 (defun %ensure-permissions (a))
 (defun %js (a b))
 (defun pixel-ratio ())
@@ -23,7 +24,7 @@
 (defun %qml-get (a b))
 (defun %qml-set (a b c))
 (defun qobject-name (a))
-(defun qprocess-events ())
+(defun %qprocess-events (a))
 (defun %qquit (a))
 (defun %qrun-on-ui-thread (a b))
 (defun %qget (a b))
