@@ -13,6 +13,7 @@
 ;;; compile ASDF system
 
 (require :asdf)
+(require :cmp)
 
 (push (merge-pathnames "../")
       asdf:*central-registry*)
@@ -26,7 +27,8 @@
                  :type :static-library
                  :move-here (format nil "platforms/~A/lib/"
                                     #+linux  "linux"
-                                    #+darwin "macos")
+                                    #+darwin "macos"
+                                    #+win32  "windows")
                  :init-name "ini_LQML")
 
 #+mobile
@@ -41,15 +43,20 @@
 
 ;;; rename lib
 
-(let* ((from (format nil "platforms/~A/lib/lqml--all-systems.a"
+(let* ((from (format nil "platforms/~A/lib/lqml--all-systems.~A"
                      #+(and linux  (not android)) "linux"
                      #+(and darwin (not ios))     "macos"
+                     #+win32   "windows"
                      #+android "android"
-                     #+ios     "ios"))
-       (to   "liblisp.a")
+                     #+ios     "ios"
+                     #+msvc    "lib"
+                     #-msvc    "a"))
+       (to   #+msvc "lisp.lib"
+             #-msvc "liblisp.a")
        (to*  (format nil "platforms/~A/lib/~A"
                      #+(and linux  (not android)) "linux"
                      #+(and darwin (not ios))     "macos"
+                     #+win32   "windows"
                      #+android "android"
                      #+ios     "ios"
                      to)))

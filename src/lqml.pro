@@ -25,6 +25,14 @@ macx {
   target.path = /usr/local/bin
 }
 
+win32 {
+  include(windows.pri)
+
+  CONFIG      += console
+  LIBS        += -L../../platforms/windows/lib -lecl -llisp
+  target.path = .
+}
+
 INSTALLS = target
 
 HEADERS += \

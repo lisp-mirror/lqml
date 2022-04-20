@@ -16,6 +16,12 @@ macx {
   DESTDIR     = ../../platforms/macos/lib
 }
 
+win32 {
+  include(windows.pri)
+
+  DESTDIR = ../../platforms/windows/lib
+}
+
 android {
   QT           += androidextras
   INCLUDEPATH  = $$(ECL_ANDROID)/include
@@ -55,7 +61,7 @@ android {
                     -norc -shell $$PWD/make.lisp
 } else:ios {
   QMAKE_POST_LINK = ../../platforms/ios/cross-compile.sh ../make.lisp
-} else:unix {
+} else {
   QMAKE_POST_LINK = ecl -shell $$PWD/make.lisp
 }
 

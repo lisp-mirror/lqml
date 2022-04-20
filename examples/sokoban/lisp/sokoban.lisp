@@ -53,7 +53,10 @@
 
 (defun find-file (file)
   (x:if-it (probe-file file)
-           (format nil "file://~A" x:it)
+           (format nil "file:~A~A"
+		   #+win32 ""
+		   #-win32 "//"
+		   x:it)
            (x:cc "qrc:/" file)))
 
 (defun update-translate-xy ()

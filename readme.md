@@ -48,7 +48,6 @@ Qt6 version currently still lacks significant parts of mobile (as of Qt6.2).
 TODO
 ----
 
-* add Windows platform
 * port to CMake
 
 
@@ -61,3 +60,10 @@ On macOS instead, I found this a little annoying bug: after a QML property
 change in Slime, the QQuickView is not updating. So, for a visual update you
 need to click on the view; but it seems to work for subsequent property
 changes.
+
+
+Windows note
+------------
+
+The Windows version is only meant to run on the desktop, using the (free) MSVC
+compiler. Please see [readme-windows](readme-windows.md) for details.

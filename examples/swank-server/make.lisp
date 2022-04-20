@@ -46,6 +46,7 @@
 ;;; compile ASDF system
 
 (require :asdf)
+(require :cmp)
 
 (push (merge-pathnames "../")
       asdf:*central-registry*)
@@ -86,9 +87,12 @@
 
 ;;; rename lib
 
-(let* ((from #-mobile (cc *current* "build/tmp/app--all-systems.a")
+(let* ((from #-mobile (cc *current* (format nil "build/tmp/app--all-systems.~A"
+                                            #+msvc "lib"
+                                            #-msvc "a"))
              #+mobile (cc *library-path* "app--all-systems.a"))
-       (to   "libapp.a")
+       (to   #+msvc "app.lib"
+             #-msvc "libapp.a")
        (to*  #-mobile (cc *current* "build/tmp/" to)
              #+mobile (cc *library-path* to)))
   (when (probe-file to*)

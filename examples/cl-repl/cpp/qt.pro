@@ -20,4 +20,10 @@ macx {
   LIBS += -L../../../platforms/macos/lib
 }
 
+win32 {
+  include(../../../src/windows.pri)
+
+  LIBS += -L../../../platforms/windows/lib
+}
+
 QMAKE_CXXFLAGS += -std=c++17

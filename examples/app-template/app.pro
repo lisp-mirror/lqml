@@ -8,13 +8,19 @@ android {
                   -norc -shell $$PWD/make.lisp
 } else:unix {
   lisp.commands = /usr/local/bin/ecl -shell $$PWD/make.lisp
+} else:win32 {
+  lisp.commands = ecl.exe -shell $$PWD/make.lisp
 }
 
 lisp.input  = LISP_FILES
-lisp.output = tmp/libapp.a
+
+win32:  lisp.output = tmp/app.lib
+!win32: lisp.output = tmp/libapp.a
 
 QMAKE_EXTRA_COMPILERS += lisp
-PRE_TARGETDEPS        += tmp/libapp.a
+
+win32:  PRE_TARGETDEPS = tmp/app.lib
+!win32: PRE_TARGETDEPS = tmp/libapp.a
 
 QT          += quick qml
 TEMPLATE    = app
@@ -29,6 +35,11 @@ MOC_DIR     = tmp
 
 linux: LIBS += -L../../../platforms/linux/lib
 macx:  LIBS += -L../../../platforms/macos/lib
+win32: LIBS += -L../../../platforms/windows/lib
+
+win32 {
+  include(../../src/windows.pri)
+}
 
 android {
   QT          += androidextras
