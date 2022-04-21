@@ -6,7 +6,7 @@ A lightweight ECL based QML-only binding to Qt5/Qt6.
 
 This small project aims to simplify all the steps needed for building
 cross-platform apps. The same sources can be used to build executables for both
-desktop (Linux/macOS) and mobile (android/iOS).
+desktop (Linux/macOS/Windows) and mobile (android/iOS).
 
 
 QML auto reload
