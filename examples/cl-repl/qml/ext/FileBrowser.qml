@@ -11,7 +11,10 @@ Rectangle {
   property bool editMode: false
   property string editFrom
 
-  function urlToString(url) { return url.toString().substring("file://".length) }
+  function urlToString(url) {
+    var cut = (Qt.platform.os === "windows") ? "file:/" : "file://"
+    return url.toString().substring(cut.length)
+  }
 
   Rectangle {
     id: header

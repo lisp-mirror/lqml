@@ -132,11 +132,13 @@
          (namestring *default-pathname-defaults*))))
 
 (defun set-file-browser-path (path) ; called from QML
-  (let ((url (x:cc "file://" (if (x:starts-with ":" path)
-                                 (location path)
-                                 path))))
+  (let ((url (x:cc #+win32 "file:/"
+                   #-win32 "file://"
+                   (if (x:starts-with ":" path)
+                       (location path)
+                       path))))
     (unless (x:ends-with "/" url)
-      (setf path* (x:cc url "/")))
+      (setf url (x:cc url "/")))
     (q> |folder| ui:*folder-model* url)))
 
 (defun help ()
