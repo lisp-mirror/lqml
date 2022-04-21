@@ -107,9 +107,8 @@ int main(int argc, char* argv[]) {
     view.show();
   }
 
-#ifdef Q_OS_WIN
-    // uncomment for apps without console
-    //lqml.ignoreIOStreams();
+#if (defined Q_OS_WIN) && (defined DESKTOP_APP)
+    lqml.ignoreIOStreams();
 #endif
 
 #if (defined Q_OS_ANDROID) || (defined Q_OS_IOS)

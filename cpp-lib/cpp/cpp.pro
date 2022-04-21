@@ -10,3 +10,7 @@ MOC_DIR     = ./tmp/
 
 HEADERS += lib.h
 SOURCES += lib.cpp
+
+win32 {
+  include(../../src/windows.pri)
+}

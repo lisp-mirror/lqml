@@ -42,6 +42,8 @@ macx:  LIBS += -L../../../platforms/macos/lib
 win32: LIBS += -L../../../platforms/windows/lib
 
 win32 {
+  LIBS += ws2_32
+
   include(../../src/windows.pri)
 }
 

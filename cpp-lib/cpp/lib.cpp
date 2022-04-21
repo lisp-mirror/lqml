@@ -13,9 +13,8 @@ QObject* ini() {
     cpp = new CPP;
 
     // needed for QMessageBox
-    static int argc = 1;
-    static char* argv[] = {"cpp"};
-    new QApplication(argc, argv);
+    static int argc = 0;
+    new QApplication(argc, nullptr);
   }
   return cpp;
 }
