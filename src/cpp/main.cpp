@@ -108,7 +108,7 @@ int main(int argc, char* argv[]) {
   }
 
 #if (defined Q_OS_WIN) && (defined DESKTOP_APP)
-    lqml.ignoreIOStreams();
+  lqml.ignoreIOStreams();
 #endif
 
 #if (defined Q_OS_ANDROID) || (defined Q_OS_IOS)

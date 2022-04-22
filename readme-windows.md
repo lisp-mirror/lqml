@@ -35,6 +35,20 @@ Run `nmake` followed by `nmake install`.
 
 
 
+Quicklisp/ASDF notes
+--------------------
+
+To avoid confusion, please note:
+
+* **don't** install Quicklisp using `(require :ecl-quicklisp)`; just install it
+  the usual way, see [Quicklisp beta](https://www.quicklisp.org/beta/)
+
+* put this as first line in your `C:\Users\name\.eclrc`: `(require :cmp)` in
+  order to always use the **C compiler** (instead of the default bytecodes
+  compiler)
+
+
+
 Build LQML
 ----------
 
