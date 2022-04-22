@@ -1,6 +1,6 @@
 QT          += quick qml
 TEMPLATE    = app
-CONFIG      += no_keywords release
+CONFIG      += c++17 no_keywords release
 INCLUDEPATH = /usr/local/include
 LIBS        = -L/usr/local/lib -lecl -llisp
 TARGET      = lqml
@@ -52,8 +52,6 @@ SOURCES += \
   cpp/qt_ecl.cpp \
   cpp/single_shot.cpp \
   cpp/main.cpp
-
-QMAKE_CXXFLAGS += -std=c++17
 
 QMAKE_PRE_LINK = ecl -shell $$PWD/make.lisp
 

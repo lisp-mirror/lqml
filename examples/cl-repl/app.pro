@@ -24,7 +24,7 @@ win32:  PRE_TARGETDEPS = tmp/app.lib
 
 QT          += quick qml
 TEMPLATE    = app
-CONFIG      += no_keywords release
+CONFIG      += c++17 no_keywords release
 DEFINES     += DESKTOP_APP INI_LISP INI_ECL_CONTRIB QT_EXTENSION
 INCLUDEPATH = /usr/local/include ../../../src/cpp
 ECL_VERSION = $$lower($$system(ecl -v))
@@ -87,6 +87,3 @@ HEADERS += ../../src/cpp/main.h   cpp/qt.h
 SOURCES += ../../src/cpp/main.cpp cpp/qt.cpp
 
 RESOURCES = $$files(qml/*)
-
-QMAKE_CXXFLAGS += -std=c++17
-

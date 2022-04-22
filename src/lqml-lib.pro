@@ -1,6 +1,6 @@
 QT          += quick qml
 TEMPLATE    = lib
-CONFIG      += staticlib no_keywords release
+CONFIG      += c++17 staticlib no_keywords release
 LIBS        = -L/usr/local/lib -lecl
 TARGET      = lqml
 OBJECTS_DIR = ./tmp
@@ -51,8 +51,6 @@ SOURCES += \
   cpp/lqml.cpp \
   cpp/qt_ecl.cpp \
   cpp/single_shot.cpp
-
-QMAKE_CXXFLAGS += -std=c++17
 
 # compile Lisp code
 

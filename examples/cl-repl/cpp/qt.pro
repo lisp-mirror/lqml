@@ -1,6 +1,6 @@
 QT          += gui quick
 TEMPLATE    = lib
-CONFIG      += plugin release no_keywords
+CONFIG      += c++17 plugin release no_keywords
 DEFINES     += PLUGIN
 INCLUDEPATH = /usr/local/include ../../../src/cpp
 LIBS        = -L/usr/local/lib -lecl
@@ -25,5 +25,3 @@ win32 {
 
   LIBS += -L../../../platforms/windows/lib
 }
-
-QMAKE_CXXFLAGS += -std=c++17
