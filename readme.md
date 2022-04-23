@@ -39,7 +39,7 @@ Tested
 
 The examples are only tested with **Qt5.15**. The binding also works with
 **Qt6**, but would need some adaption of QML in most examples. It's recommended
-to use the new Qt online installer (see [doc/get-qt6](doc/get-qt6.md)), where
+to use the new Qt online installer (see [readme-qt](readme-qt.md)), where
 you can choose to install different Qt versions side by side, sharing the same
 Qt Creator.
 

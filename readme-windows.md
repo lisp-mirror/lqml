@@ -8,8 +8,8 @@ This only describes the MSVC build.
 
 * install the Windows SDK (for C header files etc.)
 
-* install either Qt5 or Qt6 from the online installer, see
-  [readme-qt](readme-qt.md)
+* install either Qt5.15 (recommended) or Qt6 (will need some adaption of QML in
+  the examples) from the online installer, see [readme-qt](readme-qt.md)
 
 To be able to run everything from the command line, you need to set both
 the MSVC and the Qt environment variables like so:
