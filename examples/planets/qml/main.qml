@@ -24,7 +24,7 @@ Item {
     objectName: "planets"
 
     // example of inline item
-    //ListElement { name: "Earth"; shape: "img/earth.png"; map: "img/earth-map.jpg"; info: "..." }
+    //ListElement { mName: "Earth"; mShape: "img/earth.png"; mMap: "img/earth-map.jpg"; mInfo: "..." }
 
     function addPlanet(planet) { append(planet) }
   }
@@ -53,7 +53,7 @@ Item {
           anchors.leftMargin: 4
           font.pixelSize: parent.height - 22
           color: "#f0f0f0"
-          text: name // see Lisp keyword name
+          text: mName // see Lisp keyword name
         }
       }
 
@@ -76,7 +76,7 @@ Item {
             height: parent.height - mapImage.height
             width: parent.width
             fillMode: Image.PreserveAspectFit
-            source: shape // see Lisp keyword name
+            source: mShape // see Lisp keyword name
           }
 
           Image {
@@ -84,7 +84,7 @@ Item {
             width: parent.width
             height: 0
             fillMode: Image.PreserveAspectFit
-            source: map // see Lisp keyword name
+            source: mMap // see Lisp keyword name
           }
         }
       }
@@ -136,7 +136,7 @@ Item {
               focus: true
               wrapMode: TextEdit.Wrap
               onCursorRectangleChanged: flick.ensureVisible(cursorRectangle)
-              text: info // see Lisp keyword name
+              text: mInfo // see Lisp keyword name
             }
           }
         }
