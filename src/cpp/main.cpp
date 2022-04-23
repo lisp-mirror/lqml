@@ -55,7 +55,9 @@ int catch_all_qexec() {
 }
 
 int main(int argc, char* argv[]) {
+#if QT_VERSION < 0x060000
   QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
+#endif
 #ifdef NO_TEXT_HANDLES
   qputenv("QT_QPA_NO_TEXT_HANDLES", "1");
 #endif

@@ -37,12 +37,11 @@ LQML can be considered public domain.
 Tested
 ------
 
-Only tested with **Qt5.15** and latest **Qt6**. It's recommended to use the new
-Qt online installer (see [doc/get-qt6](doc/get-qt6.md)), where you can choose
-to install different Qt versions side by side, sharing the same Qt Creator.
-
-The **mobile** part is currently only tested with **Qt5.15**, because the LGPL
-Qt6 version currently still lacks significant parts of mobile (as of Qt6.2).
+The examples are only tested with **Qt5.15**. The binding also works with
+**Qt6**, but would need some adaption of QML in most examples. It's recommended
+to use the new Qt online installer (see [doc/get-qt6](doc/get-qt6.md)), where
+you can choose to install different Qt versions side by side, sharing the same
+Qt Creator.
 
 
 TODO

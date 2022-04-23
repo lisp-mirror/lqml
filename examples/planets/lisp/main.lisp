@@ -21,7 +21,7 @@
 ;;;   (q! |clear| *planets*)
 ;;;   (q! |setProperty| *planets* 0 "name" "First")
 ;;;
-;;; The model keys (like ':m-name') are all preceeded by 'm-' to prevent
+;;; The model keys (like ':m-name') are all preceded by 'm-' to prevent
 ;;; eventual name clashes with property names in QML. The 'm' stands for
 ;;; 'model'. This would not be a problem in this example, but it's a good
 ;;; generic rule.
