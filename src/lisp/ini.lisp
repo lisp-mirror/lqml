@@ -240,7 +240,7 @@
   "args: (arg1 &rest args)
   For debug messages. On android they can be captured with 'adb logcat'.
     (qlog 12)
-    (qlog \"width\" 10 \"height\" 20)
+    (qlog \"width\" w \"height\" h)
     (qlog \"x ~A y ~A\" x y)"
   (%qlog (if (and (stringp arg1)
                   (find #\~ arg1))
