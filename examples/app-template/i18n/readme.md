@@ -27,4 +27,4 @@ or `qsTr("")` (QML files).
 
 Now when you launch the app, the translation file matching your system locale
 setting of your platform (see `QLocale`) will be loaded, see `QTranslator` in
-[main.cpp](`../../../src/cpp/main.cpp`).
+[main.cpp](../../../src/cpp/main.cpp).
