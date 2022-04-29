@@ -108,3 +108,9 @@ If you don't want this, define the following in `app.pro`:
 ```
 DEFINES += NO_QT_RESTART
 ```
+
+
+Translations (i18n)
+-------------------
+
+Please see [i18n/readme](i18n/readme.md).
