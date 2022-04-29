@@ -66,8 +66,6 @@
 
 ;;(setf c::*compile-print* t) ; for debugging compile errors
 
-(load (merge-pathnames "src/lisp/tr.lisp")) ; i18n
-
 ;;; --- HACK begin ---
 
 (in-package :asdf/lisp-action)

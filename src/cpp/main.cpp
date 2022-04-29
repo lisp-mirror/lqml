@@ -8,6 +8,7 @@
 #include <QQmlEngine>
 #include <QQmlFileSelector>
 #include <QQuickView>
+#include <QTranslator>
 #include <QtDebug>
 #include <iostream>
 
@@ -93,6 +94,11 @@ int main(int argc, char* argv[]) {
   if (arguments.contains("-v") || arguments.contains("--version")) {
     lqml.printVersion();
     exit(0);
+  }
+
+  QTranslator translator;
+  if (translator.load(QLocale(), QString(), QString(), ":/i18n")) {
+    QCoreApplication::installTranslator(&translator);
   }
 
   new QQmlFileSelector(view.engine(), &view);

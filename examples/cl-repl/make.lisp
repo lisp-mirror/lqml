@@ -63,6 +63,10 @@
 (dolist (file (list "package" "x" "ecl-ext" "ini" "qml")) ; load LQML symbols
   (load (merge-pathnames file "src/lisp/")))
 
+(progn
+  (defvar cl-user::*tr-path* (truename (cc *current* "i18n/")))
+  (load "src/lisp/tr"))
+
 #-mobile
 (progn
   (require :ecl-curl)

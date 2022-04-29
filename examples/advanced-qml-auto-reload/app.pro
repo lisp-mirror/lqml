@@ -88,3 +88,8 @@ system(ecl -shell qml/.create-qml-loaders.lisp)
 
 RESOURCES += $$files(qml/*)
 RESOURCES += $$files(qml/.ext/*)
+RESOURCES += $$files(i18n/*.qm)
+
+lupdate_only {
+  SOURCES += i18n/tr.h
+}

@@ -86,4 +86,9 @@ LIBS        += -llqml -llisp -Ltmp -lapp
 HEADERS += ../../src/cpp/main.h   cpp/qt.h
 SOURCES += ../../src/cpp/main.cpp cpp/qt.cpp
 
-RESOURCES = $$files(qml/*)
+RESOURCES += $$files(qml/*)
+RESOURCES += $$files(i18n/*.qm)
+
+lupdate_only {
+  SOURCES += i18n/tr.h
+}

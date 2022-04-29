@@ -5,16 +5,19 @@
 
 (defparameter *sources* (make-hash-table :test 'equal))
 
-(progn
-  (when (probe-file "tr.h")
-    (delete-file "tr.h"))
+(defvar cl-user::*tr-path* *default-pathname-defaults*)
+
+(let ((tr.h (merge-pathnames "tr.h" cl-user::*tr-path*)))
+  (when (probe-file tr.h)
+    (delete-file tr.h))
+  (format t "~&creating ~S~%" tr.h)
   (define-compiler-macro tr (&whole form src &optional con (n -1))
     (let* ((source (ignore-errors (eval src)))
            (context* (ignore-errors (eval con)))
            (context (if (stringp context*)
                         context*
                         (file-namestring *compile-file-truename*))))
-      (with-open-file (out "tr.h" :direction :output :if-exists :append :if-does-not-exist :create)
+      (with-open-file (out tr.h :direction :output :if-exists :append :if-does-not-exist :create)
         (if (stringp source)
             (unless (gethash (cons source context) *sources*)
               (setf (gethash (cons source context) *sources*) t)

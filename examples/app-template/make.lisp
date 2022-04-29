@@ -30,6 +30,10 @@
 (defun cc (&rest args)
   (apply 'concatenate 'string args))
 
+(progn
+  (defvar cl-user::*tr-path* (truename (cc *current* "i18n/")))
+  (load "src/lisp/tr"))
+
 #-mobile
 (asdf:make-build "app"
                  :monolithic t
