@@ -5,8 +5,9 @@ Translations
 Wrap all strings which need to be translated in either `(tr "")` (Lisp files)
 or `qsTr("")` (QML files).
 
-* compile app (either desktop or mobile), this will generate a dummy file
-  `tr.h`, containing all Lisp strings to translate
+* compile app (either desktop or mobile, you may need `touch ../app.asd` to
+  force recompilation of all files); this will generate a dummy file `tr.h`,
+  containing all Lisp strings to translate
 
 * run Qt command `lupdate` (here: Spanish, Frensh) for creating the translation
   source files from both Lisp and QML strings:
