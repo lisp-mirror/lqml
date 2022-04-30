@@ -322,7 +322,7 @@ cl_object qtranslate(cl_object l_con, cl_object l_src, cl_object l_n) {
   if (n == -1) {
     l_ret = from_qstring(QCoreApplication::translate(context, source));
   } else {
-    l_ret = from_qstring(QCoreApplication::translate(context, source, 0, n));
+    l_ret = from_qstring(QCoreApplication::translate(context, source, nullptr, n));
   }
   ecl_return1(ecl_process_env(), l_ret);
 }

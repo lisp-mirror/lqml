@@ -97,7 +97,8 @@ int main(int argc, char* argv[]) {
   }
 
   QTranslator translator;
-  if (translator.load(QLocale(), QString(), QString(), ":/i18n")) {
+  if ((QFile::exists("i18n") && translator.load(QLocale(), QString(), QString(), "i18n"))
+      || translator.load(QLocale(), QString(), QString(), ":/i18n")) {
     QCoreApplication::installTranslator(&translator);
   }
 

@@ -138,7 +138,8 @@
         (context* (ignore-errors (eval context))))
     `(qml:qtranslate ,(if (stringp context*)
                           context*
-                          (if *compile-file-truename* (file-namestring *compile-file-truename*) ""))
+                          (file-namestring (or *compile-file-truename*
+                                               *load-truename*)))
                      ,source*
                      ,plural-number)))
 
