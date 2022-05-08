@@ -21,11 +21,14 @@
 (defun cc (&rest args)
   (apply 'concatenate 'string args))
 
+(defvar *32bit* (<= most-positive-fixnum (expt 2 32)))
+
 (let* ((cache (namestring asdf:*user-cache*))
        (p (search "/ecl" cache)))
   (setf asdf:*user-cache*
         (pathname (cc (subseq cache 0 p)
                       "/ecl-" #+android "android" #+ios "ios"
+                      (if *32bit* "-32bit" "")
                       (subseq cache (+ 4 p))))))
 
 ;;; *** (1) byte-compile ASDF system ***
@@ -46,8 +49,6 @@
 (asdf:load-system *asdf-system*)
 
 ;;; *** (2) cross-compile ***
-
-;;; load and prepare cross-compiler
 
 (ext:install-c-compiler)
 

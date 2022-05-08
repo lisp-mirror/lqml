@@ -2,9 +2,14 @@ QT          += quick qml
 TEMPLATE    = lib
 CONFIG      += c++17 staticlib no_keywords release
 LIBS        = -L/usr/local/lib -lecl
-TARGET      = lqml
 OBJECTS_DIR = ./tmp
 MOC_DIR     = ./tmp
+
+32bit {
+  TARGET = lqml32
+} else {
+  TARGET = lqml
+}
 
 linux {
   INCLUDEPATH = /usr/local/include
@@ -23,11 +28,21 @@ win32 {
 }
 
 android {
+  32bit {
+    ECL = $$(ECL_ANDROID_32)
+  } else {
+    ECL = $$(ECL_ANDROID)
+  }
   QT           += androidextras
-  INCLUDEPATH  = $$(ECL_ANDROID)/include
-  LIBS         = -L$$(ECL_ANDROID)/lib -lecl
+  INCLUDEPATH  = $$ECL/include
+  LIBS         = -L$$ECL/lib -lecl
   DESTDIR      = ../../platforms/android/lib
-  ANDROID_ABIS = "arm64-v8a"
+
+  32bit {
+    ANDROID_ABIS = "armeabi-v7a"
+  } else {
+    ANDROID_ABIS = "arm64-v8a"
+  }
 }
 
 ios {
@@ -55,7 +70,7 @@ SOURCES += \
 # compile Lisp code
 
 android {
-  QMAKE_POST_LINK = $$(ECL_ANDROID)/../ecl-android-host/bin/ecl \
+  QMAKE_POST_LINK = $$ECL/../ecl-android-host/bin/ecl \
                     -norc -shell $$PWD/make.lisp
 } else:ios {
   QMAKE_POST_LINK = ../../platforms/ios/cross-compile.sh ../make.lisp

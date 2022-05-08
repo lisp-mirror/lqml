@@ -21,6 +21,9 @@ Put this in e.g. `~/.bashrc`:
   export ANDROID_NDK_TOOLCHAIN='<path-to-ndk>/toolchains/llvm/prebuilt/linux-x86_64'
   export ECL_ANDROID='<path-to-cross-compiled-ecl>/ecl-android'
 
+  # optional
+  export ECL_ANDROID_32='<path-to-cross-compiled-ecl-32>/ecl-android'
+
   alias qmake-android='<path-to-qt5.15>/android/bin/qmake'
 ```
 Add the path of the platform tools (`.../sdk/platforms-tools`) to your path, so
@@ -52,3 +55,16 @@ this project. As of March 2022, please use latest ECL from development branch.
 Now you should have your cross-compiled ECL under `~/ecl/android/ecl-android/`,  
 and your host ECL (for cross-compiling) under `~/ecl/android/ecl-android-host/`.
 
+
+
+Build 32bit ECL (optional)
+--------------------------
+
+For older devices you may need a 32bit version. Just use the build scripts in
+[platforms/android/build-ecl/32bit/](platforms/android/build-ecl/32bit/) and
+set `ECL_ANDROID_32` (see above).
+
+For 32bit builds you need to substitute every `qmake-android ...` with:
+```
+qmake-android "CONFIG+=32bit" ...
+```

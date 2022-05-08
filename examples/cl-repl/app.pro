@@ -1,7 +1,12 @@
 LISP_FILES = $$files(lisp/*) app.asd make.lisp
 
 android {
-  lisp.commands = $$(ECL_ANDROID)/../ecl-android-host/bin/ecl \
+  32bit {
+    ECL = $$(ECL_ANDROID_32)
+  } else {
+    ECL = $$(ECL_ANDROID)
+  }
+  lisp.commands = $$ECL/../ecl-android-host/bin/ecl \
                   -norc -shell $$PWD/make.lisp
 } else:ios {
   lisp.commands = $$(ECL_IOS)/../ecl-ios-host/bin/ecl \
@@ -51,17 +56,22 @@ android {
   QT          += androidextras
   DEFINES     += INI_ASDF NO_TEXT_HANDLES
   DEFINES     -= DESKTOP_APP
-  INCLUDEPATH = $$(ECL_ANDROID)/include
-  ECL_VERSION = $$lower($$system($ECL_ANDROID/../ecl-android-host/bin/ecl -v))
+  INCLUDEPATH = $$ECL/include
+  ECL_VERSION = $$lower($$system($$ECL/../ecl-android-host/bin/ecl -v))
   ECL_VERSION = $$replace(ECL_VERSION, " ", "-")
-  LIBS        = -L$$(ECL_ANDROID)/lib -lecl
-  LIBS        += -L$$(ECL_ANDROID)/lib/$$ECL_VERSION
+  LIBS        = -L$$ECL/lib -lecl
+  LIBS        += -L$$ECL/lib/$$ECL_VERSION
   LIBS        += -lasdf -lecl-help -ldeflate -lecl-cdb -lecl-curl -lql-minitar -lsockets
   LIBS        += -L../../../platforms/android/lib
 
-  ANDROID_ABIS               = "arm64-v8a"
-  ANDROID_EXTRA_LIBS         += $$(ECL_ANDROID)/lib/libecl.so
+  ANDROID_EXTRA_LIBS         += $$ECL/lib/libecl.so
   ANDROID_PACKAGE_SOURCE_DIR = ../platforms/android
+
+  32bit {
+    ANDROID_ABIS = "armeabi-v7a"
+  } else {
+    ANDROID_ABIS = "arm64-v8a"
+  }
 }
 
 ios {
@@ -80,8 +90,14 @@ ios {
   QMAKE_BUNDLE_DATA += assets
 }
 
+32bit {
+  LIBS += -llqml32 -llisp32
+} else {
+  LIBS += -llqml -llisp
+}
+
+LIBS        += -Ltmp -lapp
 INCLUDEPATH += ../../../src/cpp
-LIBS        += -llqml -llisp -Ltmp -lapp
 
 HEADERS += ../../src/cpp/main.h   cpp/qt.h
 SOURCES += ../../src/cpp/main.cpp cpp/qt.cpp

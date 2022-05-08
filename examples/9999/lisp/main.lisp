@@ -21,7 +21,7 @@
   (setf *number* number)
   (q! |requestPaint| *canvas*))
 
-(defun paint ()
+(defun paint () ; called from QML
   (with-path ("black")
     (draw-line 0 -150 0 150))
   (with-path ("blue")

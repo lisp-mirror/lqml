@@ -52,7 +52,8 @@
                      #+msvc    "lib"
                      #-msvc    "a"))
        (to   #+msvc "lisp.lib"
-             #-msvc "liblisp.a")
+             #-msvc (format nil "liblisp~A.a"
+                            (if (<= most-positive-fixnum (expt 2 32)) "32" "")))
        (to*  (format nil "platforms/~A/lib/~A"
                      #+(and linux  (not android)) "linux"
                      #+(and darwin (not ios))     "macos"

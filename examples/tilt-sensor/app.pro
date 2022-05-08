@@ -1,7 +1,12 @@
 LISP_FILES = $$files(lisp/*) app.asd make.lisp
 
 android {
-  lisp.commands = $$(ECL_ANDROID)/../ecl-android-host/bin/ecl \
+  32bit {
+    ECL = $$(ECL_ANDROID_32)
+  } else {
+    ECL = $$(ECL_ANDROID)
+  }
+  lisp.commands = $$ECL/../ecl-android-host/bin/ecl \
                   -norc -shell $$PWD/make.lisp
 } else:ios {
   lisp.commands = $$(ECL_IOS)/../ecl-ios-host/bin/ecl \
@@ -44,13 +49,18 @@ win32 {
 android {
   QT          += androidextras sensors
   DEFINES     -= DESKTOP_APP
-  INCLUDEPATH = $$(ECL_ANDROID)/include
-  LIBS        = -L$$(ECL_ANDROID)/lib -lecl
+  INCLUDEPATH = $$ECL/include
+  LIBS        = -L$$ECL/lib -lecl
   LIBS        += -L../../../platforms/android/lib
 
-  ANDROID_ABIS               = "arm64-v8a"
-  ANDROID_EXTRA_LIBS         += $$(ECL_ANDROID)/lib/libecl.so
+  ANDROID_EXTRA_LIBS         += $$ECL/lib/libecl.so
   ANDROID_PACKAGE_SOURCE_DIR = ../platforms/android
+
+  32bit {
+    ANDROID_ABIS = "armeabi-v7a"
+  } else {
+    ANDROID_ABIS = "arm64-v8a"
+  }
 }
 
 ios {
@@ -64,7 +74,13 @@ ios {
   QMAKE_INFO_PLIST = platforms/ios/Info.plist
 }
 
-LIBS    += -llqml -llisp -Ltmp -lapp
+32bit {
+  LIBS += -llqml32 -llisp32
+} else {
+  LIBS += -llqml -llisp
+}
+
+LIBS    += -Ltmp -lapp
 HEADERS += ../../src/cpp/main.h
 SOURCES += ../../src/cpp/main.cpp
 
