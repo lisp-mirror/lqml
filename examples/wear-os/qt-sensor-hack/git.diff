@@ -1,0 +1,62 @@
+diff --git a/QtActivity.java b/examples/wear-os/qt-sensor-hack/QtActivity.java
+index 9d8c46f..c068042 100644
+--- a/QtActivity.java
++++ b/examples/wear-os/qt-sensor-hack/QtActivity.java
+@@ -62,8 +62,56 @@ import android.view.accessibility.AccessibilityEvent;
+ 
+ import org.qtproject.qt5.android.QtNative;
+ 
+-public class QtActivity extends Activity
++// for hack
++import android.hardware.Sensor;
++import android.hardware.SensorEvent;
++import android.hardware.SensorEventListener;
++import android.hardware.SensorManager;
++import android.util.Log;
++
++//public class QtActivity extends Activity
++public class QtActivity extends Activity implements SensorEventListener
+ {
++    // hack
++    public int _heart_rate_           = 0;
++    public int _heart_rate_accuracy_  = 0;
++    private static final String LQML  = "[LQML]";
++
++    // hack
++    public void iniSensors()
++    {
++        try {
++            //Log.d(LQML, "ini heart rate sensor...");
++            SensorManager mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
++            Sensor mHeartRateSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
++            mSensorManager.registerListener(this, mHeartRateSensor, SensorManager.SENSOR_DELAY_NORMAL);
++            //Log.d(LQML, "ini heart rate sensor OK");
++        }
++        catch (Exception e) {
++            //Log.e(LQML, Log.getStackTraceString(e));
++        }
++    }
++
++    // hack
++    @Override
++    public void onAccuracyChanged(Sensor sensor, int accuracy)
++    {
++        if (sensor.getType() == Sensor.TYPE_HEART_RATE) {
++            _heart_rate_accuracy_ = accuracy;
++            //Log.d(LQML, "BPM accuracy: " + _heart_rate_accuracy_);
++        }
++    }
++
++    // hack
++    @Override
++    public void onSensorChanged(SensorEvent event)
++    {
++        if (event.sensor.getType() == Sensor.TYPE_HEART_RATE) {
++            _heart_rate_ = Math.round(event.values[0]);
++            //Log.d(LQML, "BPM: " + _heart_rate_);
++        }
++    }
++
+     public String APPLICATION_PARAMETERS = null; // use this variable to pass any parameters to your application,
+                                                                // the parameters must not contain any white spaces
+                                                                // and must be separated with "\t"
