@@ -68,3 +68,5 @@ For 32bit builds you need to substitute every `qmake-android ...` with:
 ```
 qmake-android "CONFIG+=32bit" ...
 ```
+Just use the respective `build-android/` directory for building, and remember
+to do a `make clean` before running `make`.

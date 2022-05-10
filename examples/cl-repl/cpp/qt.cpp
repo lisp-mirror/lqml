@@ -19,8 +19,8 @@ Q_DECLARE_METATYPE(QTextDocument*)
 QT_BEGIN_NAMESPACE
 
 QObject* ini() {
-  static QObject* qt = 0;
-  if(!qt) {
+  static QObject* qt = nullptr;
+  if (!qt) {
     qt = new QT;
 #ifdef PLUGIN
     ini_lisp();

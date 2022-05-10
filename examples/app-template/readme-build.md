@@ -98,8 +98,12 @@ Simulator note: to show the virtual keyboard, use `cmd-k`.
 
 
 
-Advanced note
--------------
+Notes
+-----
+
+You will note that sometimes a change of a single Lisp file won't recompile
+that file on the next `make`; in those cases, just do something like
+`touch ../app.asd` to force recompilation of everything.
 
 For conditions during Qt event processing, a fallback restart is added at
 startup (needed in e.g. Slime).
