@@ -9,7 +9,7 @@ or `qsTr("")` (QML files).
   force recompilation of all files); this will generate a dummy file `tr.h`,
   containing all Lisp strings to translate
 
-* run Qt command `lupdate` (here: Spanish, Frensh) for creating the translation
+* run Qt command `lupdate` (here: Spanish, French) for creating the translation
   source files from both Lisp and QML strings:
 ```
   lupdate ../app.pro -ts es.ts fr.ts

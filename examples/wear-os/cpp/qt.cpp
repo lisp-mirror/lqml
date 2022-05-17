@@ -22,7 +22,7 @@ static void clearEventualExceptions() {
 
 QObject* ini() {
   static QObject* qt = nullptr;
-  if (!qt) {
+  if (qt == nullptr) {
     qt = new QT;
   }
   return qt;

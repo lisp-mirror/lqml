@@ -1,5 +1,5 @@
 
-Howto
+HowTo
 -----
 
 * to add a new app from the template, run:

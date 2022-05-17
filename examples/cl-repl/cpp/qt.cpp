@@ -20,7 +20,7 @@ QT_BEGIN_NAMESPACE
 
 QObject* ini() {
   static QObject* qt = nullptr;
-  if (!qt) {
+  if (qt == nullptr) {
     qt = new QT;
 #ifdef PLUGIN
     ini_lisp();
@@ -32,7 +32,7 @@ QObject* ini() {
 SyntaxHighlighter::SyntaxHighlighter(QTextDocument* doc)
   : QSyntaxHighlighter(doc) {}
 
-void SyntaxHighlighter::highlightBlock(const QString& text) {
+void SyntaxHighlighter::highlightBlock(const QString& text) { // override
   ecl_fun("editor:highlight-block", VAR(SyntaxHighlighter*, this), text);
 }
 

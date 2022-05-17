@@ -18,7 +18,7 @@ works both on the desktop and on mobile.
 As a concrete example, you may have running your app on the desktop, and have
 both an android mobile device plus an iOS mobile device pointing to the IP of
 the desktop. Now you will see any change to QML on all 3 screens
-simultaneoulsy.
+simultaneously.
 
 This even works (with some limitations, and only in this
 [advanced example](examples/advanced-qml-auto-reload/)) at QML file level,

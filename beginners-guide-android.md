@@ -19,14 +19,13 @@ register with an email.
 
 Make sure to select the following in the online installer (assuming Linux):
 
-* [Qt5.15 Image Formats](doc/img/qt-image-formats.png)
 * [Qt5.15 Desktop, Android](doc/img/qt-desktop-android.png)
 
 Even on Linux you really want the online installer. Yes it's a 1 GB download,
 but it brings all the examples, demos, tutorials, documentation, Qt Designer,
 all QML modules, so you won't miss anything. And you can easily add/remove
-parts later (see `~/Qt/MaintainanceTool` after installation), or install Qt6 in
-parallel in the future.
+parts later (see `~/Qt/MaintainanceTool` after installation), or install Qt6
+in the future (side by side).
 
 
 Cross-compile ECL

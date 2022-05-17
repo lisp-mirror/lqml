@@ -9,7 +9,7 @@ QT_BEGIN_NAMESPACE
 QObject* ini() {
   // any QObject inherited class will do
   static QObject* cpp = nullptr;
-  if (!cpp) {
+  if (cpp == nullptr) {
     cpp = new CPP;
 
     // needed for QMessageBox
