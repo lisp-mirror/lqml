@@ -5,8 +5,7 @@
    #:ini
    #:ini-sensors
    #:heart-rate
-   #:heart-rate-accuracy
-   #:keep-screen-on))
+   #:heart-rate-accuracy))
 
 (in-package :qt)
 

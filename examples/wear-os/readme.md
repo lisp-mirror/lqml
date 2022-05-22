@@ -39,3 +39,13 @@ Closing the window quits the app. If you try to kill it with `ctrl-c`, you need
 an additional `ctrl-d` to exit from ECL. To quit from Slime, do `(qq)` which is
 short for `(qquit)`.
 
+
+
+...and the Apple Watch?
+-----------------------
+
+If you were wondering: both ECL and Qt run almost everywhere, but there **are**
+exceptions. So, neither ECL (because of some missing OS API), nor QML (only Qt
+Core would run) can currently be used on the Apple Watch.
+
+So, just use **SwiftUI** there.

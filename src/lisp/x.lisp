@@ -30,19 +30,19 @@
 
 (defmacro if-it (exp then &optional else)
   `(let ((it ,exp))
-    (if it ,then ,else)))
+     (if it ,then ,else)))
 
 (defmacro if-it* (exp then &optional else)
   `(let ((it* ,exp))
-    (if it* ,then ,else)))
+     (if it* ,then ,else)))
 
 (defmacro when-it (exp &body body)
   `(let ((it ,exp))
-    (when it ,@body)))
+     (when it ,@body)))
 
 (defmacro when-it* (exp &body body)
   `(let ((it* ,exp))
-    (when it* ,@body)))
+     (when it* ,@body)))
 
 (defmacro with-gensyms (syms &body body)
   `(let ,(mapcar (lambda (s)
