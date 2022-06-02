@@ -20,10 +20,7 @@
   (ensure-asdf)
   (unless (find-package :quicklisp)
     #+android
-    (progn
-      (require :ecl-quicklisp)
-      (require :deflate)
-      (require :ql-minitar))
+    (require :ecl-quicklisp)
     #+ios
     (load "quicklisp/setup")
     ;; replace interpreted function with precompiled one from DEFLATE

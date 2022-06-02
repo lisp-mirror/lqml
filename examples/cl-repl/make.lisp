@@ -33,11 +33,14 @@
     (let ((to (cc *assets* "quicklisp/local-projects/slime/")))
       (ensure-directories-exist to)
       (shell (cc "cp -r ../../../slime/src/* " to))))
-  (unless (probe-file (cc *assets* "encodings"))
-    (let ((lib (cc (ext:getenv #+android "ECL_ANDROID" #+ios "ECL_IOS")
-                   "/lib/ecl-*/")))
+  (let ((lib (cc (ext:getenv #+android "ECL_ANDROID" #+ios "ECL_IOS")
+                 "/lib/ecl-*/")))
+    (unless (probe-file (cc *assets* "encodings"))
       (shell (cc "cp " lib "*.doc " *assets*))
-      (shell (cc "cp -r " lib "encodings " *assets*)))))
+      (shell (cc "cp -r " lib "encodings " *assets*)))
+    #+android
+    (unless (probe-file (cc *assets* "ecl-quicklisp.fas"))
+      (shell (cc "cp " lib "ecl-quicklisp.fas " *assets*)))))
 
 #+mobile
 (unless (find-swank)
