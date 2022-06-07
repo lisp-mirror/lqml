@@ -3,7 +3,7 @@
 (defun run ()
   (qt:ini)
   #+android
-  (when t (ensure-permissions :body-sensors)
+  (when (ensure-permissions :body-sensors)
     (qt:ini-sensors qt:*cpp*))
   (update-heart-rate))
 
