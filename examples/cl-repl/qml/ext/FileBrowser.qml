@@ -115,6 +115,31 @@ Rectangle {
                     "*.fas", "*.fasb", "*.fasc", ".eclrc", ".repl-history"]
     }
 
+    Row {
+      y: main.small ? 7 : 10
+      anchors.horizontalCenter: parent.horizontalCenter
+      spacing: 20
+      visible: path.focus
+
+      // cursor back
+      Ext.ArrowButton {
+        opacity: 0.15
+        text: "\uf137"
+
+        onPressed:      path.cursorPosition--
+        onPressAndHold: path.cursorPosition = 0
+      }
+
+      // cursor forward
+      Ext.ArrowButton {
+        opacity: 0.15
+        text: "\uf138"
+
+        onPressed:      path.cursorPosition++
+        onPressAndHold: path.cursorPosition = path.length
+      }
+    }
+
     footer: Rectangle {
       width: fileBrowser.width
       height: itemCount.height + 4

@@ -39,4 +39,29 @@ Rectangle {
       font.pixelSize: queryInput.font.pixelSize - (main.small ? 2 : 0)
     }
   }
+
+  Row {
+    anchors.horizontalCenter: parent.horizontalCenter
+    y: queryInput.y + queryInput.height + (main.small ? 7 : 10)
+    spacing: 20
+    visible: queryInput.focus
+
+    // cursor back
+    Ext.ArrowButton {
+      opacity: 0.15
+      text: "\uf137"
+
+      onPressed:      queryInput.cursorPosition--
+      onPressAndHold: queryInput.cursorPosition = 0
+    }
+
+    // cursor forward
+    Ext.ArrowButton {
+      opacity: 0.15
+      text: "\uf138"
+
+      onPressed:      queryInput.cursorPosition++
+      onPressAndHold: queryInput.cursorPosition = queryInput.length
+    }
+  }
 }

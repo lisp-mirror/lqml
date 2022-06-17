@@ -23,9 +23,12 @@
 (let ((secs 0)
       (ini t))
   (defun auto-reload-qml ()
-    (let ((curr (ignore-errors
-                 (parse-integer
-                  (curl (x:cc *remote-ip* "cgi-bin/qml-last-modified.py"))))))
+    (multiple-value-bind (curr error)
+        (ignore-errors
+         (parse-integer
+          (curl (x:cc *remote-ip* "cgi-bin/qml-last-modified.py"))))
+      (when error
+        (qlog :auto-reload-qml :error error))
       (when (and curr (/= secs curr))
         (when (plusp secs)
           (if ini
