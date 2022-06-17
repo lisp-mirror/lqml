@@ -97,7 +97,7 @@ QVariant QT::block2(const QVariant& vCursor) {
   QTextCursor* cursor = VAL(vCursor, TextCursor*);
   if (cursor != nullptr) {
     TextBlock* tmp = new TextBlock(cursor->block());
-    tmp->deleteLater();
+    QTimer::singleShot(0, tmp, &QObject::deleteLater);
     return VAR(TextBlock*, tmp);
   }
   return QVariant();
@@ -173,7 +173,7 @@ QVariant QT::findBlockByLineNumber(const QVariant& vDocument, const QVariant& vN
   QTextDocument* document = VAL(vDocument, QTextDocument*);
   if (document != nullptr) {
     TextBlock* tmp = new TextBlock(document->findBlockByLineNumber(vNumber.toInt()));
-    tmp->deleteLater();
+    QTimer::singleShot(0, tmp, &QObject::deleteLater);
     return VAR(TextBlock*, tmp);
   }
   return QVariant();
@@ -191,7 +191,7 @@ QVariant QT::next(const QVariant& vBlock) {
   QTextBlock* block = VAL(vBlock, TextBlock*);
   if (block != nullptr) {
     TextBlock* tmp = new TextBlock(block->next());
-    tmp->deleteLater();
+    QTimer::singleShot(0, tmp, &QObject::deleteLater);
     return VAR(TextBlock*, tmp);
   }
   return QVariant();
@@ -217,7 +217,7 @@ QVariant QT::previous(const QVariant& vBlock) {
   QTextBlock* block = VAL(vBlock, TextBlock*);
   if (block != nullptr) {
     TextBlock* tmp = new TextBlock(block->previous());
-    tmp->deleteLater();
+    QTimer::singleShot(0, tmp, &QObject::deleteLater);
     return VAR(TextBlock*, tmp);
   }
   return QVariant();

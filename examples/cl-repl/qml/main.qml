@@ -14,6 +14,7 @@ StackView {
 
   property bool small: (Math.max(width, height) < 1000)
   property bool skipEnsureVisible: false
+  property double editorHeight: 0.5 // preferred initial height (50%)
 
   function availableHeight() {
     var h = Math.round(Qt.inputMethod.keyboardRectangle.y /
@@ -21,10 +22,10 @@ StackView {
     return (h === 0) ? main.height : h
   }
 
-  function halfHeight()       { return (availableHeight() - rectCommand.height) / 2 }
-  function isLandscape()      { return (Screen.primaryOrientation === Qt.LandscapeOrientation) }
-  function keyboardVisible()  { return Qt.inputMethod.visible }
-  function showKeyboard(show) { show ? Qt.inputMethod.show() : Qt.inputMethod.hide() }
+  function divideHeight(factor) { return (availableHeight() - rectCommand.height) * factor }
+  function isLandscape()        { return (Screen.primaryOrientation === Qt.LandscapeOrientation) }
+  function keyboardVisible()    { return Qt.inputMethod.visible }
+  function showKeyboard(show)   { show ? Qt.inputMethod.show() : Qt.inputMethod.hide() }
 
   // show/hide dialogs
 
@@ -129,81 +130,356 @@ StackView {
   Rectangle {
     id: mainRect
 
-    Rectangle {
-      id: rectEdit
-      objectName: "rect_edit"
-      width: main.width
-      height: main.halfHeight()
+    SplitView {
+      id: splitView
+      anchors.fill: parent
+      orientation: Qt.Vertical
 
-      Ext.Flickable {
-        id: flickEdit
-        objectName: "flick_edit"
-        anchors.fill: parent
-        contentWidth: edit.paintedWidth
-        contentHeight: edit.paintedHeight
+      property double handleHeight: 10
 
-        TextEdit {
-          id: edit
-          objectName: "edit"
-          width: flickEdit.width
-          height: flickEdit.height
-          leftPadding: 2
-          font.family: "Hack"
-          font.pixelSize: 18
-          selectionColor: "firebrick"
-          inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText | Qt.ImhNoTextHandles | Qt.ImhNoEditMenu
-          cursorDelegate: cursor
+      handle: Rectangle {
+        implicitHeight: splitView.handleHeight
+        color: SplitHandle.pressed ? Qt.darker(rectOutput.color) : rectOutput.color
+      }
 
-          Keys.onTabPressed: command.forceActiveFocus()
+      Rectangle {
+        id: rectEdit
+        objectName: "rect_edit"
+        width: main.width
+        SplitView.preferredHeight: divideHeight(editorHeight)
 
-          onCursorRectangleChanged: flickEdit.ensureVisible(cursorRectangle)
+        Ext.Flickable {
+          id: flickEdit
+          objectName: "flick_edit"
+          anchors.fill: parent
+          contentWidth: edit.paintedWidth
+          contentHeight: edit.paintedHeight
 
-          Component.onCompleted: later(function() {
-            Lisp.call(textDocument, "editor:set-text-document", objectName)
-          })
+          TextEdit {
+            id: edit
+            objectName: "edit"
+            width: flickEdit.width
+            height: flickEdit.height
+            leftPadding: 2
+            font.family: "Hack"
+            font.pixelSize: 18
+            selectionColor: "firebrick"
+            inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText | Qt.ImhNoTextHandles | Qt.ImhNoEditMenu
+            cursorDelegate: cursor
 
-          // for external keyboard
-          Shortcut {
-            sequence: "Ctrl+E" // E for Expression
-            onActivated: Lisp.call("editor:select-expression")
-          }
-          Shortcut {
-            sequence: "Ctrl+L" // L for Lambda
-            onActivated: Lisp.call("editor:eval-single-expression")
-          }
+            Keys.onTabPressed: command.forceActiveFocus()
 
-          MouseArea {
-            width: Math.max(rectEdit.width, edit.paintedWidth)
-            height: Math.max(rectEdit.height, edit.paintedHeight)
+            onCursorRectangleChanged: flickEdit.ensureVisible(cursorRectangle)
 
-            onPressed: {
-              // seems necessary to consistently move cursor by tapping
-              edit.forceActiveFocus()
-              edit.cursorPosition = edit.positionAt(mouse.x, mouse.y)
-              Qt.inputMethod.show() // needed for edge case (since we have 2 input fields)
-              Lisp.call("editor:set-focus-editor", edit.objectName)
+            Component.onCompleted: later(function() {
+              Lisp.call(textDocument, "editor:set-text-document", objectName)
+            })
+
+            // for external keyboard
+            Shortcut {
+              sequence: "Ctrl+E" // E for Expression
+              onActivated: Lisp.call("editor:select-expression")
+            }
+            Shortcut {
+              sequence: "Ctrl+L" // L for Lambda
+              onActivated: Lisp.call("editor:eval-single-expression")
             }
 
-            onPressAndHold: Lisp.call("editor:copy-paste", edit.cursorPosition)
+            MouseArea {
+              width: Math.max(rectEdit.width, edit.paintedWidth)
+              height: Math.max(rectEdit.height, edit.paintedHeight)
+
+              onPressed: {
+                // seems necessary to consistently move cursor by tapping
+                edit.forceActiveFocus()
+                edit.cursorPosition = edit.positionAt(mouse.x, mouse.y)
+                Qt.inputMethod.show() // needed for edge case (since we have 2 input fields)
+                Lisp.call("editor:set-focus-editor", edit.objectName)
+              }
+
+              onPressAndHold: Lisp.call("editor:copy-paste", edit.cursorPosition)
+            }
+          }
+        }
+      }
+
+      Item {
+        id: bottomItem
+        width: parent.width
+
+        Rectangle {
+          id: rectCommand
+          objectName: "rect_command"
+          width: parent.width
+          height: command.font.pixelSize + 11
+          border.width: 2
+          border.color: command.focus ? "#0066ff" : "lightgray"
+
+          Ext.Flickable {
+            id: flickCommand
+            objectName: "flick_command"
+            anchors.fill: parent
+            contentWidth: command.paintedWidth
+            contentHeight: command.paintedHeight
+
+            TextEdit {
+              id: command
+              objectName: "command"
+              width: flickCommand.width
+              height: flickCommand.height
+              padding: 4
+              font.family: "Hack"
+              font.pixelSize: 18
+              selectionColor: "firebrick"
+              inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText | Qt.ImhNoTextHandles | Qt.ImhNoEditMenu
+              cursorDelegate: cursor
+              focus: true
+
+              Keys.onUpPressed:   Lisp.call("editor:history-move", "back")
+              Keys.onDownPressed: Lisp.call("editor:history-move", "forward")
+              Keys.onTabPressed:  edit.forceActiveFocus()
+
+              onCursorRectangleChanged: flickCommand.ensureVisible(cursorRectangle)
+
+              Component.onCompleted: later(function() {
+                Lisp.call(textDocument, "editor:set-text-document", objectName)
+              })
+
+              MouseArea {
+                width: Math.max(rectCommand.width, command.paintedWidth)
+                height: Math.max(rectCommand.height, command.paintedHeight)
+
+                onPressed: {
+                  // seems necessary to consistently move cursor by tapping
+                  command.forceActiveFocus()
+                  command.cursorPosition = command.positionAt(mouse.x, mouse.y)
+                  Qt.inputMethod.show() // needed for edge case (since we have 2 input fields)
+                  Lisp.call("editor:set-focus-editor", command.objectName)
+                  Lisp.call("editor:ensure-output-visible")
+                }
+
+                onPressAndHold: Lisp.call("editor:copy-paste", command.cursorPosition)
+              }
+            }
           }
         }
 
-        Component {
-          id: cursor
+        Rectangle {
+          id: rectOutput
+          objectName: "rect_output"
+          y: rectCommand.height
+          width: main.width
+          // calculate manually (for virtual keyboard)
+          height: main.availableHeight() - rectEdit.height - rectCommand.height - splitView.handleHeight
 
-          Rectangle {
-            width: 2
-            color: "blue"
-            visible: parent.activeFocus
+          ListView {
+            id: output
+            objectName: "output"
+            anchors.fill: parent
+            contentWidth: parent.width * 5
+            clip: true
+            model: outputModel
+            flickableDirection: Flickable.HorizontalAndVerticalFlick
 
-            SequentialAnimation on opacity {
-              running: true
-              loops: Animation.Infinite
+            property string fontFamily: "Hack"
+            property int fontSize: 18
 
-              NumberAnimation { to: 0; duration: 500; easing.type: "OutQuad" }
-              NumberAnimation { to: 1; duration: 500; easing.type: "InQuad" }
+            delegate: Column {
+              Rectangle {
+                width: output.contentWidth
+                height: mLine ? 2 : 0
+                color: "#c0c0ff"
+              }
+
+              Text {
+                x: 2
+                padding: 2
+                textFormat: Text.PlainText
+                font.family: output.fontFamily
+                font.pixelSize: output.fontSize
+                text: mRichText ? "" : mText
+                color: mColor
+                font.bold: mBold
+                visible: !mRichText
+              }
+
+              Text {
+                x: 2
+                padding: 2
+                textFormat: Text.RichText
+                font.family: output.fontFamily
+                font.pixelSize: output.fontSize
+                text: mRichText ? mText : ""
+                color: mColor
+                font.bold: mBold
+                visible: mRichText
+
+                MouseArea {
+                  width: parent.paintedWidth
+                  height: parent.paintedHeight
+
+                  onPressed: {
+                    // custom link handling, since 'onLinkActivated' does not work within a Flickable
+                    var link = parent.linkAt(mouse.x, mouse.y)
+                    if(link.length) {
+                      Qt.openUrlExternally(link)
+                    }
+                  }
+                }
+              }
+            }
+
+            onFlickStarted: forceActiveFocus()
+
+            Component.onCompleted: later(function () {
+              Lisp.call("editor:delayed-ini")
+            })
+          }
+
+          ListModel {
+            id: outputModel
+            objectName: "output_model"
+
+            function appendOutput(text) {
+              append(text)
+              output.contentX = 0
+              output.positionViewAtEnd()
             }
           }
+
+          ProgressBar {
+            objectName: "progress"
+            width: main.width
+            z: 1
+            indeterminate: true
+            enabled: visible
+            visible: false
+          }
+
+          // move history buttons
+
+          Rectangle {
+            id: buttonsBottom
+            width: rowButtonsBottom.width
+            height: rowButtonsBottom.height
+            anchors.horizontalCenter: parent.horizontalCenter
+            opacity: 0.7
+            visible: command.activeFocus
+
+            Row {
+              id: rowButtonsBottom
+              padding: 4
+              spacing: 6
+
+              Ext.MenuButton {
+                objectName: "history_back"
+                text: "\uf100"
+              }
+              Ext.MenuButton {
+                objectName: "history_forward"
+                text: "\uf101"
+              }
+            }
+          }
+
+          // paren buttons (above keyboard)
+
+          Rectangle {
+            objectName: "rect_paren_buttons"
+            width: rowParens.width
+            height: rowParens.height
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            color: "transparent"
+            visible: Qt.inputMethod.visible
+
+            Row {
+              id: rowParens
+              padding: 5
+              spacing: 5
+
+              Ext.ParenButton {
+                source: "img/paren-open.png"
+                onClicked: Lisp.call("editor:insert", "(")
+              }
+              Ext.ParenButton {
+                source: "img/paren-close.png"
+                onClicked:      Lisp.call("editor:insert", ")")
+                onPressAndHold: Lisp.call("editor:close-all-parens")
+              }
+            }
+          }
+
+          // arrow buttons (cursor movement)
+
+          Rectangle {
+            id: rectArrows
+            objectName: "rect_arrows"
+            width: arrows.width + 20
+            height: width
+            anchors.right: rectOutput.right
+            anchors.bottom: rectOutput.bottom
+            color: "transparent"
+            visible: Qt.inputMethod.visible
+
+            MouseArea {
+              anchors.fill: parent
+              onPressed: Lisp.call("editor:ensure-focus")
+            }
+
+            Item {
+              id: arrows
+              width: up.width * 3
+              height: width
+              anchors.horizontalCenter: parent.horizontalCenter
+              anchors.verticalCenter: parent.verticalCenter
+
+              Ext.ArrowButton {
+                id: up
+                objectName: "up"
+                text: "\uf139"
+                anchors.horizontalCenter: parent.horizontalCenter
+              }
+
+              Ext.ArrowButton {
+                objectName: "left"
+                text: "\uf137"
+                anchors.verticalCenter: parent.verticalCenter
+              }
+
+              Ext.ArrowButton {
+                objectName: "right"
+                text: "\uf138"
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.right: parent.right
+              }
+
+              Ext.ArrowButton {
+                objectName: "down"
+                text: "\uf13a"
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.bottom: parent.bottom
+              }
+            }
+          }
+        }
+      }
+    }
+
+    Component {
+      id: cursor
+
+      Rectangle {
+        width: 2
+        color: "blue"
+        visible: parent.activeFocus
+
+        SequentialAnimation on opacity {
+          running: true
+          loops: Animation.Infinite
+
+          NumberAnimation { to: 0; duration: 500; easing.type: "OutQuad" }
+          NumberAnimation { to: 1; duration: 500; easing.type: "InQuad" }
         }
       }
     }
@@ -245,161 +521,11 @@ StackView {
       }
     }
 
-    Rectangle {
-      id: rectCommand
-      objectName: "rect_command"
-      y: flickEdit.height
-      width: parent.width
-      height: command.font.pixelSize + 11
-      border.width: 2
-      border.color: command.focus ? "#0066ff" : "lightgray"
-
-      Ext.Flickable {
-        id: flickCommand
-        objectName: "flick_command"
-        anchors.fill: parent
-        contentWidth: command.paintedWidth
-        contentHeight: command.paintedHeight
-
-        TextEdit {
-          id: command
-          objectName: "command"
-          width: flickCommand.width
-          height: flickCommand.height
-          padding: 4
-          font.family: "Hack"
-          font.pixelSize: 18
-          selectionColor: "firebrick"
-          inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText | Qt.ImhNoTextHandles | Qt.ImhNoEditMenu
-          cursorDelegate: cursor
-          focus: true
-
-          Keys.onUpPressed:   Lisp.call("editor:history-move", "back")
-          Keys.onDownPressed: Lisp.call("editor:history-move", "forward")
-          Keys.onTabPressed:  edit.forceActiveFocus()
-
-          onCursorRectangleChanged: flickCommand.ensureVisible(cursorRectangle)
-
-          Component.onCompleted: later(function() {
-            Lisp.call(textDocument, "editor:set-text-document", objectName)
-          })
-
-          MouseArea {
-            width: Math.max(rectCommand.width, command.paintedWidth)
-            height: Math.max(rectCommand.height, command.paintedHeight)
-
-            onPressed: {
-              // seems necessary to consistently move cursor by tapping
-              command.forceActiveFocus()
-              command.cursorPosition = command.positionAt(mouse.x, mouse.y)
-              Qt.inputMethod.show() // needed for edge case (since we have 2 input fields)
-              Lisp.call("editor:set-focus-editor", command.objectName)
-              Lisp.call("editor:ensure-output-visible")
-            }
-
-            onPressAndHold: Lisp.call("editor:copy-paste", command.cursorPosition)
-          }
-        }
-      }
-    }
- 
-    ProgressBar {
-      objectName: "progress"
-      anchors.top: rectCommand.bottom
-      width: main.width
-      z: 1
-      indeterminate: true
-      enabled: visible
-      visible: false
-    }
-
-    Rectangle {
-      id: rectOutput
-      objectName: "rect_output"
-      y: flickEdit.height + rectCommand.height
-      width: main.width
-      height: main.halfHeight()
-
-      ListView {
-        id: output
-        objectName: "output"
-        anchors.fill: parent
-        contentWidth: parent.width * 5
-        clip: true
-        model: outputModel
-        flickableDirection: Flickable.HorizontalAndVerticalFlick
-
-        property string fontFamily: "Hack"
-        property int fontSize: 18
-
-        delegate: Column {
-          Rectangle {
-            width: output.contentWidth
-            height: mLine ? 2 : 0
-            color: "#c0c0ff"
-          }
-
-          Text {
-            x: 2
-            padding: 2
-            textFormat: Text.PlainText
-            font.family: output.fontFamily
-            font.pixelSize: output.fontSize
-            text: mRichText ? "" : mText
-            color: mColor
-            font.bold: mBold
-            visible: !mRichText
-          }
-
-          Text {
-            x: 2
-            padding: 2
-            textFormat: Text.RichText
-            font.family: output.fontFamily
-            font.pixelSize: output.fontSize
-            text: mRichText ? mText : ""
-            color: mColor
-            font.bold: mBold
-            visible: mRichText
-
-            MouseArea {
-              width: parent.paintedWidth
-              height: parent.paintedHeight
-
-              onPressed: {
-                // custom link handling, since 'onLinkActivated' does not work within a Flickable
-                var link = parent.linkAt(mouse.x, mouse.y)
-                if(link.length) {
-                  Qt.openUrlExternally(link)
-                }
-              }
-            }
-          }
-        }
-
-        onFlickStarted: forceActiveFocus()
-
-        Component.onCompleted: later(function () {
-          Lisp.call("editor:delayed-ini")
-        })
-      }
-
-      ListModel {
-        id: outputModel
-        objectName: "output_model"
-
-        function appendOutput(text) {
-          append(text)
-          output.contentX = 0
-          output.positionViewAtEnd()
-        }
-      }
-    }
-
     Ext.MenuButton {
       id: showMenu
       objectName: "show_menu"
-      x: parent.width - width - 4
+      anchors.right: parent.right
+      anchors.rightMargin: 4
       y: 4
       opacity: 0.7
       text: "\uf142"
@@ -454,31 +580,6 @@ StackView {
       }
     }
 
-    Rectangle {
-      id: buttonsBottom
-      width: rowButtonsBottom.width
-      height: rowButtonsBottom.height
-      anchors.horizontalCenter: parent.horizontalCenter
-      anchors.top: rectOutput.top
-      opacity: 0.7
-      visible: command.activeFocus
-
-      Row {
-        id: rowButtonsBottom
-        padding: 4
-        spacing: 6
-
-        Ext.MenuButton {
-          objectName: "history_back"
-          text: "\uf100"
-        }
-        Ext.MenuButton {
-          objectName: "history_forward"
-          text: "\uf101"
-        }
-      }
-    }
-
     // animations for showing/hiding editor menu buttons
 
     NumberAnimation {
@@ -522,93 +623,12 @@ StackView {
       duration: 500
       easing.type: Easing.InExpo
     }
-
-    // paren buttons (above keyboard)
-
-    Rectangle {
-      objectName: "rect_paren_buttons"
-      width: rowParens.width
-      height: rowParens.height
-      anchors.horizontalCenter: rectOutput.horizontalCenter
-      anchors.bottom: rectOutput.bottom
-      color: "transparent"
-      visible: Qt.inputMethod.visible
-
-      Row {
-        id: rowParens
-        padding: 5
-        spacing: 5
-
-        Ext.ParenButton {
-          source: "img/paren-open.png"
-          onClicked: Lisp.call("editor:insert", "(")
-        }
-        Ext.ParenButton {
-          source: "img/paren-close.png"
-          onClicked:      Lisp.call("editor:insert", ")")
-          onPressAndHold: Lisp.call("editor:close-all-parens")
-        }
-      }
-    }
-
-    // arrow buttons (cursor movement)
-
-    Rectangle {
-      id: rectArrows
-      objectName: "rect_arrows"
-      width: arrows.width + 20
-      height: width
-      anchors.right: rectOutput.right
-      anchors.bottom: rectOutput.bottom
-      color: "transparent"
-      visible: Qt.inputMethod.visible
-
-      MouseArea {
-        anchors.fill: parent
-        onPressed: Lisp.call("editor:ensure-focus")
-      }
-
-      Item {
-        id: arrows
-        width: up.width * 3
-        height: width
-        anchors.horizontalCenter: parent.horizontalCenter
-        anchors.verticalCenter: parent.verticalCenter
-
-        Ext.ArrowButton {
-          id: up
-          objectName: "up"
-          text: "\uf139"
-          anchors.horizontalCenter: parent.horizontalCenter
-        }
-
-        Ext.ArrowButton {
-          objectName: "left"
-          text: "\uf137"
-          anchors.verticalCenter: parent.verticalCenter
-        }
-
-        Ext.ArrowButton {
-          objectName: "right"
-          text: "\uf138"
-          anchors.verticalCenter: parent.verticalCenter
-          anchors.right: parent.right
-        }
-
-        Ext.ArrowButton {
-          objectName: "down"
-          text: "\uf13a"
-          anchors.horizontalCenter: parent.horizontalCenter
-          anchors.bottom: parent.bottom
-        }
-      }
-    }
   }
 
   // custom font loader
 
   function loadFont(file) {
-    var font = Qt.createQmlObject("import QtQuick 2.10; FontLoader { source: '" + file + "' }", main)
+    var font = Qt.createQmlObject("import QtQuick 2.15; FontLoader { source: '" + file + "' }", main)
     return font.name
   }
 

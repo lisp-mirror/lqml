@@ -17,7 +17,7 @@ android {
   lisp.commands = ecl.exe -shell $$PWD/make.lisp
 }
 
-lisp.input  = LISP_FILES
+lisp.input = LISP_FILES
 
 win32:  lisp.output = tmp/app.lib
 !win32: lisp.output = tmp/libapp.a
@@ -86,8 +86,9 @@ ios {
   LIBS        += -lasdf -lecl-help -ldeflate -lecl-cdb -lecl-curl -lql-minitar -lsockets
   LIBS        += -L../../../platforms/ios/lib
 
-  assets.files      = $$files($$PWD/platforms/ios/assets)
-  QMAKE_BUNDLE_DATA += assets
+  assets.files         = $$files($$PWD/platforms/ios/assets)
+  QMAKE_BUNDLE_DATA    += assets
+  QMAKE_ASSET_CATALOGS += platforms/ios/Assets.xcassets
 }
 
 32bit {
