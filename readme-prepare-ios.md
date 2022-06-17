@@ -30,7 +30,7 @@ definition inside which it occurs, put this line:
 ```
   #undef HAVE_SYSTEM
 ```
-Edit `src/c/thread/process.d`, search for `pthread_attr_init` (around line 588)
+Edit `src/c/threads/process.d`, search for `pthread_attr_init` (around line 588)
 and add the following below that line:
 ```
   pthread_attr_setstacksize(&pthreadattr, 2 * 236 * 4096); // double default size

@@ -1,6 +1,6 @@
 
-Important note
---------------
+Important notes
+---------------
 
 * **Lisp**: the cross-compile cache is
   `~/.cache/commmon-lisp/ecl-<target-platform>...`. Please remember to purge it

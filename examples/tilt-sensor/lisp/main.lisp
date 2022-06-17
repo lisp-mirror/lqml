@@ -33,7 +33,7 @@
           (setf *y* (normalize *y*))
           (incf *y* dy))))
   (move-ball)
-  (values))
+  (values)) ; no return value to QML
 
 (defun move-ball ()
   (if (and (= *x* +w+)
