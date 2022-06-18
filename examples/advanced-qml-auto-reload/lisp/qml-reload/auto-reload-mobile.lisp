@@ -37,9 +37,12 @@
 (let ((secs 0)
       (ini t))
   (defun auto-reload-qml ()
-    (let ((curr/file (ignore-errors
-                      (x:split (curl (x:cc *remote-ip* "cgi-bin/qml-last-modified.py"))
-                               #.(coerce (list #\Return #\Newline) 'string)))))
+    (multiple-value-bind (curr/file error)
+        (ignore-errors
+         (x:split (curl (x:cc *remote-ip* "cgi-bin/qml-last-modified.py"))
+                  #.(coerce (list #\Return #\Newline) 'string)))
+      (when error
+        (qlog :auto-reload-qml :error error))
       (when (= 2 (length curr/file))
         (destructuring-bind (curr file)
             curr/file
