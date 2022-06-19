@@ -203,9 +203,10 @@ StackView {
         }
       }
 
-      Item {
-        id: bottomItem
+      Column {
         width: parent.width
+        height: rectCommand.height + rectOutput.height
+        SplitView.fillHeight: false // see comment in rectOutput
 
         Rectangle {
           id: rectCommand
@@ -267,7 +268,6 @@ StackView {
         Rectangle {
           id: rectOutput
           objectName: "rect_output"
-          y: rectCommand.height
           width: main.width
           // calculate manually (for virtual keyboard)
           height: main.availableHeight() - rectEdit.height - rectCommand.height - splitView.handleHeight
