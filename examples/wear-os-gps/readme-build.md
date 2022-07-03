@@ -5,9 +5,6 @@ Note
 This will only work with Qt 5.15 (customized AndroidManifest.xml file) and
 requires WearOS 2 or later.
 
-You'll also need an easy to apply hack for the **heart rate sensor**, see
-[qt-sensor-hack](qt-sensor-hack/).
-
 It is assumed that you already enabled the developer settings on your watch.
 
 
