@@ -5,7 +5,7 @@ Prepare
 Please copy the app template files first:
 ```
 $ cd ..
-$ ./copy.sh wear-os
+$ ./copy.sh wear-os-heart
 ```
 
 

@@ -1,0 +1,11 @@
+<Placemark>
+<styleUrl>#marker</styleUrl>
+<description><![CDATA[
+<style>
+.s1 { font-size: 16px; text-align: right; font-weight: bold; }
+.s2 { font-size: 22px; text-align: right; font-weight: bold; }
+td { font-size: 10px; }
+table { border-collapse: collapse; margin: auto; width: 90%; }
+table, th, td { border: 1px solid #d0d0d0; }
+h2 { text-align: center; color: blue; }
+</style>

@@ -42,7 +42,6 @@ Log note: for showing only your own messages, see `log.sh`.
 Important note (Qt bug)
 -----------------------
 
-
 After editing [AndroidManifest.xml](platforms/android/AndroidManifest.xml)
 in **Qt Creator** you need to add this inside `activity`:
 ```

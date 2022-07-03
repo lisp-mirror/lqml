@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2" xmlns:gx="http://www.google.com/kml/ext/2.2" xmlns:kml="http://www.opengis.net/kml/2.2" xmlns:atom="http://www.w3.org/2005/Atom">
+<Document>
+<name>LQML Example GPS.kml</name>
+<Style id="point">
+<IconStyle>
+<scale>1.0</scale>
+<Icon>
+<href>point.png</href>
+</Icon>
+<hotSpot x="100" y="75" xunits="pixels" yunits="pixels"/>
+</IconStyle>
+<LineStyle>
+<color>ff0000ff</color>
+<width>6</width>
+</LineStyle>
+</Style>
+<Style id="point_hl">
+<IconStyle>
+<scale>1.8</scale>
+<Icon>
+<href>point.png</href>
+</Icon>
+<hotSpot x="100" y="75" xunits="pixels" yunits="pixels"/>
+</IconStyle>
+<LineStyle>
+<color>ff0000ff</color>
+<width>6</width>
+</LineStyle>
+</Style>
+<StyleMap id="marker">
+<Pair>
+<key>normal</key>
+<styleUrl>#point</styleUrl>
+</Pair>
+<Pair>
+<key>highlight</key>
+<styleUrl>#point_hl</styleUrl>
+</Pair>
+</StyleMap>
+<Placemark>
+<name></name>
+<styleUrl>#marker</styleUrl>
+<LineString>
+<tessellate>0</tessellate>
+<altitudemode>relativeToGround</altitudemode>
+<coordinates>
