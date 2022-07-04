@@ -36,7 +36,15 @@
   (unless *start-time*
     (setf *start-time* timestamp)
     (setf *log-stream* (open (format nil "LOG ~A.csv" (substitute #\. #\: timestamp))
-                             :direction :output :if-does-not-exist :create)))
+                             :direction :output :if-does-not-exist :create))
+    (format *log-stream* "~A,~A,~A,~A,~A,~A,~A,~A,~A,~A~%"
+            "timestamp"
+            "gps latitude" "gps longitude" "gps h-accuracy (m)"
+            "gps speed (m/s)"
+            "gps direction (°)"
+            "kalman latitude" "kalman longitude"
+            "speed (km/h)"
+            "distance (m)"))
   (when (and lat lon accuracy)
     (when direction
       (setf *direction* direction))
@@ -47,12 +55,12 @@
     (q> |text| ui:*distance* (str (round* (distance))))
     (q> |text| ui:*accuracy* (str (round* accuracy 1)))
     (when kal:*lat* 
-      (format *log-stream* "~A,~F,~F,~F,~F,~F,~A,~A,~A,~A~%"
+      (format *log-stream* "~A,~F,~F,~F,~A,~A,~F,~F,~F,~D~%"
               timestamp
               lat lon (round* accuracy 1)
-              kal:*lat* kal:*lon*
               (str (round* speed 1))
               (str (round* direction))
+              kal:*lat* kal:*lon*
               (round* (speed*) 1)
               (round* (distance))))))
 
