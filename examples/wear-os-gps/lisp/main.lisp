@@ -8,8 +8,9 @@
   (qt:ini)
   #+android
   (progn
-    (qt:keep-screen-on qt:*cpp*)
-    (ensure-permissions :access-fine-location)))
+    (qlater (lambda () (qt:keep-screen-on qt:*cpp*))) ; delay until UI is loaded (see 'Settings.qml')
+    (ensure-permissions :access-fine-location))
+  (q> |ready| ui:*position-source* t))
 
 (defun closing ()
   (close *log-stream*)
@@ -63,5 +64,13 @@
               kal:*lat* kal:*lon*
               (round* (speed*) 1)
               (round* (distance))))))
+
+(defun always-on-changed (on) ; called from QML
+  #+android
+  (qt:keep-screen-on qt:*cpp* on))
+
+(defun set-max-speed () ; called from QML
+  (q> |maximumValue| ui:*speed*
+      (q< |value| ui:*max-speed*)))
 
 (qlater 'run)

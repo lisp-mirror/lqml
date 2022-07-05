@@ -14,7 +14,12 @@ Info
 
 This is a practical example of displaying both the speed and the whole distance
 of e.g. a canoe session (only meant for constant altitude values). You probably
-need to adapt the maximum speed value (km/h) to your personal needs.
+need to adapt the maximum speed value (km/h) to your personal needs, see
+settings (swipe up).
+
+An important feature is keeping the display always on (implemented with the Qt
+JNI interface). But this also consumes more battery, so you can switch it off
+in the settings.
 
 The data is automatically logged, and can be accessed with e.g.
 **Device File Explorer** from Android Studio (see Help / Find Action...).
@@ -35,8 +40,8 @@ using **Google Earth** (the free desktop app).
 
 A simple **Kalman** filter is used for the necessary GPS data smoothing.
 
-The UI uses a `CircularGauge` for displaying the speed (an average of the
-latest 10 seconds). Additionally it shows the whole distance and the GPS
+The UI uses a `CircularGauge` for displaying the speed (by default, an average
+of the latest 5 seconds). Additionally it shows the whole distance and the GPS
 accuracy in meters.
 
 

@@ -20,6 +20,10 @@ and adding to resources included in the executable).
 So, you only need to **manually** care about the usual ASDF project files in
 `app.asd`.
 
+But -- *of course* -- you still need to run the respective **qmake** command
+every time you add new files to the project, because the automation is all
+defined in `app.pro`.
+
 
 Run desktop
 -----------

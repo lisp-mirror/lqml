@@ -8,11 +8,11 @@ Rectangle {
   color: "black"
 
   CircularGauge {
-    id: gauge
+    id: speed
     objectName: "speed"
     anchors.fill: parent
     maximumValue: 10
-    stepSize: 0.1
+    stepSize: 0.05
 
     Behavior on value {
       NumberAnimation {
@@ -23,8 +23,8 @@ Rectangle {
 
     style: CircularGaugeStyle {
       id: style
-      labelStepSize: 1
-      tickmarkStepSize: 1
+      labelStepSize: parent.maximumValue / 10
+      tickmarkStepSize: labelStepSize
       minorTickmarkCount: 5
       minimumValueAngle: -90
       maximumValueAngle: 90
@@ -43,7 +43,7 @@ Rectangle {
           ctx.strokeStyle = limitColor
           ctx.lineWidth = outerRadius * 0.02
           ctx.arc(outerRadius, outerRadius, outerRadius - ctx.lineWidth / 2,
-                  toRad(valueToAngle(limit) - 90), toRad(valueToAngle(gauge.maximumValue) - 90))
+                  toRad(valueToAngle(limit) - 90), toRad(valueToAngle(speed.maximumValue) - 90))
           ctx.stroke()
         }
       }

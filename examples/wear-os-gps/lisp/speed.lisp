@@ -1,14 +1,16 @@
 (in-package :gps)
 
+(defvar *distance-samples* 5)
+
 (let ((speed 0.0)
       samples)
   (defun update-speed ()
-    "After 10 distance samples, calculate average speed and update on every new
-    distance sample."
+    "After *DISTANCE-SAMPLES* samples, calculate average speed and update on
+    every new distance sample."
     (push (cons (distance)
                 (get-internal-real-time))
           samples)
-    (when (> (length samples) 10)
+    (when (> (length samples) *distance-samples*)
       (setf samples (butlast samples))
       (let ((b (first samples))
             (a (first (last samples))))

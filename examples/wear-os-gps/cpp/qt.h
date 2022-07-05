@@ -11,7 +11,7 @@ class QT : public QObject {
   Q_OBJECT
 
 public:
-  Q_INVOKABLE QVariant keepScreenOn();
+  Q_INVOKABLE QVariant keepScreenOn(const QVariant& = true);
 };
 
 QT_END_NAMESPACE

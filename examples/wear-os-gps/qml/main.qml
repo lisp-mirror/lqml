@@ -14,27 +14,51 @@ Rectangle {
     updateInterval: 1000
     active: true
 
+    property bool ready: false
+
     onPositionChanged: {
-      Lisp.call("gps:position-changed",
-                position.latitudeValid           ? position.coordinate.latitude  : null,
-                position.longitudeValid          ? position.coordinate.longitude : null,
-                position.horizontalAccuracyValid ? position.horizontalAccuracy   : null,
-                position.speedValid              ? position.speed                : null,
-                position.directionValid          ? position.direction            : null,
-                position.timestamp.toLocaleString(Qt.locale(), "yyyy-MM-dd hh:mm:ss"))
+      if (ready) {
+        Lisp.call("gps:position-changed",
+                  position.latitudeValid           ? position.coordinate.latitude  : null,
+                  position.longitudeValid          ? position.coordinate.longitude : null,
+                  position.horizontalAccuracyValid ? position.horizontalAccuracy   : null,
+                  position.speedValid              ? position.speed                : null,
+                  position.directionValid          ? position.direction            : null,
+                  position.timestamp.toLocaleString(Qt.locale(), "yyyy-MM-dd hh:mm:ss"))
+      }
     }
   }
 
-  Ext.Gauge {}
+  SwipeView {
+    id: view
+    anchors.fill: parent
+    orientation: Qt.Vertical
 
-  Column {
+    onCurrentIndexChanged: {
+      if (currentIndex === 0) {
+        Lisp.call("gps:set-max-speed")
+      }
+    }
+
+    Ext.MainView {}
+    Ext.Settings {}
+  }
+
+  PageIndicator {
+    id: indicator
+    anchors.bottom: view.bottom
     anchors.horizontalCenter: parent.horizontalCenter
-    anchors.bottom: parent.bottom
-    anchors.bottomMargin: 5
-    spacing: -5
+    height: 14
+    count: view.count
+    currentIndex: view.currentIndex
 
-    Ext.LogText { objectName: "distance"; font.pixelSize: 48 }
-    Ext.LogText { objectName: "accuracy"; font.pixelSize: 24 }
+    delegate: Rectangle {
+      implicitWidth: 6
+      implicitHeight: 6
+      radius: width / 2
+      color: "white"
+      opacity: index === indicator.currentIndex ? 1 : 0.35
+    }
   }
 
   // quit
