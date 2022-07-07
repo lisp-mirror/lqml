@@ -47,6 +47,7 @@ Rectangle {
   PageIndicator {
     id: indicator
     anchors.bottom: view.bottom
+    anchors.bottomMargin: 3
     anchors.horizontalCenter: parent.horizontalCenter
     height: 14
     count: view.count
@@ -56,7 +57,7 @@ Rectangle {
       implicitWidth: 6
       implicitHeight: 6
       radius: width / 2
-      color: "white"
+      color: (view.currentIndex === 0) ? "white" : "black"
       opacity: index === indicator.currentIndex ? 1 : 0.35
     }
   }

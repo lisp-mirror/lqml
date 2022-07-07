@@ -48,9 +48,6 @@
              (i-distance  9)
              (*print-pretty* nil))
         (setf lines (rest lines)) ; cut header
-        (dolist (file (list kml kmz))
-          (when (probe-file file)
-            (delete-file file)))
         (with-open-file (s kml :direction :output :if-exists :supersede)
           (write-string *kml-1* s)
           (dolist (line lines)
@@ -60,7 +57,7 @@
           (write-string *kml-2* s)
           (let ((c 0))
             (dolist (line lines)
-              (when (zerop (mod (incf c) 60)) ; a marker every minute
+              (when (zerop (mod (incf c) 20)) ; a marker every 20 seconds
                 (write-string *kml-3* s)
                 (format s header (nth i-timestamp line))
                 (write-line "<table>" s)
