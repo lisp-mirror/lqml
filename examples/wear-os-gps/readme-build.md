@@ -5,6 +5,9 @@ Note
 This will only work with Qt 5.15 (customized AndroidManifest.xml file) and
 requires WearOS 2 or later.
 
+Running on an android/iOS phone will also work, please see the generic
+[readme-build.md](../app-template/readme-build.md).
+
 It is assumed that you already enabled the developer settings on your watch.
 
 --

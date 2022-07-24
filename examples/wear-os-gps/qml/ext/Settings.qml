@@ -24,7 +24,8 @@ Rectangle {
 
       delegate: Text {
         text: modelData
-        font.pixelSize: 22
+        font.family: "Courier"
+        font.pixelSize: 24
         font.bold: true
         opacity: 0.4 + Math.max(0, 1 - Math.abs(Tumbler.displacement)) * 0.6
         Component.onCompleted: { maxSpeed.width = paintedWidth }

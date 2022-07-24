@@ -1,3 +1,16 @@
+;;; A 'Kalman' filter is a much more sophisticated filter than a simple
+;;; 'low-pass' filter.
+;;;
+;;; It takes a theoretically well founded approach, which means: it makes an
+;;; 'educated guess' of the next position to be expected, and 'corrects' it
+;;; with actual GPS data, considering the accuracy and the speed of current raw
+;;; GPS data.
+;;;
+;;; For most use cases this is already sufficiently precise.
+;;;
+;;; If you need more precision, you would need to integrate e.g. accelerometer
+;;; data into the Kalman filter.
+
 (defpackage :kalman
   (:use :cl)
   (:nicknames :kal)

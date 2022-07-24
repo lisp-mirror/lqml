@@ -52,7 +52,7 @@
     (kal:filter lat lon accuracy speed)
     (update-distance)
     (update-speed)
-    (q> |value| ui:*speed* (speed*))
+    (q> |value| gauge:*gauge* (speed*))
     (q> |text| ui:*distance* (str (round* (distance))))
     (q> |text| ui:*accuracy* (str (round* accuracy 1)))
     (when kal:*lat* 
@@ -70,7 +70,7 @@
   (qt:keep-screen-on qt:*cpp* on))
 
 (defun set-max-speed () ; called from QML
-  (q> |maximumValue| ui:*speed*
+  (q> |maximumValue| gauge:*gauge*
       (q< |value| ui:*max-speed*)))
 
 (qlater 'run)

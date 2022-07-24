@@ -7,4 +7,5 @@
                (:file "lisp/distance")
                (:file "lisp/speed")
                (:file "lisp/qt")
+               (:file "lisp/gauge")
                (:file "lisp/main")))

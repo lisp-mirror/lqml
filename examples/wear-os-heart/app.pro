@@ -1,8 +1,7 @@
-CONFIG += 32bit
-
 LISP_FILES = $$files(lisp/*) app.asd make.lisp
 
 android {
+  CONFIG += 32bit # for WearOS
   32bit {
     ECL = $$(ECL_ANDROID_32)
   } else {

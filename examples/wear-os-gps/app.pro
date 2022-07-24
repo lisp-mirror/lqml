@@ -1,14 +1,16 @@
-CONFIG += 32bit
-
 LISP_FILES = $$files(lisp/*) app.asd make.lisp
 
 android {
+  CONFIG += 32bit # for WearOS
   32bit {
     ECL = $$(ECL_ANDROID_32)
   } else {
     ECL = $$(ECL_ANDROID)
   }
   lisp.commands = $$ECL/../ecl-android-host/bin/ecl \
+                  -norc -shell $$PWD/make.lisp
+} else:ios {
+  lisp.commands = $$(ECL_IOS)/../ecl-ios-host/bin/ecl \
                   -norc -shell $$PWD/make.lisp
 } else:unix {
   lisp.commands = /usr/local/bin/ecl -shell $$PWD/make.lisp
@@ -47,7 +49,6 @@ win32 {
 
 android {
   QT          += androidextras
-  #DEFINES     += INI_ASDF
   DEFINES     -= DESKTOP_APP
   DEFINES     += QT_EXTENSION
   INCLUDEPATH = $$ECL/include
@@ -64,6 +65,16 @@ android {
   } else {
     ANDROID_ABIS = "arm64-v8a"
   }
+}
+
+ios {
+  DEFINES     -= DESKTOP_APP
+  INCLUDEPATH = $$(ECL_IOS)/include
+  LIBS        = -L$$(ECL_IOS)/lib -lecl
+  LIBS        += -leclatomic -leclffi -leclgc -leclgmp
+  LIBS        += -L../../../platforms/ios/lib
+
+  QMAKE_INFO_PLIST = platforms/ios/Info.plist
 }
 
 32bit {

@@ -4,8 +4,7 @@
    #:*accuracy*
    #:*distance*
    #:*max-speed*
-   #:*position-source*
-   #:*speed*))
+   #:*position-source*))
 
 (in-package :ui)
 
@@ -13,4 +12,3 @@
 (defparameter *distance*        "distance")
 (defparameter *max-speed*       "max_speed")
 (defparameter *position-source* "position_source")
-(defparameter *speed*           "speed")
