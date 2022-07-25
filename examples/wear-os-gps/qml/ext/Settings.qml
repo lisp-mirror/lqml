@@ -24,11 +24,14 @@ Rectangle {
 
       delegate: Text {
         text: modelData
-        font.family: "Courier"
-        font.pixelSize: 24
+        font.pixelSize: 22
         font.bold: true
+        horizontalAlignment: Text.AlignHCenter
         opacity: 0.4 + Math.max(0, 1 - Math.abs(Tumbler.displacement)) * 0.6
-        Component.onCompleted: { maxSpeed.width = paintedWidth }
+
+        Component.onCompleted: {
+          maxSpeed.width = paintedWidth * 1.1 // 1.1 for iOS font (not fixed width)
+        }
       }
 
       onCurrentIndexChanged: { value = model[currentIndex] }
