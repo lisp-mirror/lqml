@@ -40,7 +40,8 @@ using **Google Earth** (the free desktop app).
 
 A simple **Kalman** filter is used for the necessary GPS data smoothing.
 
-The UI uses a `CircularGauge` for displaying the speed (by default, an average
+The UI uses a custom 180° `Gauge` (and not a `CircularGauge`, which has
+deprecated dependencies) for displaying the speed (by default, an average
 of the latest 5 seconds). Additionally it shows the whole distance and the GPS
 accuracy in meters.
 
