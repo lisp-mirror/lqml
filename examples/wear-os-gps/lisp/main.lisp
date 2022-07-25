@@ -6,9 +6,10 @@
 
 (defun run ()
   (qt:ini)
-  #+android
+  #+mobile
   (progn
     (qlater (lambda () (qt:keep-screen-on qt:*cpp*))) ; delay until UI is loaded (see 'Settings.qml')
+    #+android
     (ensure-permissions :access-fine-location))
   (q> |ready| ui:*position-source* t))
 
@@ -66,7 +67,7 @@
               (round* (distance))))))
 
 (defun always-on-changed (on) ; called from QML
-  #+android
+  #+mobile
   (qt:keep-screen-on qt:*cpp* on))
 
 (defun set-max-speed () ; called from QML

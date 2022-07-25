@@ -69,10 +69,14 @@ android {
 
 ios {
   DEFINES     -= DESKTOP_APP
+  DEFINES     += QT_EXTENSION
   INCLUDEPATH = $$(ECL_IOS)/include
   LIBS        = -L$$(ECL_IOS)/lib -lecl
   LIBS        += -leclatomic -leclffi -leclgc -leclgmp
   LIBS        += -L../../../platforms/ios/lib
+  LIBS        += -framework UIKit # for 'qt:keep-screen-on'
+  HEADERS     += cpp/qt.h
+  SOURCES     += cpp/qt.mm
 
   QMAKE_INFO_PLIST = platforms/ios/Info.plist
 }

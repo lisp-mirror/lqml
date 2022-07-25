@@ -10,7 +10,7 @@
 (defvar *cpp* nil)
 
 (defun ini ()
-  #+android
+  #+mobile
   (progn
     (setf *cpp* (qfind-child nil "QT"))
     (let ((*package* (find-package :qt)))

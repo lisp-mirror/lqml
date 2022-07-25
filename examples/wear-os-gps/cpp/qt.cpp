@@ -20,7 +20,7 @@ QVariant QT::keepScreenOn(const QVariant& on) {
       env->ExceptionClear();
     }
   });
-  return QVariant();
+  return on;
 }
 
 QT_END_NAMESPACE
