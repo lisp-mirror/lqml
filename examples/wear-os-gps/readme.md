@@ -17,17 +17,23 @@ of e.g. a canoe session (only meant for constant altitude values). You probably
 need to adapt the maximum speed value (km/h) to your personal needs, see
 settings (swipe up).
 
-An important feature (android only) is keeping the display always on
-(implemented with the Qt JNI interface). But this also consumes more battery,
-so you can switch it off in the settings.
+An important feature (both android and iOS phones) is keeping the display
+always on (implemented with the Qt JNI interface on android, and with UIKit on
+iOS). But this also consumes more battery (especially on WearOS), so you can
+switch it off in the settings.
 
-The data is automatically logged, and can be accessed with e.g.
-**Device File Explorer** from Android Studio (see Help / Find Action...).
+The data is automatically logged, and can be accessed with:
 
-The path of the log files is:
+* android: "Device File Explorer" from **Android Studio** (see "Help / Find
+Action...")
 ```
 /data/data/org.qtproject.example.gps/files/
 ```
+
+* iOS: **Xcode**: "Window / Devices and Simulators", select device on the left,
+select app on the right, click on the gear icon below the app list, choose
+"Download Container...". Right-click on the downloaded file and choose "Show
+Package Contents"
 
 You can then put those log files in directory [kml/logs/](kml/logs/) and run
 ```
