@@ -6,6 +6,7 @@
 
 (defun run ()
   (qt:ini)
+  (load-settings)
   #+mobile
   (progn
     (qlater (lambda () (qt:keep-screen-on qt:*cpp*))) ; delay until UI is loaded (see 'Settings.qml')
@@ -70,8 +71,31 @@
   #+mobile
   (qt:keep-screen-on qt:*cpp* on))
 
-(defun set-max-speed () ; called from QML
-  (q> |maximumValue| gauge:*gauge*
-      (q< |value| ui:*max-speed*)))
+(defun set-max-speed (index) ; called from QML
+  (if (zerop index)
+      (q> |maximumValue| gauge:*gauge*
+          (q< |value| ui:*max-speed*))
+      (q> |value| ui:*max-speed*
+          (q< |maximumValue| gauge:*gauge*))))
+
+;;; settings
+
+(let ((file "settings.exp"))
+  (defun save-settings () ; called from QML
+    (with-open-file (s file :direction :output :if-exists :supersede)
+      (print (list (cons :max-speed
+                         (q< |maximumValue| gauge:*gauge*))
+                   (cons :always-on
+                         (q< |checked| ui:*always-on*)))
+             s))
+    (values)) ; no return value to QML
+  (defun load-settings ()
+    (when (probe-file file)
+      (with-open-file (s file)
+        (let ((settings (read s)))
+          (q> |maximumValue| gauge:*gauge*
+              (cdr (assoc :max-speed settings)))
+          (q> |checked| ui:*always-on*
+              (cdr (assoc :always-on settings))))))))
 
 (qlater 'run)

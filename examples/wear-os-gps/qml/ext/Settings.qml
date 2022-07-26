@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 
 Rectangle {
+
   Column {
     anchors.centerIn: parent
 
@@ -22,6 +23,9 @@ Rectangle {
 
       property int value: model[0]
 
+      onCurrentIndexChanged: { value = model[currentIndex] }
+      onValueChanged:        { currentIndex = model.indexOf(value) }
+
       delegate: Text {
         text: modelData
         font.pixelSize: 22
@@ -33,8 +37,6 @@ Rectangle {
           maxSpeed.width = paintedWidth * 1.1 // 1.1 for iOS font (not fixed width)
         }
       }
-
-      onCurrentIndexChanged: { value = model[currentIndex] }
     }
 
     Switch {

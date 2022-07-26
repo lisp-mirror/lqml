@@ -35,8 +35,9 @@ Rectangle {
     orientation: Qt.Vertical
 
     onCurrentIndexChanged: {
+      Lisp.call("gps:set-max-speed", currentIndex)
       if (currentIndex === 0) {
-        Lisp.call("gps:set-max-speed")
+        Lisp.call("gps:save-settings")
       }
     }
 
