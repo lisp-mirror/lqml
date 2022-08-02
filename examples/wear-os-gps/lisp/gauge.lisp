@@ -49,7 +49,7 @@
     ;; limit zone
     (set-style "red" (* 12 f))
     (with-path ()
-      (arc 0 0 (- r (* 5 f))
+      (arc 0 0 (- r (* 6 f))
            (to-rad (- 360
                       (* 180 (- 1 (q< |limit| *gauge*)))))
            (to-rad 360)))

@@ -21,6 +21,9 @@
 #define VAL(var, type) \
   var.value<type>()
 
+#define DELETE_LATER(var) \
+  QTimer::singleShot(0, var, &QObject::deleteLater)
+
 QT_BEGIN_NAMESPACE
 
 extern "C" { LIB_EXPORT QObject* ini(); }
