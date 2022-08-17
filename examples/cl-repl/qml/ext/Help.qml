@@ -3,6 +3,7 @@ import "." as Ext
 
 Rectangle {
   color: "lightyellow"
+  visible: false
 
   Column {
     anchors.fill: parent
