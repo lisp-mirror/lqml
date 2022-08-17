@@ -39,7 +39,7 @@
                   (qset *quick-view* |source| (subseq src #.(length "qrc:///")))))
               (qml:reload)))
         (setf secs curr)))
-    (qsingle-shot 250 'auto-reload-qml)))
+    (qsingle-shot 500 'auto-reload-qml)))
 
 (export
  (list 'load*

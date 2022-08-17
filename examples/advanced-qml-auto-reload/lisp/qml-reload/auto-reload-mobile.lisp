@@ -61,7 +61,7 @@
                     (qml:reload)
                     (qjs |reload| *edited-file*)))
             (setf secs curr)))))
-    (qsingle-shot 250 'auto-reload-qml)))
+    (qsingle-shot 500 'auto-reload-qml)))
 
 (export
  (list 'load*

@@ -33,15 +33,15 @@
   you want to find items inside a specific item, like in a QML Repeater. See
   also note in sources."
   ;;
-  ;; when to use *ROOT-ITEM*
+  ;; When to use *ROOT-ITEM*
   ;;
-  ;; say you have a Repeater QML item with multiple instances of the same
+  ;; Say you have a Repeater QML item with multiple instances of the same
   ;; QQuickItem. The children of those QQuickItems all have the same object
   ;; names, respectively. In order to access those child items, we need to
   ;; search in the specific item of the Repeater.
   ;;
-  ;; So, we locally bind *ROOT-ITEM* in order to find a specific child item
-  ;; inside the Repeater:
+  ;; So, we locally set (not bind, see note N.B.) *ROOT-ITEM* in order to find
+  ;; a specific child item inside the Repeater:
   ;;
   ;; (setf qml:*root-item* (q! |itemAt| ui:*repeater* 0)) ; (1) set
   ;; ;; everything we do here will only affect children of the first
