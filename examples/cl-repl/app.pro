@@ -88,6 +88,9 @@ ios {
 
   assets.files         = $$files($$PWD/platforms/ios/assets)
   QMAKE_BUNDLE_DATA    += assets
+  local.files          = $$files($$PWD/platforms/ios/local-assets)
+  QMAKE_BUNDLE_DATA    += local
+
   QMAKE_ASSET_CATALOGS += platforms/ios/Assets.xcassets
 }
 

@@ -17,5 +17,6 @@
                (:file "lisp/curl")
                (:file "lisp/dialogs")
                (:file "lisp/editor")
+               (:file "lisp/ini")
                (:file "lisp/main")))
 
