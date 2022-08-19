@@ -16,7 +16,7 @@
   (let ((s (ext:run-program "sh" (list "-c" command))))
     (setf *shell-output*
           (loop :for line = (read-line s nil nil)
-                :while line collect line)))
+                :while line :collect line)))
   (princ (x:join *shell-output* #\Newline))
   (values))
 

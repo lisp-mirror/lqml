@@ -327,6 +327,10 @@
     (setf (logical-pathname-translations "HOME")
           (list (list "home:**;*.*"
                       (merge-pathnames "**/*.*" (user-homedir-pathname))))))
+  ;; copy all asset files on first startup of app
+  ;; (note that PROBE-FILE is a hack here: for copying eventual, additional
+  ;; asset files, either the whole directory "encodings/" needs to be removed
+  ;; from within the app, or the app needs to be uninstalled first)
   (unless (probe-file (merge-pathnames "encodings/"))
     #+ios
     (flet ((dir (assets)
@@ -336,8 +340,7 @@
         (copy-asset-files assets assets)
         (copy-asset-files local-assets local-assets)))
     #+android
-    (unless (probe-file (merge-pathnames "encodings/"))
-      (copy-asset-files))))
+    (copy-asset-files)))
 
 ;;; alias
 
