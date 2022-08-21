@@ -327,11 +327,17 @@
     (setf (logical-pathname-translations "HOME")
           (list (list "home:**;*.*"
                       (merge-pathnames "**/*.*" (user-homedir-pathname))))))
-  ;; copy all asset files on first startup of app
-  ;; (note that PROBE-FILE is a hack here: for copying eventual, additional
-  ;; asset files, either the whole directory "encodings/" needs to be removed
-  ;; from within the app, or the app needs to be uninstalled first)
-  (unless (probe-file (merge-pathnames "encodings/"))
+  (copy-all-asset-files t))
+
+(defun copy-all-asset-files (&optional ini)
+  "args: ()
+  Mobile only. Preamble: all asset files are automatically copied to the app
+  directory on the very first app startup.
+  If you eventually need to copy additional asset files, or replace the current
+  ones, use this function (after installing an app update)."
+  #+mobile
+  (when (or (not ini)
+            (not (probe-file (merge-pathnames "encodings/"))))
     #+ios
     (flet ((dir (assets)
              (namestring (merge-pathnames assets *bundle-root*))))
@@ -340,7 +346,9 @@
         (copy-asset-files assets assets)
         (copy-asset-files local-assets local-assets)))
     #+android
-    (copy-asset-files)))
+    (copy-asset-files))
+  #-mobile
+  :mobile-only)
 
 ;;; alias
 

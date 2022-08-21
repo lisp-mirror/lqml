@@ -7,6 +7,7 @@
    #:*root-item*
    #:*caller*
    #:clipboard-text
+   #:copy-all-asset-files
    #:define-qt-wrappers
    #:disable-clipboard-menu
    #:ensure-permissions
