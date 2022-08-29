@@ -9,12 +9,12 @@
   #include <ecl_fun.h>
 #endif
 
-Q_DECLARE_METATYPE(RegularExpression*)
-Q_DECLARE_METATYPE(TextBlock*)
-Q_DECLARE_METATYPE(TextCharFormat*)
-Q_DECLARE_METATYPE(TextCursor*)
-Q_DECLARE_METATYPE(SyntaxHighlighter*)
-Q_DECLARE_METATYPE(QTextDocument*)
+Q_DECLARE_METATYPE (RegularExpression*)
+Q_DECLARE_METATYPE (TextBlock*)
+Q_DECLARE_METATYPE (TextCharFormat*)
+Q_DECLARE_METATYPE (TextCursor*)
+Q_DECLARE_METATYPE (SyntaxHighlighter*)
+Q_DECLARE_METATYPE (QTextDocument*)
 
 QT_BEGIN_NAMESPACE
 

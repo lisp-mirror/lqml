@@ -1,9 +1,10 @@
 ;;; needed for cross-compiling
+;;; (ECL functions defined directly in C++)
 
 (in-package :qml)
 
 (defun clipboard-text ())
-(defun %disable_clipboard_menu (a))
+(defun %disable-clipboard-menu (a))
 (defun %ensure-permissions (a))
 (defun %js (a b))
 (defun pixel-ratio ())
