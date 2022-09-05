@@ -3,7 +3,7 @@
   (mapc (lambda (name feature)
           (when (search name arg)
             (pushnew feature *features*)))
-        (list "/ecl-android/" "/ecl-ios/")
+        (list "/ecl-android" "/ecl-ios")
         (list :android :ios)))
 
 #+(or android ios)
