@@ -371,14 +371,20 @@
    with-input-from-string qml::do-string qml::do-with qml::when-it
    qml::when-it* qml::while qml::while-it))
 
+(defparameter *four-spaces-indent-symbols*
+ '(multiple-value-bind prog1 prog2))
+
 (defun auto-indent-spaces (kw)
   (when (symbolp kw)
     (let* ((name (symbol-name kw))
            (p (x:if-it (position *package-char-dummy* name :from-end t)
                        (1+ x:it)
-                       0)))
-      (when (find (read* (subseq name p)) *two-spaces-indent-symbols*)
-        2))))
+                       0))
+           (symbol (read* (subseq name p))))
+      (cond ((find symbol *four-spaces-indent-symbols*)
+             4)
+            ((find symbol *two-spaces-indent-symbols*)
+             2)))))
 
 (defun cut-comment (line)
   (let ((ex #\Space))
@@ -413,7 +419,8 @@
     (let* ((pos-keyword    (paren-match-index code -1))
            (pos-local      (paren-match-index code -3))
            (keyword-indent (x:when-it (pos-newline pos-keyword) (- x:it pos-keyword 1)))
-           (keyword        (read* (reverse (subseq code 0 pos-keyword))))
+           (code1          (reverse (subseq code 0 pos-keyword)))
+           (keyword        (read* code1))
            (auto-indent    (auto-indent-spaces keyword))
            (in-local       (find (read* (reverse (subseq code 0 pos-local)))
                                  '(flet labels macrolet)))
@@ -423,6 +430,11 @@
             *current-keyword-indent* (if local-indent
                                          (+ 5 (length (symbol-name in-local)))
                                          (or auto-indent 0)))
+      (when (and (find keyword *four-spaces-indent-symbols*)
+                 (>= (count #\Newline code1)
+                     (if (eql 'prog2 keyword) 2 1)))
+        (decf *current-keyword-indent* 2)
+        (setf *indentation-already-calculated* t))
       (if (and return-pressed
                (not (eql 'loop keyword)))
           (unless *indentation-already-calculated*
