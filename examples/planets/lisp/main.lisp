@@ -54,10 +54,10 @@
              :m-map   "img/moon-map.jpg"
              :m-info  #.(read-file "txt/moon.txt")))
   (qjs |addPlanet| *planets*
-       (list :m-name "Mars"
+       (list :m-name  "Mars"
              :m-shape "img/mars.png"
              :m-map   "img/mars-map.jpg"
-             :m-info #.(read-file "txt/mars.txt")))
+             :m-info  #.(read-file "txt/mars.txt")))
   (qjs |addPlanet| *planets*
        (list :m-name  "Jupiter"
              :m-shape "img/jupiter.png"
