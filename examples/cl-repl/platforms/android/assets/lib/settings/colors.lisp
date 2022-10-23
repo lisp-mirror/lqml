@@ -8,7 +8,7 @@
 (setf *string-color*            "saddlebrown")
 (setf *comment-color*           "lightslategray")
 (setf *lisp-keyword-color*      "#c05050")
-(setf *eql-keyword-color*       "#5050c0")
+(setf *lqml-keyword-color*      "#5050c0")
 (setf *keyword-color*           "#409090")
 
 (setf *output-text-color*       "black")
@@ -19,7 +19,7 @@
 (setf *output-error-color*      "red")
 
 (progn
-  (apply-colors)
+  (qrun* (apply-colors))
   (q! |clear| ui:*output-model*)
   (values))
 

@@ -15,5 +15,5 @@ If we need to return a non `QObject` value to Lisp (not a pointer or primitive
 value, but a class like `TextBlock` in this example, that is a `QTextBlock`
 extended with a `QObject`), a new instance is created on the heap, calling
 `QTimer::singleShot(0, tmp, &QObject::deleteLater)` on it, which should be
-sufficient in any circumstance. The additional timer is need here because of
+sufficient in any circumstance. The additional timer is needed here because of
 `SplitView`, which delays certain events.
