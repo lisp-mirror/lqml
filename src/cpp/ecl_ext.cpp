@@ -454,8 +454,9 @@ cl_object qinvoke_method2(cl_object l_obj, cl_object l_name, cl_object l_args) {
   // for internal use: this is used to call user defined JS functions, and to
   // call user defined Qt/C++ plugin functions.
   // Max. 10 arguments of type T, NIL, INTEGER, FLOAT, STRING, VECTOR of
-  // octets, (nested) LIST of mentioned arguments. On Qt side, only QVariant
-  // arguments are allowed.
+  // octets, (nested) LIST of mentioned arguments.
+  // For the complete list of supported types see 'marshal.cpp:toQVariant()'.
+  // On Qt side, only QVariant arguments are allowed.
   // N.B. does not support default arguments, if used to call JS functions
   ecl_process_env()->nvalues = 1;
   const int MAX = 10;

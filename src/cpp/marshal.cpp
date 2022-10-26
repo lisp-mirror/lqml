@@ -130,18 +130,6 @@ QString toQString(cl_object l_str) {
   return s;
 }
 
-QStringList toQStringList(cl_object l_list) {
-  QStringList l;
-  if (ECL_LISTP(l_list)) {
-    cl_object l_el = l_list;
-    while (l_el != ECL_NIL) {
-      l << toQString(cl_car(l_el));
-      l_el = cl_cdr(l_el);
-    }
-  }
-  return l;
-}
-
 TO_QT_2 (QPoint, toInt)
 TO_QT_2 (QSize,  toInt)
 TO_QT_4 (QRect,  toInt)
@@ -285,15 +273,6 @@ cl_object from_qstring(const QString& s) {
     l_p[i] = s.at(i).unicode();
   }
   return l_s;
-}
-
-cl_object from_qstringlist(const QStringList& l) {
-  cl_object l_list = ECL_NIL;
-  for (QString s : qAsConst(l)) {
-    l_list = CONS(from_qstring(s), l_list);
-  }
-  l_list = cl_nreverse(l_list);
-  return l_list;
 }
 
 TO_CL_2 (QPoint, qpoint, ecl_make_fixnum, x, y)

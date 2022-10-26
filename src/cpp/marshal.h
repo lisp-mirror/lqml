@@ -82,7 +82,6 @@ qreal        toReal(cl_object);
 QByteArray   toCString(cl_object);
 QByteArray   toQByteArray(cl_object);
 QString      toQString(cl_object);
-QStringList  toQStringList(cl_object);
 QVariant     toQVariant(cl_object, int = -1);
 QVariantList toQVariantList(cl_object);
 QVariant     toQVariantMap(cl_object);
@@ -92,7 +91,6 @@ cl_object from_cstring(const QByteArray&);
 cl_object from_qbytearray(const QByteArray&);
 cl_object from_qchar(const QChar&);
 cl_object from_qstring(const QString&);
-cl_object from_qstringlist(const QStringList&);
 cl_object from_qvariant(const QVariant&);
 cl_object from_qobject_pointer(QObject*);
 
