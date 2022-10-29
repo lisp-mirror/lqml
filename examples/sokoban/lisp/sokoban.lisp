@@ -64,8 +64,8 @@
   (let ((dim (sokoban:maze-dimensions *maze*))
         (img-px 32)
         (board-size 16))
-    (setf *translate-x* (floor (/ (* img-px (- board-size (car dim))) 2))
-          *translate-y* (floor (/ (* img-px (- board-size (cdr dim))) 2)))))
+    (setf *translate-x* (floor (* img-px (- board-size (car dim))) 2)
+          *translate-y* (floor (* img-px (- board-size (cdr dim))) 2))))
   
 (defun create-item (type)
   (let* ((name (string-downcase type))

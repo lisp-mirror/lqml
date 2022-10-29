@@ -51,6 +51,6 @@
         (let ((num *number*))
           (x:while (plusp num)
             (draw (mod num 10))
-            (setf num (floor (/ num 10)))
+            (setf num (floor num 10))
             (incf dig)))))))
 

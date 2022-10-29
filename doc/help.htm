@@ -164,8 +164,9 @@
 
   Fast and convenient way to call JS functions defined in QML. You may pass
   up to 10 arguments of the following types:
-  T, NIL, INTEGER, FLOAT, STRING, VECTOR of octets, and (nested) lists of
+  T, NIL, INTEGER, FLOAT, STRING, VECTOR of octets, ... and (nested) lists of
   mentioned arguments.
+  For the complete list of supported types see 'marshal.cpp:toQVariant()'.
   A special use case is to populate an item model in QML (using a trivial JS
   glue code function) which expects a JS dictionary, see example below.
   N.B: Does not work with JS default arguments.
