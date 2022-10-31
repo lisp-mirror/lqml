@@ -44,9 +44,9 @@
 
 <b>find-quick-item (object-name)</b>
 
-  Finds the first QQuickItem matching OBJECT-NAME. Locally set *ROOT-ITEM* if
-  you want to find items inside a specific item, like in a QML Repeater. See
-  also note in sources.
+  Finds the first QQuickItem matching OBJECT-NAME.
+  See also WITH-ROOT-ITEM if you want to find items inside a specific item,
+  like in a QML Repeater.
 
 
 <b>pixel-ratio ()</b>
@@ -292,6 +292,17 @@
     (defun qml:view-status-changed (status)
       (when (= 1 status)
         (populate-item-model)))
+
+
+<b>with-root-item (root-item)</b>
+
+  Say you have a Repeater QML item with multiple instances of the same
+  QQuickItem. The children of those QQuickItems all have the same object names,
+  respectively. In order to access those child items, we need to search in one
+  specific item of the Repeater.
+
+    (with-root-item (q! |itemAt| ui:*repeater* 0)
+      (q< |text| ui:*edit*))
 
 
 </pre>

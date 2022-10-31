@@ -13,7 +13,7 @@ conversions, as long as you only use `bool`, `long`, `double`, `QString`,
 `QByteArray` or (nested) `QVariant` lists of mentioned types.
 
 For the complete list of marshalled types please see `toQVariant()` and
-`from_qvariant` in [marshal.cpp](../src/cpp/marshal.cpp).
+`from_qvariant()` in [marshal.cpp](../src/cpp/marshal.cpp).
 
 
 

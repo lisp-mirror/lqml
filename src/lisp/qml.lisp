@@ -29,34 +29,28 @@
 
 (defun find-quick-item (object-name)
   "args: (object-name)
-  Finds the first QQuickItem matching OBJECT-NAME. Locally set *ROOT-ITEM* if
-  you want to find items inside a specific item, like in a QML Repeater. See
-  also note in sources."
-  ;;
-  ;; When to use *ROOT-ITEM*
-  ;;
-  ;; Say you have a Repeater QML item with multiple instances of the same
-  ;; QQuickItem. The children of those QQuickItems all have the same object
-  ;; names, respectively. In order to access those child items, we need to
-  ;; search in the specific item of the Repeater.
-  ;;
-  ;; So, we locally set (not bind, see note N.B.) *ROOT-ITEM* in order to find
-  ;; a specific child item inside the Repeater:
-  ;;
-  ;; (setf qml:*root-item* (q! |itemAt| ui:*repeater* 0)) ; (1) set
-  ;; ;; everything we do here will only affect children of the first
-  ;; ;; item in ui:*repeater* (see index 0 above)
-  ;; (q< |text| ui:*edit*)
-  ;; (setf qml:*root-item* nil)                           ; (2) reset
-  ;;
-  ;; N.B. we need SETF (instead of LET) because of the global var and threads
-  ;;      (QRUN* is used internally here)
-  ;;
+  Finds the first QQuickItem matching OBJECT-NAME.
+  See also WITH-ROOT-ITEM if you want to find items inside a specific item,
+  like in a QML Repeater."
   (let ((parent (or *root-item* (root-item))))
     (when (and parent (/= 0 (qt-object-address parent)))
       (if (string= (qobject-name parent) object-name)
           parent
           (qfind-child parent object-name)))))
+
+(defmacro with-root-item (root-item &body body)
+  "args: (root-item)
+  Say you have a Repeater QML item with multiple instances of the same
+  QQuickItem. The children of those QQuickItems all have the same object names,
+  respectively. In order to access those child items, we need to search in one
+  specific item of the Repeater.
+    (with-root-item (q! |itemAt| ui:*repeater* 0)
+      (q< |text| ui:*edit*))"
+  `(prog2
+       (setf qml:*root-item* ,root-item)
+       (progn
+         ,@body)
+     (setf qml:*root-item* nil)))
 
 (defun quick-item (item/name)
   ;; for internal use

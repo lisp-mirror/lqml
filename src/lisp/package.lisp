@@ -58,6 +58,7 @@
    #:set-clipboard-text
    #:tr
    #:view-status-changed
+   #:with-root-item
    #:!))
 
 (defpackage :qml-user
