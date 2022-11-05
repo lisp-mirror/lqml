@@ -264,9 +264,6 @@
                  #+ios     "assets/")
 
 #+ios
-(defvar *local-assets* "local-assets/")
-
-#+ios
 (progn
   ;; adapt paths to iOS specific values
   (defvar *bundle-root*                *default-pathname-defaults*)
@@ -339,12 +336,8 @@
   (when (or (not ini)
             (not (probe-file (merge-pathnames "encodings/"))))
     #+ios
-    (flet ((dir (assets)
-             (namestring (merge-pathnames assets *bundle-root*))))
-      (let ((assets       (dir *assets*))
-            (local-assets (dir *local-assets*)))
-        (copy-asset-files assets assets)
-        (copy-asset-files local-assets local-assets)))
+    (let ((assets (namestring (merge-pathnames *assets* *bundle-root*))))
+      (copy-asset-files assets assets))
     #+android
     (copy-asset-files))
   #-mobile
