@@ -1,8 +1,18 @@
 
+Prepare
+-------
+
+Please copy the app template files first:
+```
+$ cd ..
+$ ./copy.sh camera
+```
+
+
 Info
 ----
 
-This shows how to use the QML Camera item. Only very basic usage is covered
+This shows how to use the QML `Camera` item. Only very basic usage is covered
 here -- of course you can set many parameters, if you want to dive into all the
 details (see Qt Assistant).
 
