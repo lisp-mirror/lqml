@@ -5,7 +5,7 @@ import QtMultimedia 5.15
 Rectangle {
   width: 640
   height: 360
-  color: "gray"
+  color: "black"
 
   Camera {
     id: camera
@@ -62,6 +62,12 @@ Rectangle {
     id: imagePaths
   }
 
+  Rectangle {
+    anchors.fill: listView
+    anchors.topMargin: -listView.spacing
+    color: "gray"
+  }
+
   ListView {
     id: listView
     height: parent.height / 5
@@ -77,13 +83,6 @@ Rectangle {
       height: parent.height
       source: path
       fillMode: Image.PreserveAspectFit
-    }
-
-    Rectangle {
-      anchors.fill: parent
-      anchors.topMargin: -10
-      color: "black"
-      opacity: 0.5
     }
   }
 }

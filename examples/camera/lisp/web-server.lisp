@@ -14,7 +14,7 @@
 <html>
 <head>
 <style type=\"text/css\">
-img { width: 50px; border-width: 10px; border-style: solid; border-color: white }
+img { width: 100px; border-width: 10px; border-style: solid; border-color: white }
 </style>
 </head>
 <body>
