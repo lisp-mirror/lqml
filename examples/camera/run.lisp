@@ -1,5 +1,7 @@
 (in-package :qml-user)
 
+(pushnew :qt-plugin *features*)
+
 (require :asdf)
 
 (asdf:load-system :s-http-server)

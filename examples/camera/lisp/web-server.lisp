@@ -14,7 +14,7 @@
 <html>
 <head>
 <style type=\"text/css\">
-img { width: 100px; border-width: 10px; border-style: solid; border-color: white }
+img { width: 150px; height: 150px; object-fit: contain; border-width: 10px; border-style: solid; border-color: white }
 </style>
 </head>
 <body>
@@ -30,8 +30,10 @@ img { width: 100px; border-width: 10px; border-style: solid; border-color: white
   (register-context-handler *web-server* "/" 'static-resource-handler
                             :arguments (list image-path)))
 
-(defun create-index.html (image-path) ; called from QML
+(defun create-index.html (image-path rotation) ; called from QML
   "Creates 'index.html' for local web-server."
+  #+ios ; on iOS the image must be rotated
+  (qt:rotate-image qt:*cpp* image-path rotation)
   (unless *image-path*
     (ini image-path))
   (setf *image-path* image-path)

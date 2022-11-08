@@ -29,8 +29,10 @@ http://192.168.1.x:1701/
 **1701** is the default port of `:s-http-server` (from Quicklisp), which was
 chosen here because it's both relatively small and works well on mobile.
 
-You may wonder about the "wrong" orientation of the images in the browser: this
-depends both on the camera orientation and on the mobile OS.
+This example needs a small Qt extension for rotating images. That's necessary
+here because different devices may have different camera orientations, so the
+saved images would be displayed with the wrong orientation in the desktop
+browser.
 
 
 

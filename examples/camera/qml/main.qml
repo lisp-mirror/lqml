@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import QtQuick.Window 2.15
 import QtMultimedia 5.15
 
 Rectangle {
@@ -7,26 +8,48 @@ Rectangle {
   height: 360
   color: "black"
 
+  property int rotation: 0 // iOS: saved image will be rotated by this angle
+
   Camera {
     id: camera
     objectName: "camera"
 
     imageCapture {
       onImageSaved: {
+        Lisp.call("camera:create-index.html", path, rotation)
         imagePaths.append({"path": "file://" + path})
         listView.positionViewAtEnd()
-        Lisp.call("camera:create-index.html", path)
       }
     }
   }
 
   VideoOutput {
+    id: videoOutput
     objectName: "output"
     source: camera
     anchors.fill: parent
     anchors.bottomMargin: listView.height + 10
     focus: visible // to receive focus and capture key events when visible
+    autoOrientation: (Qt.platform.os === "android")
+
+    Component.onCompleted: adaptOrientation(Screen.orientation)
   }
+
+  // for iOS
+  function adaptOrientation(orientation) {
+    if (Qt.platform.os === "ios") {
+      var angle = 0
+      switch (orientation) {
+        case Qt.PortraitOrientation:          angle = -90; break
+        case Qt.InvertedLandscapeOrientation: angle = 180; break
+        case Qt.InvertedPortraitOrientation:  angle = 90;  break
+      }
+      videoOutput.orientation = angle
+      rotation = (Math.abs(angle) === 90) ? -angle : angle
+    }
+  }
+
+  Screen.onOrientationChanged: adaptOrientation(Screen.orientation)
 
   // menu buttons
 

@@ -30,7 +30,7 @@ win32:  PRE_TARGETDEPS = tmp/app.lib
 QT          += quick qml multimedia
 TEMPLATE    = app
 CONFIG      += c++17 no_keywords release
-DEFINES     = DESKTOP_APP INI_LISP INI_ECL_CONTRIB
+DEFINES     += DESKTOP_APP INI_LISP INI_ECL_CONTRIB QT_EXTENSION
 INCLUDEPATH = /usr/local/include
 ECL_VERSION = $$lower($$system(ecl -v))
 ECL_VERSION = $$replace(ECL_VERSION, " ", "-")
@@ -96,9 +96,11 @@ ios {
   LIBS += -llqml -llisp
 }
 
-LIBS    += -Ltmp -lapp
-HEADERS += ../../src/cpp/main.h
-SOURCES += ../../src/cpp/main.cpp
+LIBS        += -Ltmp -lapp
+INCLUDEPATH += ../../../src/cpp
+
+HEADERS += ../../src/cpp/main.h   cpp/qt.h
+SOURCES += ../../src/cpp/main.cpp cpp/qt.cpp
 
 RESOURCES += $$files(qml/*)
 RESOURCES += $$files(i18n/*.qm)
