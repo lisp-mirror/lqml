@@ -61,7 +61,7 @@ lqml run.lisp
 Optionally pass `-slime` to start a Swank server, and connect from Emacs with
 `M-x slime-connect`.
 
-During development you can pass `-auto`, which will releoad all QML files after
+During development you can pass `-auto`, which will reload all QML files after
 you made a change to any of them and saved it. For re-initialization after
 reloading, file `lisp/qml-reload/on-reloaded` will be loaded.
 
