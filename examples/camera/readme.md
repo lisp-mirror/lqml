@@ -40,10 +40,9 @@ Note
 ----
 
 While testing on different devices (phone/tablet), I discovered that they may
-behave differently regarding the orientation (both video output and saved
-images) even if running the same OS. So, to adapt to your device's behavior,
-you need to play around with `autoOrientation` and the angles in function
-`adaptOrientation()`; see also Lisp function `qt:rotate-image`.
+behave differently regarding the saved image orientation, even if running the
+same OS. So, to adapt to your device's behavior, you need to play around with
+`rotation` in `updateImageRotation()` (QML). See also `qt:rotate-image` (Lisp).
 
 The current settings worked for me on both an android phone and an iPhone (both
 older models).

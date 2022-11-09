@@ -7,6 +7,9 @@ Rectangle {
   width: 640
   height: 360
   color: "black"
+  Screen.orientationUpdateMask:
+    Qt.LandscapeOrientation | Qt.PortraitOrientation |
+    Qt.InvertedLandscapeOrientation | Qt.InvertedPortraitOrientation
 
   property int rotation: 0 // iOS: saved image will be rotated by this angle
 
@@ -30,26 +33,24 @@ Rectangle {
     anchors.fill: parent
     anchors.bottomMargin: listView.height + 10
     focus: visible // to receive focus and capture key events when visible
-    autoOrientation: (Qt.platform.os === "android")
+    autoOrientation: true
 
-    Component.onCompleted: adaptOrientation(Screen.orientation)
+    Component.onCompleted: updateImageRotation(Screen.orientation)
   }
 
   // for iOS
-  function adaptOrientation(orientation) {
+  function updateImageRotation(orientation) {
     if (Qt.platform.os === "ios") {
-      var angle = 0
       switch (orientation) {
-        case Qt.PortraitOrientation:          angle = -90; break
-        case Qt.InvertedLandscapeOrientation: angle = 180; break
-        case Qt.InvertedPortraitOrientation:  angle = 90;  break
+        case Qt.LandscapeOrientation:         rotation = 0;   break
+        case Qt.PortraitOrientation:          rotation = 90;  break
+        case Qt.InvertedLandscapeOrientation: rotation = 180; break
+        case Qt.InvertedPortraitOrientation:  rotation = -90; break
       }
-      videoOutput.orientation = angle
-      rotation = (Math.abs(angle) === 90) ? -angle : angle
     }
   }
 
-  Screen.onOrientationChanged: adaptOrientation(Screen.orientation)
+  Screen.onOrientationChanged: updateImageRotation(Screen.orientation)
 
   // menu buttons
 
