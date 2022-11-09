@@ -1,6 +1,7 @@
 ;;; This starts a local web-server in order to preview/download the taken
-;;; pictures on your desktop computer. Make sure you are in the same WiFi,
-;;; and open:
+;;; pictures (mobile device) on your desktop computer.
+;;;
+;;; Make sure you are in the same WiFi, and open:
 ;;;
 ;;; http://192.168.1.x:1701/
 
@@ -14,7 +15,10 @@
 <html>
 <head>
 <style type=\"text/css\">
-img { width: 150px; height: 150px; object-fit: contain; border-width: 10px; border-style: solid; border-color: white }
+img {
+  width: 150px; height: 150px; object-fit: contain;
+  border-width: 10px; border-style: solid; border-color: white;
+}
 </style>
 </head>
 <body>
