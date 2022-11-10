@@ -26,6 +26,11 @@ Rectangle {
     }
   }
 
+  Audio {
+    id: clickSound
+    source: "audio/camera.mp3"
+  }
+
   VideoOutput {
     id: videoOutput
     objectName: "output"
@@ -76,7 +81,10 @@ Rectangle {
       height: width
       text: "Photo"
 
-      onClicked: camera.imageCapture.capture()
+      onClicked: {
+        clickSound.play()
+        camera.imageCapture.capture()
+      }
     }
   }
 

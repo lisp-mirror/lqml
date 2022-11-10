@@ -41,8 +41,9 @@ Note
 
 While testing on different devices (phone/tablet), I discovered that they may
 behave differently regarding the saved image orientation, even if running the
-same OS. So, to adapt to your device's behavior, you need to play around with
-`rotation` in `updateImageRotation()` (QML). See also `qt:rotate-image` (Lisp).
+same OS. So, to adapt to your device's behavior, you need to check if it needs
+image rotation, and adapt function `updateImageRotation()` (QML) and
+`qt:rotate-image` (Lisp).
 
 The current settings worked for me on both an android phone and an iPhone (both
 older models).
