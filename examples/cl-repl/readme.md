@@ -11,6 +11,10 @@ $ ./copy.sh cl-repl
 See also [../../slime/src/readme-sources](../../slime/src/readme-sources.md) for
 installing the Slime sources where this example can find them.
 
+**Important**: you need to patch library `:zip` from Quicklisp, so copy it in
+your `~/quicklisp/local-projects/` directory, and apply this
+[patch/zip.diff](patch/zip.diff).
+
 
 
 Info
@@ -74,6 +78,46 @@ If you don't want auto reload enabled, comment out `auto-reload-qml` in
 Both desktop and mobile auto reload can also be run **simultaneously**, since
 they share the QML source files. Any number of mobile devices may be connected,
 if they are in the same WiFi and point to the same desktop IP.
+
+
+
+File exchange over WiFi (mobile only)
+-------------------------------------
+
+A simple web-server is integrated here for both downloading saved files to a
+desktop computer, or uploading them to the mobile device.
+
+To start the web-server, enter `:w` in the command line. It will point to the
+`[Home]` directory (`[Home]/Documents/` on iOS).
+
+### Upload
+
+Enter the IP of your mobile device in the desktop browser, using `1701` as
+port (mind the trailing `/`):
+```
+http://192.168.1.x:1701/
+```
+Now you can upload either a whole directory, or a single file. The files will
+be stored in `[Home]/uploads/` (`[Home]/Documents/uploads/` on iOS).
+
+You may also upload a zip file, which can then be unzipped using:
+```
+(unzip "uploads/all.zip" "examples/")
+```
+
+### Download
+
+First create a `*.zip` file like so:
+```
+(zip "all.zip" "examples/")
+```
+Note that the zip file will not contain the passed directory name (this is how
+the zip library from Quicklisp is implemented).
+
+Now you just need to enter the path in your desktop browser, something like:
+```
+http://192.168.1.x:1701/all.zip
+```
 
 
 

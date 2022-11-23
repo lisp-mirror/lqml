@@ -35,6 +35,7 @@
       (shell (cc "cp -r ../../../slime/src/* " to))))
   (let ((lib (cc (ext:getenv #+android "ECL_ANDROID" #+ios "ECL_IOS")
                  "/lib/ecl-*/")))
+    (shell (cc "cp ../www/index.html " *assets*))
     (unless (probe-file (cc *assets* "encodings"))
       (shell (cc "cp " lib "*.doc " *assets*))
       (shell (cc "cp -r " lib "encodings " *assets*)))

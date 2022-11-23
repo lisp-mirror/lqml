@@ -1,0 +1,18 @@
+diff --git a/zip.lisp.orig b/zip.lisp
+index a2f3768..cb1d76a 100644
+--- a/zip.lisp.orig
++++ b/zip.lisp
+@@ -15,8 +15,12 @@
+   #o640
+   #-(or windows mswindows)
+   (progn
+-    #-(or sbcl allegro ccl)
++    #-(or ecl sbcl allegro ccl)
+     (error "ZIP::FILE-MODE not ported")
++    #+ecl
++    (if (pathname-type pathname)
++        #o644
++        #o775)
+     #+ccl
+     (multiple-value-bind (win mode size mtime inode uid blocksize rmtime gid dev)
+         (ccl::%stat (ccl:native-translated-namestring pathname))

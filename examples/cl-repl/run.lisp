@@ -4,8 +4,14 @@
 
 (require :asdf)
 
+(asdf:load-system :cl-ppcre)
+(asdf:load-system :s-http-server)
+(asdf:load-system :zip)
+
 (push (merge-pathnames "./")
       asdf:*central-registry*)
+
+(push :depends-loaded *features*)
 
 (asdf:operate 'asdf:load-source-op :app)
 

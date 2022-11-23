@@ -1,6 +1,8 @@
 (defsystem :app
   :serial t
-  :depends-on (:cl-ppcre)
+  :depends-on (#-:depends-loaded :cl-ppcre
+               #-:depends-loaded :s-http-server
+               #-:depends-loaded :zip)
   :components ((:file "lisp/package")
                (:file "lisp/ui-vars")
                (:file "lisp/qt")
@@ -17,6 +19,7 @@
                (:file "lisp/curl")
                (:file "lisp/dialogs")
                (:file "lisp/editor")
+               (:file "lisp/upload-download")
                (:file "lisp/ini")
                (:file "lisp/main")))
 

@@ -46,6 +46,12 @@ Rectangle {
     <td align=right><b>:k</b></td><td>kill eval thread (long running task)</td>
   </tr>
   <tr>
+    <td align=right><b>:w</b></td><td>start local web-server for file upload/download, see http://192.168.1.x:1701/</td>
+  </tr>
+  <tr>
+    <td align=right><b>:ws</b></td><td>stop local web-server</td>
+  </tr>
+  <tr>
     <td align=right><b>double SPC</b></td><td>auto completion, e.g.<b> m-v-b</b></td>
   </tr>
   <tr>
