@@ -88,7 +88,7 @@ A simple web-server is integrated here for both downloading saved files to a
 desktop computer, or uploading them to the mobile device.
 
 To start the web-server, enter `:w` in the command line. It will point to the
-`[Home]` directory (`[Home]/Documents/` on iOS).
+`[Home]` directory.
 
 ### Upload
 
@@ -98,18 +98,22 @@ port (mind the trailing `/`):
 http://192.168.1.x:1701/
 ```
 Now you can upload either a whole directory, or a single file. The files will
-be stored in `[Home]/uploads/` (`[Home]/Documents/uploads/` on iOS).
+be stored in `[Home]/uploads/`.
 
 You may also upload a zip file, which can then be unzipped using:
 ```
-(unzip "uploads/all.zip" "examples/")
+(unzip "uploads/all.zip" "examples/") ; android
+
+(unzip "uploads/all.zip" "../Documents/examples/") ; iOS
 ```
 
 ### Download
 
 First create a `*.zip` file like so:
 ```
-(zip "all.zip" "examples/")
+(zip "all.zip" "examples/") ; android
+
+(zip "all.zip" "../Documents/examples/") ; iOS
 ```
 Note that the zip file will not contain the passed directory name (this is how
 the zip library from Quicklisp is implemented).
