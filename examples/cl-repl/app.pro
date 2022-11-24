@@ -75,7 +75,7 @@ android {
 }
 
 ios {
-  DEFINES     += INI_ASDF NO_TEXT_HANDLES
+  DEFINES     += INI_ASDF NO_TEXT_HANDLES DISABLE_SMART_QUOTES
   DEFINES     -= DESKTOP_APP
   INCLUDEPATH = $$(ECL_IOS)/include
   ECL_VERSION = $$lower($$system($ECL_IOS/../ecl-ios-host/bin/ecl -v))

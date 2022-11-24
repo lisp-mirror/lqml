@@ -2,7 +2,6 @@
 #include "lqml.h"
 #include "qml_ext.h"
 #include <QDir>
-#include <QGuiApplication>
 #include <QTimer>
 #include <QRegularExpression>
 #include <QQmlEngine>
@@ -65,9 +64,7 @@ int main(int argc, char* argv[]) {
 #ifdef INI_WEBVIEW
   QtWebView::initialize();
 #endif
-  QGuiApplication app(argc, argv);
-  //app.setOrganizationName("MyProject");
-  //app.setOrganizationDomain("my.org");
+  EventFilterApp app(argc, argv);
   app.setApplicationName(QFileInfo(app.applicationFilePath()).baseName());
   QStringList arguments(QCoreApplication::arguments());
 
