@@ -127,6 +127,17 @@ http://192.168.1.x:1701/all.zip
 
 
 
+iOS note (smart quotes)
+-----------------------
+
+Smart quotation marks can only be disabled globally for the whole app, putting
+this in the iOS section of `app.pro`:
+```
+DEFINES += DISABLE_SMART_QUOTES
+```
+
+
+
 Important notes for mobile
 --------------------------
 
