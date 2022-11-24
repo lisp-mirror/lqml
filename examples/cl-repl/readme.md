@@ -98,7 +98,9 @@ port (mind the trailing `/`):
 http://192.168.1.x:1701/
 ```
 Now you can upload either a whole directory, or a single file. The files will
-be stored in `[Home]/uploads/`.
+be stored in `[Home]/uploads/`. Note that different browsers may behave
+differently when uploading (recursive) directories (seems to work best with
+either Firefox or Chromium based browsers).
 
 You may also upload a zip file, which can then be unzipped using:
 ```

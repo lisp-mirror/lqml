@@ -10,10 +10,10 @@
     </style>
   </head>
   <body>
-    <h3>Upload files to CL REPL app</h3>
+    <h3>Upload files to REPL app</h3>
     <form enctype="multipart/form-data" method="post" action="/">
       <p>
-        <small><b>Whole Directory</b></small>
+        <small><b>Whole Directory</b> (recursive in Firefox/Chromium)</small>
         <br>
         <input name="files[]" type="file" webkitdirectory directory />
       </p>
@@ -26,6 +26,19 @@
       <input type="submit" value="Upload" />
       </p>
     </form>
-    <small>Files are saved in <code>[Home]/uploads/</code></small>.
+    <small>
+      Files are saved in <code>[Home]/uploads/</code>.
+      <ul>
+        <li>uploaded zip files can be unzipped on the device with
+          <br><code>(unzip "all.zip" "examples/") ; android</code>
+          <br><code>(unzip "all.zip" "../Documents/examples/") ; iOS</code>
+          <br>&nbsp;
+        <li>files on the device can be zipped before downloading with
+          <br><code>(zip "all.zip" "examples/") ; android</code>
+          <br><code>(zip "all.zip" "../Documents/examples/") ; iOS</code>
+          <br>and downloaded like so:
+          <br><code>http://192.168.1.x:1701/all.zip</code>
+      </ul>
+    </small>
   </body>
 </html>

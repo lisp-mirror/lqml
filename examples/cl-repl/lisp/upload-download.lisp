@@ -3,11 +3,10 @@
 (in-package :s-http-server)
 
 (defvar *web-server* nil)
-
-(defconstant +buffer-length+ 8192)
-
 (defvar *empty-line* #.(map 'vector 'char-code (list #\Return #\Linefeed
                                                      #\Return #\Linefeed)))
+
+(defconstant +buffer-length+ 8192)
 
 (defun form-data-filename (data start end)
   "Searches for 'filename=' in current form data field header."
@@ -29,8 +28,8 @@
           ;; don't read past end, would block http connection
           :for pos = (read-sequence buffer stream :end (min +buffer-length+
                                                             (- content-length index)))
-          do (adjust-array content (+ index pos))
-             (replace content buffer :start1 index :end2 pos)
+          :do (adjust-array content (+ index pos))
+              (replace content buffer :start1 index :end2 pos)
           :while (< index content-length))
     ;; loop through all form-data and save file(s)
     (x:while-it (search boundary content :start2 start)
@@ -105,12 +104,14 @@ it saves uploaded files on the server."
   "Creates a *.zip file of passed directory, _not_ including the directory name."
   (zip:zip (merge-pathnames zip-file)
            (probe-file directory)
-           :if-exists :supersede))
+           :if-exists :supersede)
+  zip-file)
 
 (defun unzip (zip-file &optional directory)
   "Extracts (previously uploaded) *.zip file."
   (zip:unzip (merge-pathnames zip-file)
              (probe-file (or directory "."))
-             :if-exists :supersede))
+             :if-exists :supersede)
+  zip-file)
 
 (export (list 'zip 'unzip))
