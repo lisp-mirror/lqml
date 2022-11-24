@@ -97,5 +97,9 @@ assets on the very first start of the app.
 A simple way to guarantee a clean install is simply uninstalling the app first,
 both on the device and on the emulator (android) or simulator (iOS).
 
+Alternatively call `(copy-all-asset-files)` manually (after installing an
+update). This function is called automatically only on the very first app
+startup.
+
 If your local web server doesn't seem to work, please check your firewall
 settings.
