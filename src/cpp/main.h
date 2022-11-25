@@ -34,6 +34,10 @@ public:
         bool changed = true;
         const int code = s.at(0).unicode();
         switch (code) {
+          // undo automatic double hyphen substitution
+          case 8212:
+            s = "--";
+            break;
           // replace iOS smart quotation marks with standard ones
           // (English, French, German, ...)
           case 8216:
