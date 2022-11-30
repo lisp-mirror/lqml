@@ -4,13 +4,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
     <style>
-      body { color: #505050; font-family: sans-serif; margin: 30px 20px; }
+      body { color: #303030; font-family: sans-serif; margin: 30px 20px; }
       a:link, a:visited { text-decoration: none; color: blue; }
       a:hover { text-decoration: underline; }
     </style>
   </head>
   <body>
-    <h3>Upload files to REPL app</h3>
+    <h3>File exchange with REPL app</h3>
     <form enctype="multipart/form-data" method="post" action="/">
       <p>
         <small><b>Whole Directory</b> (recursive in Firefox/Chromium)</small>
@@ -36,6 +36,7 @@
         <li>files on the device can be zipped before downloading with
           <br><code>(zip "all.zip" "examples/") ; android</code>
           <br><code>(zip "all.zip" "../Documents/examples/") ; iOS</code>
+          <br>&nbsp;
           <br>and downloaded like so:
           <br><code>http://192.168.1.x:1701/all.zip</code>
       </ul>

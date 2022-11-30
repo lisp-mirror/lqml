@@ -66,3 +66,11 @@ Windows note
 
 The Windows version is only meant to run on the desktop, using the (free) MSVC
 compiler. Please see [readme-windows](readme-windows.md) for details.
+
+
+Known issues
+------------
+
+* on **iOS**, functions `read-sequence`, `read-char` etc. don't update
+  `file-position` (ECL bug?); for a workaround see hack
+  [here](examples/cl-repl/lisp/upload-download.lisp)
