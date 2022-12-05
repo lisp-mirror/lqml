@@ -91,7 +91,7 @@
     (qjs |showKeyboard| ui:*main* nil)
     (when 1st
       (setf 1st nil)
-      (set-file-browser-path ":home"))
+      (set-file-browser-path #+ios ":data" #-ios ":home"))
     (setf *callback* callback)
     ;; force update
     (dolist (folder (list "" (q< |folder| ui:*folder-model*)))
