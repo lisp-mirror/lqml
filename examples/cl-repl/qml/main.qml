@@ -644,4 +644,8 @@ StackView {
   // modal dialogs
 
   Dlg.Dialogs {}
+
+  // dynamic QML items
+
+  Ext.Dynamic {}
 }

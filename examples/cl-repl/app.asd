@@ -2,7 +2,7 @@
   :serial t
   :depends-on (#-:depends-loaded :cl-ppcre
                #-:depends-loaded :s-http-server
-               #-:depends-loaded :zip)
+               #-:depends-loaded :zip) ; see 'patch/'
   :components ((:file "lisp/package")
                (:file "lisp/ui-vars")
                (:file "lisp/qt")
@@ -18,6 +18,7 @@
                (:file "lisp/eval")
                (:file "lisp/curl")
                (:file "lisp/dialogs")
+               (:file "lisp/qml-item")
                (:file "lisp/editor")
                (:file "lisp/upload-download")
                (:file "lisp/ini")

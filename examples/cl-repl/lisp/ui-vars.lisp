@@ -15,6 +15,7 @@
    #:*debug-model*
    #:*debug-text*
    #:*dialogs*
+   #:*dynamic*
    #:*down*
    #:*edit*
    #:*eval*
@@ -70,6 +71,7 @@
 (defparameter *debug-model*        "debug_model")
 (defparameter *debug-text*         "debug_text")
 (defparameter *dialogs*            "dialogs")
+(defparameter *dynamic*            "dynamic")
 (defparameter *down*               "down")
 (defparameter *edit*               "edit")
 (defparameter *eval*               "eval")
