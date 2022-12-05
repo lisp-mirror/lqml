@@ -86,10 +86,13 @@ ios {
   LIBS        += -lasdf -lecl-help -ldeflate -lecl-cdb -lecl-curl -lql-minitar -lsockets
   LIBS        += -L../../../platforms/ios/lib
 
-  assets.files         = $$files($$PWD/platforms/ios/assets)
-  QMAKE_BUNDLE_DATA    += assets
-
+  QMAKE_INFO_PLIST     = platforms/ios/Info.plist
   QMAKE_ASSET_CATALOGS += platforms/ios/Assets.xcassets
+
+  assets.files      = $$files($$PWD/platforms/ios/assets)
+  QMAKE_BUNDLE_DATA += assets
+  launch.files      = platforms/ios/designable.storyboard platforms/img/logo.png
+  QMAKE_BUNDLE_DATA += launch
 }
 
 32bit {
