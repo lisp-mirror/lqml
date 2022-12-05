@@ -34,9 +34,13 @@
       (ensure-directories-exist to)
       (shell (cc "cp -r ../../../slime/src/* " to))))
   (let ((lib (cc (ext:getenv #+android "ECL_ANDROID" #+ios "ECL_IOS")
-                 "/lib/ecl-*/")))
+                 "/lib/ecl-*/"))
+        (examples #+android *assets*
+                  #+ios (cc *assets* "../Documents/")))
     (shell (cc "cp ../www/index.html " *assets*))
-    (shell (cc "cp -r ../examples " *assets*))
+    #+ios
+    (ensure-directories-exist (cc examples "examples/"))
+    (shell (cc "cp -r ../examples " examples))
     (unless (probe-file (cc *assets* "encodings"))
       (shell (cc "cp " lib "*.doc " *assets*))
       (shell (cc "cp -r " lib "encodings " *assets*)))
