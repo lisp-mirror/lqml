@@ -3,7 +3,7 @@
 (defvar *quick-view* nil) ; QQuickView - is set in 'lqml.cpp' on startup
 (defvar *engine*     nil) ; QQmlEngine - (see above)
 (defvar *caller*     nil)
-(defvar *root-item*  nil) ; see note in 'find-quick-item'
+(defvar *root-item*  nil) ; see macro 'with-root-item'
 
 (defun string-to-symbol (name)
   (let ((upper (string-upcase name))
