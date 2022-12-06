@@ -1,4 +1,12 @@
 
+Try it
+------
+
+A signed APK (android) of this example can be downloaded from
+[cl-repl.org](http://cl-repl.org/).
+
+
+
 Prepare
 -------
 
