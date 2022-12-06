@@ -79,7 +79,7 @@ Rectangle {
   </tr>
 </table>
 ".arg((Qt.platform.os === "ios")
-      ? "Alt" : ((Qt.platform.os === "macos")
+      ? "Alt" : ((Qt.platform.os === "osx")
                  ? "Cmd" : "Ctrl"))
       }
     }
