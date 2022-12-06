@@ -7,10 +7,9 @@
 
 (defun qml-item-from-file (&optional (file *qml-file*) (name "my"))
   (setf *qml-file* file)
-  (let ((item (qjs |createItem| ui:*dynamic* file)))
-    (when item
-      (qset item |parent| (root-item))
-      (qset item |objectName| name)
-      item)))
+  (x:when-it (qjs |createItem| ui:*dynamic* file)
+    (qset x:it |parent| (root-item))
+    (qset x:it |objectName| name)
+    x:it))
 
 (export (list 'qml-item-from-file 'reload-qml-file))

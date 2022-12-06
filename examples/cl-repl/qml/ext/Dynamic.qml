@@ -12,7 +12,8 @@ Item {
       item.destroy()
     }
     Engine.clearCache()
-    component = Qt.createComponent("file://" + file)
+    var pre = (Qt.platform.os === "windows") ? "file:/" : "file://"
+    component = Qt.createComponent(pre + file)
     if (component.status === Component.Ready) {
       item = component.createObject()
       return item

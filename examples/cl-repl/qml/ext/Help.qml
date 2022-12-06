@@ -51,6 +51,7 @@ Rectangle {
   <tr>
     <td align=right><b>:ws</b></td><td>stop local web-server</td>
   </tr>
+  <br>
   <tr>
     <td align=right><b>double SPC</b></td><td>auto completion, e.g.<b> m-v-b</b></td>
   </tr>
@@ -60,8 +61,26 @@ Rectangle {
   <tr>
     <td align=right><b>tap and hold</b></td><td>cursor buttons to move to beginning/end of line/file</td>
   </tr>
+  <br>
+  <tr>
+    <td align=right><b>[Up]</b></td><td>move back in eval line history</td>
+  </tr>
+  <tr>
+    <td align=right><b>[Down]</b></td><td>move forward in eval line history</td>
+  </tr>
+  <tr>
+    <td align=right><b>[Tab]</b></td><td>switch focus between editor / eval line</td>
+  </tr>
+  <tr>
+    <td align=right><b>[%1+E]</b></td><td><b>E</b>xpression: select s-exp</td>
+  </tr>
+  <tr>
+    <td align=right><b>[%1+L]</b></td><td><b>L</b>ambda: eval selected s-exp</td>
+  </tr>
 </table>
-"
+".arg((Qt.platform.os === "ios")
+      ? "Alt" : ((Qt.platform.os === "macos")
+                 ? "Cmd" : "Ctrl"))
       }
     }
   }
