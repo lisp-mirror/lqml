@@ -1,4 +1,5 @@
 #include "qt.h"
+#include <main.h>
 #include <QtDebug>
 #include <QTextDocument>
 #include <QQuickTextDocument>
@@ -88,6 +89,18 @@ QVariant QT::connectDocumentChanged(const QVariant& vDocument, const QVariant& v
   }
   return false;
 }
+
+#ifdef Q_OS_IOS
+QVariant QT::connectKeyPressed() {
+  EventFilterApp* sender = static_cast<EventFilterApp*>(qGuiApp);
+  connect(sender, &EventFilterApp::keyPressed,
+          [](const QString& key, const QString& objectName) {
+            ecl_fun("editor:key-pressed", key, objectName);
+          });
+  return QVariant();
+}
+#endif
+
 
 // methods
 //

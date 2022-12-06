@@ -34,6 +34,11 @@ public:
         bool changed = true;
         const int code = s.at(0).unicode();
         switch (code) {
+          // capture Tab (iOS external keyboard), since QML Keys doesn't capture it
+          case '\t':
+            s = QString();
+            keyPressed("Tab", object->objectName());
+            break;
           // undo automatic double hyphen substitution
           case 8212:
             s = "--";
@@ -51,6 +56,15 @@ public:
           case 8221:
           case 8222:
             s[0] = QChar('"');
+            break;
+          // capture Alt+E, Alt+L (iOS external keyboard) for example 'cl-repl'
+          case 8364:
+            s = QString();
+            keyPressed("Alt+E", object->objectName());
+            break;
+          case 172:
+            s = QString();
+            keyPressed("Alt+L", object->objectName());
             break;
           default:
             changed = false;
@@ -79,6 +93,9 @@ public:
     }
     return QGuiApplication::eventFilter(object, event);
   }
+
+Q_SIGNALS:
+  void keyPressed(const QString&, const QString&);
 #endif
 };
 

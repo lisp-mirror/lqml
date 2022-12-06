@@ -7,6 +7,8 @@
    #:make-object
    ;; connect
    #:connect-document-changed
+   #+ios
+   #:connect-key-pressed
    ;; methods
    #:block*
    #:block-number

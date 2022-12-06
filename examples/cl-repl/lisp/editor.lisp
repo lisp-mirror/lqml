@@ -1059,6 +1059,21 @@
        (arrow-helt button))))
   (values)) ; no return value to QML
 
+#+ios
+(defun key-pressed (key object-name) ; called form Qt extension
+  ;; hack for iOS external keyboard
+  (cond ((string= "Tab" key)
+         (let ((window (intern (string-upcase object-name) :keyword)))
+           (when (find window '(:edit :command))
+             (q! |forceActiveFocus| (if (eql :edit window)
+                                    ui:*command*
+                                    ui:*edit*)))))
+        ((string= "Alt+E" key)
+         (select-expression))
+        ((string= "Alt+L" key)
+         (eval-single-expression)))
+  (values)) ; no return value to Qt extension
+
 ;;; ini
 
 (let ((curr 0)
@@ -1144,6 +1159,8 @@
   (eval:ini :output       'print-eval-output
             :query-dialog 'dialogs:query-dialog
             :debug-dialog 'dialogs:debug-dialog)
+  #+ios
+  (qt:connect-key-pressed qt:*cpp*) ; for iOS external keyboard
   (append-output (format nil "~% :h for help") :bold t))
 
 ;;; quit app
