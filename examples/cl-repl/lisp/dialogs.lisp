@@ -118,6 +118,7 @@
           (qlater 'pop-dialog)))))
 
 (defun rename-file* (from to) ; called from QML
+  (ensure-directories-exist to) ; for moving files around
   (ignore-errors (rename-file from to)))
 
 (defun location (name)

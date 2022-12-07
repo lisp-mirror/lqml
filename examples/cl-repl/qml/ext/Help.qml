@@ -37,13 +37,16 @@ Rectangle {
     <td align=right><b>*</b></td><td>copy eval value to clipboard</td>
   </tr>
   <tr>
-    <td align=right><b>:s</b></td><td>start swank server</td>
-  </tr>
-  <tr>
     <td align=right><b>:c</b></td><td>clear all output</td>
   </tr>
   <tr>
     <td align=right><b>:k</b></td><td>kill eval thread (long running task)</td>
+  </tr>
+  <tr>
+    <td align=right><b>:s</b></td><td>start Swank server</td>
+  </tr>
+  <tr>
+    <td align=right><b>:q</b></td><td>load Quicklisp</td>
   </tr>
   <tr>
     <td align=right><b>:w</b></td><td>start local web-server for file upload/download, see http://192.168.1.x:1701/</td>

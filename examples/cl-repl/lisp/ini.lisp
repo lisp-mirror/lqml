@@ -23,7 +23,8 @@
 #+android
 (progn
   ;; copied asset files are read-only by default
-  (shell "chmod 664 settings/*.lisp"))
+  (when (probe-file "settings/")
+    (shell "chmod 664 settings/*.lisp")))
 
 ;;; create default '.eclrc'
 
