@@ -34,3 +34,28 @@
     (with-open-file (s ecl-rc :direction :output)
       (format s "(x:when-it (probe-file \"settings/colors.lisp\")~
                ~%  (load x:it))"))))
+
+(ignore-errors ; don't hang on startup
+ (load (merge-pathnames ".eclrc")))
+
+;;; check version
+
+#+mobile
+(defconstant +version+ 1)
+
+#+mobile
+(let* ((file (merge-pathnames ".version"))
+       (exists (probe-file file))
+       (write (not exists)))
+  (when (and exists
+             (> +version+
+                (parse-integer (alexandria:read-file-into-string file))))
+    (copy-all-asset-files) ; asset files may have changed
+    (setf write t))
+  (when write
+    (alexandria:write-string-into-file
+     (princ-to-string +version+) file :if-exists :supersede)))
+
+;;; hacks
+
+(asdf:defsystem :sb-bsd-sockets) ; needed for :sockets (linked as static lib)
