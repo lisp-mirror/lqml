@@ -19,6 +19,8 @@
 (ignore-errors ; don't hang on startup
  (load (merge-pathnames ".eclrc")))
 
+(asdf:defsystem :sb-bsd-sockets) ; needed for :sockets (linked as static lib)
+
 #+mobile
 (when qml::*remote-ip*
   (qsingle-shot 1000 'auto-reload-qml))
