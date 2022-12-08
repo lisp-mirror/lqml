@@ -119,7 +119,7 @@
 
 (defun rename-file* (from to) ; called from QML
   (ensure-directories-exist (merge-pathnames to from)) ; for moving files around
-  (ignore-errors (rename-file from to)))
+  (rename-file from to))
 
 (defun location (name)
   (cond ((string= ":data" name)
