@@ -58,4 +58,12 @@
 
 ;;; hacks
 
-(asdf:defsystem :sb-bsd-sockets) ; needed for :sockets (linked as static lib)
+;; needed for :sockets (linked as static lib)
+(asdf:defsystem :sb-bsd-sockets)
+
+;; eventual ssl libs (not included in LQML) need to be loaded manually
+#+android
+(when (probe-file "libssl.so")
+  (ffi:load-foreign-library "libcrypto.so")
+  (ffi:load-foreign-library "libssl.so"))
+

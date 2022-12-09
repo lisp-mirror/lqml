@@ -64,7 +64,12 @@ android {
   LIBS        += -lasdf -lecl-help -ldeflate -lecl-cdb -lecl-curl -lql-minitar -lsockets
   LIBS        += -L../../../platforms/android/lib
 
-  ANDROID_EXTRA_LIBS         += $$ECL/lib/libecl.so
+  ANDROID_EXTRA_LIBS += $$ECL/lib/libecl.so
+
+  # optional, not included in LQML
+  #SSL_PATH = ../../../platforms/android/lib
+  #ANDROID_EXTRA_LIBS += $$SSL_PATH/libcrypto.so $$SSL_PATH/libssl.so
+
   ANDROID_PACKAGE_SOURCE_DIR = ../platforms/android
 
   32bit {

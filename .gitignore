@@ -2,6 +2,7 @@ TODO
 lqml
 _*
 *.a
+*.eclrc
 *.fas*
 *.*history
 *.lib
@@ -13,6 +14,7 @@ _*
 *.qm
 *.stash
 *.ts
+*.version
 *~
 *.~
 #*.*#

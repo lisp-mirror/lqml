@@ -134,23 +134,12 @@ int main(int argc, char* argv[]) {
   ecl_init_module(NULL, init_lib_ASDF);
 #endif
 
-#ifdef INI_SSL
-  #ifdef Q_OS_ANDROID
-    // ssl libs need to be loaded manually
-    LQML::eval("(ffi:load-foreign-library \"libcrypto.so\")");
-    LQML::eval("(ffi:load-foreign-library \"libssl.so\")");
-  #endif
-  LQML::eval("(push :cl+ssl-foreign-libs-already-loaded *features*)");
-#endif
-
   // load .eclrc
   if (arguments.contains("-norc")) {
     arguments.removeAll("-norc");
   } else {
 #if (defined Q_OS_ANDROID) || (defined Q_OS_IOS)
-    // mobile: don't hang on startup
-    LQML::eval("(x:when-it (probe-file \"~/.eclrc\")"
-               "  (ignore-errors (load x:it)))");
+    // nothing
 #else
   #ifndef DESKTOP_APP
     LQML::eval("(x:when-it (probe-file \"~/.eclrc\")"
