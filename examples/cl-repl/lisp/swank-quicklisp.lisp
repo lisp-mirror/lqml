@@ -62,12 +62,6 @@
     (funcall (%sym 'stop-server :swank) port)
     :stopped))
 
-(progn
-  ;; be careful not to use :s, :q in your mobile app code
-  ;; ios simulator note: wrap :s and :q in qrun* (would crash otherwise)
-  (define-symbol-macro :s (start-swank))
-  (define-symbol-macro :q (quicklisp)))
-
 (export
  (list 'start-swank
        'stop-swank
