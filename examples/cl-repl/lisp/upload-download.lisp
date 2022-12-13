@@ -100,20 +100,18 @@ it saves uploaded files on the server."
 
 (in-package :qml)
 
-#+ios ;; hack for iOS, where 'read-sequence' doesn't update 'file-position'
-(progn
-  (ext:package-lock :common-lisp nil)
-
-  (defvar cl-user::%read-sequence% (symbol-function 'cl:read-sequence))
-
-  (defun cl:read-sequence (buffer stream &rest arguments)
-    (let ((p1 (file-position stream))
-          (p2 (apply cl-user::%read-sequence% buffer stream arguments)))
-      (when p1
-        (file-position stream (+ p1 p2))) ; update manually
-      p2))
-
-  (ext:package-lock :common-lisp t))
+#+ios
+(defun cl-user::read-sequence* (buffer stream &rest arguments)
+  ;; hack for iOS, where 'read-sequence' doesn't update 'file-position';
+  ;; every occurrence of 'read-sequence' in library :zip must be replaced
+  ;; with this function;
+  ;; we can't replace it globally, because some code (like Quicklisp)
+  ;; would stop working
+  (let ((p1 (file-position stream))
+        (p2 (apply 'cl:read-sequence buffer stream arguments)))
+    (when p1
+      (file-position stream (+ p1 p2))) ; update manually
+    p2))
 
 (defun zip (zip-file directory)
   "Creates a *.zip file of passed directory, _not_ including the directory name."

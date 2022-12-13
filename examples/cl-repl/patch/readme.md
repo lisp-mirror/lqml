@@ -13,5 +13,8 @@ It uses a trivial approach by simply applying a stat of `644` for files, and
 HowTo
 -----
 
-Copy project `:zip` from Quicklisp to `~/quicklisp/local-projects/` and patch
-file `zip.lisp` according to `zip.diff`.
+* copy project `:zip` from Quicklisp to `~/quicklisp/local-projects/` and patch
+  file `zip.lisp` according to `zip.diff`
+
+* **iOS** only: replace every occurrence of `read-sequence` with
+  `cl-user::read-sequence*` (see files `zip.lisp` and `gray.lisp`)
