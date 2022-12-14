@@ -44,15 +44,11 @@
 (defconstant +version+ 1)
 
 #+mobile
-(let* ((file (merge-pathnames ".version"))
-       (exists (probe-file file))
-       (write (not exists)))
-  (when (and exists
-             (> +version+
-                (parse-integer (alexandria:read-file-into-string file))))
+(let ((file (merge-pathnames ".version")))
+  (when (or (not (probe-file file))
+            (> +version+
+               (parse-integer (alexandria:read-file-into-string file))))
     (copy-all-asset-files) ; asset files may have changed
-    (setf write t))
-  (when write
     (alexandria:write-string-into-file
      (princ-to-string +version+) file :if-exists :supersede)))
 
