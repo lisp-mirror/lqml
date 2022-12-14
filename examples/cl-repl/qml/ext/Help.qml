@@ -64,6 +64,9 @@ Rectangle {
   <tr>
     <td align=right><b>tap and hold</b></td><td>cursor buttons to move to beginning/end of line/file</td>
   </tr>
+  <tr>
+    <td align=right><b>hold ')'</b></td><td>(paren buttons) to close all open parens</td>
+  </tr>
   <br>
   <tr>
     <td align=right><b>[Up]</b></td><td>move back in eval line history</td>
