@@ -20,12 +20,6 @@
   (princ (x:join *shell-output* #\Newline))
   (values))
 
-#+android
-(progn
-  ;; copied asset files are read-only by default
-  (when (probe-file "settings/")
-    (shell "chmod 664 settings/*.lisp")))
-
 ;;; create default '.eclrc'
 
 #+mobile
@@ -48,14 +42,16 @@
   (when (or (not (probe-file .version))
             (> +version+
                (parse-integer (alexandria:read-file-into-string .version))))
-    (let ((colors (merge-pathnames "settings/colors.lisp"))
-          (keep (when (probe-file colors)
-                  (alexandria:read-file-into-string colors))))
-      (copy-all-asset-files) ; asset files may have changed
-      (when keep
-        (alexandria:write-string-into-file keep colors :if-exists :supersede)))
+    ;; asset files may have changed
+    (copy-all-asset-files :keep (list "settings/colors.lisp"))
     (alexandria:write-string-into-file
      (princ-to-string +version+) .version :if-exists :supersede)))
+
+#+android
+(progn
+  ;; copied asset files are read-only by default
+  (when (probe-file "settings/")
+    (shell "chmod 664 settings/*.lisp")))
 
 ;;; hacks
 

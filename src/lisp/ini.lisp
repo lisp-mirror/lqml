@@ -285,7 +285,7 @@
                                                       (user-homedir-pathname))))))
 
 #+mobile
-(defun copy-asset-files (&optional (dir-name *assets*) origin)
+(defun copy-asset-files (&optional keep (dir-name *assets*) origin)
   "Copy asset files to home directory."
   (flet ((directory-p (path)
            (x:ends-with "/" path))
@@ -302,13 +302,17 @@
     ;; APK asset files, which can't be accessed directly from Lisp
     (dolist (from (qdirectory dir-name))
       (if (directory-p from)
-          (copy-asset-files from origin)
-          (let ((to (translate from)))
-            (when (probe-file to)
-              (delete-file to))
-            (unless (qcopy-file from to)
-              (qlog "Error copying asset file: ~S" from)
-              (return-from copy-asset-files))))))
+          (copy-asset-files keep from origin)
+          (let* ((to (translate from))
+                 (exists (probe-file to))
+                 (skip (and exists
+                            (find to keep :test (lambda (a b) (x:ends-with b a))))))
+            (unless skip
+              (when exists
+                (delete-file to))
+              (unless (qcopy-file from to)
+                (qlog "Error copying asset file: ~S" from)
+                (return-from copy-asset-files)))))))
   t)
 
 #+mobile
@@ -324,9 +328,9 @@
     (setf (logical-pathname-translations "HOME")
           (list (list "home:**;*.*"
                       (merge-pathnames "**/*.*" (user-homedir-pathname))))))
-  (copy-all-asset-files t))
+  (copy-all-asset-files :ini t))
 
-(defun copy-all-asset-files (&optional ini)
+(defun copy-all-asset-files (&key ini keep)
   "args: ()
   Mobile only. Preamble: all asset files are automatically copied to the app
   directory on the very first app startup.
@@ -337,9 +341,9 @@
             (not (probe-file (merge-pathnames "encodings/"))))
     #+ios
     (let ((assets (namestring (merge-pathnames *assets* *bundle-root*))))
-      (copy-asset-files assets assets))
+      (copy-asset-files keep assets assets))
     #+android
-    (copy-asset-files))
+    (copy-asset-files keep))
   #-mobile
   :mobile-only)
 
