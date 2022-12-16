@@ -41,16 +41,21 @@
 ;;; check version
 
 #+mobile
-(defconstant +version+ 1)
+(defconstant +version+ 2)
 
 #+mobile
-(let ((file (merge-pathnames ".version")))
-  (when (or (not (probe-file file))
+(let ((.version (merge-pathnames ".version")))
+  (when (or (not (probe-file .version))
             (> +version+
-               (parse-integer (alexandria:read-file-into-string file))))
-    (copy-all-asset-files) ; asset files may have changed
+               (parse-integer (alexandria:read-file-into-string .version))))
+    (let ((colors (merge-pathnames "settings/colors.lisp"))
+          (keep (when (probe-file colors)
+                  (alexandria:read-file-into-string colors))))
+      (copy-all-asset-files) ; asset files may have changed
+      (when keep
+        (alexandria:write-string-into-file keep colors :if-exists :supersede)))
     (alexandria:write-string-into-file
-     (princ-to-string +version+) file :if-exists :supersede)))
+     (princ-to-string +version+) .version :if-exists :supersede)))
 
 ;;; hacks
 

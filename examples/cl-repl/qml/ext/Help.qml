@@ -28,10 +28,10 @@ Rectangle {
         textFormat: Text.RichText
         text:
 "
-<h2>Help</h2>
+<h3>Eval line commands</h3>
 <table cellpadding=5>
   <tr>
-    <td align=right><b>:?</b></td><td>find regular expression, e.g.<b> :?&nbsp;prin[c1]</b>; hit RET for next match</td>
+    <td align=right><b>:?</b></td><td>find regular expression, e.g.<br><code>:?&nbsp;prin[c1]</code><br>hit RET for next match</td>
   </tr>
   <tr>
     <td align=right><b>*</b></td><td>copy eval value to clipboard</td>
@@ -49,12 +49,16 @@ Rectangle {
     <td align=right><b>:q</b></td><td>load Quicklisp</td>
   </tr>
   <tr>
-    <td align=right><b>:w</b></td><td>start local web-server for file upload/download, see http://192.168.1.x:1701/</td>
+    <td align=right><b>:w</b></td><td>start local web-server for file upload/download, see<br><code>http://192.168.1.x:1701/</code>
+    <br>(not encrypted)</td>
   </tr>
   <tr>
     <td align=right><b>:ws</b></td><td>stop local web-server</td>
   </tr>
-  <br>
+</table>
+<br>
+<h3>Special keys/taps</h3>
+<table cellpadding=5>
   <tr>
     <td align=right><b>double SPC</b></td><td>auto completion, e.g.<b> m-v-b</b></td>
   </tr>
@@ -67,7 +71,18 @@ Rectangle {
   <tr>
     <td align=right><b>hold ')'</b></td><td>(paren buttons) to close all open parens</td>
   </tr>
-  <br>
+</table>
+<br>
+<h3>Special functions</h3>
+<table cellpadding=5>
+  <tr>
+    <td align=right><b>print</b></td><td><code>(ed:pr \"greetings\" :color \"red\" :bold t :line t)</code></td>
+  </tr>
+%2
+</table>
+<br>
+<h3>External keyboard</h3>
+<table cellpadding=5>
   <tr>
     <td align=right><b>[Up]</b></td><td>move back in eval line history</td>
   </tr>
@@ -87,6 +102,9 @@ Rectangle {
 ".arg((Qt.platform.os === "ios")
       ? "Alt" : ((Qt.platform.os === "osx")
                  ? "Cmd" : "Ctrl"))
+ .arg((Qt.platform.os === "android")
+      ? "<tr><td align=right><b>shell</b></td><td><code>(shell \"df -h\")</code></td></tr>"
+      : "")
       }
     }
   }

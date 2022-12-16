@@ -66,7 +66,8 @@ android {
 
   ANDROID_EXTRA_LIBS += $$ECL/lib/libecl.so
 
-  # optional, not included in LQML
+  # optional (not included), can be downloaded from:
+  # https://github.com/KDAB/android_openssl/tree/master/latest
   #SSL_PATH = ../../../platforms/android/lib
   #ANDROID_EXTRA_LIBS += $$SSL_PATH/libcrypto.so $$SSL_PATH/libssl.so
 

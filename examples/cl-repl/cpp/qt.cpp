@@ -3,6 +3,8 @@
 #include <QtDebug>
 #include <QTextDocument>
 #include <QQuickTextDocument>
+#include <QNetworkInterface>
+#include <QHostAddress>
 
 #ifdef PLUGIN
   #include <ecl_fun_plugin.h>
@@ -305,5 +307,30 @@ QVariant QT::textDocument(const QVariant& vDocument) {
   }
   return QVariant();
 }
+
+#if (defined Q_OS_ANDROID) || (defined Q_OS_IOS)
+QVariant QT::localIp() {
+  // Tries to find the local network address. If the result is not unique,
+  // a null value is returned (no guesses).
+  QStringList ips;
+  QList<QHostAddress> addresses = QNetworkInterface::allAddresses();
+  for (QHostAddress adr : qAsConst(addresses)) {
+    if (adr.protocol() == QAbstractSocket::IPv4Protocol) {
+      QString str(adr.toString());
+      if (str.startsWith("192.168.1.")) {
+        return str;
+      }
+      if (str != "127.0.0.1") {
+        ips << str;
+      }
+    }
+  }
+  if (ips.length() == 1) {
+    return ips.first();
+  }
+  qDebug() << "multiple IPs found:\n" << ips.join("\n");
+  return QVariant();
+}
+#endif
 
 QT_END_NAMESPACE

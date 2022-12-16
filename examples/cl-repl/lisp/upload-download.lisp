@@ -43,7 +43,7 @@
                                       (+ 4 (search *empty-line* content :start2 start))
                                       (- x:it 4))
                               out)))))
-      (setf start (incf x:it boundary-length)))))
+      (setf start (+ x:it boundary-length)))))
 
 (defun ensure-multipart/form-data (headers)
   "Searches headers for 'multipart/form-data' and returns its boundary string."
@@ -89,7 +89,11 @@ it saves uploaded files on the server."
     (when ini
       (register-context-handler *web-server* "/" 'static-resource/upload-handler
                                 :arguments (list #+mobile *default-pathname-defaults*
-                                                 #-mobile (merge-pathnames "www/"))))))
+                                                 #-mobile (merge-pathnames "www/")))))
+  #+mobile
+  ;; qrun*: only when running on main thread can we have return values from Qt
+  (x:when-it (qml:qrun* (qt:local-ip qt:*cpp*))
+    (format nil "http://~A:1701/" x:it)))
 
 (defun stop ()
   (stop-server *web-server*))

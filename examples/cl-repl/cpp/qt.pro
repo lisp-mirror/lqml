@@ -1,4 +1,4 @@
-QT          += gui quick
+QT          += gui quick network
 TEMPLATE    = lib
 CONFIG      += c++17 plugin release no_keywords
 DEFINES     += PLUGIN

@@ -102,6 +102,9 @@ public:
   Q_INVOKABLE QVariant setPattern            (const QVariant&, const QVariant&);
   Q_INVOKABLE QVariant text                  (const QVariant&);
   Q_INVOKABLE QVariant textDocument          (const QVariant&);
+#if (defined Q_OS_ANDROID) || (defined Q_OS_IOS)
+  Q_INVOKABLE QVariant localIp               ();
+#endif
 };
 
 QT_END_NAMESPACE
