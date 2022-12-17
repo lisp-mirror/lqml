@@ -623,7 +623,12 @@ cl_object qcopy_file(cl_object l_from, cl_object l_to) {
   /// Convenience function for android, for e.g. copying files from 'assets:/',
   /// which can't be accessed directly from Lisp.
   ///   (qcopy-file "assets:/lib/asdf.fas" "asdf.fas")
-  bool ok = QFile::copy(toQString(l_from), toQString(l_to));
+  QString to(toQString(l_to));
+  bool ok = QFile::copy(toQString(l_from), to);
+#ifdef Q_OS_ANDROID
+  // copied asset files are read-only by default
+  QFile::setPermissions(to, QFile::permissions(to) | QFileDevice::WriteOwner);
+#endif
   ecl_return1(ecl_process_env(), ok ? ECL_T : ECL_NIL);
 }
 

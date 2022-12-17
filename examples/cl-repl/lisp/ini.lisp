@@ -35,7 +35,7 @@
 ;;; check version
 
 #+mobile
-(defconstant +version+ 2)
+(defconstant +version+ 3)
 
 #+mobile
 (let ((.version (merge-pathnames ".version")))
@@ -46,12 +46,6 @@
     (copy-all-asset-files :keep (list "settings/colors.lisp"))
     (alexandria:write-string-into-file
      (princ-to-string +version+) .version :if-exists :supersede)))
-
-#+android
-(progn
-  ;; copied asset files are read-only by default
-  (when (probe-file "settings/")
-    (shell "chmod 664 settings/*.lisp")))
 
 ;;; hacks
 
