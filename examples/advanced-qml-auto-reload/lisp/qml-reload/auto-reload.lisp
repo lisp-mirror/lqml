@@ -20,29 +20,33 @@
 
 (let ((secs 0))
   (defun watch-files ()
-    (let ((sum 0)
-          (max 0)
-          files)
-      ;; don't cache, files might be added/removed during development
-      (dolist (file (directory (merge-pathnames "../../qml/**/*.qml" *dir*)))
-        (unless (search "/." (namestring file))
-          (push file files)))
-      (dolist (file files)
-        (let ((date (file-write-date file)))
-          (when (> date max)
-            (setf max date
-                  *edited-file* file))
-          (incf sum date)))
-      (let ((edited (namestring *edited-file*)))
-        (setf *edited-file*
-              (subseq edited (+ 5 (search "/qml/" edited)))))
-      (when (/= secs sum)
-        (unless (zerop secs)
-          (if (reload-main-p)
-              (qml:reload)
-              (qjs |reload| *edited-file*)))
-        (setf secs sum)))
-    (qsingle-shot 250 'watch-files)))
+    (flet ((repeat ()
+             (qsingle-shot 500 'watch-files)))
+      (let ((sum 0)
+            (max 0)
+            files)
+        ;; don't cache, files might be added/removed during development
+        (dolist (file (directory (merge-pathnames "../../qml/**/*.qml" *dir*)))
+          (unless (search "/." (namestring file))
+            (push file files)))
+        (dolist (file files)
+          (let ((date (file-write-date file)))
+            (unless date ; might be NIL while saving
+              (return-from watch-files (repeat)))
+            (when (> date max)
+              (setf max date
+                    *edited-file* file))
+            (incf sum date)))
+        (let ((edited (namestring *edited-file*)))
+          (setf *edited-file*
+                (subseq edited (+ 5 (search "/qml/" edited)))))
+        (when (/= secs sum)
+          (unless (zerop secs)
+            (if (reload-main-p)
+                (qml:reload)
+                (qjs |reload| *edited-file*)))
+          (setf secs sum)))
+      (repeat))))
 
 (progn
   (load "qml/.create-qml-loaders")

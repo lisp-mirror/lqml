@@ -13,17 +13,22 @@
 (let ((secs 0)
       files)
   (defun watch-files ()
-    (unless files
-      (dolist (file (directory (merge-pathnames "../../qml/**/*.qml" *dir*)))
-        (push file files)))
-    (let ((curr 0))
-      (dolist (file files)
-        (incf curr (file-write-date file)))
-      (when (/= secs curr)
-        (unless (zerop secs)
-          (qml:reload))
-        (setf secs curr)))
-    (qsingle-shot 250 'watch-files)))
+    (flet ((repeat ()
+             (qsingle-shot 500 'watch-files)))
+      (unless files
+        (dolist (file (directory (merge-pathnames "../../qml/**/*.qml" *dir*)))
+          (push file files)))
+      (let ((curr 0))
+        (dolist (file files)
+          (let ((date (file-write-date file)))
+            (unless date ; might be NIL while saving
+              (return-from watch-files (repeat)))
+            (incf curr date)))
+        (when (/= secs curr)
+          (unless (zerop secs)
+            (qml:reload))
+          (setf secs curr)))
+      (repeat))))
 
 (watch-files)
 
