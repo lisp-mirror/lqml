@@ -155,7 +155,7 @@ Rectangle {
           id: itemCount
           anchors.verticalCenter: parent.verticalCenter
           text: Lisp.call("cl:format", null, " ~D item~P", folderModel.count, folderModel.count)
-          font.pixelSize: 18 + main.small ? 0 : 2
+          font.pixelSize: 18
         }
       }
     }

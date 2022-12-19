@@ -19,14 +19,14 @@ Rectangle {
     Text {
       width: 3/4 * folderView.width - icon.width
       anchors.verticalCenter: parent.verticalCenter
-      font.pixelSize: 18 + main.small ? 0 : 2
+      font.pixelSize: 18
       text: fileName
     }
     Text {
       width: 1/4 * folderView.width - 4
       anchors.verticalCenter: parent.verticalCenter
       horizontalAlignment: Text.AlignRight
-      font.pixelSize: 18 + main.small ? 0 : 2
+      font.pixelSize: 18
       text: fileIsDir ? "" : Lisp.call("cl:format", null, "~:D", fileSize)
     }
   }
