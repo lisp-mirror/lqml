@@ -30,7 +30,7 @@ Rectangle {
         x: 30
         height: backButton.height * 1.1 // align correction (different font from above)
         verticalAlignment: Text.AlignVCenter
-        font.pixelSize: 22
+        font.pixelSize: 20
         font.weight: Font.DemiBold
         color: iconBack.color
         text: "Repl"
@@ -47,7 +47,7 @@ Rectangle {
   Text {
     id: label
     anchors.centerIn: parent
-    font.pixelSize: 22
+    font.pixelSize: 20
     font.weight: Font.DemiBold
   }
 }

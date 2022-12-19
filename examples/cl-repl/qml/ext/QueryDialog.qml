@@ -21,6 +21,7 @@ Rectangle {
       objectName: "query_input"
       width: parent.width
       font.family: "Hack"
+      font.pixelSize: 18
       inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText
 
       onAccepted: {
@@ -36,7 +37,7 @@ Rectangle {
       leftPadding: 8
       rightPadding: 8
       topPadding: 8
-      font.pixelSize: queryInput.font.pixelSize - (main.small ? 2 : 0)
+      font.pixelSize: 18
     }
   }
 

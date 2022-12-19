@@ -23,6 +23,7 @@ Rectangle {
       objectName: "debug_input"
       Layout.fillWidth: true
       font.family: "Hack"
+      font.pixelSize: 18
       inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText
       text: ":q"
 
@@ -37,7 +38,7 @@ Rectangle {
       topPadding: 8
       bottomPadding: 8
       font.family: "Hack"
-      font.pixelSize: debugInput.font.pixelSize - (main.small ? 4 : 2)
+      font.pixelSize: 16
       text: ":r1 etc. restart / :h help / :q quit"
     }
 
@@ -61,7 +62,7 @@ Rectangle {
       delegate: Text {
         padding: 8
         textFormat: Text.PlainText
-        font.pixelSize: debugInput.font.pixelSize - (main.small ? 2 : 0)
+        font.pixelSize: 18
         font.family: "Hack"
         font.bold: mBold
         text: mText
