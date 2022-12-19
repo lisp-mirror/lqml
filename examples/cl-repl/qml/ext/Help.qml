@@ -79,6 +79,7 @@ Rectangle {
     <td align=right><b>print</b></td><td><code>(ed:pr \"greetings\" :color \"red\" :bold t :line t)</code></td>
   </tr>
 %2
+%3
 </table>
 <br>
 <h3>External keyboard</h3>
@@ -105,6 +106,11 @@ Rectangle {
  .arg((Qt.platform.os === "android")
       ? "<tr><td align=right><b>shell</b></td><td><code>(shell \"df -h\")</code></td></tr>"
       : "")
+ .arg((Qt.platform.os === "android")
+      ? "<tr><td align=right><b>zip</b></td><td><code>(zip \"all.zip\" \"examples/\")</code></td></tr><tr><td align=right><b>unzip</b></td><td><code>(unzip \"uploads/all.zip\" \"examples/\")</code></td></tr>"
+      : (Qt.platform.os === "ios")
+        ? "<tr><td align=right><b>zip</b></td><td><code>(zip \"all.zip\" \"../Documents/examples/\")</code></td></tr><tr><td align=right><b>unzip</b></td><td><code>(unzip \"uploads/all.zip\" \"../Documents/examples/\")</code></td></tr>"
+        : "")
       }
     }
   }
