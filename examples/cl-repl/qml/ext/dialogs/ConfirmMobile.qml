@@ -3,7 +3,8 @@ import QtQuick.Controls 2.15
 
 Dialog {
   anchors.centerIn: parent
-  title: "LQML"
+  title: "Confirm"
+  font.pixelSize: 18
   modal: true
   standardButtons: Dialog.Save | Dialog.Cancel
 
@@ -14,6 +15,7 @@ Dialog {
     id: message
     width: parent.width // without width word wrap won't work
     wrapMode: Text.Wrap
+    font.pixelSize: 18
   }
 
   onAccepted: Lisp.call(callback, true)

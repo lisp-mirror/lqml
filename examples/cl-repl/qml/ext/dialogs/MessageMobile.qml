@@ -4,6 +4,7 @@ import QtQuick.Controls 2.15
 Dialog {
   anchors.centerIn: parent
   title: "Info"
+  font.pixelSize: 18
   modal: true
   standardButtons: Dialog.Ok
 
@@ -13,5 +14,6 @@ Dialog {
     id: message
     width: parent.width // without width word wrap won't work
     wrapMode: Text.Wrap
+    font.pixelSize: 18
   }
 }
