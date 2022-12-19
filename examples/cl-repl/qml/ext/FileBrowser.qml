@@ -62,10 +62,10 @@ Rectangle {
         inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText
         text: urlToString(folderModel.folder)
 
-        onFocusChanged: if(focus) { cursorPosition = length }
+        onFocusChanged: if (focus) { cursorPosition = length }
 
         onAccepted: {
-          if(fileBrowser.editMode) {
+          if (fileBrowser.editMode) {
             Lisp.call("dialogs:rename-file*", fileBrowser.editFrom, path.text)
             fileBrowser.editMode = false
           } else {
@@ -153,8 +153,9 @@ Rectangle {
 
         Text {
           id: itemCount
-          text: Lisp.call("cl:format", null, " ~D item~P", folderModel.count, folderModel.count)
           anchors.verticalCenter: parent.verticalCenter
+          text: Lisp.call("cl:format", null, " ~D item~P", folderModel.count, folderModel.count)
+          font.pixelSize: 18 + main.small ? 0 : 2
         }
       }
     }

@@ -45,7 +45,7 @@ StackView {
   }
 
   Keys.onPressed: {
-    if(event.key === Qt.Key_Back) {
+    if (event.key === Qt.Key_Back) {
       event.accepted = true
       Lisp.call("editor:back-pressed")
     }
@@ -321,7 +321,7 @@ StackView {
                   onPressed: {
                     // custom link handling, since 'onLinkActivated' does not work within a Flickable
                     var link = parent.linkAt(mouse.x, mouse.y)
-                    if(link.length) {
+                    if (link.length) {
                       Qt.openUrlExternally(link)
                     }
                   }

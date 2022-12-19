@@ -143,7 +143,7 @@ Rectangle {
   // etc
 
   Keys.onPressed: {
-    if(event.key === Qt.Key_Back) {
+    if (event.key === Qt.Key_Back) {
       event.accepted = true
       Lisp.call("qml:qquit")
     }

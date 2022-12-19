@@ -1,4 +1,4 @@
-import QtQuick 2.10
+import QtQuick 2.15
 
 Rectangle {
   width: folderView.width
@@ -19,12 +19,14 @@ Rectangle {
     Text {
       width: 3/4 * folderView.width - icon.width
       anchors.verticalCenter: parent.verticalCenter
+      font.pixelSize: 18 + main.small ? 0 : 2
       text: fileName
     }
     Text {
       width: 1/4 * folderView.width - 4
       anchors.verticalCenter: parent.verticalCenter
       horizontalAlignment: Text.AlignRight
+      font.pixelSize: 18 + main.small ? 0 : 2
       text: fileIsDir ? "" : Lisp.call("cl:format", null, "~:D", fileSize)
     }
   }
@@ -38,18 +40,18 @@ Rectangle {
       Lisp.call("qml:qsleep", 0.1)
       folderView.currentIndex = -1
 
-      if(fileBrowser.editMode) {
+      if (fileBrowser.editMode) {
         path.text = filePath
         fileBrowser.editFrom = filePath
         path.forceActiveFocus()
         var start = filePath.lastIndexOf("/") + 1
         var end = filePath.lastIndexOf(".")
-        if(end > start) {
+        if (end > start) {
           path.cursorPosition = start
           path.moveCursorSelection(end, TextInput.SelectCharacters)
         }
       } else {
-        if(fileIsDir) {
+        if (fileIsDir) {
           Lisp.call("dialogs:set-file-browser-path", filePath)
         }
         else {

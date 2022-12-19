@@ -34,7 +34,7 @@ Rectangle {
   }
 
   Keys.onPressed: {
-    if(event.key === Qt.Key_Back) {
+    if (event.key === Qt.Key_Back) {
       event.accepted = true
       if (view.currentIndex === 0) {
         Lisp.call("qml:qquit")
