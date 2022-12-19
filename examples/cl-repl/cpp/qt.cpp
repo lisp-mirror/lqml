@@ -308,7 +308,8 @@ QVariant QT::textDocument(const QVariant& vDocument) {
   return QVariant();
 }
 
-#if (defined Q_OS_ANDROID) || (defined Q_OS_IOS)
+// etc
+
 QVariant QT::localIp() {
   // Tries to find the local network address. If the result is not unique,
   // a null value is returned (no guesses).
@@ -331,6 +332,5 @@ QVariant QT::localIp() {
   qDebug() << "multiple IPs found:\n" << ips.join("\n");
   return QVariant();
 }
-#endif
 
 QT_END_NAMESPACE

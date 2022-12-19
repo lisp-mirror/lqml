@@ -19,7 +19,6 @@
    #:find-block-by-line-number
    #:exact-match
    #:line-count
-   #+mobile
    #:local-ip
    #:next
    #:position*
