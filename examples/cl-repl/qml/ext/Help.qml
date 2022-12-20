@@ -31,7 +31,7 @@ Rectangle {
 <h3>Eval line commands</h3>
 <table cellpadding=5>
   <tr>
-    <td align=right><b>:?</b></td><td>find regular expression, e.g.<br><font face=\"%4\">:?&nbsp;prin[c1]</font><br>hit RET for next match</td>
+    <td align=right><b>:?</b></td><td>find regular expression, e.g.<br><font face=\"Hack\">:?&nbsp;prin[c1]</font><br>hit RET for next match</td>
   </tr>
   <tr>
     <td align=right><b>*</b></td><td>copy eval value to clipboard</td>
@@ -49,7 +49,7 @@ Rectangle {
     <td align=right><b>:q</b></td><td>load Quicklisp</td>
   </tr>
   <tr>
-    <td align=right><b>:w</b></td><td>start local web-server for file upload/download, see<br><font face=\"%4\">http://192.168.1.x:1701/</font>
+    <td align=right><b>:w</b></td><td>start local web-server for file upload/download, see<br><font face=\"Hack\">http://192.168.1.x:1701/</font>
     <br>(not encrypted)</td>
   </tr>
   <tr>
@@ -76,7 +76,11 @@ Rectangle {
 <h3>Special functions</h3>
 <table cellpadding=5>
   <tr>
-    <td align=right><b>print</b></td><td><font face=\"%4\">(ed:pr \"greetings\" :color \"red\" :bold t :line t)</font></td>
+    <td align=right><b>print</b></td>
+    <td>
+      <font face=\"Hack\">(ed:pr \"greetings\" :color \"red\" :bold t :line t)</font>
+      <br>pass <font face=\"Hack\"> :rich-text t </font> if you use (a subset of) <b>html</b>
+    </td>
   </tr>
 %2
 %3
@@ -104,14 +108,13 @@ Rectangle {
       ? "Alt" : ((Qt.platform.os === "osx")
                  ? "Cmd" : "Ctrl"))
  .arg((Qt.platform.os === "android")
-      ? "<tr><td align=right><b>shell</b></td><td><font face=\"%4\">(shell \"df -h\")</font></td></tr>"
+      ? "<tr><td align=right><b>shell</b></td><td><font face=\"Hack\">(shell \"df -h\")</font></td></tr>"
       : "")
  .arg((Qt.platform.os === "android")
-      ? "<tr><td align=right><b>zip</b></td><td><font face=\"%4\">(zip \"all.zip\" \"examples/\")</font></td></tr><tr><td align=right><b>unzip</b></td><td><font face=\"%4\">(unzip \"uploads/all.zip\" \"examples/\")</font></td></tr>"
+      ? "<tr><td align=right><b>zip</b></td><td><font face=\"Hack\">(zip \"all.zip\" \"examples/\")</font></td></tr><tr><td align=right><b>unzip</b></td><td><font face=\"Hack\">(unzip \"uploads/all.zip\" \"examples/\")</font></td></tr>"
       : (Qt.platform.os === "ios")
-        ? "<tr><td align=right><b>zip</b></td><td><font face=\"%4\">(zip \"all.zip\" \"../Documents/examples/\")</font></td></tr><tr><td align=right><b>unzip</b></td><td><font face=\"%4\">(unzip \"uploads/all.zip\" \"../Documents/examples/\")</font></td></tr>"
+        ? "<tr><td align=right><b>zip</b></td><td><font face=\"Hack\">(zip \"all.zip\" \"../Documents/examples/\")</font></td></tr><tr><td align=right><b>unzip</b></td><td><font face=\"Hack\">(unzip \"uploads/all.zip\" \"../Documents/examples/\")</font></td></tr>"
         : "")
- .arg(((Qt.platform.os === "android") || (Qt.platform.os === "ios")) ? "Hack" : "Monospace")
       }
     }
   }
