@@ -1,8 +1,15 @@
 (in-package :qml)
 
 (export
- (list #+android '*shell-output*
+ (list 'my-ip
+       #+android '*shell-output*
        #+android 'shell))
+
+;;; convenience functions from :qt
+
+(defun my-ip ()
+  ;; qrun*: only when running on main thread can we have return values from Qt
+  (qrun* (qt:local-ip qt:*cpp*)))
 
 ;;; add function 'shell' (android only)
 

@@ -90,9 +90,7 @@ it saves uploaded files on the server."
       (register-context-handler *web-server* "/" 'static-resource/upload-handler
                                 :arguments (list #+mobile *default-pathname-defaults*
                                                  #-mobile (merge-pathnames "www/")))))
-  #+mobile
-  ;; qrun*: only when running on main thread can we have return values from Qt
-  (x:when-it (qml:qrun* (qt:local-ip qt:*cpp*))
+  (x:when-it (qml:my-ip)
     (format nil "http://~A:1701/" x:it)))
 
 (defun stop ()

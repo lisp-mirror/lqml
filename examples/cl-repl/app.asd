@@ -7,8 +7,6 @@
                (:file "lisp/ui-vars")
                (:file "lisp/qt")
                #+mobile
-               (:file "lisp/swank-quicklisp")
-               #+mobile
                (:file "lisp/qml-reload/auto-reload-mobile")
                (:file "lisp/data/lisp-keywords")
                (:file "lisp/data/lqml-keywords")
@@ -20,7 +18,9 @@
                (:file "lisp/dialogs")
                (:file "lisp/qml-item")
                (:file "lisp/editor")
-               (:file "lisp/upload-download")
                (:file "lisp/ini")
+               #+mobile
+               (:file "lisp/swank-quicklisp")
+               (:file "lisp/upload-download")
                (:file "lisp/main")))
 

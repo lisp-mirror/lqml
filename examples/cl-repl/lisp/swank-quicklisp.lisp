@@ -56,8 +56,7 @@
       (mp:process-run-function
        "SLIME-listener"
        (lambda () (swank/create-server interface port dont-close style))))
-  ;; qrun*: only when running on main thread can we have return values from Qt
-  (x:when-it (qrun* (qt:local-ip qt:*cpp*))
+  (x:when-it (my-ip)
     (format nil "slime-connect ~A" x:it)))
 
 (defun stop-swank (&optional (port 4005))
