@@ -113,7 +113,7 @@ Rectangle {
  .arg((Qt.platform.os === "android")
       ? "<tr><td align=right><b>zip</b></td><td><font face=\"Hack\">(zip \"all.zip\" \"examples/\")</font></td></tr><tr><td align=right><b>unzip</b></td><td><font face=\"Hack\">(unzip \"uploads/all.zip\" \"examples/\")</font></td></tr>"
       : (Qt.platform.os === "ios")
-        ? "<tr><td align=right><b>zip</b></td><td><font face=\"Hack\">(zip \"all.zip\" \"../Documents/examples/\")</font></td></tr><tr><td align=right><b>unzip</b></td><td><font face=\"Hack\">(unzip \"uploads/all.zip\" \"../Documents/examples/\")</font></td></tr>"
+        ? "<tr><td align=right><b>zip</b></td><td><font face=\"Hack\">(zip \"all.zip\" \"doc/examples/\")</font></td></tr><tr><td align=right><b>unzip</b></td><td><font face=\"Hack\">(unzip \"uploads/all.zip\" \"doc/examples/\")</font></td></tr>"
         : "")
       }
     }
