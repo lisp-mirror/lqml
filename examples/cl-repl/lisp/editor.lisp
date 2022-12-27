@@ -881,12 +881,13 @@
        title text (x:callback-name callback)))
 
 (defun save-file ()
-  (if *file*
-      (confirm-dialog "Save?"
-                      (format nil "Save to opened file, overwriting it?<br><br>~S<br>"
-                              *file*)
-                      'safe-file-confirmed?)
-      (safe-file-confirmed? nil)))
+  (when (q< |canUndo| ui:*edit*)
+    (if *file*
+        (confirm-dialog "Save?"
+                        (format nil "Save to opened file, overwriting it?<br><br>~S<br>"
+                                *file*)
+                        'safe-file-confirmed?)
+        (safe-file-confirmed? nil))))
 
 (defun safe-file-confirmed? (save)
   (if save

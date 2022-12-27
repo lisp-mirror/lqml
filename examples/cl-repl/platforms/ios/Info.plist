@@ -30,6 +30,8 @@
 	<string>designable.storyboard</string>
 	<key>UILaunchStoryboardName~iPad</key>
 	<string>designable_iPad.storyboard</string>
+	<key>UIRequiresFullScreen</key>
+	<true/>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
