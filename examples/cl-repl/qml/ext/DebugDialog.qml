@@ -11,6 +11,7 @@ Rectangle {
 
   ColumnLayout {
     anchors.fill: parent
+    spacing: 0
 
     Ext.MenuBack {
       id: menuBack
@@ -38,7 +39,7 @@ Rectangle {
       topPadding: 8
       bottomPadding: 8
       font.family: "Hack"
-      font.pixelSize: 16
+      font.pixelSize: 14
       text: ":r1 etc. restart / :h help / :q quit"
     }
 
@@ -62,7 +63,7 @@ Rectangle {
       delegate: Text {
         padding: 8
         textFormat: Text.PlainText
-        font.pixelSize: 18
+        font.pixelSize: 16
         font.family: "Hack"
         font.bold: mBold
         text: mText
