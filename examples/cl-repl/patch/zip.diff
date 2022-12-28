@@ -10,9 +10,9 @@ index a2f3768..cb1d76a 100644
 +    #-(or ecl sbcl allegro ccl)
      (error "ZIP::FILE-MODE not ported")
 +    #+ecl
-+    (if (pathname-type pathname)
-+        #o644
-+        #o775)
++    (if (cl-fad:directory-pathname-p pathname)
++        #o775
++        #o644)
      #+ccl
      (multiple-value-bind (win mode size mtime inode uid blocksize rmtime gid dev)
          (ccl::%stat (ccl:native-translated-namestring pathname))
