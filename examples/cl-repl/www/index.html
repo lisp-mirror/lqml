@@ -1,6 +1,7 @@
 <!doctype html>
 <html>
   <head>
+    <title>cl-repl file exchange</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
     <style>
@@ -8,6 +9,12 @@
       a:link, a:visited { text-decoration: none; color: blue; }
       a:hover { text-decoration: underline; }
     </style>
+    <script type="text/javascript">
+      function setOrange() {
+        document.getElementById("upload").style =
+          "background-color: #f0f0f0; border: 3px solid #febc2e; border-radius: 3px;"
+      }
+    </script>
   </head>
   <body>
     <h3>File exchange with cl-repl app</h3>
@@ -15,15 +22,16 @@
       <p>
         <small><b>Whole Directory</b> (recursive in Firefox/Chromium)</small>
         <br>
-        <input name="files[]" type="file" webkitdirectory directory />
+        <input name="files[]" type="file" webkitdirectory directory onclick="setOrange()" />
       </p>
       <p>
         <small><b>Single File</b></small>
         <br>
-        <input name="file" type="file" value="Choose file" />
+        <input name="file" type="file" value="Choose file" onclick="setOrange()" />
       </p>
       <p>
-      <input type="submit" value="Upload" />
+        <input type="submit" value="Upload" id="upload"
+               style="background-color: #f0f0f0; border: 3px solid #29c840; border-radius: 3px;" />
       </p>
     </form>
     <small>

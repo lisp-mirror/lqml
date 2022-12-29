@@ -36,11 +36,13 @@ public:
         skipAutoFullStop = true;
       } else {
         if (size == 1) {
+          static QChar exChar;
           bool changed = true;
           const int code = s.at(0).unicode();
           switch (code) {
+            // prevent auto full stop after double space
             case '.':
-              if (skipAutoFullStop) { // prevent auto full stop after double space
+              if (skipAutoFullStop && (exChar == ' ')) {
                 s = " ";
               } else {
                 changed = false;
@@ -84,6 +86,7 @@ public:
           if (changed) {
             input->setCommitString(s);
           }
+          exChar = s.at(0);
         } else if (size == 2) {
           bool changed = true;
           s = s.trimmed();
