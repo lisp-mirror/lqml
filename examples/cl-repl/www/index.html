@@ -10,10 +10,7 @@
       a:hover { text-decoration: underline; }
     </style>
     <script type="text/javascript">
-      function setOrange() {
-        document.getElementById("upload").style =
-          "background-color: #f0f0f0; border: 3px solid #febc2e; border-radius: 3px;"
-      }
+      function setOrange() { document.getElementById("upload").style.border = "3px solid #febc2e" }
     </script>
   </head>
   <body>
@@ -30,8 +27,7 @@
         <input name="file" type="file" value="Choose file" onclick="setOrange()" />
       </p>
       <p>
-        <input type="submit" value="Upload" id="upload"
-               style="background-color: #f0f0f0; border: 3px solid #29c840; border-radius: 3px;" />
+        <input type="submit" value="Upload" id="upload" style="background-color: #f0f0f0; border: 3px solid #29c840; border-radius: 3px;" />
       </p>
     </form>
     <small>
