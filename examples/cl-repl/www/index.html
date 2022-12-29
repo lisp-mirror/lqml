@@ -9,7 +9,7 @@
       a:link, a:visited { text-decoration: none; color: blue; }
       a:hover { text-decoration: underline; }
     </style>
-    <script type="text/javascript">
+    <script>
       function setOrange() { document.getElementById("upload").style.border = "3px solid #febc2e" }
     </script>
   </head>
@@ -19,15 +19,15 @@
       <p>
         <small><b>Whole Directory</b> (recursive in Firefox/Chromium)</small>
         <br>
-        <input name="files[]" type="file" webkitdirectory directory onclick="setOrange()" />
+        <input name="files[]" type="file" webkitdirectory directory onclick="setOrange()">
       </p>
       <p>
         <small><b>Single File</b></small>
         <br>
-        <input name="file" type="file" value="Choose file" onclick="setOrange()" />
+        <input name="file" type="file" onclick="setOrange()">
       </p>
       <p>
-        <input type="submit" value="Upload" id="upload" style="background-color: #f0f0f0; border: 3px solid #29c840; border-radius: 3px;" />
+        <input type="submit" value="Upload" id="upload" style="background-color: #f0f0f0; border: 3px solid #29c840; border-radius: 3px;">
       </p>
     </form>
     <small>
