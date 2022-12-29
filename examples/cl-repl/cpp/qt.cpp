@@ -326,10 +326,10 @@ QVariant QT::localIp() {
       }
     }
   }
-  if (ips.length() == 1) {
+  if (!ips.isEmpty()) {
+    ips.sort();
     return ips.first();
   }
-  qDebug() << "multiple IPs found:\n" << ips.join("\n");
   return QVariant();
 }
 
