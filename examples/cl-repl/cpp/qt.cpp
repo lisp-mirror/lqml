@@ -311,24 +311,20 @@ QVariant QT::textDocument(const QVariant& vDocument) {
 // etc
 
 QVariant QT::localIp() {
-  // Tries to find the local network address. If the result is not unique,
-  // a null value is returned (no guesses).
-  QStringList ips;
+  // Returns the local IP string. Private networks may use:
+  // 10.*.*.*
+  // 172.16.*.*
+  // 192.168.*.*
   QList<QHostAddress> addresses = QNetworkInterface::allAddresses();
   for (QHostAddress adr : qAsConst(addresses)) {
     if (adr.protocol() == QAbstractSocket::IPv4Protocol) {
-      QString str(adr.toString());
-      if (str.startsWith("192.168.1.")) {
-        return str;
-      }
-      if (str != "127.0.0.1") {
-        ips << str;
+      QString ip(adr.toString());
+      if (ip.startsWith("10.") ||
+          ip.startsWith("172.16.") ||
+          ip.startsWith("192.168.")) {
+        return ip;
       }
     }
-  }
-  if (!ips.isEmpty()) {
-    ips.sort();
-    return ips.first();
   }
   return QVariant();
 }
