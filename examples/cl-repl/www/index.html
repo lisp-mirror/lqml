@@ -8,6 +8,9 @@
       body { color: #303030; font-family: sans-serif; margin: 30px 20px; }
       a:link, a:visited { text-decoration: none; color: blue; }
       a:hover { text-decoration: underline; }
+      .upload { background-color: #f0f0f0; color: black; border: 3px solid #29c840; border-radius: 3px; }
+      .upload:hover { background-color: #d0d0d0; }
+      .upload:active { background-color: #b0b0b0; }
     </style>
     <script>
       function setOrange() { document.getElementById("upload").style.border = "3px solid #febc2e" }
@@ -27,7 +30,7 @@
         <input name="file" type="file" onclick="setOrange()">
       </p>
       <p>
-        <input type="submit" value="Upload" id="upload" style="background-color: #f0f0f0; border: 3px solid #29c840; border-radius: 3px;">
+        <input type="submit" value="Upload" id="upload" class="upload">
       </p>
     </form>
     <small>

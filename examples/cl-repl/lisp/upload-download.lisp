@@ -124,9 +124,14 @@ it saves uploaded files on the server."
 
 (defun unzip (zip-file &optional directory)
   "Extracts (previously uploaded) *.zip file."
-  (zip:unzip (merge-pathnames zip-file)
-             (probe-file (or directory "."))
-             :if-exists :supersede)
+  (let ((dir (namestring directory)))
+    #+ios
+    (when (x:starts-with "doc" dir)
+      ;; allow "doc" as shorthand for "../Documents"
+      (setf dir (x:cc "../Documents" (subseq dir #.(length "doc")))))
+    (zip:unzip (merge-pathnames zip-file)
+               (probe-file (or dir "."))
+               :if-exists :supersede))
   zip-file)
 
 (export (list 'zip 'unzip))
