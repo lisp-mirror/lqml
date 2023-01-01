@@ -42,7 +42,7 @@
 ;;; check version
 
 #+mobile
-(defconstant +version+ 4)
+(defconstant +version+ 6)
 
 #+mobile
 (let ((.version (merge-pathnames ".version")))

@@ -37,16 +37,15 @@
       Files are saved in <code>[Home]/uploads/</code>.
       <ul>
         <li>uploaded zip files can be unzipped on the device with
-          <br><code>(unzip "uploads/all.zip" "examples/") ; android</code>
-          <br><code>(unzip "uploads/all.zip" "doc/examples/") ; iOS</code>
+          <br><code>(unzip "uploads/all.zip" "doc")</code>
           <br>&nbsp;
         <li>files on the device can be zipped before downloading with
-          <br><code>(zip "all.zip" "examples/") ; android</code>
-          <br><code>(zip "all.zip" "doc/examples/") ; iOS</code>
+          <br><code>(zip "all.zip" "doc")</code>
           <br>&nbsp;
           <br>and downloaded like so:
           <br><code>http://192.168.1.x:1701/all.zip</code>
       </ul>
+      <code>"doc"</code> is shorthand for either <code>/sdcard/Documents</code> (android) or <code>../Documents</code> (iOS)
     </small>
   </body>
 </html>

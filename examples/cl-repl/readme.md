@@ -112,19 +112,21 @@ either Firefox or Chromium based browsers).
 
 You may also upload a zip file, which can then be unzipped using:
 ```
-(unzip "uploads/all.zip" "examples/") ; android
-
-(unzip "uploads/all.zip" "../Documents/examples/") ; iOS (or use shorthand "doc/")
+(unzip "uploads/all.zip" "doc")
 ```
+`doc` is shorthand for either `/sdcard/Documents` (android) or `../Documents`
+(iOS).
 
 ### Download
 
 First create a `*.zip` file like so:
 ```
-(zip "all.zip" "examples/") ; android
-
-(zip "all.zip" "../Documents/examples/") ; iOS (or use shorthand "doc/")
+(zip "all.zip" "doc")
 ```
+`doc` is shorthand for either `/sdcard/Documents` (android) or `../Documents`
+(iOS).
+
+
 Note that the zip file will not contain the passed directory name (this is how
 the zip library from Quicklisp is implemented).
 

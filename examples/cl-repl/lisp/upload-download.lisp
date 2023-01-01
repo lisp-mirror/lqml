@@ -115,23 +115,29 @@ it saves uploaded files on the server."
       (file-position stream (+ p1 p2))) ; update manually
     p2))
 
+(defun resolve-doc (directory)
+  ;; allow "doc" as shorthand for:
+  ;; android: "/sdcard/Documents"
+  ;; iOS:     "../Documents"
+  (let ((dir (namestring directory)))
+    (if (x:starts-with "doc" dir)
+        (x:cc #+android "/sdcard/Documents"
+              #+ios     "../Documents"
+              (subseq dir #.(length "doc")))
+        directory)))
+
 (defun zip (zip-file directory)
   "Creates a *.zip file of passed directory, _not_ including the directory name."
   (zip:zip (merge-pathnames zip-file)
-           (probe-file directory)
+           (probe-file (resolve-doc directory))
            :if-exists :supersede)
   zip-file)
 
-(defun unzip (zip-file &optional directory)
+(defun unzip (zip-file &optional (directory "."))
   "Extracts (previously uploaded) *.zip file."
-  (let ((dir (namestring directory)))
-    #+ios
-    (when (x:starts-with "doc" dir)
-      ;; allow "doc" as shorthand for "../Documents"
-      (setf dir (x:cc "../Documents" (subseq dir #.(length "doc")))))
-    (zip:unzip (merge-pathnames zip-file)
-               (probe-file (or dir "."))
-               :if-exists :supersede))
+  (zip:unzip (merge-pathnames zip-file)
+             (probe-file (resolve-doc directory))
+             :if-exists :supersede)
   zip-file)
 
 (export (list 'zip 'unzip))
