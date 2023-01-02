@@ -172,7 +172,7 @@ StackView {
             onCursorRectangleChanged: flickEdit.ensureVisible(cursorRectangle)
 
             Component.onCompleted: later(function() {
-              Lisp.call(textDocument, "editor:set-text-document", objectName)
+              Lisp.call("editor:set-text-document", objectName, textDocument)
             })
 
             // for external keyboard
@@ -243,7 +243,7 @@ StackView {
               onCursorRectangleChanged: flickCommand.ensureVisible(cursorRectangle)
 
               Component.onCompleted: later(function() {
-                Lisp.call(textDocument, "editor:set-text-document", objectName)
+                Lisp.call("editor:set-text-document", objectName, textDocument)
               })
 
               MouseArea {

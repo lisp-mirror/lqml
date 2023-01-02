@@ -1079,12 +1079,12 @@
 
 (let ((curr 0)
       (all 2))
-  (defun set-text-document (name) ; called from QML
+  (defun set-text-document (name document) ; called from QML
     (setf (symbol-value (cond ((string= ui:*edit* name)
                                '*qml-document-edit*)
                               ((string= ui:*command* name)
                                '*qml-document-command*)))
-          (qt:text-document qt:*cpp* qml:*caller*))
+          (qt:text-document qt:*cpp* document))
     (when (= all (incf curr))
       (ini-highlighters)
       (qt:connect-document-changed qt:*cpp* *qml-document-edit*    "edit")
