@@ -2,7 +2,6 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import ".ext/" as Ext        // for single file auto reload (development)
 //import "ext/" as Ext       // release version
-import 'ext/dialogs' as Dlg
 
 Rectangle {
   id: main
@@ -46,6 +45,4 @@ Rectangle {
   FontLoader { id: fontIcons;    source: "fonts/fontawesome-webfont.ttf" }
   FontLoader { id: fontHack;     source: "fonts/Hack-Regular.ttf" }
   FontLoader { id: fontHackBold; source: "fonts/Hack-Bold.ttf" }
-
-  Dlg.Dialogs {} // modal dialogs
 }
