@@ -133,7 +133,7 @@ Rectangle {
   }
 
   Ext.ScaleAnimator {
-	objectName: "zoom_board_in"
+    objectName: "zoom_board_in"
     target: board
     from: 0.0
     to: 1.0

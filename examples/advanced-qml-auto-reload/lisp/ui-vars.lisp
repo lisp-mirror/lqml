@@ -1,6 +1,7 @@
 (defpackage ui
   (:use :cl :qml)
   (:export
+   #:*dialogs*
    #:*flick-output*
    #:*history-back*
    #:*history-forward*
@@ -12,6 +13,7 @@
 
 (in-package :ui)
 
+(defparameter *dialogs*         "dialogs")
 (defparameter *flick-output*    "flick_output")
 (defparameter *history-back*    "history_back")
 (defparameter *history-forward* "history_forward")
