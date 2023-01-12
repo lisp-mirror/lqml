@@ -1,5 +1,7 @@
 ;;; check target
 
+(defvar *32bit* (<= most-positive-fixnum (expt 2 32)))
+
 (let ((arg (first (ext:command-args))))
   (mapc (lambda (name feature)
           (when (search name arg)
@@ -33,7 +35,8 @@
     (let ((to (cc *assets* "quicklisp/local-projects/slime/")))
       (ensure-directories-exist to)
       (shell (cc "cp -r ../../../slime/src/* " to))))
-  (let ((lib (cc (ext:getenv #+android "ECL_ANDROID" #+ios "ECL_IOS")
+  (let ((lib (cc (ext:getenv #+android (if *32bit* "ECL_ANDROID_32" "ECL_ANDROID")
+                             #+ios "ECL_IOS")
                  "/lib/ecl-*/"))
         (examples #+android *assets*
                   #+ios (cc *assets* "../Documents/")))
@@ -44,9 +47,8 @@
     (unless (probe-file (cc *assets* "encodings"))
       (shell (cc "cp " lib "*.doc " *assets*))
       (shell (cc "cp -r " lib "encodings " *assets*)))
-    #+android
-    (unless (probe-file (cc *assets* "ecl-quicklisp.fas"))
-      (shell (cc "cp " lib "ecl-quicklisp.fas " *assets*)))))
+    #+android ; always copy (might be either 32 or 64 bit)
+    (shell (cc "cp " lib "ecl-quicklisp.fas " *assets*))))
 
 #+mobile
 (unless (find-swank)
