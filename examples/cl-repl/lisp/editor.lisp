@@ -366,7 +366,7 @@
  '(case ccase ecase ctypecase etypecase handler-bind handler-case catch
    defclass defgeneric defstruct defun defmacro defmethod destructuring-bind do
    do* dolist dotimes do-all-symbols do-external-symbols do-symbols flet labels
-   lambda let let* loop multiple-value-bind prog progn prog1 prog2 qlet
+   lambda let let* loop multiple-value-bind prog progn prog1 prog2 progv qlet
    typecase unless when with-open-file with-output-to-string
    with-input-from-string qml::do-string qml::do-with qml::when-it
    qml::when-it* qml::while qml::while-it))
@@ -725,6 +725,9 @@
                    :bold  bold
                    :line  line)))
 
+(defun eval-expression* ()
+  (qlater 'eval-expression)) ; QLATER for key release event
+
 (defun eval-expression (&optional single (history t))
   (let ((text (string-trim '(#\Space #\Tab #\Newline #\Return)
                            (or single (q< |text| ui:*edit*)))))
@@ -944,7 +947,7 @@
   (let* ((edit (active-edit))
          (text (q< |text| edit))
          (pos (or cursor-position (q< |cursorPosition| edit)))
-         (start pos)
+         (start (max 0 (1- pos)))
          ch)
     (flet ((select (start end)
              (setf *selection-start* start
@@ -1027,7 +1030,8 @@
 
 (defun button-pressed () ; called from QML
   (flet ((hide ()
-           (q! |close| ui:*clipboard-menu*))
+           ;; QLATER for key release event
+           (qlater (lambda () (q! |close| ui:*clipboard-menu*))))
          (timer ()
            (q! |restart| ui:*menu-timer*)))
     (let ((button (intern (lispify (q< |objectName| *caller*))
@@ -1045,7 +1049,7 @@
         (:clear           (clear)                  (timer))
         (:open-file       (open-file)              (timer))
         (:save-file       (save-file)              (timer))
-        (:eval            (eval-expression)        (timer))
+        (:eval            (eval-expression*)       (timer))
         (:history-back    (history-move "back"))
         (:history-forward (history-move "forward"))
         ((:up :down :left :right)

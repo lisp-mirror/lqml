@@ -168,3 +168,28 @@ startup.
 
 If your local web server doesn't seem to work, please check your firewall
 settings.
+
+
+
+Cross-compile a single file (or ASDF lib)
+-----------------------------------------
+
+Say you have developed something useful, and want to put a cross-compiled
+version of it on your mobile device.
+
+### Single file
+```
+$ECL_ANDROID/../ecl-android-host/bin/ecl --norc \
+  --load ~/lqml/platforms/android/cross-compile.lisp
+
+> (compile-file "my.lisp") ; will produce 'my.fas'
+```
+
+### ASDF library
+
+Define a system in `lib.asd`, then do:
+```
+cd build-android
+
+$ECL_ANDROID/../ecl-android-host/bin/ecl --norc --shell ../make-lib.lisp ; will produce 'lib.fas'
+```
