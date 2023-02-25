@@ -34,7 +34,7 @@ select_ios_and_simulator()
   echo "*** compiling for \"$ios_platform\" - \"$ios_sdk\" and \"$ios_platform_sim\" - \"$ios_sdk_sim\""
 
   # this needs to be updated when a new Xcode is released
-  iphoneos_version_min="11.0"
+  iphoneos_version_min="12.0"
 
   export CC="clang"
   export CXX="clang++"

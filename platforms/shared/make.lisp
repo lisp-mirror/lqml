@@ -10,8 +10,10 @@
 (in-package :cl-user)
 
 ;; optional, to be set in 'make.lisp' in your app dir
-(defvar *ql-libs* nil)
-(defvar *require* nil)
+(defvar *ql-libs*    nil)
+(defvar *require*    nil)
+(defvar *build-type* nil)
+(defvar *init-name*  nil)
 
 (pushnew :lqml *features*)
 
@@ -86,6 +88,6 @@
 
 (asdf:make-build *asdf-system*
                  :monolithic t
-                 :type       :static-library
+                 :type       (or *build-type* :static-library)
                  :move-here  *library-path*
                  :init-name  *init-name*)

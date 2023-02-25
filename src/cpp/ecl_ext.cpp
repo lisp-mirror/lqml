@@ -360,8 +360,8 @@ cl_object qexec2(cl_object l_milliseconds) {
   /// after which QEventLoop::exit() will be called. See also QSLEEP.
   ecl_process_env()->nvalues = 1;
   if (l_milliseconds != ECL_NIL) {
-    static QTimer* timer = 0;
-    if (!timer) {
+    static QTimer* timer = nullptr;
+    if (timer == nullptr) {
       timer = new QTimer;
       LQML::eventLoop = new QEventLoop;
       timer->setSingleShot(true);
@@ -815,7 +815,7 @@ cl_object qapropos2(cl_object l_search, cl_object l_obj, cl_object l_no_offset) 
     search = toCString(l_search);
   }
   bool no_offset = (l_no_offset != ECL_NIL); // for QML (all instance properties)
-  const QMetaObject* mo = 0;
+  const QMetaObject* mo = nullptr;
   QObject* obj = toQObjectPointer(l_obj);
   if (obj != nullptr) {
     mo = obj->metaObject();

@@ -31,7 +31,7 @@ QVariant Lisp::call(const QJSValue& caller_or_function,
                     const QJSValue& arg14,
                     const QJSValue& arg15,
                     const QJSValue& arg16) {
-  QObject* caller = 0;
+  QObject* caller = nullptr;
   QString function;
   QVariantList arguments;
   if (caller_or_function.isQObject()) {
@@ -97,7 +97,7 @@ QVariant Lisp::call(const QJSValue& caller_or_function,
 QVariant Lisp::apply(const QJSValue& caller_or_function,
                      const QJSValue& function_or_arguments,
                      const QJSValue& arguments_or_undefined) {
-  QObject* caller = 0;
+  QObject* caller = nullptr;
   QString function;
   QVariantList arguments;
   if (caller_or_function.isQObject()) {

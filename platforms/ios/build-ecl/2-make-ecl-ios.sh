@@ -47,7 +47,7 @@ select_ios()
   esac
 
   # this needs to be updated when a new Xcode is released
-  iphoneos_version_min="11.0"
+  iphoneos_version_min="12.0"
 
   export CC="clang"
   export CXX="clang++"
