@@ -171,8 +171,8 @@ settings.
 
 
 
-Cross-compile a single file (or ASDF lib)
------------------------------------------
+Cross-compile single file / ASDF library (android only)
+-------------------------------------------------------
 
 Say you have developed something useful, and want to put a cross-compiled
 version of it on your mobile device.
