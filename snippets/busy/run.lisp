@@ -1,0 +1,1 @@
+(load "lisp/main.lisp")
