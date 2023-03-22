@@ -12,7 +12,7 @@ Rectangle {
   property string editFrom
 
   function urlToString(url) {
-    var cut = (Qt.platform.os === "windows") ? "file:/" : "file://"
+    var cut = (Qt.platform.os === "windows") ? "file:///" : "file://"
     return url.toString().substring(cut.length)
   }
 
@@ -60,7 +60,6 @@ Rectangle {
         objectName: "path"
         width: fileBrowser.width
         inputMethodHints: Qt.ImhNoAutoUppercase | Qt.ImhNoPredictiveText
-        text: urlToString(folderModel.folder)
 
         onFocusChanged: if (focus) { cursorPosition = length }
 
@@ -113,6 +112,8 @@ Rectangle {
       showHidden: true
       nameFilters: ["*.lisp", "*.lsp", "*.qml", "*.asd", "*.exp", "*.sexp",
                     "*.fas", "*.fasb", "*.fasc", ".eclrc", ".repl-history"]
+
+      onFolderChanged: path.text = urlToString(folder)
     }
 
     Row {
