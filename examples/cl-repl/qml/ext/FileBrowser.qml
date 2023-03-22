@@ -13,7 +13,8 @@ Rectangle {
 
   function urlToString(url) {
     var cut = (Qt.platform.os === "windows") ? "file:///" : "file://"
-    return url.toString().substring(cut.length)
+    var str = url.toString()
+    return str.substring(Math.min(str.length, cut.length))
   }
 
   Rectangle {
