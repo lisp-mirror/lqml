@@ -13,8 +13,7 @@ Rectangle {
 
   function urlToString(url) {
     var cut = (Qt.platform.os === "windows") ? "file:///" : "file://"
-    var str = url.toString()
-    return str.substring(Math.min(str.length, cut.length))
+    return url.toString().substring(cut.length)
   }
 
   Rectangle {
@@ -121,7 +120,9 @@ Rectangle {
       y: main.small ? 7 : 10
       anchors.horizontalCenter: parent.horizontalCenter
       spacing: 20
-      visible: path.focus
+      visible: ((Qt.platform.os === "android") ||
+                (Qt.platform.os === "ios"))
+               ? path.focus : false
 
       // cursor back
       Ext.ArrowButton {
