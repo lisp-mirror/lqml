@@ -101,15 +101,6 @@
   Calls FUNCTION as soon as the Qt event loop is idle."
   `(qsingle-shot 0 ,function))
 
-(defun %ensure-persistent-function (fun)
-  (typecase fun
-    (symbol   ; 'foo
-     fun)
-    (function ; lambda
-     ;; hold a reference (will be called later from Qt event loop)
-     (setf (symbol-function (intern (%reference-name)))
-           fun))))
-
 (defun %make-vector ()
   ;; for internal use (called from 'ecl_ext.cpp')
   (make-array 0 :adjustable t :fill-pointer t))
