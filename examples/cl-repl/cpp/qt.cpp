@@ -26,7 +26,7 @@ QObject* ini() {
   if (qt == nullptr) {
     qt = new QT;
 #ifdef PLUGIN
-    ini_lisp();
+    ini_lisp(); // see 'ecl_fun_plugin.h'
 #endif
   }
   return qt;
@@ -316,15 +316,21 @@ QVariant QT::localIp() {
   // 172.16.*.*
   // 192.168.*.*
   QList<QHostAddress> addresses = QNetworkInterface::allAddresses();
+  QStringList ips;
   for (QHostAddress adr : qAsConst(addresses)) {
     if (adr.protocol() == QAbstractSocket::IPv4Protocol) {
       QString ip(adr.toString());
       if (ip.startsWith("10.") ||
           ip.startsWith("172.16.") ||
           ip.startsWith("192.168.")) {
-        return ip;
+        ips << ip;
       }
     }
+  }
+  if (!ips.isEmpty()) {
+    // hack for rare, ambiguous cases
+    ips.sort();
+    return ips.first();
   }
   return QVariant();
 }
