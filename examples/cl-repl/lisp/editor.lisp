@@ -847,22 +847,23 @@
   (save-changes :confirm)
   (dialogs:get-file-name 'do-open-file))
 
-(defun do-open-file ()
-  (unless (x:empty-string dialogs:*file-name*)
-    (if (probe-file dialogs:*file-name*)
-        (let ((file-type (pathname-type dialogs:*file-name*)))
-          (cond ((x:starts-with "fas" file-type)
-                 ;; wait for dialog to be hidden
-                 (qsingle-shot 150 (lambda ()
-                                     (eval* (format nil "(load ~S)" dialogs:*file-name*)))))
-                ((string= "qml" file-type)
-                 (qml-item-from-file dialogs:*file-name*))
-                (t
-                 (setf *file* dialogs:*file-name*)
-                 (q> |text| ui:*edit* (read-file *file*))
-                 (reset-line-count))))
-        (qjs |message| ui:*dialogs*
-             (format nil "File does not exist:~%~%~S" dialogs:*file-name*))))
+(defun do-open-file (&optional file)
+  (let ((file-name (namestring (or file dialogs:*file-name*))))
+    (unless (x:empty-string file-name)
+      (if (probe-file file-name)
+          (let ((file-type (pathname-type file-name)))
+            (cond ((x:starts-with "fas" file-type)
+                   ;; wait for dialog to be hidden
+                   (qsingle-shot 150 (lambda ()
+                                       (eval* (format nil "(load ~S)" file-name)))))
+                  ((string= "qml" file-type)
+                   (qml-item-from-file file-name))
+                  (t
+                   (setf *file* file-name)
+                   (q> |text| ui:*edit* (read-file *file*))
+                   (reset-line-count))))
+          (qjs |message| ui:*dialogs*
+               (format nil "File does not exist:~%~%~S" file-name)))))
   (qsingle-shot 250 (lambda () (q! |forceActiveFocus| ui:*edit*))))
 
 ;;; save-file
