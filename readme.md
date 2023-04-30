@@ -47,8 +47,8 @@ Qt Creator.
 TODO
 ----
 
-* add (very simple) meshtastic app example
-* port to CMake?
+* add (very simple) [meshtastic](https://meshtastic.org) app example
+* port to CMake (?)
 
 
 macOS note
