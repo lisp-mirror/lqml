@@ -291,7 +291,7 @@ cl_object qload_cpp(cl_object l_lib_name, cl_object l_unload) { /// qload-c++
       }
       return ECL_NIL;
     }
-    if (!lib) {
+    if (lib == nullptr) {
       lib = new QLibrary(libName);
       libraries[libName] = lib;
     }

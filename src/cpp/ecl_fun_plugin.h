@@ -463,7 +463,7 @@ QVariant ecl_fun(const QByteArray& pkgFun,
   // 'ecl_fun("cl:format", ...);' to prevent useless error messages from ECL
   // like "the function NIL is undefined"
   void* symbol = lisp_functions.value(pkgFun);
-  if (!symbol) {
+  if (symbol == nullptr) {
     int p = pkgFun.indexOf(':');
     QByteArray pkg = (p == -1) ? "qml-user" : pkgFun.left(p);
     QByteArray fun = pkgFun.mid(pkgFun.lastIndexOf(':') + 1);
