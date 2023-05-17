@@ -47,7 +47,7 @@ QVariant QT::makeObject(const QVariant& vName, const QVariant& vArg) {
   if (name == "QTextCharFormat") {
     vObject = VAR_NEW(TextCharFormat);
   } else if (name == "QSyntaxHighlighter") {
-    QTextDocument* doc = VAL(vArg, QTextDocument*);
+    auto doc = VAL(vArg, QTextDocument*);
     if (doc != nullptr) {
       vObject = VAR_NEW_1(SyntaxHighlighter, doc);
     }
@@ -60,7 +60,7 @@ QVariant QT::makeObject(const QVariant& vName, const QVariant& vArg) {
 // connect
 
 QVariant QT::connectDocumentChanged(const QVariant& vDocument, const QVariant& vWhich) {
-  QTextDocument* doc = VAL(vDocument, QTextDocument*);
+  auto doc = VAL(vDocument, QTextDocument*);
   if (doc != nullptr) {
     QString which = vWhich.toString();
     if (which == "edit") {
@@ -109,7 +109,7 @@ QVariant QT::connectKeyPressed() {
 // pointers stored in a QVariant are type checked (if QObject derived)
 
 QVariant QT::block2(const QVariant& vCursor) {
-  QTextCursor* cursor = VAL(vCursor, TextCursor*);
+  auto cursor = VAL(vCursor, TextCursor*);
   if (cursor != nullptr) {
     TextBlock* tmp = new TextBlock(cursor->block());
     DELETE_LATER(tmp);
@@ -119,7 +119,7 @@ QVariant QT::block2(const QVariant& vCursor) {
 }
 
 QVariant QT::blockNumber(const QVariant& vBlock) {
-  QTextBlock* block = VAL(vBlock, TextBlock*);
+  auto block = VAL(vBlock, TextBlock*);
   if (block != nullptr) {
     return block->blockNumber();
   }
@@ -127,7 +127,7 @@ QVariant QT::blockNumber(const QVariant& vBlock) {
 }
 
 QVariant QT::characterAt(const QVariant& vDocument, const QVariant& vPos) {
-  QTextDocument* document = VAL(vDocument, QTextDocument*);
+  auto document = VAL(vDocument, QTextDocument*);
   if (document != nullptr) {
     return VAR(QChar, document->characterAt(vPos.toInt()));
   }
@@ -135,7 +135,7 @@ QVariant QT::characterAt(const QVariant& vDocument, const QVariant& vPos) {
 }
 
 QVariant QT::clearUndoRedoStacks(const QVariant& vDocument) {
-  QTextDocument* document = VAL(vDocument, QTextDocument*);
+  auto document = VAL(vDocument, QTextDocument*);
   if (document != nullptr) {
     document->clearUndoRedoStacks();
   }
@@ -143,7 +143,7 @@ QVariant QT::clearUndoRedoStacks(const QVariant& vDocument) {
 }
 
 QVariant QT::currentBlockState(const QVariant& vHighlighter) {
-  SyntaxHighlighter* highlighter = VAL(vHighlighter, SyntaxHighlighter*);
+  auto highlighter = VAL(vHighlighter, SyntaxHighlighter*);
   if (highlighter != nullptr) {
     return highlighter->currentBlockState();
   }
@@ -151,7 +151,7 @@ QVariant QT::currentBlockState(const QVariant& vHighlighter) {
 }
 
 QVariant QT::exactMatch(const QVariant& vRegExp, const QVariant& vText) {
-  QRegularExpression* regExp = VAL(vRegExp, RegularExpression*);
+  auto regExp = VAL(vRegExp, RegularExpression*);
   if (regExp != nullptr) {
     QString text = vText.toString();
     return (regExp->match(text).capturedLength() == text.length());
@@ -160,7 +160,7 @@ QVariant QT::exactMatch(const QVariant& vRegExp, const QVariant& vText) {
 }
 
 QVariant QT::find2(const QVariant& vDocument, const QVariant& vWhat, const QVariant& vPos) {
-  QTextDocument* document = VAL(vDocument, QTextDocument*);
+  auto document = VAL(vDocument, QTextDocument*);
   if (document != nullptr) {
 #if QT_VERSION < 0x060000
     const int type = vWhat.type();
@@ -171,7 +171,7 @@ QVariant QT::find2(const QVariant& vDocument, const QVariant& vWhat, const QVari
     if (type == QMetaType::QString) {
       cursor = document->find(vWhat.toString(), vPos.toInt());
     } else {
-      QRegularExpression* regexp = VAL(vWhat, RegularExpression*);
+      auto regexp = VAL(vWhat, RegularExpression*);
       if (regexp != nullptr) {
         cursor = document->find(*regexp, vPos.toInt());
       }
@@ -185,7 +185,7 @@ QVariant QT::find2(const QVariant& vDocument, const QVariant& vWhat, const QVari
 }
 
 QVariant QT::findBlockByLineNumber(const QVariant& vDocument, const QVariant& vNumber) {
-  QTextDocument* document = VAL(vDocument, QTextDocument*);
+  auto document = VAL(vDocument, QTextDocument*);
   if (document != nullptr) {
     TextBlock* tmp = new TextBlock(document->findBlockByLineNumber(vNumber.toInt()));
     DELETE_LATER(tmp);
@@ -195,7 +195,7 @@ QVariant QT::findBlockByLineNumber(const QVariant& vDocument, const QVariant& vN
 }
 
 QVariant QT::lineCount(const QVariant& vDocument) {
-  QTextDocument* document = VAL(vDocument, QTextDocument*);
+  auto document = VAL(vDocument, QTextDocument*);
   if (document != nullptr) {
     return document->lineCount();
   }
@@ -203,7 +203,7 @@ QVariant QT::lineCount(const QVariant& vDocument) {
 }
 
 QVariant QT::next(const QVariant& vBlock) {
-  QTextBlock* block = VAL(vBlock, TextBlock*);
+  auto block = VAL(vBlock, TextBlock*);
   if (block != nullptr) {
     TextBlock* tmp = new TextBlock(block->next());
     DELETE_LATER(tmp);
@@ -213,7 +213,7 @@ QVariant QT::next(const QVariant& vBlock) {
 }
 
 QVariant QT::position2(const QVariant& vCursor) {
-  QTextCursor* cursor = VAL(vCursor, TextCursor*);
+  auto cursor = VAL(vCursor, TextCursor*);
   if (cursor != nullptr) {
     return cursor->position();
   }
@@ -221,7 +221,7 @@ QVariant QT::position2(const QVariant& vCursor) {
 }
 
 QVariant QT::positionInBlock(const QVariant& vCursor) {
-  QTextCursor* cursor = VAL(vCursor, TextCursor*);
+  auto cursor = VAL(vCursor, TextCursor*);
   if (cursor != nullptr) {
     return cursor->positionInBlock();
   }
@@ -229,7 +229,7 @@ QVariant QT::positionInBlock(const QVariant& vCursor) {
 }
 
 QVariant QT::previous(const QVariant& vBlock) {
-  QTextBlock* block = VAL(vBlock, TextBlock*);
+  auto block = VAL(vBlock, TextBlock*);
   if (block != nullptr) {
     TextBlock* tmp = new TextBlock(block->previous());
     DELETE_LATER(tmp);
@@ -239,7 +239,7 @@ QVariant QT::previous(const QVariant& vBlock) {
 }
 
 QVariant QT::previousBlockState(const QVariant& vHighlighter) {
-  SyntaxHighlighter* highlighter = VAL(vHighlighter, SyntaxHighlighter*);
+  auto highlighter = VAL(vHighlighter, SyntaxHighlighter*);
   if (highlighter != nullptr) {
     return highlighter->previousBlockState();
   }
@@ -247,7 +247,7 @@ QVariant QT::previousBlockState(const QVariant& vHighlighter) {
 }
 
 QVariant QT::setCurrentBlockState(const QVariant& vHighlighter, const QVariant& vState) {
-  SyntaxHighlighter* highlighter = VAL(vHighlighter, SyntaxHighlighter*);
+  auto highlighter = VAL(vHighlighter, SyntaxHighlighter*);
   if (highlighter != nullptr) {
     highlighter->setCurrentBlockState(vState.toInt());
   }
@@ -255,9 +255,9 @@ QVariant QT::setCurrentBlockState(const QVariant& vHighlighter, const QVariant& 
 }
 
 QVariant QT::setFormat(const QVariant& vObject, const QVariant& vFormat) {
-  QTextCharFormat* format = VAL(vObject, TextCharFormat*);
+  auto format = VAL(vObject, TextCharFormat*);
   if (format != nullptr) {
-    QVariantMap map = VAL(vFormat, QVariantMap);
+    auto map = VAL(vFormat, QVariantMap);
     format->setForeground(QColor(map.value("color").toString()));
     if (map.contains("bold")) {
       format->setFontWeight(QFont::Bold);
@@ -267,12 +267,12 @@ QVariant QT::setFormat(const QVariant& vObject, const QVariant& vFormat) {
     }
     return true;
   }
-  SyntaxHighlighter* highlighter = VAL(vObject, SyntaxHighlighter*);
+  auto highlighter = VAL(vObject, SyntaxHighlighter*);
   if (highlighter != nullptr) {
-    QVariantList args = VAL(vFormat, QVariantList);
-    int start = args.at(0).toInt();
-    int count = args.at(1).toInt();
-    QTextCharFormat* format = VAL(args.at(2), TextCharFormat*);
+    auto args = VAL(vFormat, QVariantList);
+    auto start = args.at(0).toInt();
+    auto count = args.at(1).toInt();
+    auto format = VAL(args.at(2), TextCharFormat*);
     if (format != nullptr) {
       highlighter->setFormat(start, count, *format);
     } else {
@@ -284,7 +284,7 @@ QVariant QT::setFormat(const QVariant& vObject, const QVariant& vFormat) {
 }
 
 QVariant QT::setPattern(const QVariant& vObject, const QVariant& vArg) {
-  QRegularExpression* regexp = VAL(vObject, RegularExpression*);
+  auto regexp = VAL(vObject, RegularExpression*);
   if (regexp != nullptr) {
     regexp->setPattern(vArg.toString());
     regexp->optimize();
@@ -293,7 +293,7 @@ QVariant QT::setPattern(const QVariant& vObject, const QVariant& vArg) {
 }
 
 QVariant QT::text(const QVariant& vBlock) {
-  QTextBlock* block = VAL(vBlock, TextBlock*);
+  auto block = VAL(vBlock, TextBlock*);
   if (block != nullptr) {
     return block->text();
   }
@@ -301,7 +301,7 @@ QVariant QT::text(const QVariant& vBlock) {
 }
 
 QVariant QT::textDocument(const QVariant& vDocument) {
-  QQuickTextDocument* document = VAL(vDocument, QQuickTextDocument*);
+  auto document = VAL(vDocument, QQuickTextDocument*);
   if (document != nullptr) {
     return VAR(QTextDocument*, document->textDocument());
   }
@@ -315,9 +315,9 @@ QVariant QT::localIp() {
   // 10.*.*.*
   // 172.16.*.*
   // 192.168.*.*
-  QList<QHostAddress> addresses = QNetworkInterface::allAddresses();
+  const auto addresses = QNetworkInterface::allAddresses();
   QStringList ips;
-  for (QHostAddress adr : qAsConst(addresses)) {
+  for (QHostAddress adr : addresses) {
     if (adr.protocol() == QAbstractSocket::IPv4Protocol) {
       QString ip(adr.toString());
       if (ip.startsWith("10.") ||
