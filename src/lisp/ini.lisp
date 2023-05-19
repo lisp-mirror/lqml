@@ -101,9 +101,9 @@
   Calls FUNCTION as soon as the Qt event loop is idle."
   `(qsingle-shot 0 ,function))
 
-(defun %make-vector ()
+(defun %make-byte-vector (list)
   ;; for internal use (called from 'ecl_ext.cpp')
-  (make-array 0 :adjustable t :fill-pointer t))
+  (make-array (length list) :element-type '(unsigned-byte 8) :initial-contents list))
 
 (defun %break (&rest args)
   ;; for internal use (called from 'ecl_ext.cpp')

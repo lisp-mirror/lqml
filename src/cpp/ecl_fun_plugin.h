@@ -11,6 +11,9 @@
 #include <QUrl>
 #include <QVariant>
 #include <QObject>
+#include <QPointF>
+#include <QSizeF>
+#include <QRectF>
 #include <ecl/ecl.h>
 
 QT_BEGIN_NAMESPACE
@@ -316,17 +319,14 @@ cl_object from_cstring(const QByteArray& s) {
   return l_s;
 }
 
-static cl_object make_vector() {
-  STATIC_SYMBOL_PKG (s_make_vector, "%MAKE-VECTOR", "QML")
-  cl_object l_vector = cl_funcall(1, s_make_vector);
-  return l_vector;
-}
-
 cl_object from_qbytearray(const QByteArray& ba) {
-  cl_object l_vec = make_vector();
-  for (int i = 0; i < ba.size(); i++) {
-    cl_vector_push_extend(2, ecl_make_fixnum(ba.at(i)), l_vec);
+  STATIC_SYMBOL_PKG (s_make_byte_vector, "%MAKE-BYTE-VECTOR", "QML") // see 'ini.lisp'
+  cl_object l_list = Cnil;
+  for (QChar b : ba) {
+    l_list = CONS(ecl_make_fixnum(static_cast<unsigned char>(b.toLatin1())),
+                  l_list);
   }
+  cl_object l_vec = cl_funcall(2, s_make_byte_vector, cl_nreverse(l_list));
   return l_vec;
 }
 
@@ -516,13 +516,13 @@ QVariant ecl_fun(const QByteArray& pkgFun,
   return QVariant();
 }
 
-// Lisp 'qt-object', '%make-vector'
+// Lisp 'qt-object', '%make-byte-vector'
 
 static const char* lisp_code =
   "(in-package :cl-user)\n"
   "(make-package :qml (use :cl))\n"
   "(in-package :qml)\n"
-  "(defun %make-vector () (make-array 0 :adjustable t :fill-pointer t))\n"
+  "(defun %make-byte-vector (list) (make-array (length list) :element-type '(unsigned-byte 8) :initial-contents list))\n"
   "(defstruct (qt-object (:constructor qt-object (address))) (address 0 :type integer))";
 
 void ini_lisp() {
