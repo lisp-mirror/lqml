@@ -19,11 +19,16 @@
   ;; Every 'Lisp.call()' or 'Lisp.apply()' function call in QML will call this
   ;: function. The variable *CALLER* will be bound to the calling QQuickItem,
   ;; if passed with 'this' as first argument to 'Lisp.call()' / 'Lisp.apply()'.
-  (let ((*caller* (if (zerop caller)
+  (let ((fun (string-to-symbol function))
+        (*caller* (if (zerop caller)
                       *caller*
                       (qt-object caller))))
-    (apply (string-to-symbol function)
-           arguments)))
+    (if (fboundp fun)
+        (apply fun arguments)
+        (let ((msg (format nil "[LQML:error] Lisp.call(): function ~S is undefined." function)))
+          (when *break-on-errors*
+            (break msg)
+            (format *error-output* "~%~A~%" msg))))))
 
 ;;; utils
 
