@@ -102,7 +102,7 @@
   `(qsingle-shot 0 ,function))
 
 (defun %make-byte-vector (list)
-  ;; for internal use (called from 'ecl_ext.cpp')
+  ;; for internal use (called from marshal.cpp')
   (make-array (length list) :element-type '(unsigned-byte 8) :initial-contents list))
 
 (defun %break (&rest args)

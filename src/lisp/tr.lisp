@@ -25,6 +25,6 @@
                       context
                       source
                       (if (= -1 n) "" (format nil ", ~D" n))))
-            (error "[TR: error] ~S from context ~S doesn't evaluate to a string" src context))))
+            (error "[TR:error] ~S from context ~S doesn't evaluate to a string" src context))))
     form))
 
