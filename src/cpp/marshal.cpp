@@ -250,9 +250,8 @@ cl_object from_cstring(const QByteArray& s) {
 cl_object from_qbytearray(const QByteArray& ba) {
   STATIC_SYMBOL_PKG (s_make_byte_vector, "%MAKE-BYTE-VECTOR", "QML") // see 'ini.lisp'
   cl_object l_list = Cnil;
-  for (QChar b : ba) {
-    l_list = CONS(ecl_make_fixnum(static_cast<unsigned char>(b.toLatin1())),
-                  l_list);
+  for (int i = 0; i < ba.size(); i++) {
+    l_list = CONS(ecl_make_fixnum(static_cast<uchar>(ba.at(i))), l_list);
   }
   cl_object l_vec = cl_funcall(2, s_make_byte_vector, cl_nreverse(l_list));
   return l_vec;
