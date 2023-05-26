@@ -6,11 +6,12 @@
 (defvar *root-item*  nil) ; see macro 'with-root-item'
 
 (defun string-to-symbol (name)
-  (let ((upper (string-upcase name))
-        (p (position #\: name)))
+  (let* ((upper (string-upcase name))
+         (p (position #\: name))
+         (pkg (find-package (subseq upper 0 p))))
     (if p
-        (find-symbol (subseq upper (1+ (position #\: name :from-end t)))
-                     (subseq upper 0 p))
+        (and pkg (find-symbol (subseq upper (1+ (position #\: name :from-end t)))
+                              pkg))
         (find-symbol upper))))
 
 ;;; function calls from QML
@@ -25,7 +26,7 @@
                       (qt-object caller))))
     (if (fboundp fun)
         (apply fun arguments)
-        (let ((msg (format nil "[LQML:error] Lisp.call(): function ~S is undefined." function)))
+        (let ((msg (format nil "[LQML:error] Lisp.call(): ~S is undefined." function)))
           (when *break-on-errors*
             (break msg)
             (format *error-output* "~%~A~%" msg))))))

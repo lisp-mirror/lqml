@@ -45,12 +45,15 @@ QVariant ecl_fun(const QByteArray& pkgFun,
     int p = pkgFun.indexOf(':');
     QByteArray pkg = (p == -1) ? "qml-user" : pkgFun.left(p);
     QByteArray fun = pkgFun.mid(pkgFun.lastIndexOf(':') + 1);
-    cl_object l_sym = cl_find_symbol(2,
-                                     make_constant_base_string(fun.toUpper().constData()),
-                                     cl_find_package(make_constant_base_string(pkg.toUpper().constData())));
-    if (l_sym != Cnil) {
-      symbol = l_sym;
-      lisp_functions[pkgFun] = symbol;
+    cl_object l_pkg = cl_find_package(make_constant_base_string(pkg.toUpper().constData()));
+    if (l_pkg != Cnil) {
+      cl_object l_sym = cl_find_symbol(2,
+                                       make_constant_base_string(fun.toUpper().constData()),
+                                       l_pkg);
+      if (cl_fboundp(l_sym) != Cnil) {
+        symbol = l_sym;
+        lisp_functions[pkgFun] = symbol;
+      }
     }
   }
   cl_object l_args = Cnil;
