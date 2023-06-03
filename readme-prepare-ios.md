@@ -15,7 +15,14 @@ immediately in your current terminal session.)
 Build cross-compiled ECL for iOS
 --------------------------------
 
-As of March 2022, please use latest ECL from development branch.
+As of May 2023, please use latest ECL from development branch.
+
+**Important**: pay attention to file `src/c/unixsys.d`, function `si_system()`.
+Function `system()` inside of it needs to work when running the script **1**,
+and needs not to be there when running script **2**.
+
+Different ECL versions handle this problem differently, but none of them
+worked for me, so you need to find a hack for yourself for achieving the above.
 
 * extract a fresh copy of the ECL sources in e.g. `~/ecl`, and rename
   `ecl-21.2.1` to `ios`
@@ -25,13 +32,9 @@ As of March 2022, please use latest ECL from development branch.
 ```
   ./1-make-ecl-host.sh
 ```
-Edit `src/c/unixsys.d` and search for `HAVE_SYSTEM`; right before the function
-definition inside which it occurs, put this line:
-```
-  #undef HAVE_SYSTEM
-```
 Edit `src/c/threads/process.d`, search for `pthread_attr_init` (around line 588)
-and add the following below that line:
+and add the following below that line (iOS has quite limited stack size, but at
+least we provide double the stack size for threads):
 ```
   pthread_attr_setstacksize(&pthreadattr, 2 * 236 * 4096); // double default size
 ```

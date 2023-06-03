@@ -30,8 +30,9 @@ case of nested page structures.
 License
 -------
 
-ECL and Qt5/Qt6 are LGPL.
-LQML can be considered public domain.
+Both ECL and Qt5/Qt6 are **LGPL** (being Qt6 a special case to consider).
+
+LQML is **GWL** (Good Will License -- use it for anything good, for free).
 
 
 Tested
