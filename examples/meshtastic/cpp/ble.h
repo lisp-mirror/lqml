@@ -35,10 +35,11 @@ Q_SIGNALS:
   void mainServiceReady();
   void deviceDisconnecting();
 
-  /*** </INTERFACE> *********************************************************/
-
 public Q_SLOTS:
   void startDeviceDiscovery();
+
+  /*** </INTERFACE> *********************************************************/
+
   void scanServices();
   void connectToService(const QString&);
   void disconnectFromDevice();

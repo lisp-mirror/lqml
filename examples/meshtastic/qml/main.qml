@@ -16,7 +16,7 @@ Item {
 
   Rectangle {
     anchors.fill: parent
-    color: "#e5d8bd"
+    color: loading.visible ? "#1974d3" : "#e5d8bd"
   }
 
   ListView {
@@ -28,27 +28,32 @@ Item {
     spacing: 3
     delegate: messageDelegate
     model: messages
-
-    property string myName
   }
 
   ListModel {
     id: messages
     objectName: "messages"
 
+    // hack to define all model key _types_
+    ListElement {
+      text: ""; sender: ""; me: true; timestamp: ""; mid: 0; ackState: 0
+    }
+
     function addMessage(message) {
       append(message)
       view.positionViewAtEnd()
     }
 
-    function changeState(state, id) {
+    function changeState(state, mid) {
       for (var i = count - 1; i >= 0; i--) {
-        if (get(i).mId === id) {
-          setProperty(i, "mAckState", state)
+        if (get(i).mid === mid) {
+          setProperty(i, "ackState", state)
           break
         }
       }
     }
+
+    Component.onCompleted: remove(0) // see hack above
   }
 
   Component {
@@ -61,7 +66,7 @@ Item {
 
       Rectangle {
         anchors.fill: parent
-        color: (mSender === view.myName) ? "#f2f2f2" : "#ffffcc"
+        color: model.me ? "#f2f2f2" : "#ffffcc"
         radius: 12
         border.width: 0
         border.color: "#dc1128"
@@ -78,8 +83,8 @@ Item {
             width: 8
             height: width
             source: "img/semaphore.gif"
-            currentFrame: mAckState
-            visible: (sender.text === view.myName)
+            currentFrame: model.ackState
+            visible: model.me
           }
 
           Text {
@@ -88,7 +93,7 @@ Item {
             font.bold: true
             font.family: fontMono.name
             color: "#8B0000"
-            text: mSender
+            text: model.sender
           }
         }
 
@@ -99,7 +104,7 @@ Item {
           font.pixelSize: 10
           font.family: fontText.name
           color: "#505050"
-          text: mTimestamp
+          text: model.timestamp
         }
 
         Text {
@@ -111,7 +116,7 @@ Item {
           font.pixelSize: 18
           font.family: fontText.name
           color: "#303030"
-          text: mText
+          text: model.text
         }
       }
     }
@@ -159,28 +164,37 @@ Item {
     }
   }
 
-  // busy image / animation
-
-  Item { // shown while loading app (slow...)
+  // shown while loading app (may take a while)
+  Item {
+    visible: loading.visible
     anchors.fill: parent
-    objectName: "hour_glass"
 
-    Image {
+    AnimatedImage {
+      id: loading
+      objectName: "loading"
       anchors.centerIn: parent
-      source: "img/busy.png"
+      source: "img/busy.webp"
+      visible: playing
+      playing: true
     }
 
     Text {
-      width: parent.width
-      anchors.bottom: parent.bottom
-      anchors.bottomMargin: main.height / 4
-      horizontalAlignment: Text.AlignHCenter
-      font.pixelSize: 20
-      text: qsTr("Loading app...\n(make take a while)")
+      id: iniCount
+      anchors.centerIn: parent
+      color: "white"
+      font.family: fontText.name
+      font.pixelSize: 22
+    }
+
+    Timer {
+      running: loading.playing
+      interval: 4500
+      repeat: true
+      onTriggered: iniCount.text = Number(iniCount.text) + 1
     }
   }
 
-  AnimatedImage { // shown during config
+  AnimatedImage {
     objectName: "busy"
     anchors.centerIn: parent
     width: 42

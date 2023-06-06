@@ -338,6 +338,12 @@
   #-mobile
   :mobile-only)
 
+;;; background ini for big apps, so we can show animation during ini
+
+(defun background-ini ()
+  ;; DO-INI-APP is defined in main.cpp
+  (mp:process-run-function :app-ini 'do-ini-app))
+
 ;;; alias
 
 (defmacro alias (s1 s2)

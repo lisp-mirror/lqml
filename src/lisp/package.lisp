@@ -6,6 +6,7 @@
    #:*engine*
    #:*root-item*
    #:*caller*
+   #:background-ini
    #:clipboard-text
    #:copy-all-asset-files
    #:define-qt-wrappers

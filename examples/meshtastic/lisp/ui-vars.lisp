@@ -4,14 +4,14 @@
   (:use :cl)
   (:export
    #:*busy*
-   #:*hour-glass*
+   #:*loading*
    #:*messages*
    #:*view*))
 
 (in-package :ui)
 
-(defparameter *busy*       "busy")
-(defparameter *hour-glass* "hour_glass")
-(defparameter *messages*   "messages")
-(defparameter *view*       "view")
+(defparameter *busy*     "busy")
+(defparameter *loading*  "loading")
+(defparameter *messages* "messages")
+(defparameter *view*     "view")
 

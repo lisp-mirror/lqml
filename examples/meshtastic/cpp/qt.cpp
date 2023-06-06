@@ -16,6 +16,11 @@ QT::QT() : QObject() {
   ble = new BLE_ME;
 }
 
+QVariant QT::startDeviceDiscovery() {
+  ble->startDeviceDiscovery();
+  return QVariant();
+}
+
 QVariant QT::read2() {
   ble->read();
   return QVariant();

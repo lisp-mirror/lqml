@@ -23,11 +23,11 @@
 QT_BEGIN_NAMESPACE
 
 void iniCLFunctions() {
-  cl_object qml(STRING("QML"));
-  if (cl_find_package(qml) == ECL_NIL) {
-    cl_make_package(1, qml);
+  cl_object l_qml(STRING("QML"));
+  if (cl_find_package(l_qml) == ECL_NIL) {
+    cl_make_package(1, l_qml);
   }
-  si_select_package(qml);
+  si_select_package(l_qml);
   DEFUN ("clipboard-text",          clipboard_text,          0)
   DEFUN ("%disable-clipboard-menu", disable_clipboard_menu2, 1)
   DEFUN ("%ensure-permissions",     ensure_permissions2,     1)

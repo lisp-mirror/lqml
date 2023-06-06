@@ -2,7 +2,7 @@
 Info
 ----
 
-Please note: this is **WIP!**. It's only a 'proof-of-concept' version.
+Please note: this is **WIP!** It's only a 'proof-of-concept' version.
 
 Eventually it will (hopefully) catch up with the official app versions.
  
@@ -22,9 +22,14 @@ some small adaptions and included all generated proto Lisp files in order to be
 independent.
 
 Unfortunately cl-protobufs loads very slowly on mobile (and conses hugely
-during startup). On an older phone and a cold startup this may take up to 30
-seconds. On newer phones and warm startup it should 'only' take around 10
+during startup). On an older phone and a cold startup this may take more than
+20 seconds. On newer phones and warm startup it should 'only' take around 10
 seconds (which seems acceptable).
+
+For the above reason, an animation is shown while loading the app, together
+with a counter. For this to work, the app is loaded in the background (that is,
+in a separate thread). You'll need to rebuild the lqml library for this to
+work.
 
 You will see a json output of all data sent/received. It simply uses the
 `print-json` convenience function from cl-protobufs.
@@ -34,23 +39,28 @@ You will see a json output of all data sent/received. It simply uses the
 Tested
 ------
 
-Currently tested on Linux, macOS, android. The macOS version shows an exception
+Tested on Linux, macOS, android, iOS. The macOS version shows an ECL exception
 during BLE ini, but works nevertheless.
-
-The iOS version doesn't currently work yet (WIP).
 
 
 
 How to use cl-meshtastic
 ------------------------
 
-You currently need 2 meshtastic radio devices, both should be running before
-you start the app. Both bluetooth and location needs to be enabled (coarse
-location permission is required on android for BLE to work).
+You currently need exactly 2 meshtastic radio devices, both should be running
+before you start the app. Both bluetooth and location needs to be enabled
+(coarse location permission is required on android for BLE to work).
 
 Pairing might sometimes require some playing around. If it asks for a PIN and
 your device doesn't have a display (like the RAK starter kit), just use
 `123456`.
+
+On iOS pairing is not needed beforehand, because it will ask for pairing and
+PIN during BLE ini.
+
+If your android phone says "no BLE devices found" (see logcat output), you
+might need to uninstall an eventual app which used the LoRa radio before, and
+restart the phone.
 
 On Linux you might need to restart the bluetooth service if you want to pair
 a different device (after already pairing a first one).

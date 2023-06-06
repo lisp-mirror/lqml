@@ -39,8 +39,6 @@
   (values))
 
 (defun start-config ()
-  #+android
-  (ensure-permissions :access-coarse-location) ; needed for BLE
   (when *ready*
     (incf *config-id*)
     (send-to-radio
@@ -60,11 +58,12 @@
                        :portnum :text-message-app
                        :payload (babel:string-to-octets text)))))
   (msg:add-message
-   (list :m-text text
-         :m-sender (me:short-name (me:user *my-node-info*))
-         :m-timestamp (timestamp-to-string)
-         :m-id msg:*message-id*
-         :m-ack-state (position :not-received msg:*states*))))
+   (list :text text
+         :sender (me:short-name (me:user *my-node-info*))
+         :me t
+         :timestamp (timestamp-to-string)
+         :mid msg:*message-id*
+         :ack-state (position :not-received msg:*states*))))
 
 (defun read-radio ()
   "Triggers a read on the radio. Will call RECEIVED-FROM-RADIO on success."
@@ -89,9 +88,10 @@
         (push from-radio *received*)))
   (values))
 
-(defun receiving-done ()
+(defun receiving-done () ; called from Qt
   (setf *reading* nil)
-  (process-received))
+  (process-received)
+  (values))
 
 (defun node-to-name (num)
   (dolist (info *node-infos*)
@@ -115,10 +115,10 @@
                ;; text-message
                (:text-message-app
                 (msg:add-message
-                 (list :m-text (babel:octets-to-string payload)
-                       :m-sender (node-to-name (me:from packet))
-                       :m-timestamp (timestamp-to-string))))
-               ;; for :m-ack-state (acknowledgement state)
+                 (list :text (babel:octets-to-string payload)
+                       :sender (node-to-name (me:from packet))
+                       :timestamp (timestamp-to-string))))
+               ;; for :ack-state (acknowledgement state)
                (:routing-app
                 (msg:change-state (case (me:routing.error-reason
                                          (pr:deserialize-from-bytes 'me:routing payload))
@@ -148,8 +148,6 @@
           ((me:from-radio.has-config-complete-id struct)
            (when (= *config-id* (me:config-complete-id struct))
              (qlater 'config-device)
-             (q> |myName| ui:*view*
-                 (me:short-name (me:user *my-node-info*)))
              (q> |playing| ui:*busy* nil)
              (qlog :config-complete *config-id*)))))
   (setf *received* nil))

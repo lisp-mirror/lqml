@@ -26,7 +26,7 @@
 #define ADD_MACOS_BUNDLE_IMPORT_PATH
 #endif
 
-#ifdef INI_LISP
+#if (defined INI_LISP) || (defined BACKGROUND_INI_LISP)
   extern "C" void ini_app(cl_object);
 #endif
 
@@ -52,6 +52,13 @@ int catch_all_qexec() {
   }
   CL_CATCH_ALL_END;
   return ret;
+}
+
+cl_object do_ini_app() {
+#ifdef BACKGROUND_INI_LISP
+  ecl_init_module(NULL, ini_app);
+#endif
+  return Cnil;
 }
 
 int main(int argc, char* argv[]) {
@@ -92,6 +99,10 @@ int main(int argc, char* argv[]) {
     lqml.printVersion();
     exit(0);
   }
+
+  cl_object l_qml(STRING("QML"));
+  si_select_package(l_qml);
+  DEFUN ("do-ini-app", do_ini_app, 0)
 
   QTranslator translator;
   if ((QFile::exists("i18n") && translator.load(QLocale(), QString(), QString(), "i18n"))
@@ -163,6 +174,10 @@ int main(int argc, char* argv[]) {
 
 #ifdef INI_LISP
   ecl_init_module(NULL, ini_app);
+#endif
+
+#ifdef BACKGROUND_INI_LISP
+  LQML::eval("(qml::background-ini)", true); // see 'ini.liso'
 #endif
 
 #ifdef NO_QT_RESTART

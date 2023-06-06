@@ -7,19 +7,19 @@
 (defun add-message (message &optional loading)
   "Adds passed MESSAGE (a PLIST) to both the QML item model and *MESSAGES*.
   The model keys are:
-  :m-text :m-sender :m-timestamp :m-id :m-ack-state"
+  :text :sender :me :timestamp :mid :ack-state"
   (qjs |addMessage| ui:*messages* message)
   (unless loading
     (push message *messages*)
     (qlater 'save-messages)))
 
-(defun change-state (state id)
+(defun change-state (state mid)
   (let ((i-state (position state *states*)))
     (qjs |changeState| ui:*messages*
-         i-state id)
+         i-state mid)
     (dolist (msg *messages*)
-      (when (eql (getf msg :m-id) id) ; EQL: might be NIL
-        (setf (getf msg :m-ack-state) i-state)
+      (when (eql (getf msg :mid) mid) ; EQL: might be NIL
+        (setf (getf msg :ack-state) i-state)
         (return))))
   (qlater 'save-messages))
 
@@ -31,7 +31,7 @@
     (with-open-file (s *file*)
       (setf *messages* (read s)))
     (dolist (msg (reverse *messages*))
-      (setf *message-id* (max (or (getf msg :m-id) 0)
+      (setf *message-id* (max (or (getf msg :mid) 0)
                               *message-id*))
       (add-message msg t))))
 

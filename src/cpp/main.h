@@ -1,10 +1,20 @@
 #pragma once
 
+#undef SLOT
+
+#include <ecl/ecl.h>
 #include <QQmlEngine>
 #include <QGuiApplication>
 #include <QInputMethodEvent>
 
 QT_BEGIN_NAMESPACE
+
+#define STRING(s) ecl_make_constant_base_string(s, -1)
+
+#define DEFUN(name, c_name, num_args) \
+  ecl_def_c_function(ecl_read_from_cstring(name), (cl_objectfn_fixed)c_name, num_args);
+
+cl_object do_ini_app (); // for background ini
 
 class Engine : public QQmlEngine {
   Q_OBJECT

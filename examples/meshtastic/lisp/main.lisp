@@ -2,8 +2,9 @@
 
 (defun ini ()
   (qt:ini)
+  (qt:start-device-discovery qt:*ble*)
   (msg:load-messages)
-  (q> |visible| ui:*hour-glass* nil) ; shown during Lisp startup
-  (q> |playing| ui:*busy* t))        ; shown during BLE setup
+  (q> |playing| ui:*loading* nil) ; shown during Lisp startup
+  (q> |playing| ui:*busy* t))     ; shown during BLE setup
 
 (qlater 'ini)

@@ -91,35 +91,3 @@
     (delete-file to*))
   (rename-file from to))
 
-;;; build 'cl-protobufs.fas' (slow on mobile, will be loaded in background)
-
-#|
-#-mobile
-(asdf:make-build "my-cl-protobufs"
-                 :monolithic t
-                 :type :fasl
-                 :move-here (cc *current* "build/tmp/"))
-
-#+mobile
-(progn
-  (pushnew :interpreter *features*)
-  (defvar *asdf-system*  "my-cl-protobufs")
-  (defvar *ql-libs*      (cc *current* "ql-libs.lisp"))
-  (defvar *build-type*   :fasl)
-  (defvar *library-path* (format nil "~Abuild-~A/tmp/"
-                                 *current*
-                                 #+android "android"
-                                 #+ios     "ios"))
-  (load "platforms/shared/make"))
-
-;;; rename lib
-
-(let* ((from #-mobile (cc *current* "build/tmp/my-cl-protobufs--all-systems.fasb")
-             #+mobile (cc *library-path* "my-cl-protobufs--all-systems.fasb"))
-       (to   "cl-protobufs.fas")
-       (to*  #-mobile (cc *current* "build/tmp/" to)
-             #+mobile (cc *library-path* to)))
-  (when (probe-file to*)
-    (delete-file to*))
-  (rename-file from to))
-|#

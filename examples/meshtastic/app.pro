@@ -30,7 +30,7 @@ win32:  PRE_TARGETDEPS = tmp/app.lib
 QT          += quick qml bluetooth
 TEMPLATE    = app
 CONFIG      += c++17 no_keywords release
-DEFINES     += DESKTOP_APP INI_LISP INI_ECL_CONTRIB QT_EXTENSION
+DEFINES     += DESKTOP_APP BACKGROUND_INI_LISP INI_ECL_CONTRIB QT_EXTENSION
 INCLUDEPATH = /usr/local/include
 ECL_VERSION = $$lower($$system(ecl -v))
 ECL_VERSION = $$replace(ECL_VERSION, " ", "-")
@@ -87,10 +87,10 @@ ios {
   LIBS        += -L../../../platforms/ios/lib
 
   QMAKE_INFO_PLIST     = platforms/ios/Info.plist
-  QMAKE_ASSET_CATALOGS += platforms/ios/Assets.xcassets
+  #QMAKE_ASSET_CATALOGS += platforms/ios/Assets.xcassets
 
-  launch.files      = platforms/ios/designable.storyboard platforms/img/logo.png
-  QMAKE_BUNDLE_DATA += launch
+  #launch.files      = platforms/ios/designable.storyboard platforms/img/logo.png
+  #QMAKE_BUNDLE_DATA += launch
 }
 
 32bit {

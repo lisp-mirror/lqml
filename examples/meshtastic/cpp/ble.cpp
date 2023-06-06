@@ -17,8 +17,6 @@ BLE::BLE(const QBluetoothUuid& uuid) : mainServiceUuid(uuid) {
   connect(discoveryAgent, QOverload<QBluetoothDeviceDiscoveryAgent::Error>::of(&QBluetoothDeviceDiscoveryAgent::error),
           this, &BLE::deviceScanError);
   connect(discoveryAgent, &QBluetoothDeviceDiscoveryAgent::finished, this, &BLE::deviceScanFinished);
-
-  QTimer::singleShot(0, this, &BLE::startDeviceDiscovery);
 }
 
 void BLE::startDeviceDiscovery() {
@@ -60,8 +58,7 @@ void BLE::scanServices() {
   if (controller && (previousAddress != currentDevice.address())) {
     Q_EMIT deviceDisconnecting();
     controller->disconnectFromDevice();
-    delete controller;
-    controller = nullptr;
+    delete controller; controller = nullptr;
   }
 
   if (!controller) {
