@@ -287,7 +287,7 @@ StackView {
             delegate: Column {
               Rectangle {
                 width: output.contentWidth
-                height: mLine ? 2 : 0
+                height: model.line ? 2 : 0
                 color: "#c0c0ff"
               }
 
@@ -297,10 +297,10 @@ StackView {
                 textFormat: Text.PlainText
                 font.family: output.fontFamily
                 font.pixelSize: output.fontSize
-                text: mRichText ? "" : mText
-                color: mColor
-                font.bold: mBold
-                visible: !mRichText
+                text: model.richText ? "" : model.text
+                color: model.color
+                font.bold: model.bold
+                visible: !model.richText
               }
 
               Text {
@@ -309,10 +309,10 @@ StackView {
                 textFormat: Text.RichText
                 font.family: output.fontFamily
                 font.pixelSize: output.fontSize
-                text: mRichText ? mText : ""
-                color: mColor
-                font.bold: mBold
-                visible: mRichText
+                text: model.richText ? model.text : ""
+                color: model.color
+                font.bold: model.bold
+                visible: model.richText
 
                 MouseArea {
                   width: parent.paintedWidth

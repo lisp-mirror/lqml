@@ -694,11 +694,11 @@
   :rich-text (text is subset of html). The ouput is printed immediately
   (important for longer running tasks)."
   (qjs |appendOutput| ui:*output-model*
-       (list :m-text      (if (stringp x) x (prin1-to-string x))
-             :m-color     color
-             :m-bold      bold
-             :m-line      line
-             :m-rich-text rich-text)))
+       (list :text      (if (stringp x) x (prin1-to-string x))
+             :color     color
+             :bold      bold
+             :line      line
+             :rich-text rich-text)))
 
 (qml::alias pr append-output)
 

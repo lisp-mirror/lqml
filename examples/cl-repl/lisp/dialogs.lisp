@@ -49,9 +49,9 @@
 
 (defun append-debug-output (text color bold)
   (qjs |appendOutput| ui:*debug-model*
-       (list :m-text  text
-             :m-color color
-             :m-bold  bold)))
+       (list :text  text
+             :color color
+             :bold  bold)))
 
 (defun debug-dialog (messages)
   (qrun*

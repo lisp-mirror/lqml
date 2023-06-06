@@ -65,9 +65,9 @@ Rectangle {
         textFormat: Text.PlainText
         font.pixelSize: 16
         font.family: "Hack"
-        font.bold: mBold
-        text: mText
-        color: mColor
+        font.bold: model.bold
+        text: model.text
+        color: model.color
       }
     }
 
