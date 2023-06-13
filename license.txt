@@ -1,3 +1,4 @@
-please see Qt6 and ECL license (both LGPL)
+Please see Qt5 and ECL license (both LGPL). Qt6 is more complicated, but
+basically still LGPL.
 
-everything else can be considered public domain
+LQML is free to use, including commercially.

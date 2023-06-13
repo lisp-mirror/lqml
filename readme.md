@@ -32,7 +32,8 @@ License
 
 Both ECL and Qt5/Qt6 are **LGPL** (being Qt6 a special case to consider).
 
-LQML is **GWL** (Good Will License -- use it for anything good, for free).
+LQML is **GWL** (Good Will License -- use it for anything good, for free,
+including commercially).
 
 
 Tested
