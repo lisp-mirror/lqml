@@ -65,6 +65,10 @@ restart the phone.
 On Linux you might need to restart the bluetooth service if you want to pair
 a different device (after already pairing a first one).
 
+To choose which app instance will use which device, set both name and address
+in [main.lisp](lisp/main.lisp), and set one app to `*device-1*` and the other
+to `*device-2*`.
+
 
 
 Run

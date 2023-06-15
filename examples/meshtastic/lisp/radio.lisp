@@ -2,11 +2,11 @@
 
 (defvar *region* :eu-868) ; Europe 868 MHz
 
-(defvar *primary-channel* nil)
-(defvar *channels*        nil)
-(defvar *my-node-info*    nil)
-(defvar *node-infos*      nil)
-(defvar *config-lora*     nil)
+(defvar *my-channel*   nil)
+(defvar *channels*     nil)
+(defvar *my-node-info* nil)
+(defvar *node-infos*   nil)
+(defvar *config-lora*  nil)
 
 ;;; header
 
@@ -109,21 +109,22 @@
   (dolist (struct *received*)
     (cond ((me:from-radio.has-packet struct)
            (let* ((packet (me:from-radio.packet struct))
-                  (decoded (me:decoded packet))
-                  (payload (me:payload decoded)))
-             (case (me:portnum decoded)
-               ;; text-message
-               (:text-message-app
-                (msg:add-message
-                 (list :text (babel:octets-to-string payload)
-                       :sender (node-to-name (me:from packet))
-                       :timestamp (timestamp-to-string))))
-               ;; for :ack-state (acknowledgement state)
-               (:routing-app
-                (msg:change-state (case (me:routing.error-reason
-                                         (pr:deserialize-from-bytes 'me:routing payload))
-                                    (:none :received))
-                                  (me:request-id decoded))))))
+                  (decoded (me:decoded packet)))
+             (when decoded
+               (let ((payload (me:payload decoded)))
+                 (case (me:portnum decoded)
+                   ;; text-message
+                   (:text-message-app
+                    (msg:add-message
+                     (list :text (babel:octets-to-string payload)
+                           :sender (node-to-name (me:from packet))
+                           :timestamp (timestamp-to-string))))
+                   ;; for :ack-state (acknowledgement state)
+                   (:routing-app
+                    (msg:change-state (case (me:routing.error-reason
+                                             (pr:deserialize-from-bytes 'me:routing payload))
+                                        (:none :received))
+                                      (me:request-id decoded))))))))
           ;; my-info
           ((me:from-radio.has-my-info struct)
            (setf *my-node-info* (me:my-node-num (me:my-info struct))))
@@ -136,9 +137,9 @@
           ;; channel
           ((me:from-radio.has-channel struct)
            (let ((channel (me:channel struct)))
-             (if (eql :primary (me:role channel))
-                 (setf *primary-channel* channel)
-                 (push channel *channels*))))
+             (when (eql :primary (me:role channel))
+               (setf *my-channel* channel))
+             (push channel *channels*)))
           ;; config lora
           ((me:from-radio.has-config struct)
            (let ((config (me:config struct)))
@@ -163,6 +164,10 @@
                        :payload (pr:serialize-to-bytes admin-message)
                        :want-response t)))))
 
+(defun set-channel (channel)
+  (send-admin (me:make-admin-message
+               :set-channel (setf *my-channel* channel))))
+
 (defun config-device ()
   "Absolut minimum necessary for sending text messages."
   ;; lora settings
@@ -175,8 +180,24 @@
                         :hop-limit 3
                         :tx-enabled t))))
   ;; channel settings
-  (send-admin
-   (me:make-admin-message
-    :set-channel (me:make-channel
-                  :settings (me:make-channel-settings :psk (to-bytes (list 1)))
-                  :role :primary))))
+  (set-channel (me:make-channel
+                :settings (me:make-channel-settings :psk (to-bytes (list 1)))
+                :role :primary)))
+
+(defun channel-to-url (&optional channel)
+  (let ((base64 (base64:usb8-array-to-base64-string
+                 (pr:serialize-to-bytes (or channel *my-channel*)))))
+    ;; remove padding, substitute characters as by definition
+    (x:cc "https:/meshtastic.org/e/#"
+          (string-right-trim "=" (substitute #\- #\+ (substitute #\_ #\/ base64))))))
+
+(defun url-to-channel (url &optional (set t))
+  (let ((base64 (+ 2 (subseq "/#" url))))
+    ;; re-add padding
+    (setf base64 (x:cc base64
+                       (make-string (mod (length base64) 4) :initial-element #\=)))
+    (let ((channel (pr:deserialize-from-bytes
+                    (base64:base64-string-to-usb8-array base64))))
+      (if set
+          (set-channel channel)
+          channel))))

@@ -27,7 +27,7 @@ void BLE::startDeviceDiscovery() {
 
 void BLE::addDevice(const QBluetoothDeviceInfo& device) {
   if (deviceFilter(device)) {
-    qDebug() << "device added: " << device.name();
+    qDebug() << "device added:" << device.name() << device.address().toString();
   }
 }
 
@@ -108,7 +108,7 @@ void BLE::serviceScanDone() {
 
 void BLE::connectToService(const QString& uuid) {
   QLowEnergyService* service = nullptr;
-  for (auto s: qAsConst(services)) {
+  for (auto s : qAsConst(services)) {
     if (s->serviceUuid().toString() == uuid) {
       service = s;
       break;
