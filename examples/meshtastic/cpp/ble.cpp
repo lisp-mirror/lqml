@@ -51,7 +51,16 @@ void BLE::scanServices() {
     return;
   }
   if (!currentDevice.isValid()) {
-    currentDevice = devices.at(0);
+    if (initialDeviceName.isNull()) {
+      currentDevice = devices.at(0);
+    } else {
+      for (auto device : qAsConst(devices)) {
+        if (device.name().contains(initialDeviceName, Qt::CaseInsensitive)) {
+          currentDevice = device;
+          break;
+        }
+      }
+    }
   }
   services.clear();
   qDebug() << "connecting to device...";

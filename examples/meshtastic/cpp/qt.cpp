@@ -12,29 +12,28 @@ QObject* ini() {
   return qt;
 }
 
-static QBluetoothDeviceInfo toDeviceInfo(const QVariantMap& map) {
-  return QBluetoothDeviceInfo(QBluetoothAddress(map.value("address").toString()),
-                              map.value("name").toString(),
-                              0);
-}
-
 QT::QT() : QObject() {
   ble = new BLE_ME;
 }
 
-QVariant QT::setDevice(const QVariant& vMap) {
-  auto map = vMap.value<QVariantMap>();
-  ble->setCurrentDevice(toDeviceInfo(map));
-  return vMap;
+QVariant QT::setDevice(const QVariant& vName) {
+  auto name = vName.toString();
+  for (auto device : qAsConst(ble->devices)) {
+    if (device.name().contains(name, Qt::CaseInsensitive)) {
+      ble->setCurrentDevice(device);
+      return vName;
+    }
+  }
+  return QVariant();
 }
 
-QVariant QT::startDeviceDiscovery(const QVariant& vMap) {
-  auto map = vMap.value<QVariantMap>();
-  if (!map.isEmpty()) {
-    ble->currentDevice = toDeviceInfo(map);
+QVariant QT::startDeviceDiscovery(const QVariant& vName) {
+  auto name = vName.toString();
+  if (!name.isNull()) {
+    ble->initialDeviceName = name;
   }
   ble->startDeviceDiscovery();
-  return vMap;
+  return vName;
 }
 
 QVariant QT::read2() {

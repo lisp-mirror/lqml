@@ -1,10 +1,10 @@
 (in-package :app)
 
-;; set here the name and address of your 2 devices
+;; set here the 4 character short name of your 2 devices
 ;; (see debug output during device discovery)
 
-(defvar *device-1* '(:name "Meshtastic_128c" :address "F4:12:FA:9D:12:8D"))
-(defvar *device-2* '(:name "Meshtastic_1c9c" :address "F4:12:FA:9D:1C:9D"))
+(defvar *device-1* "128c")
+(defvar *device-2* "1c9c")
 
 (defun ini ()
   (qt:ini)

@@ -26,6 +26,7 @@ public:
   QBluetoothDeviceInfo currentDevice; // if not defined, first one discovered
   QList<QBluetoothDeviceInfo> devices;
   void setCurrentDevice(const QBluetoothDeviceInfo&);
+  QString initialDeviceName; // optional
 
   // custom device filter (e.g. name filter)
   virtual bool deviceFilter(const QBluetoothDeviceInfo&) { return true; }
