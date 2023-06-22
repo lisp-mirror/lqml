@@ -58,8 +58,7 @@ Qt works (obviously) perfectly well on Linux.
 
 On macOS instead, I found this a little annoying bug: after a QML property
 change in Slime, the QQuickView is not updating. So, for a visual update you
-need to click on the view; but it seems to work for subsequent property
-changes.
+need to (sometimes) click on the view to actually see the property changes.
 
 
 Windows note
