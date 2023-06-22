@@ -1,6 +1,6 @@
-(in-package :radio)
+(in-package :lora)
 
-(defvar *region* :eu-868) ; Europe 868 MHz
+(defvar *settings* (list :region :eu-868)) ; Europe 868 MHz
 
 (defvar *my-channel*   nil)
 (defvar *channels*     nil)
@@ -32,17 +32,22 @@
               :element-type '(unsigned-byte 8)
               :initial-contents list))
 
-(defun set-ready (&optional (ready t)) ; called from Qt
-  (setf *ready* ready)
-  (when ready
-    (qlater 'start-config))
-  (values))
+(defun start-device-discovery (&optional (name ""))
+  (setf radios:*schedule-clear* t)
+  (qt:start-device-discovery qt:*ble* name)
+  (q> |playing| ui:*busy* t))
 
 (defun start-config ()
   (when *ready*
     (incf *config-id*)
     (send-to-radio
      (me:make-to-radio :want-config-id *config-id*))))
+
+(defun set-ready (&optional (ready t)) ; called from Qt
+  (setf *ready* ready)
+  (when ready
+    (qlater 'start-config))
+  (values))
 
 (defun send-message (text)
   "Sends TEXT to radio and adds it to QML item model."
@@ -133,7 +138,21 @@
            (let ((info (me:node-info struct)))
              (if (eql *my-node-info* (me:num info))
                  (setf *my-node-info* info)
-                 (push info *node-infos*))))
+                 (setf *node-infos*
+                       (nconc *node-infos* (list info))))
+             (when radios:*schedule-clear*
+               (radios:clear))
+             (let ((name (me:short-name (me:user info)))
+                   (current (= (me:num info)
+                               (me:num *my-node-info*))))
+               (radios:add-radio
+                (list :name name
+                      :hw-model (symbol-name (me:hw-model (me:user info)))
+                      :battery-level (me:battery-level (me:device-metrics info))
+                      :current current))
+               (when current
+                 (setf (getf *settings* :device) name))))
+                 (app:save-settings))
           ;; channel
           ((me:from-radio.has-channel struct)
            (let ((channel (me:channel struct)))
@@ -176,7 +195,7 @@
     :set-config (me:make-config
                  :lora (me:make-config.lo-ra-config
                         :use-preset t
-                        :region *region*
+                        :region (getf *settings* :region)
                         :hop-limit 3
                         :tx-enabled t))))
   ;; channel settings

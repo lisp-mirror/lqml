@@ -16,17 +16,6 @@ QT::QT() : QObject() {
   ble = new BLE_ME;
 }
 
-QVariant QT::setDevice(const QVariant& vName) {
-  auto name = vName.toString();
-  for (auto device : qAsConst(ble->devices)) {
-    if (device.name().contains(name, Qt::CaseInsensitive)) {
-      ble->setCurrentDevice(device);
-      return vName;
-    }
-  }
-  return QVariant();
-}
-
 QVariant QT::startDeviceDiscovery(const QVariant& vName) {
   auto name = vName.toString();
   if (!name.isNull()) {

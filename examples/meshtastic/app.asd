@@ -7,7 +7,8 @@
   :components ((:file "lisp/package")
                (:file "lisp/qt")
                (:file "lisp/ui-vars")
-               (:file "lisp/radio")
+               (:file "lisp/lora")
                (:file "lisp/messages")
+               (:file "lisp/radios")
                (:file "lisp/main")))
 

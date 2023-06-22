@@ -6,12 +6,12 @@
    #:*busy*
    #:*loading*
    #:*messages*
-   #:*view*))
+   #:*radios*))
 
 (in-package :ui)
 
 (defparameter *busy*     "busy")
 (defparameter *loading*  "loading")
 (defparameter *messages* "messages")
-(defparameter *view*     "view")
+(defparameter *radios*   "radios")
 

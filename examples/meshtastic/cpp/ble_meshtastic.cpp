@@ -92,23 +92,23 @@ void BLE_ME::searchCharacteristics() {
   }
 
   if (toRadio.isValid() && fromRadio.isValid() && fromNum.isValid()) {
-    ecl_fun("radio:set-ready");
+    ecl_fun("lora:set-ready");
   }
 }
 
 void BLE_ME::characteristicChanged(const QLowEnergyCharacteristic&,
                                    const QByteArray& data) {
   if (!data.isEmpty()) {
-    ecl_fun("radio:received-from-radio", data, "notified");
+    ecl_fun("lora:received-from-radio", data, "notified");
   }
 }
 
 void BLE_ME::characteristicRead(const QLowEnergyCharacteristic&,
                                 const QByteArray& data) {
   if (data.isEmpty()) {
-    ecl_fun("radio:receiving-done");
+    ecl_fun("lora:receiving-done");
   } else {
-    ecl_fun("radio:received-from-radio", data);
+    ecl_fun("lora:received-from-radio", data);
     QTimer::singleShot(0, this, &BLE_ME::read);
   }
 }
@@ -151,7 +151,7 @@ void BLE_ME::disconnecting() {
     // disable notifications
     mainService->writeDescriptor(notifications, QByteArray::fromHex("0000"));
   }
-  ecl_fun("radio:set-ready", false);
+  ecl_fun("lora:set-ready", false);
   delete mainService; mainService = nullptr;
 }
 

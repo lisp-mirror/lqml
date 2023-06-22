@@ -3,7 +3,6 @@
   (:export
    #:*ble*
    #:ini
-   #:set-device
    #:start-device-discovery
    #:read*
    #:write*))

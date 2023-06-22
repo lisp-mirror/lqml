@@ -35,5 +35,5 @@
 
 (when (option "-slime")
   (load "~/slime/lqml-start-swank") ; for 'slime-connect' from Emacs
-  (qlater (lambda () (in-package :radio))))
+  (qlater (lambda () (in-package :lora))))
 

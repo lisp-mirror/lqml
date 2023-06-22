@@ -55,19 +55,14 @@ Pairing might sometimes require some playing around. If it asks for a PIN and
 your device doesn't have a display (like the RAK starter kit), just use
 `123456`.
 
-On iOS pairing is not needed beforehand, because it will ask for pairing and
-PIN during BLE ini.
+Pairing of your LoRa radios is generally not needed beforehand, except on
+android, where you need to start the app only after successful pairing.
 
 If your android phone says "no BLE devices found" (see logcat output), you
-might need to uninstall an eventual app which used the LoRa radio before, and
-restart the phone.
+might need to unpair the devices and pair them again.
 
-On Linux you might need to restart the bluetooth service if you want to pair
-a different device (after already pairing a first one).
-
-To choose which app instance will use which device, set both name and address
-in [main.lisp](lisp/main.lisp), and set one app to `*device-1*` and the other
-to `*device-2*`.
+On Linux you might sometimes also need to unpair and pair again, if there are
+errors when trying to connect.
 
 
 

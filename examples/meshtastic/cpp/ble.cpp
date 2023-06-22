@@ -20,14 +20,18 @@ BLE::BLE(const QBluetoothUuid& uuid) : mainServiceUuid(uuid) {
 }
 
 void BLE::startDeviceDiscovery() {
+  connected = false;
+  scanned = false;
+  currentDevice = QBluetoothDeviceInfo();
   devices.clear();
+
   qDebug() << "scanning for devices...";
   discoveryAgent->start(QBluetoothDeviceDiscoveryAgent::LowEnergyMethod);
 }
 
 void BLE::addDevice(const QBluetoothDeviceInfo& device) {
   if (deviceFilter(device)) {
-    qDebug() << "device added:" << device.name() << device.address().toString();
+    qDebug() << "device added:" << device.name();
   }
 }
 
@@ -51,7 +55,7 @@ void BLE::scanServices() {
     return;
   }
   if (!currentDevice.isValid()) {
-    if (initialDeviceName.isNull()) {
+    if (initialDeviceName.isEmpty()) {
       currentDevice = devices.at(0);
     } else {
       for (auto device : qAsConst(devices)) {
@@ -64,7 +68,7 @@ void BLE::scanServices() {
   }
   services.clear();
   qDebug() << "connecting to device...";
-  if (controller && (previousAddress != currentDevice.address())) {
+  if (controller) {
     Q_EMIT deviceDisconnecting();
     controller->disconnectFromDevice();
     delete controller; controller = nullptr;
@@ -85,7 +89,6 @@ void BLE::scanServices() {
   }
 
   controller->connectToDevice();
-  previousAddress = currentDevice.address();
 }
 
 void BLE::setCurrentDevice(const QBluetoothDeviceInfo& device) {
@@ -160,8 +163,7 @@ void BLE::disconnectFromDevice() {
 }
 
 void BLE::deviceDisconnected() {
-  connected = false;
-  qDebug() << "disconnect from device";
+  qDebug() << "disconnected from device";
 }
 
 void BLE::deviceScanError(QBluetoothDeviceDiscoveryAgent::Error error) {

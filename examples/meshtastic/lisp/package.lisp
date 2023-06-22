@@ -1,8 +1,10 @@
 (defpackage :app
   (:use :cl :qml)
-  (:export))
+  (:export
+   #:load-settings
+   #:save-settings))
 
-(defpackage :radio
+(defpackage :lora
   (:use :cl :qml)
   (:local-nicknames (:pr :cl-protobufs)
                     (:me :cl-protobufs.meshtastic))
@@ -16,10 +18,11 @@
    #:*reading*
    #:*ready*
    #:*received*
-   #:*region*
    #:*remote-node*
+   #:*settings*
    #:channel-to-url
    #:start-config
+   #:start-device-discovery
    #:read-radio
    #:received-from-radio
    #:send-message
@@ -37,3 +40,12 @@
    #:change-state
    #:load-messages
    #:save-messages))
+
+(defpackage :radios
+  (:use :cl :qml)
+  (:export
+  #:*schedule-clear*
+  #:add-radio
+  #:change-radio
+  #:clear))
+

@@ -38,12 +38,12 @@ Q_SIGNALS:
 
 public Q_SLOTS:
   void startDeviceDiscovery();
+  void disconnectFromDevice();
 
   /*** </INTERFACE> *********************************************************/
 
   void scanServices();
   void connectToService(const QString&);
-  void disconnectFromDevice();
 
 private Q_SLOTS:
   // QBluetoothDeviceDiscoveryAgent related
@@ -62,7 +62,6 @@ private:
   void retryScan();
   QBluetoothDeviceDiscoveryAgent* discoveryAgent;
   QList<QLowEnergyService*> services;
-  QBluetoothAddress previousAddress;
   QLowEnergyController* controller = nullptr;
   bool connected = false;
   bool scanned = false;
