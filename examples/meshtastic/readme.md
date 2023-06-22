@@ -51,15 +51,15 @@ You currently need exactly 2 meshtastic radio devices, both should be running
 before you start the app. Both bluetooth and location needs to be enabled
 (coarse location permission is required on android for BLE to work).
 
-Pairing might sometimes require some playing around. If it asks for a PIN and
-your device doesn't have a display (like the RAK starter kit), just use
-`123456`.
+Pairing of your LoRa radios is generally not needed beforehand, the app will
+ask for pairing/PIN during BLE ini. If your device doesn't have a display, use
+`123456` as your PIN.
 
-Pairing of your LoRa radios is generally not needed beforehand, except on
-android, where you need to start the app only after successful pairing.
-
-If your android phone says "no BLE devices found" (see logcat output), you
-might need to unpair the devices and pair them again.
+Both on android and Linux it may occur that the devices are sometimes not
+found. It's still a mystery to me why this happens. I tried unpairing/pairing
+again, reinstall app or restart OS until it works. A generic bluetooth app like
+**nRF Connect** might help in those cases in order to see if the devices
+themselves work and are able to connect.
 
 On Linux you might sometimes also need to unpair and pair again, if there are
 errors when trying to connect.
