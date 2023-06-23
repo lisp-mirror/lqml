@@ -5,6 +5,7 @@
   (load-settings)
   (msg:load-messages)
   (q> |playing| ui:*loading* nil)
+  (q> |interactive| ui:*main-view* t)
   #+android
   (ensure-permissions :bluetooth-scan :bluetooth-connect) ; android >= 12
   (lora:start-device-discovery (getf lora:*settings* :device "")))

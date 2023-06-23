@@ -64,11 +64,11 @@
                        :payload (babel:string-to-octets text)))))
   (msg:add-message
    (list :text text
-         :sender (me:short-name (me:user *my-node-info*))
+         :sender (my-name)
          :me t
          :timestamp (timestamp-to-string)
          :mid msg:*message-id*
-         :ack-state (position :not-received msg:*states*))))
+         :ack-state (position :sending msg:*states*))))
 
 (defun read-radio ()
   "Triggers a read on the radio. Will call RECEIVED-FROM-RADIO on success."
@@ -103,6 +103,9 @@
     (when (= num (me:num info))
       (return (me:short-name (me:user info))))))
 
+(defun my-name ()
+  (me:short-name (me:user *my-node-info*)))
+
 (defun timestamp-to-string (&optional (secs (get-universal-time)))
   (multiple-value-bind (_ m h)
       (decode-universal-time secs)
@@ -126,10 +129,15 @@
                            :timestamp (timestamp-to-string))))
                    ;; for :ack-state (acknowledgement state)
                    (:routing-app
-                    (msg:change-state (case (me:routing.error-reason
-                                             (pr:deserialize-from-bytes 'me:routing payload))
-                                        (:none :received))
-                                      (me:request-id decoded))))))))
+                    (let ((state (me:routing.error-reason
+                                  (pr:deserialize-from-bytes 'me:routing payload))))
+                      (msg:change-state (case state
+                                          (:none
+                                           :received)
+                                          (t
+                                           (qlog "message state changed: ~A" state)
+                                           :not-received))
+                                        (me:request-id decoded)))))))))
           ;; my-info
           ((me:from-radio.has-my-info struct)
            (setf *my-node-info* (me:my-node-num (me:my-info struct))))
@@ -167,17 +175,25 @@
           ;; config-complete-id
           ((me:from-radio.has-config-complete-id struct)
            (when (= *config-id* (me:config-complete-id struct))
-             (qlater 'config-device)
              (q> |playing| ui:*busy* nil)
-             (qlog :config-complete *config-id*)))))
+             (qlog "config-complete id: ~A" *config-id*)
+             (let ((configured (getf *settings* :configured)))
+               (unless (find (my-name) configured :test 'string=)
+                 (setf (getf *settings* :configured)
+                       (cons (my-name) configured))
+                 (app:save-settings)
+                 (qlater 'config-device)))))))
   (setf *received* nil))
 
 (defun send-admin (admin-message)
   (send-to-radio
    (me:make-to-radio
     :packet (me:make-mesh-packet
+             :to (me:num *my-node-info*)
              :id (incf msg:*message-id*)
+             :hop-limit 3
              :want-ack t
+             :priority :reliable
              :decoded (me:make-data
                        :portnum :admin-app
                        :payload (pr:serialize-to-bytes admin-message)
@@ -188,7 +204,8 @@
                :set-channel (setf *my-channel* channel))))
 
 (defun config-device ()
-  "Absolut minimum necessary for sending text messages."
+  "Will be called once for every new device, in order to be able to
+  communicate on the same channel."
   ;; lora settings
   (send-admin 
    (me:make-admin-message
@@ -197,11 +214,18 @@
                         :use-preset t
                         :region (getf *settings* :region)
                         :hop-limit 3
-                        :tx-enabled t))))
+                        :tx-enabled t
+                        :tx-power 27))))
   ;; channel settings
   (set-channel (me:make-channel
-                :settings (me:make-channel-settings :psk (to-bytes (list 1)))
-                :role :primary)))
+                :settings (me:make-channel-settings
+                           :name "cl-meshtastic"
+                           :psk (to-bytes (list 1)))
+                :role :primary))
+  ;; device will reboot after changing settings
+  (qlog "waiting for reboot...")
+  (qsleep 20)
+  (qrun* (start-device-discovery (getf *settings* :device))))
 
 (defun channel-to-url (&optional channel)
   (let ((base64 (base64:usb8-array-to-base64-string

@@ -55,14 +55,11 @@ Pairing of your LoRa radios is generally not needed beforehand, the app will
 ask for pairing/PIN during BLE ini. If your device doesn't have a display, use
 `123456` as your PIN.
 
-Both on android and Linux it may occur that the devices are sometimes not
-found. It's still a mystery to me why this happens. I tried unpairing/pairing
-again, reinstall app or restart OS until it works. A generic bluetooth app like
-**nRF Connect** might help in those cases in order to see if the devices
-themselves work and are able to connect.
+It may occur that the devices are sometimes not found. For me it worked again
+after unpairing the devices. Remember to unpair them from all devices.
 
-On Linux you might sometimes also need to unpair and pair again, if there are
-errors when trying to connect.
+A generic bluetooth app like **nRF Connect** may help in order to see if the
+devices themselves work and are able to connect.
 
 
 

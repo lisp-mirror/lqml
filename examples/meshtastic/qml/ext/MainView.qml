@@ -24,10 +24,12 @@ Item {
 
   SwipeView {
     id: view
+    objectName: "main_view"
     y: header.height
     width: parent.width
     height: parent.height - header.height
     currentIndex: 1
+    interactive: false
 
     Ext.Groups {}
     Ext.Messages {}

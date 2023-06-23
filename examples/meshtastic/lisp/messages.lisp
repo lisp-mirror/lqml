@@ -2,7 +2,7 @@
 
 (defvar *messages*   nil)
 (defvar *message-id* 0)
-(defvar *states*     '(:not-received :out-there :received))
+(defvar *states*     '(:not-received :sending :received))
 
 (defun add-message (message &optional loading)
   "Adds passed MESSAGE (a PLIST) to both the QML item model and *MESSAGES*.
