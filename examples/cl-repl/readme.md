@@ -137,8 +137,8 @@ http://192.168.1.x:1701/all.zip
 
 
 
-iOS note (smart quotes)
------------------------
+iOS notes
+---------
 
 Smart punctuation (especially annoying with quotes in an app like this one) can
 only be disabled globally for the whole app, by putting this in the iOS section
@@ -146,6 +146,8 @@ of `app.pro`:
 ```
 DEFINES += DISABLE_SMART_QUOTES
 ```
+See also hack in file [lisp/upload-download](lisp/upload-download.lisp) needed
+for zip to work on iOS.
 
 
 
