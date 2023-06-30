@@ -16,9 +16,29 @@ Item {
       spacing: 5
       anchors.horizontalCenter: parent.horizontalCenter
 
-      Ext.MainIcon { source: "../img/group.png" }
-      Ext.MainIcon { source: "../img/message.png" }
-      Ext.MainIcon { source: "../img/radio.png" }
+      Ext.MainIcon {
+        source: "../img/group.png"
+
+        Rectangle {
+          objectName: "unread_messages"
+          width: 10
+          height: width
+          anchors.right: parent.right
+          anchors.top: parent.top
+          anchors.margins: 7
+          radius: width / 2
+          color: "#ff5f57"
+          visible: false
+        }
+      }
+
+      Ext.MainIcon {
+        source: "../img/message.png"
+      }
+
+      Ext.MainIcon {
+        source: "../img/radio.png"
+      }
     }
   }
 
@@ -31,9 +51,11 @@ Item {
     currentIndex: 1
     interactive: false
 
-    Ext.Groups {}
+    Ext.Group {}
     Ext.Messages {}
     Ext.Radios {}
+
+    onCurrentIndexChanged: Lisp.call("app:view-index-changed", currentIndex)
   }
 
   PageIndicator {

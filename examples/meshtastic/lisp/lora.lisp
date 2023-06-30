@@ -1,12 +1,15 @@
 (in-package :lora)
 
-(defvar *settings* (list :region :eu-868)) ; Europe 868 MHz
+(defvar *settings* (list :region :eu-868
+                         :modem-preset :long-fast))
 
 (defvar *my-channel*   nil)
 (defvar *channels*     nil)
 (defvar *my-node-info* nil)
 (defvar *node-infos*   nil)
+(defvar *receiver*     nil)
 (defvar *config-lora*  nil)
+(defvar *ble-names*    nil)
 
 ;;; header
 
@@ -34,6 +37,7 @@
 
 (defun start-device-discovery (&optional (name ""))
   (setf radios:*schedule-clear* t)
+  (setf *ble-names* nil)
   (qt:start-device-discovery qt:*ble* name)
   (q> |playing| ui:*busy* t))
 
@@ -56,19 +60,21 @@
    (me:make-to-radio
     :packet (me:make-mesh-packet
              :from (me:num *my-node-info*)
-             :to (me:num (first *node-infos*)) ; assumes just 2 radios (for now)
+             :to *receiver*
              :id msg:*message-id*
              :want-ack t
              :decoded (me:make-data
                        :portnum :text-message-app
                        :payload (babel:string-to-octets text)))))
   (msg:add-message
-   (list :text text
+   (list :receiver (node-to-name *receiver*)
          :sender (my-name)
-         :me t
-         :timestamp (timestamp-to-string)
-         :mid msg:*message-id*
-         :ack-state (position :sending msg:*states*))))
+         :timestamp (princ-to-string (get-universal-time)) ; STRING for JS
+         :hour (timestamp-to-hour)
+         :text text
+         :mid (princ-to-string msg:*message-id*)           ; STRING for JS
+         :ack-state (position :sending msg:*states*)
+         :me t)))
 
 (defun read-radio ()
   "Triggers a read on the radio. Will call RECEIVED-FROM-RADIO on success."
@@ -106,7 +112,7 @@
 (defun my-name ()
   (me:short-name (me:user *my-node-info*)))
 
-(defun timestamp-to-string (&optional (secs (get-universal-time)))
+(defun timestamp-to-hour (&optional (secs (get-universal-time)))
   (multiple-value-bind (_ m h)
       (decode-universal-time secs)
     (format nil "~D:~2,'0D" h m)))
@@ -114,6 +120,8 @@
 (defun process-received ()
   "Walks *RECEIVED* FROM-RADIOs and saves relevant data."
   (setf *received* (nreverse *received*))
+  (unless *ble-names*
+    (setf *ble-names* (qt:short-names qt:*ble*)))
   (dolist (struct *received*)
     (cond ((me:from-radio.has-packet struct)
            (let* ((packet (me:from-radio.packet struct))
@@ -123,10 +131,16 @@
                  (case (me:portnum decoded)
                    ;; text-message
                    (:text-message-app
-                    (msg:add-message
-                     (list :text (babel:octets-to-string payload)
-                           :sender (node-to-name (me:from packet))
-                           :timestamp (timestamp-to-string))))
+                    (let ((timestamp (get-universal-time)) ; or (me:rx-time packet) ?
+                          (mid (me:id packet)))
+                      (setf msg:*message-id* (max mid msg:*message-id*))
+                      (msg:add-message
+                       (list :receiver (my-name)
+                             :sender (node-to-name (me:from packet))
+                             :timestamp (princ-to-string timestamp) ; STRING for JS
+                             :hour (timestamp-to-hour timestamp)
+                             :text (babel:octets-to-string payload)
+                             :mid (princ-to-string mid)))))         ; STRING for JS
                    ;; for :ack-state (acknowledgement state)
                    (:routing-app
                     (let ((state (me:routing.error-reason
@@ -137,7 +151,7 @@
                                           (t
                                            (qlog "message state changed: ~A" state)
                                            :not-received))
-                                        (me:request-id decoded)))))))))
+                                        (princ-to-string (me:request-id decoded)))))))))) ; STRING for JS
           ;; my-info
           ((me:from-radio.has-my-info struct)
            (setf *my-node-info* (me:my-node-num (me:my-info struct))))
@@ -149,18 +163,26 @@
                  (setf *node-infos*
                        (nconc *node-infos* (list info))))
              (when radios:*schedule-clear*
-               (radios:clear))
+               (radios:clear)
+               (group:clear))
              (let ((name (me:short-name (me:user info)))
                    (current (= (me:num info)
-                               (me:num *my-node-info*))))
-               (radios:add-radio
-                (list :name name
-                      :hw-model (symbol-name (me:hw-model (me:user info)))
-                      :battery-level (me:battery-level (me:device-metrics info))
-                      :current current))
-               (when current
-                 (setf (getf *settings* :device) name))))
-                 (app:save-settings))
+                               (me:num *my-node-info*)))
+                   (metrics (me:device-metrics info)))
+               (unless current
+                 (group:add-person
+                  (list :radio-name name
+                        :custom-name (or (app:setting name :custom-name) "")
+                        :node-num (princ-to-string (me:num info)) ; STRING for JS
+                        :current (equal name (app:setting :latest-receiver)))))
+               (when (find name *ble-names* :test 'string=)
+                 (radios:add-radio
+                  (list :name name
+                        :hw-model (symbol-name (me:hw-model (me:user info)))
+                        :battery-level (if metrics (me:battery-level metrics) 0)
+                        :current current))
+                 (when current
+                   (app:change-setting :device name))))))
           ;; channel
           ((me:from-radio.has-channel struct)
            (let ((channel (me:channel struct)))
@@ -177,12 +199,12 @@
            (when (= *config-id* (me:config-complete-id struct))
              (q> |playing| ui:*busy* nil)
              (qlog "config-complete id: ~A" *config-id*)
-             (let ((configured (getf *settings* :configured)))
-               (unless (find (my-name) configured :test 'string=)
-                 (setf (getf *settings* :configured)
-                       (cons (my-name) configured))
-                 (app:save-settings)
-                 (qlater 'config-device)))))))
+             (unless (find (my-name) (app:setting :configured) :test 'string=)
+               (app:change-setting :configured (my-name) :cons t)
+               (qlater 'config-device))))
+          ;; rebooted
+          ((me:from-radio.has-rebooted struct)
+           (qlog "rebooted: ~A" (me:from-radio.rebooted)))))
   (setf *received* nil))
 
 (defun send-admin (admin-message)
@@ -203,29 +225,44 @@
   (send-admin (me:make-admin-message
                :set-channel (setf *my-channel* channel))))
 
-(defun config-device ()
-  "Will be called once for every new device, in order to be able to
-  communicate on the same channel."
-  ;; lora settings
+(defun change-lora-config ()
   (send-admin 
    (me:make-admin-message
     :set-config (me:make-config
                  :lora (me:make-config.lo-ra-config
                         :use-preset t
-                        :region (getf *settings* :region)
+                        :modem-preset (app:setting :modem-preset)
+                        :region (app:setting :region)
                         :hop-limit 3
                         :tx-enabled t
                         :tx-power 27))))
-  ;; channel settings
+  ;; device will reboot after changing lora config
+  (app:toast (tr "waiting for reboot..."))
+  (qsleep 5)
+  (q> |playing| ui:*busy* t)
+  (qsleep 20)
+  (start-device-discovery (app:setting :device)))
+
+(defun change-region (region) ; called from QML
+  (app:change-setting :region (app:kw region))
+  (qlater 'change-lora-config)
+  (values))
+
+(defun change-modem-preset (modem-preset) ; called from QML
+  (app:change-setting :modem-reset (app:kw modem-preset))
+  (qlater 'change-lora-config)
+  (values))
+
+(defun config-device ()
+  "Will be called once for every new device, in order to be able to
+  communicate on the same channel."
+  ;; channel settings for direct messages
   (set-channel (me:make-channel
                 :settings (me:make-channel-settings
-                           :name "cl-meshtastic"
-                           :psk (to-bytes (list 1)))
+                           :name "cl-app"            ; max 12 bytes
+                           :psk (to-bytes (list 1))) ; encrypted with fixed (known) key
                 :role :primary))
-  ;; device will reboot after changing settings
-  (qlog "waiting for reboot...")
-  (qsleep 20)
-  (qrun* (start-device-discovery (getf *settings* :device))))
+  (change-lora-config))
 
 (defun channel-to-url (&optional channel)
   (let ((base64 (base64:usb8-array-to-base64-string
@@ -244,3 +281,28 @@
       (if set
           (set-channel channel)
           channel))))
+
+(defun change-receiver (receiver) ; called from QML
+  (setf *receiver* (parse-integer receiver)) ; STRING because of JS
+  (app:change-setting :latest-receiver (node-to-name *receiver*))
+  (msg:receiver-changed)
+  (group:receiver-changed)
+  (values))
+
+(defun ini ()
+  (setf *receiver* (app:setting :latest-receiver))
+  ;; populate and set current region, modem-preset
+  (q> |model| ui:*region*
+      (cons "-" (rest (mapcar 'symbol-name (pr:enum-keywords 'me:config.lo-ra-config.region-code)))))
+  (q> |model| ui:*modem*
+      (mapcar (lambda (kw) (string-downcase (symbol-name kw)))
+              (pr:enum-keywords 'me:config.lo-ra-config.modem-preset)))
+  (x:when-it (app:setting :region)
+    (q> |currentIndex| ui:*region*
+        (q! |indexOfValue| ui:*region*
+            (symbol-name x:it))))
+  (x:when-it (app:setting :modem-preset)
+    (q> |currentIndex| ui:*modem*
+        (q! |indexOfValue| ui:*modem*
+            (string-downcase (symbol-name x:it))))))
+

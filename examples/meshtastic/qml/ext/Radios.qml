@@ -1,11 +1,38 @@
 import QtQuick 2.15
+import QtQuick.Controls 2.15
 import "." as Ext
 
 Rectangle {
+  id: rect
   color: "#b3cde3"
+
+  Row {
+    id: rowRegion
+    padding: 9
+    spacing: 9
+
+    Ext.ComboBox {
+      id: region
+      objectName: "region"
+      width: 110
+      font.pixelSize: 16
+      font.family: fontText.name
+
+      onActivated: Lisp.call("lora:change-region", currentIndex ? currentText : "")
+    }
+
+    Text {
+      height: region.height
+      font.pixelSize: 16
+      font.family: fontText.name
+      verticalAlignment: Text.AlignVCenter
+      text: qsTr("region")
+    }
+  }
 
   ListView {
     id: view
+    anchors.topMargin: rowRegion.height
     anchors.fill: parent
     anchors.margins: 9
     spacing: 9
@@ -53,8 +80,8 @@ Rectangle {
         Text {
           anchors.centerIn: parent
           font.pixelSize: 12
-          font.bold: true
-          font.family: fontMono.name
+          font.family: fontText.name
+          font.weight: Font.DemiBold
           color: "black"
           text: model.name
         }
@@ -63,8 +90,9 @@ Rectangle {
       Text {
         x: 58
         anchors.verticalCenter: parent.verticalCenter
-        font.pixelSize: 16
+        font.pixelSize: 18
         font.family: fontText.name
+        font.weight: Font.DemiBold
         color: "white"
         text: model.hwModel
       }

@@ -25,6 +25,14 @@ QVariant QT::startDeviceDiscovery(const QVariant& vName) {
   return vName;
 }
 
+QVariant QT::shortNames() {
+  QVariantList names;
+  for (auto device : qAsConst(ble->devices)) {
+    names << device.name().right(4);
+  }
+  return names;
+}
+
 QVariant QT::read2() {
   ble->read();
   return QVariant();

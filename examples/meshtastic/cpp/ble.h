@@ -38,12 +38,12 @@ Q_SIGNALS:
 
 public Q_SLOTS:
   void startDeviceDiscovery();
-  void disconnectFromDevice();
 
   /*** </INTERFACE> *********************************************************/
 
   void scanServices();
   void connectToService(const QString&);
+  void disconnectFromDevice();
 
 private Q_SLOTS:
   // QBluetoothDeviceDiscoveryAgent related

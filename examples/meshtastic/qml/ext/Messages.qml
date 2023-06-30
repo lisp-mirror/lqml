@@ -7,6 +7,7 @@ Rectangle {
 
   ListView {
     id: view
+    objectName: "message_view"
     anchors.fill: parent
     anchors.bottomMargin: rectEdit.height + 5
     anchors.margins: 5
@@ -22,13 +23,10 @@ Rectangle {
 
     // hack to define all model key _types_
     ListElement {
-      text: ""; sender: ""; me: true; timestamp: ""; mid: 0; ackState: 0
+      receiver: ""; sender: ""; senderName: ""; timestamp: ""; hour: ""; text: ""; mid: ""; ackState: 0; me: true
     }
 
-    function addMessage(message) {
-      append(message)
-      view.positionViewAtEnd()
-    }
+    function addMessage(message) { append(message) }
 
     function changeState(state, mid) {
       for (var i = count - 1; i >= 0; i--) {
@@ -55,12 +53,12 @@ Rectangle {
       Row {
         id: rowSender
         padding: text.padding
-        spacing: padding
+        spacing: padding - 2
 
         AnimatedImage {
           id: semaphore
           playing: false
-          y: 2
+          y: 3
           width: 8
           height: width
           source: "../img/semaphore.gif"
@@ -70,11 +68,10 @@ Rectangle {
 
         Text {
           id: sender
-          font.pixelSize: 10
-          font.bold: true
-          font.family: fontMono.name
+          font.pixelSize: 11
+          font.family: fontText.name
           color: "#8B0000"
-          text: model.sender
+          text: model.senderName ? model.senderName : model.sender
         }
       }
 
@@ -82,16 +79,16 @@ Rectangle {
         id: timestamp
         x: delegate.width - contentWidth - text.padding
         y: text.padding
-        font.pixelSize: 10
+        font.pixelSize: 11
         font.family: fontText.name
         color: "#505050"
-        text: model.timestamp
+        text: model.hour
       }
 
       Text {
         id: text
         y: sender.contentHeight
-        width: main.width
+        width: main.width - 10
         padding: 5
         wrapMode: Text.Wrap
         font.pixelSize: 18
@@ -107,7 +104,7 @@ Rectangle {
     anchors.bottom: parent.bottom
     width: parent.width
     height: edit.paintedHeight + 14
-    border.width: 2
+    border.width: 3
     border.color: edit.focus ? "dodgerblue" : "#c0c0c0"
     radius: 12
 

@@ -24,9 +24,11 @@ Item {
     width: headerHeight
     height: width
     anchors.right: parent.right
+    visible: false // currently not needed
   }
 
   // shown while loading app (may take a while)
+
   Item {
     visible: loading.visible
     anchors.fill: parent
@@ -67,7 +69,8 @@ Item {
     playing: false
   }
 
-  FontLoader { id: fontText;  source: "fonts/tahoma.ttf" }
-  FontLoader { id: fontMono;  source: "fonts/Hack-Regular.ttf" }
-  FontLoader { id: fontMono2; source: "fonts/Hack-Bold.ttf" }
+  Ext.Toast {}
+
+  FontLoader { id: fontText;  source: "fonts/Ubuntu.ttf" }
+  FontLoader { id: fontText2; source: "fonts/Ubuntu-Medium.ttf" }
 }

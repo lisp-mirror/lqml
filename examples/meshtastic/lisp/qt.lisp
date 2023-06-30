@@ -5,6 +5,7 @@
    #:ini
    #:start-device-discovery
    #:read*
+   #:short-names
    #:write*))
 
 (in-package :qt)

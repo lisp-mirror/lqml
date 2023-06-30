@@ -95,7 +95,6 @@ void BLE::setCurrentDevice(const QBluetoothDeviceInfo& device) {
   if (device != currentDevice) {
     currentDevice = device;
     scanned = false;
-    retryScan();
   }
 }
 
@@ -151,7 +150,6 @@ void BLE::retryScan() {
 
 void BLE::errorReceived(QLowEnergyController::Error) {
   qDebug() << "BLE error: " << controller->errorString();
-  retryScan();
 }
 
 void BLE::disconnectFromDevice() {
@@ -176,6 +174,5 @@ void BLE::deviceScanError(QBluetoothDeviceDiscoveryAgent::Error error) {
            discoveryAgent->metaObject()->indexOfEnumerator("Error"));
     qDebug() << "error: " + QLatin1String(qme.valueToKey(error));
   }
-  retryScan();
 }
 

@@ -2,8 +2,9 @@
 Info
 ----
 
-Please note: this is **WIP!** It's only a 'proof-of-concept' version.
+Please note: this is **WIP!**
 
+Currently it can be used to send direct messages between any number of radios.
 Eventually it will (hopefully) catch up with the official app versions.
  
 
@@ -34,6 +35,9 @@ work.
 You will see a json output of all data sent/received. It simply uses the
 `print-json` convenience function from cl-protobufs.
 
+The message db uses **sqlite**, but in a lispy manner, storing basically just a
+plist for every message.
+
 
 
 Tested
@@ -42,24 +46,30 @@ Tested
 Tested on Linux, macOS, android, iOS. The macOS version shows an ECL exception
 during BLE ini, but works nevertheless.
 
+Since this is WIP, it may currently not work on all platforms (e.g. mobile).
+
 
 
 How to use cl-meshtastic
 ------------------------
 
-You currently need exactly 2 meshtastic radio devices, both should be running
-before you start the app. Both bluetooth and location needs to be enabled
-(coarse location permission is required on android for BLE to work).
+Your radio needs to be turned on and bluetooth needs to be enabled before you
+start the app.
+
+On android coarse location permission is required for BLE to work.
 
 Pairing of your LoRa radios is generally not needed beforehand, the app will
 ask for pairing/PIN during BLE ini. If your device doesn't have a display, use
 `123456` as your PIN.
 
 It may occur that the devices are sometimes not found. For me it worked again
-after unpairing the devices. Remember to unpair them from all devices.
+after unpairing the devices. Remember to unpair them from all computers/mobile
+devices
 
 A generic bluetooth app like **nRF Connect** may help in order to see if the
 devices themselves work and are able to connect.
+
+See also [readme-usage](readme-usage.md).
 
 
 

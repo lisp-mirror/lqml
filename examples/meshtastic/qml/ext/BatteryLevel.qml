@@ -2,12 +2,12 @@ import QtQuick 2.15
 
 Rectangle {
   anchors.verticalCenter: parent.verticalCenter
-  width: 10
-  height: 25
+  width: 12
+  height: 22
   color: "#f0f0f0"
   radius: 2
   border.width: 1
-  border.color: "#505050"
+  border.color: "#808080"
 
   property int level: 0
 
@@ -24,9 +24,9 @@ Rectangle {
     x: -4 - paintedWidth
     height: parent.height
     verticalAlignment: Text.AlignVCenter
-    font.pixelSize: 10
-    font.bold: true
-    font.family: fontMono.name
+    font.pixelSize: 12
+    font.family: fontText.name
+    font.weight: Font.DemiBold
     color: "white"
     text: level + "%"
   }
