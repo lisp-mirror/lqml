@@ -377,6 +377,7 @@ cl_object from_qvariant(const QVariant& var) {
       case QMetaType::Double:     l_obj = ecl_make_doublefloat(var.toDouble());         break;
       case QMetaType::Int:        l_obj = ecl_make_integer(var.toInt());                break;
       case QMetaType::UInt:       l_obj = ecl_make_unsigned_integer(var.toUInt());      break;
+      case QMetaType::LongLong:   l_obj = ecl_make_integer(var.toLongLong());           break;
       case QMetaType::ULongLong:  l_obj = ecl_make_unsigned_integer(var.toULongLong()); break;
       case QMetaType::QByteArray: l_obj = from_qbytearray(var.toByteArray());           break;
       case QMetaType::QChar:      l_obj = from_qchar(var.toChar());                     break;
