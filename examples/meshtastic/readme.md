@@ -36,7 +36,10 @@ You will see a json output of all data sent/received. It simply uses the
 `print-json` convenience function from cl-protobufs.
 
 The message db uses **sqlite**, but in a lispy manner, storing basically just a
-plist for every message.
+plist for every message. The reason I chose Qt instead of cl-sqlite is mobile:
+Qt comes with its own version, which is pulled in automatially, so one doesn't
+need to care about the OS limitations or indirect requirements. Additionally,
+cffi (dependency of cl-sqlite) currently needs a small hack to work on mobile.
 
 
 

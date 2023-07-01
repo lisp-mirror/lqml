@@ -1,4 +1,4 @@
-QT          += bluetooth
+QT          += bluetooth sql
 TEMPLATE    = lib
 CONFIG      += c++17 plugin release no_keywords
 DEFINES     += PLUGIN

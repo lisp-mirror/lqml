@@ -51,7 +51,7 @@
    #:set-unread))
 
 (defpackage :db
-  (:use :cl :sqlite)
+  (:use :cl)
   (:export
    #:ini
    #:load-message

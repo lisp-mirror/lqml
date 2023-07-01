@@ -1,21 +1,23 @@
 (defpackage :qt
   (:use :cl :qml)
   (:export
-   #:*ble*
+   #:*cpp*
    #:ini
+   #:ini-db
    #:start-device-discovery
    #:read*
    #:short-names
+   #:sql-query
    #:write*))
 
 (in-package :qt)
 
-(defvar *ble* nil)
+(defvar *cpp* nil)
 
 (defun ini ()
-  (setf *ble*
+  (setf *cpp*
         #+qt-plugin (qload-c++ "cpp/qt")
         #-qt-plugin (qfind-child nil "QT"))
   (let ((*package* (find-package :qt)))
-    (define-qt-wrappers *ble*)))
+    (define-qt-wrappers *cpp*)))
 

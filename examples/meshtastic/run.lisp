@@ -7,9 +7,7 @@
 (push (merge-pathnames "./")
       asdf:*central-registry*)
 
-(asdf:load-system :uiop)
 (asdf:load-system :cl-base64)
-(asdf:load-system :sqlite)
 (asdf:load-system :trivial-package-local-nicknames)
 
 ;; may take very long on mobile devices

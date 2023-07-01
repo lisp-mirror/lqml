@@ -16,7 +16,7 @@
     (x:when-it (app:setting (getf message :sender) :custom-name)
       (setf (getf message :sender-name) x:it)))
   (unless loading
-    (db:save-message (getf message :mid)
+    (db:save-message (parse-integer (getf message :mid))
                      (parse-integer (getf message (if (getf message :me) :receiver :sender))
                                     :radix 16)
                      (prin1-to-string message)))
@@ -43,8 +43,8 @@
 (defun show-messages ()
   (x:when-it (app:setting :latest-receiver)
     (q! |clear| ui:*messages*)
-    (dolist (row (db:load-messages (parse-integer x:it :radix 16)))
-      (add-message (read-from-string (first row)) t))
+    (dolist (message (db:load-messages (parse-integer x:it :radix 16)))
+      (add-message (read-from-string message) t))
     (q! |positionViewAtEnd| ui:*message-view*)))
 
 (defun receiver-changed ()

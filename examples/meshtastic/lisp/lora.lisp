@@ -38,7 +38,7 @@
 (defun start-device-discovery (&optional (name ""))
   (setf radios:*schedule-clear* t)
   (setf *ble-names* nil)
-  (qt:start-device-discovery qt:*ble* name)
+  (qt:start-device-discovery qt:*cpp* name)
   (q> |playing| ui:*busy* t))
 
 (defun start-config ()
@@ -56,6 +56,8 @@
 (defun send-message (text)
   "Sends TEXT to radio and adds it to QML item model."
   (incf msg:*message-id*)
+  (when (stringp *receiver*)
+    (setf *receiver* (name-to-node *receiver*)))
   (send-to-radio
    (me:make-to-radio
     :packet (me:make-mesh-packet
@@ -78,15 +80,15 @@
 
 (defun read-radio ()
   "Triggers a read on the radio. Will call RECEIVED-FROM-RADIO on success."
-  (qrun* (qt:read* qt:*ble*)))
+  (qrun* (qt:read* qt:*cpp*)))
 
 (defun send-to-radio (to-radio)
   "Sends passed TO-RADIO, preceded by a header."
   (pr:print-json to-radio)
   (let ((bytes (pr:serialize-to-bytes to-radio)))
     (qrun*
-     (qt:write* qt:*ble* (header (length bytes)))
-     (qt:write* qt:*ble* bytes))))
+     (qt:write* qt:*cpp* (header (length bytes)))
+     (qt:write* qt:*cpp* bytes))))
 
 (defun received-from-radio (bytes &optional notified) ; called from Qt
   (if notified
@@ -109,6 +111,11 @@
     (when (= num (me:num info))
       (return (me:short-name (me:user info))))))
 
+(defun name-to-node (name)
+  (dolist (info *node-infos*)
+    (when (string= name (me:short-name (me:user info)))
+      (return (me:num info)))))
+
 (defun my-name ()
   (me:short-name (me:user *my-node-info*)))
 
@@ -121,7 +128,7 @@
   "Walks *RECEIVED* FROM-RADIOs and saves relevant data."
   (setf *received* (nreverse *received*))
   (unless *ble-names*
-    (setf *ble-names* (qt:short-names qt:*ble*)))
+    (setf *ble-names* (qt:short-names qt:*cpp*)))
   (dolist (struct *received*)
     (cond ((me:from-radio.has-packet struct)
            (let* ((packet (me:from-radio.packet struct))
@@ -201,10 +208,7 @@
              (qlog "config-complete id: ~A" *config-id*)
              (unless (find (my-name) (app:setting :configured) :test 'string=)
                (app:change-setting :configured (my-name) :cons t)
-               (qlater 'config-device))))
-          ;; rebooted
-          ((me:from-radio.has-rebooted struct)
-           (qlog "rebooted: ~A" (me:from-radio.rebooted)))))
+               (qlater 'config-device))))))
   (setf *received* nil))
 
 (defun send-admin (admin-message)
@@ -249,7 +253,7 @@
   (values))
 
 (defun change-modem-preset (modem-preset) ; called from QML
-  (app:change-setting :modem-reset (app:kw modem-preset))
+  (app:change-setting :modem-preset (app:kw modem-preset))
   (qlater 'change-lora-config)
   (values))
 

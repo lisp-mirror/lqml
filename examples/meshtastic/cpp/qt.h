@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QtCore>
+#include <QSqlDatabase>
 
 #ifdef Q_CC_MSVC
 #define LIB_EXPORT __declspec(dllexport)
@@ -24,9 +25,14 @@ public:
   Q_INVOKABLE QVariant read2();
   Q_INVOKABLE QVariant write2(const QVariant&);
 
+  // SQLite
+  Q_INVOKABLE QVariant iniDb(const QVariant&);
+  Q_INVOKABLE QVariant sqlQuery(const QVariant&, const QVariant&);
+
   QT();
 
   BLE_ME* ble;
+  QSqlDatabase db;
 };
 
 QT_END_NAMESPACE
