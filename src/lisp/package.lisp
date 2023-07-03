@@ -54,6 +54,7 @@
    #:qversion
    #:qt-object
    #:qt-object-p
+   #:qto-utf8
    #:reload
    #:root-item
    #:set-clipboard-text

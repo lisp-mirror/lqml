@@ -43,6 +43,7 @@ void iniCLFunctions() {
   DEFUN ("qfind-child",             qfind_child,             2)
   DEFUN ("%qfind-children",         qfind_children2,         3)
   DEFUN ("qfrom-utf8",              qfrom_utf8,              1)
+  DEFUN ("qto-utf8",                qto_utf8,                1)
   DEFUN ("%qinvoke-method",         qinvoke_method2,         3)
   DEFUN ("%qload-c++",              qload_cpp,               2)
   DEFUN ("%qlog",                   qlog2,                   1)
@@ -332,6 +333,15 @@ cl_object qfrom_utf8(cl_object l_ba) {
   /// Returns the BYTE-ARRAY (vector of octets) converted using
   /// QString::fromUtf8().
   cl_object l_ret = from_qstring(QString::fromUtf8(toQByteArray(l_ba)));
+  ecl_return1(ecl_process_env(), l_ret);
+}
+
+cl_object qto_utf8(cl_object l_str) {
+  /// args: (string)
+  /// Returns the STRING converted to a vector of octets using
+  /// QString::toUtf8(). Use this function instead of CL BABEL to correctly
+  /// convert a QString (you got from Qt).
+  cl_object l_ret = from_qbytearray(toQString(l_str).toUtf8());
   ecl_return1(ecl_process_env(), l_ret);
 }
 

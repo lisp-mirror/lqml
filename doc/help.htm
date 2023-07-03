@@ -255,6 +255,13 @@
   Similar to SLEEP, but continuing to process Qt events.
 
 
+<b>qto-utf8 (string)</b>
+
+  Returns the STRING converted to a vector of octets using
+  QString::toUtf8(). Use this function instead of CL BABEL to correctly
+  convert a QString (you got from Qt).
+
+
 <b>qversion ()</b>
 
   Returns the LQML version number as 'year.month.counter'. The second
