@@ -4,6 +4,7 @@
   (:use :cl)
   (:export
    #:*busy*
+   #:*edit*
    #:*group*
    #:*loading*
    #:*main-view*
@@ -18,6 +19,7 @@
 (in-package :ui)
 
 (defparameter *busy*            "busy")
+(defparameter *edit*            "edit")
 (defparameter *group*           "group")
 (defparameter *loading*         "loading")
 (defparameter *main-view*       "main_view")

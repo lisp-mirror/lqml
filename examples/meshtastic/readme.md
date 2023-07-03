@@ -36,10 +36,12 @@ You will see a json output of all data sent/received. It simply uses the
 `print-json` convenience function from cl-protobufs.
 
 The message db uses **sqlite**, but in a lispy manner, storing basically just a
-plist for every message. The reason I chose Qt instead of cl-sqlite is mobile:
-Qt comes with its own version, which is pulled in automatially, so one doesn't
-need to care about the OS limitations or indirect requirements. Additionally,
-cffi (dependency of cl-sqlite) currently needs a small hack to work on mobile.
+plist for every message.
+
+The reason I chose Qt qsqlite over cl-sqlite is mobile: Qt comes with its own
+version, which is pulled in automatically, so one doesn't need to care about
+the OS limitations or indirect requirements. Additionally, cffi (as a
+dependency of cl-sqlite) currently needs a small hack to even work on mobile.
 
 
 
@@ -67,7 +69,7 @@ ask for pairing/PIN during BLE ini. If your device doesn't have a display, use
 
 It may occur that the devices are sometimes not found. For me it worked again
 after unpairing the devices. Remember to unpair them from all computers/mobile
-devices
+devices.
 
 A generic bluetooth app like **nRF Connect** may help in order to see if the
 devices themselves work and are able to connect.

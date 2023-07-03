@@ -110,6 +110,7 @@ Rectangle {
 
     TextArea {
       id: edit
+      objectName: "edit"
       anchors.fill: parent
       textFormat: TextEdit.PlainText
       font.pixelSize: 18

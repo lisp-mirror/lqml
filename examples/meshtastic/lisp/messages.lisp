@@ -9,7 +9,7 @@
                   (string= user (getf message :sender))))))
 
 (defun add-message (message &optional loading)
-  "Adds passed MESSAGE (a PLIST) to both the QML item model and *MESSAGES*.
+  "Adds passed MESSAGE (a PLIST) to the QML item model and saves it to the DB.
   The model keys are:
   :receiver :sender :sender-name :timestamp :hour :text :mid :ack-state :me"
   (unless (or loading (getf message :me))

@@ -67,7 +67,7 @@
              :want-ack t
              :decoded (me:make-data
                        :portnum :text-message-app
-                       :payload (babel:string-to-octets text)))))
+                       :payload (qto-utf8 text)))))
   (msg:add-message
    (list :receiver (node-to-name *receiver*)
          :sender (my-name)
@@ -146,7 +146,7 @@
                              :sender (node-to-name (me:from packet))
                              :timestamp (princ-to-string timestamp) ; STRING for JS
                              :hour (timestamp-to-hour timestamp)
-                             :text (babel:octets-to-string payload)
+                             :text (qfrom-utf8 payload)
                              :mid (princ-to-string mid)))))         ; STRING for JS
                    ;; for :ack-state (acknowledgement state)
                    (:routing-app
@@ -276,7 +276,7 @@
           (string-right-trim "=" (substitute #\- #\+ (substitute #\_ #\/ base64))))))
 
 (defun url-to-channel (url &optional (set t))
-  (let ((base64 (+ 2 (subseq "/#" url))))
+  (let ((base64 (subseq url (+ 2 (search "/#" url)))))
     ;; re-add padding
     (setf base64 (x:cc base64
                        (make-string (mod (length base64) 4) :initial-element #\=)))
@@ -287,7 +287,7 @@
           channel))))
 
 (defun change-receiver (receiver) ; called from QML
-  (setf *receiver* (parse-integer receiver)) ; STRING because of JS
+  (setf *receiver* (parse-integer receiver)) ; STRING for JS
   (app:change-setting :latest-receiver (node-to-name *receiver*))
   (msg:receiver-changed)
   (group:receiver-changed)
