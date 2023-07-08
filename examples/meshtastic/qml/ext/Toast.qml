@@ -11,11 +11,12 @@ Rectangle {
   color: "#303030"
   border.width: 2
   border.color: "white"
-  radius: height / 2
+  radius: Math.min(25, height / 2)
   opacity: 0
   visible: false
 
-  function message(text) { // called from Lisp
+  function message(text, seconds) { // called from Lisp
+    pause.duration = 1000 * seconds
     toast.visible = true
     msg.text = text
     anim.start()
@@ -46,6 +47,7 @@ Rectangle {
     }
 
     PauseAnimation {
+      id: pause
       duration: 3000
     }
 

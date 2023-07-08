@@ -7,6 +7,7 @@
   (qjs |addPerson| ui:*group* person))
 
 (defun clear ()
+  (setf lora:*schedule-clear* nil)
   (q! |clear| ui:*group*))
 
 (defun radio-names ()

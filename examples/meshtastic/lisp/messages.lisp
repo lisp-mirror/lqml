@@ -45,9 +45,64 @@
     (q! |clear| ui:*messages*)
     (dolist (message (db:load-messages (parse-integer x:it :radix 16)))
       (add-message (read-from-string message) t))
-    (q! |positionViewAtEnd| ui:*message-view*)))
+    (qsingle-shot 100 (lambda () (q! |positionViewAtEnd| ui:*message-view*)))))
 
 (defun receiver-changed ()
   (qsleep 0.1)
   (q> |currentIndex| ui:*main-view* 1) ; 'Messages'
   (show-messages))
+
+(defun check-utf8-length (text) ; called from QML
+  "Checks the actual number of bytes to send (e.g. an emoji is 4 utf8 bytes),
+  because we can't exceed 234 bytes, which will give 312 bytes encoded protobuf
+  payload."
+  (let ((len (length (qto-utf8 text)))
+        (too-long (q< |tooLong| ui:*edit*)))
+    (cond ((and (not too-long)
+                (> len 234))
+           (q> |tooLong| ui:*edit* t))
+          ((and too-long
+                (<= len 234))
+           (q> |tooLong| ui:*edit* nil))))
+  (values))
+
+(defun message-press-and-hold (text) ; called from QML
+  (set-clipboard-text text)
+  (app:toast (tr "message copied") 2)
+  (values))
+
+(defun find-clicked ()
+  (let ((show (not (q< |visible| ui:*find-text*))))
+    (q> |visible| ui:*find-text* show)
+    (if show
+        (progn
+          (q! |selectAll| ui:*find-text*)
+          (q! |forceActiveFocus| ui:*find-text*))
+        (q! |clear| ui:*find-text*)
+        (clear-find))))
+
+(defun find-text (text)
+  (unless (x:empty-string text)
+    (qjs |clearFind| ui:*messages*)
+    (qjs |find| ui:*messages* text)))
+
+(defun clear-find ()
+  (qjs |clearFind| ui:*messages*)
+  (qlater (lambda () (qjs |positionViewAtEnd| ui:*message-view*))))
+
+(defun highlight-term (text term)
+  "Highlights TERM in red, returns NIL if TERM is not found."
+  (let ((len (length term))
+        found)
+    (with-output-to-string (s)
+      (do ((e (search term text :test 'string-equal)
+              (search term text :test 'string-equal :start2 (+ e len)))
+           (b 0 (+ e len)))
+          ((not e) (if found
+                       (write-string (subseq text b) s)
+                       (return-from highlight-term)))
+        (setf found t)
+        (write-string (subseq text b e) s)
+        (format s "<font color='red'>~A</font>"
+                (subseq text e (+ e len)))))))
+

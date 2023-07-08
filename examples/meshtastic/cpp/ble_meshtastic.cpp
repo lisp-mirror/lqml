@@ -92,7 +92,7 @@ void BLE_ME::searchCharacteristics() {
   }
 
   if (toRadio.isValid() && fromRadio.isValid() && fromNum.isValid()) {
-    ecl_fun("lora:set-ready");
+    ecl_fun("lora:set-ready", currentDevice.name().right(4));
   }
 }
 
@@ -151,7 +151,7 @@ void BLE_ME::disconnecting() {
     // disable notifications
     mainService->writeDescriptor(notifications, QByteArray::fromHex("0000"));
   }
-  ecl_fun("lora:set-ready", false);
+  ecl_fun("lora:set-ready", "-", false);
   delete mainService; mainService = nullptr;
 }
 

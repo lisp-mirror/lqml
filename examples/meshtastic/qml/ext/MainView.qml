@@ -17,6 +17,7 @@ Item {
       anchors.horizontalCenter: parent.horizontalCenter
 
       Ext.MainIcon {
+        objectName: "group_icon"
         source: "../img/group.png"
 
         Rectangle {
@@ -33,17 +34,19 @@ Item {
       }
 
       Ext.MainIcon {
+        objectName: "message_icon"
         source: "../img/message.png"
       }
 
       Ext.MainIcon {
+        objectName: "radio_icon"
         source: "../img/radio.png"
       }
     }
   }
 
   SwipeView {
-    id: view
+    id: swipeView
     objectName: "main_view"
     y: header.height
     width: parent.width
@@ -61,8 +64,8 @@ Item {
   PageIndicator {
     id: control
     y: header.height - 12
-    count: view.count
-    currentIndex: view.currentIndex
+    count: swipeView.count
+    currentIndex: swipeView.currentIndex
     anchors.horizontalCenter: parent.horizontalCenter
 
     delegate: Rectangle {

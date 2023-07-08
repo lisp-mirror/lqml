@@ -107,8 +107,10 @@ Rectangle {
         anchors.fill: parent
 
         onClicked: {
-          view.currentIndex = index
-          Lisp.call("radios:change-radio", model.name)
+          if (index > 0) { // current radio is 0
+            view.currentIndex = index
+            Lisp.call("radios:change-radio", model.name)
+          }
         }
       }
     }

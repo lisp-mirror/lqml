@@ -6,12 +6,12 @@ import "ext/" as Ext
 Item {
   id: main
   objectName: "main"
-  width: 300
-  height: 500
+  width: 350
+  height: 550
 
   property double headerHeight: 48
 
-  Ext.MainView {}
+  Ext.MainView { id: view }
 
   Image {
     source: "img/logo-128.png"
@@ -20,11 +20,16 @@ Item {
   }
 
   Image {
-    source: "img/settings.png"
+    objectName: "find"
+    source: "img/find.png"
     width: headerHeight
     height: width
     anchors.right: parent.right
-    visible: false // currently not needed
+
+    MouseArea {
+      anchors.fill: parent
+      onClicked: Lisp.call("msg:find-clicked")
+    }
   }
 
   // shown while loading app (may take a while)

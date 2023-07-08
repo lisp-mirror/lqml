@@ -15,10 +15,21 @@
   (ensure-permissions :bluetooth-scan :bluetooth-connect) ; android >= 12
   (lora:start-device-discovery (or (setting :device) "")))
 
-(defun view-index-changed (index)
-  (when (and (= 1 index) ; 'Messages'
+(defun view-index-changed (index) ; called from QML
+  (when (and (= 1 index)
              (not (app:setting :latest-receiver)))
-    (q> |currentIndex| ui:*main-view* 0))) ; 'Group'
+    (q> |currentIndex| ui:*main-view* 0))
+  (q> |visible| ui:*find* (= 1 index))
+  (values))
+
+(defun icon-press-and-hold (name) ; called from QML
+  (cond ((string= ui:*radio-icon* name)
+         ;; force update devices
+         (lora:start-device-discovery (or (setting :device) "")))
+        ((string= ui:*group-icon* name)
+         ;; force update nodes
+         (lora:start-config)))
+  (values))
 
 ;;; settings
 
@@ -62,7 +73,7 @@
 
 ;;; toast
 
-(defun toast (message)
-  (qjs |message| ui:*toast* message))
+(defun toast (message &optional (seconds 3))
+  (qjs |message| ui:*toast* message seconds))
 
 (qlater 'ini)

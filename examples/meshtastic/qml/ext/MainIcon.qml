@@ -8,6 +8,7 @@ Image {
 
   MouseArea {
     anchors.fill: parent
-    onClicked: view.currentIndex = parent.Positioner.index
+    onClicked: swipeView.currentIndex = parent.Positioner.index
+    onPressAndHold: Lisp.call("app:icon-press-and-hold", parent.objectName)
   }
 }

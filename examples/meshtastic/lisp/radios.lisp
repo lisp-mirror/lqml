@@ -1,7 +1,5 @@
 (in-package :radios)
 
-(defvar *schedule-clear* nil)
-
 (defun add-radio (radio)
   "Adds passed RADIO (a PLIST) to QML item model.
   The model keys are:
@@ -9,10 +7,14 @@
   (qjs |addRadio| ui:*radios* radio))
 
 (defun clear ()
-  (setf *schedule-clear* nil)
+  (setf lora:*schedule-clear* nil)
   (q! |clear| ui:*radios*))
 
 (defun change-radio (name) ; called from QML
   (qlater (lambda () (lora:start-device-discovery name)))
   (values))
+
+(defun reset-configured ()
+  ;; TODO: add in UI settings
+  (app:change-setting :configured nil))
 

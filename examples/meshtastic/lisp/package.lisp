@@ -2,6 +2,7 @@
   (:use :cl :qml)
   (:export
    #:change-setting
+   #:icon-press-and-hold
    #:ini
    #:load-settings
    #:save-settings
@@ -26,6 +27,7 @@
    #:*received*
    #:*receiver*
    #:*remote-node*
+   #:*schedule-clear*
    #:*settings*
    #:change-receiver
    #:change-region
@@ -68,14 +70,17 @@
    #:*states*
    #:add-message
    #:change-state
+   #:check-utf8-length
+   #:clear-find
+   #:find-text
+   #:message-press-and-hold
    #:receiver-changed
    #:show-messages))
 
 (defpackage :radios
   (:use :cl :qml)
   (:export
-  #:*schedule-clear*
-  #:add-radio
-  #:change-radio
-  #:clear))
+   #:add-radio
+   #:change-radio
+   #:clear))
 

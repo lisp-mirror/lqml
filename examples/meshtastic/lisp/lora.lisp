@@ -24,11 +24,12 @@
 
 ;;; ini/send/receive
 
-(defvar *config-id* 0)
-(defvar *notify-id* nil)
-(defvar *ready*     nil)
-(defvar *reading*   nil)
-(defvar *received*  nil)
+(defvar *config-id*      0)
+(defvar *notify-id*      nil)
+(defvar *ready*          nil)
+(defvar *reading*        nil)
+(defvar *received*       nil)
+(defvar *schedule-clear* nil)
 
 (defun to-bytes (list)
   (make-array (length list)
@@ -36,20 +37,25 @@
               :initial-contents list))
 
 (defun start-device-discovery (&optional (name ""))
-  (setf radios:*schedule-clear* t)
+  (setf *schedule-clear* t)
   (setf *ble-names* nil)
   (qt:start-device-discovery qt:*cpp* name)
   (q> |playing| ui:*busy* t))
 
 (defun start-config ()
   (when *ready*
+    (setf *schedule-clear* t)
+    (setf *channels*   nil
+          *node-infos* nil)
     (incf *config-id*)
     (send-to-radio
-     (me:make-to-radio :want-config-id *config-id*))))
+     (me:make-to-radio :want-config-id *config-id*))
+    (q> |playing| ui:*busy* t)))
 
-(defun set-ready (&optional (ready t)) ; called from Qt
+(defun set-ready (name &optional (ready t)) ; called from Qt
   (setf *ready* ready)
   (when ready
+    (app:toast (x:cc (tr "radio") ": " name) 2)
     (qlater 'start-config))
   (values))
 
@@ -169,7 +175,7 @@
                  (setf *my-node-info* info)
                  (setf *node-infos*
                        (nconc *node-infos* (list info))))
-             (when radios:*schedule-clear*
+             (when *schedule-clear*
                (radios:clear)
                (group:clear))
              (let ((name (me:short-name (me:user info)))

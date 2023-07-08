@@ -39,6 +39,8 @@ Messages
 The initial view shows the messages between you and a chosen person. You choose
 the desired person in the **Group** view (swipe to the left).
 
+To copy a message to the clipboard, simply press-and-hold it.
+
 
 Group
 -----
@@ -62,6 +64,10 @@ If you use more than 1 radio, just switch here to the radio you want to use.
 Changing a radio will take several seconds, because the initial configuration
 needs to be repeated.
 
+A press-and-hold on the radio icon will restart bluetooth device discovery.
+This may be useful if you forgot to enable bluetooth before starting the app,
+or if your radio is not being discovered the first time.
+
 
 Unread messages
 ---------------
@@ -72,3 +78,23 @@ inform you of new, unread messages from another user.
 Switching to **Group**, a red circle with the number of unread messages is
 shown on the right of every person.
 
+
+Tips
+----
+
+If (for some reason) you want to redo the bluetooth discovery of your radio(s),
+just press-and-hold on the **Radios** icon.
+
+If (for some reason) you want to receive again the mesh node configuration from
+your radio, just press-and-hold on the **Group** icon.
+
+Both of above is meant to avoid app restart.
+
+
+Hacker tips
+-----------
+
+If it occurs that a RAK device goes into an undefined state and doesn't seem
+to work anymore, you can try to reset the flash memory from an arduino IDE,
+see the RAK github and file `reset-flash.ino`. I successfully recovered a
+RAK device with corrupted memory using this method.

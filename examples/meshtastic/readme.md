@@ -51,6 +51,8 @@ Tested
 Tested on Linux, macOS, android, iOS. The macOS version shows an ECL exception
 during BLE ini, but works nevertheless.
 
+It should also work on Windows >= 10, but this is not tested yet.
+
 Since this is WIP, it may currently not work on all platforms (e.g. mobile).
 
 
@@ -67,9 +69,11 @@ Pairing of your LoRa radios is generally not needed beforehand, the app will
 ask for pairing/PIN during BLE ini. If your device doesn't have a display, use
 `123456` as your PIN.
 
-It may occur that the devices are sometimes not found. For me it worked again
-after unpairing the devices. Remember to unpair them from all computers/mobile
-devices.
+It may occur that the devices are sometimes not found; in those cases
+
+* try to turn bluetooth off and on again, and/or:
+* try to reboot your radios, and/or:
+* try to unpair your radios from all computers/devices
 
 A generic bluetooth app like **nRF Connect** may help in order to see if the
 devices themselves work and are able to connect.

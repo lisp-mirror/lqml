@@ -47,6 +47,7 @@ void BLE::deviceScanFinished() {
   } else {
     qDebug() << "device scan done";
   }
+
   QTimer::singleShot(0, this, &BLE::scanServices);
 }
 
