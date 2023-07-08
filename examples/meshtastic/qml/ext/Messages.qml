@@ -43,7 +43,7 @@ Rectangle {
         var text = get(i).text
         var highlighted = Lisp.call("msg:highlight-term", text, term)
         if (highlighted) {
-          if (get(i).text2 === undefined) {
+          if (!get(i).text2) {
             setProperty(i, "text2", text)
           }
           setProperty(i, "text", highlighted)
@@ -58,7 +58,7 @@ Rectangle {
         var text2 = get(i).text2
         if (text2) {
           setProperty(i, "text", text2)
-          setProperty(i, "text2", undefined)
+          setProperty(i, "text2", "")
         }
         view.itemAtIndex(i).visible = true
       }

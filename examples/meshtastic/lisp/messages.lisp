@@ -75,11 +75,10 @@
   (let ((show (not (q< |visible| ui:*find-text*))))
     (q> |visible| ui:*find-text* show)
     (if show
+        (q! |forceActiveFocus| ui:*find-text*)
         (progn
-          (q! |selectAll| ui:*find-text*)
-          (q! |forceActiveFocus| ui:*find-text*))
-        (q! |clear| ui:*find-text*)
-        (clear-find))))
+          (q! |clear| ui:*find-text*)
+          (clear-find)))))
 
 (defun find-text (text)
   (unless (x:empty-string text)
@@ -90,7 +89,7 @@
   (qjs |clearFind| ui:*messages*)
   (qlater (lambda () (qjs |positionViewAtEnd| ui:*message-view*))))
 
-(defun highlight-term (text term)
+(defun highlight-term (text term) ; called from QML
   "Highlights TERM in red, returns NIL if TERM is not found."
   (let ((len (length term))
         found)

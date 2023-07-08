@@ -82,6 +82,25 @@ See also [readme-usage](readme-usage.md).
 
 
 
+TODO / ideas
+------------
+
+(1) Since this uses Lisp, there's the possibility to integrate a programmable
+interface, where users can define their own functions and extend the UI.
+
+Think of simple scripts, which send protobufs to the radio and process the
+received data, while having access to all the variables and functions of
+the app itself.
+
+Those extensions could also be shared among users.
+
+(2) Regarding encryption: since I don't like QR codes for sharing a channel,
+there's the possibility to just share a made up phrase which can easily be
+remembered, and use the letters of the phrase as encryption key, so people can
+share their channel in a simple way.
+
+
+
 Run
 ---
 ```
