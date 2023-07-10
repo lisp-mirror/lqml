@@ -59,6 +59,9 @@
     (qlater 'start-config))
   (values))
 
+(defun add-line-breaks (text)
+  (x:string-substitute "<br>" (string #\Newline) text))
+
 (defun send-message (text)
   "Sends TEXT to radio and adds it to QML item model."
   (incf msg:*message-id*)
@@ -79,7 +82,7 @@
          :sender (my-name)
          :timestamp (princ-to-string (get-universal-time)) ; STRING for JS
          :hour (timestamp-to-hour)
-         :text text
+         :text (add-line-breaks text)
          :mid (princ-to-string msg:*message-id*)           ; STRING for JS
          :ack-state (position :sending msg:*states*)
          :me t)))
@@ -152,7 +155,7 @@
                              :sender (node-to-name (me:from packet))
                              :timestamp (princ-to-string timestamp) ; STRING for JS
                              :hour (timestamp-to-hour timestamp)
-                             :text (qfrom-utf8 payload)
+                             :text (add-line-breaks (qfrom-utf8 payload))
                              :mid (princ-to-string mid)))))         ; STRING for JS
                    ;; for :ack-state (acknowledgement state)
                    (:routing-app
