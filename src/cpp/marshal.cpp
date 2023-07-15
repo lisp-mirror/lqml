@@ -3,6 +3,8 @@
 #include <QUrl>
 #include <QVariant>
 #include <QObject>
+#include <QVariant>
+#include <QJSValue>
 
 QT_BEGIN_NAMESPACE
 
@@ -289,7 +291,10 @@ cl_object from_qvariant(const QVariant& var) {
   if ((type == QMetaType::QObjectStar) || // QObject*
       (type >= QMetaType::User)) {        // e.g. QQuickItem*
     QObject* o = var.value<QObject*>();
-    if (o != nullptr) {
+    if (o == nullptr) {
+      // must be a QJSValue (e.g. return value from 'qjs')
+      l_obj = from_qvariant(var.value<QJSValue>().toVariant());
+    } else {
       l_obj = from_qobject_pointer(o);
     }
   } else {
@@ -312,12 +317,13 @@ cl_object from_qvariant(const QVariant& var) {
       case QMetaType::QString:
       case QMetaType::QUrl:       l_obj = from_qstring(var.toString());                 break;
       // special case (can be nested)
-      case QMetaType::QVariantList:
+      case QMetaType::QVariantList: {
         QVariantList list(var.value<QVariantList>());
         for (QVariant v : qAsConst(list)) {
           l_obj = CONS(from_qvariant(v), l_obj);
         }
         l_obj = cl_nreverse(l_obj);
+      }
       break;
     }
   }

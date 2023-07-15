@@ -222,7 +222,7 @@ TO_QT_2 (QPointF, toFloat)
 TO_QT_2 (QSizeF,  toFloat)
 TO_QT_4 (QRectF,  toFloat)
 
-QVariant     toQVariant(cl_object, int = -1);
+QVariant     toQVariant(cl_object, int = 0);
 QVariant     toQVariantMap(cl_object);
 QVariantList toQVariantList(cl_object);
 
@@ -391,12 +391,13 @@ cl_object from_qvariant(const QVariant& var) {
       case QMetaType::QString:
       case QMetaType::QUrl:       l_obj = from_qstring(var.toString());                 break;
       // special case (can be nested)
-      case QMetaType::QVariantList:
+      case QMetaType::QVariantList: {
         QVariantList list(var.value<QVariantList>());
         for (QVariant v : qAsConst(list)) {
           l_obj = CONS(from_qvariant(v), l_obj);
         }
         l_obj = cl_nreverse(l_obj);
+      }
       break;
     }
   }
