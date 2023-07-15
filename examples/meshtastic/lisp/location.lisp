@@ -6,18 +6,19 @@
 (defun ini ()
   #+android
   (qt:ini-positioning qt:*cpp*)
+  #+ios
+  (q> |active| ui:*position-source* t)
   #+mobile
-  (progn
-    (q> |active| ui:*position-source* t)
-    (update-my-position)))
+  (update-my-position))
 
+#+mobile
 (defun update-my-position ()
   "Mobile only: update position from GPS of mobile device."
   (unless (getf *positions* (lora:my-num))
     (destructuring-bind (lat lon time)
         #+android
         (qt:last-position qt:*cpp*)
-        #-android
+        #+ios
         (qjs |lastPosition| ui:*position-source*)
       (if (zerop lat)
           (qsingle-shot 1000 'update-my-position)
@@ -29,6 +30,7 @@
             (set-position (lora:my-num) pos)
             (send-to-radio)))))) ; just once on startup (for now)
 
+#+mobile
 (defun send-to-radio ()
   (if lora:*config-complete*
       (lora:send-position *my-position*)
