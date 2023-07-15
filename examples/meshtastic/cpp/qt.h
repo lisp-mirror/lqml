@@ -25,6 +25,10 @@ public:
   Q_INVOKABLE QVariant read2();
   Q_INVOKABLE QVariant write2(const QVariant&);
 
+  // GPS
+  Q_INVOKABLE QVariant iniPositioning();
+  Q_INVOKABLE QVariant lastPosition();
+
   // SQLite
   Q_INVOKABLE QVariant iniDb(const QVariant&);
   Q_INVOKABLE QVariant sqlQuery(const QVariant&, const QVariant&);

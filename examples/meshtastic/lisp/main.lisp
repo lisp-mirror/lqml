@@ -5,6 +5,7 @@
   (load-settings)
   (lora:ini)
   (db:ini)
+  (loc:ini)
   (setf msg:*message-id* (1+ (db:max-message-id)))
   (if (setting :latest-receiver)
       (msg:show-messages)
@@ -12,17 +13,19 @@
   (q> |playing| ui:*loading* nil)
   (q> |interactive| ui:*main-view* t)
   #+android
-  (ensure-permissions :bluetooth-scan :bluetooth-connect) ; android >= 12
+  (progn
+    (ensure-permissions :access-fine-location) ; for sharing location
+    (ensure-permissions :bluetooth-scan :bluetooth-connect)) ; android >= 12
   (lora:start-device-discovery (or (setting :device) "")))
 
-(defun view-index-changed (index) ; called from QML
+(defun view-index-changed (index) ; see QML
   (when (and (= 1 index)
              (not (app:setting :latest-receiver)))
     (q> |currentIndex| ui:*main-view* 0))
   (q> |visible| ui:*find* (= 1 index))
   (values))
 
-(defun icon-press-and-hold (name) ; called from QML
+(defun icon-press-and-hold (name) ; see QML
   (cond ((string= ui:*radio-icon* name)
          ;; force update devices
          (lora:start-device-discovery (or (setting :device) "")))

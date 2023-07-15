@@ -52,7 +52,7 @@
   (q> |currentIndex| ui:*main-view* 1) ; 'Messages'
   (show-messages))
 
-(defun check-utf8-length (text) ; called from QML
+(defun check-utf8-length (&optional (text (q< |text| ui:*edit*))) ; see QML
   "Checks the actual number of bytes to send (e.g. an emoji is 4 utf8 bytes),
   because we can't exceed 234 bytes, which will give 312 bytes encoded protobuf
   payload."
@@ -66,7 +66,7 @@
            (q> |tooLong| ui:*edit* nil))))
   (values))
 
-(defun message-press-and-hold (text) ; called from QML
+(defun message-press-and-hold (text) ; see QML
   (set-clipboard-text text)
   (app:toast (tr "message copied") 2)
   (values))
@@ -89,7 +89,7 @@
   (qjs |clearFind| ui:*messages*)
   (qlater (lambda () (qjs |positionViewAtEnd| ui:*message-view*))))
 
-(defun highlight-term (text term) ; called from QML
+(defun highlight-term (text term) ; see QML
   "Highlights TERM in red, returns NIL if TERM is not found."
   (let ((len (length term))
         found)

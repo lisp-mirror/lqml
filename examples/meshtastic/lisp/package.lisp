@@ -18,6 +18,7 @@
   (:export
    #:*channel*
    #:*channels*
+   #:*config-complete*
    #:*config-lora*
    #:*my-node-info*
    #:*node-infos*
@@ -34,6 +35,9 @@
    #:change-modem-preset
    #:channel-to-url
    #:ini
+   #:my-name
+   #:my-num
+   #:send-position
    #:start-config
    #:start-device-discovery
    #:read-radio
@@ -80,7 +84,21 @@
 (defpackage :radios
   (:use :cl :qml)
   (:export
+   #:*found*
    #:add-radio
    #:change-radio
-   #:clear))
+   #:clear
+   #:device-discovered
+   #:reset-configured
+   #:reset-default-radio))
+
+(defpackage :location
+  (:nicknames :loc)
+  (:use :cl :qml)
+  (:export
+   #:*my-position*
+   #:*positions*
+   #:ini
+   #:set-position
+   #:update-my-position))
 

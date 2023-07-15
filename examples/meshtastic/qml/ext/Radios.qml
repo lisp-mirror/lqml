@@ -46,7 +46,7 @@ Rectangle {
 
     // hack to define all model key _types_
     ListElement {
-      name: ""; hwModel: ""; batteryLevel: 0; current: false
+      name: ""; ini: false; hwModel: ""; batteryLevel: 0; current: false
     }
 
     function addRadio(radio) {
@@ -66,7 +66,7 @@ Rectangle {
       id: delegate
       width: Math.min(265, view.width)
       height: 35
-      color: (index === view.currentIndex) ? "firebrick" : "steelblue"
+      color: (index === view.currentIndex) ? "firebrick" : (model.ini ? "#808080" : "steelblue")
       radius: height / 2
 
       Rectangle {
@@ -101,6 +101,7 @@ Rectangle {
         anchors.right: parent.right
         anchors.rightMargin: 14
         level: model.batteryLevel
+        visible: !model.ini
       }
 
       MouseArea {

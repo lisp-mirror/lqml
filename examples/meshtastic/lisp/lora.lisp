@@ -24,12 +24,13 @@
 
 ;;; ini/send/receive
 
-(defvar *config-id*      0)
-(defvar *notify-id*      nil)
-(defvar *ready*          nil)
-(defvar *reading*        nil)
-(defvar *received*       nil)
-(defvar *schedule-clear* nil)
+(defvar *config-id*       0)
+(defvar *config-complete* nil)
+(defvar *notify-id*       nil)
+(defvar *ready*           nil)
+(defvar *reading*         nil)
+(defvar *received*        nil)
+(defvar *schedule-clear*  t)
 
 (defun to-bytes (list)
   (make-array (length list)
@@ -45,14 +46,15 @@
 (defun start-config ()
   (when *ready*
     (setf *schedule-clear* t)
-    (setf *channels*   nil
-          *node-infos* nil)
+    (setf *config-complete* nil
+          *channels*        nil
+          *node-infos*      nil)
     (incf *config-id*)
     (send-to-radio
      (me:make-to-radio :want-config-id *config-id*))
     (q> |playing| ui:*busy* t)))
 
-(defun set-ready (name &optional (ready t)) ; called from Qt
+(defun set-ready (name &optional (ready t)) ; see Qt
   (setf *ready* ready)
   (when ready
     (app:toast (x:cc (tr "radio") ": " name) 2)
@@ -62,30 +64,40 @@
 (defun add-line-breaks (text)
   (x:string-substitute "<br>" (string #\Newline) text))
 
+(defun my-name ()
+  (when *config-complete*
+    (me:short-name (me:user *my-node-info*))))
+
+(defun my-num ()
+  (when *config-complete*
+    (me:num *my-node-info*)))
+
 (defun send-message (text)
   "Sends TEXT to radio and adds it to QML item model."
-  (incf msg:*message-id*)
-  (when (stringp *receiver*)
-    (setf *receiver* (name-to-node *receiver*)))
-  (send-to-radio
-   (me:make-to-radio
-    :packet (me:make-mesh-packet
-             :from (me:num *my-node-info*)
-             :to *receiver*
-             :id msg:*message-id*
-             :want-ack t
-             :decoded (me:make-data
-                       :portnum :text-message-app
-                       :payload (qto-utf8 text)))))
-  (msg:add-message
-   (list :receiver (node-to-name *receiver*)
-         :sender (my-name)
-         :timestamp (princ-to-string (get-universal-time)) ; STRING for JS
-         :hour (timestamp-to-hour)
-         :text (add-line-breaks text)
-         :mid (princ-to-string msg:*message-id*)           ; STRING for JS
-         :ack-state (position :sending msg:*states*)
-         :me t)))
+  (msg:check-utf8-length (q< |text| ui:*edit*)) 
+  (unless (q< |tooLong| ui:*edit*)
+    (incf msg:*message-id*)
+    (when (stringp *receiver*)
+      (setf *receiver* (name-to-node *receiver*)))
+    (send-to-radio
+     (me:make-to-radio
+      :packet (me:make-mesh-packet
+               :from (my-num)
+               :to *receiver*
+               :id msg:*message-id*
+               :want-ack t
+               :decoded (me:make-data
+                         :portnum :text-message-app
+                         :payload (qto-utf8 text)))))
+    (msg:add-message
+     (list :receiver (node-to-name *receiver*)
+           :sender (my-name)
+           :timestamp (princ-to-string (get-universal-time)) ; STRING for JS
+           :hour (timestamp-to-hour)
+           :text (add-line-breaks text)
+           :mid (princ-to-string msg:*message-id*)           ; STRING for JS
+           :ack-state (position :sending msg:*states*)
+           :me t))))
 
 (defun read-radio ()
   "Triggers a read on the radio. Will call RECEIVED-FROM-RADIO on success."
@@ -99,7 +111,7 @@
      (qt:write* qt:*cpp* (header (length bytes)))
      (qt:write* qt:*cpp* bytes))))
 
-(defun received-from-radio (bytes &optional notified) ; called from Qt
+(defun received-from-radio (bytes &optional notified) ; see Qt
   (if notified
       (progn
         (setf *notify-id* bytes)
@@ -110,7 +122,7 @@
         (push from-radio *received*)))
   (values))
 
-(defun receiving-done () ; called from Qt
+(defun receiving-done () ; see Qt
   (setf *reading* nil)
   (process-received)
   (values))
@@ -125,13 +137,19 @@
     (when (string= name (me:short-name (me:user info)))
       (return (me:num info)))))
 
-(defun my-name ()
-  (me:short-name (me:user *my-node-info*)))
-
 (defun timestamp-to-hour (&optional (secs (get-universal-time)))
   (multiple-value-bind (_ m h)
       (decode-universal-time secs)
     (format nil "~D:~2,'0D" h m)))
+
+(defun set-gps-position (node pos)
+  (flet ((to-float (i)
+           (float (/ i (expt 10 7)))))
+    (when (me:latitude-i pos)
+      (loc:set-position node (list :lat (to-float (me:latitude-i pos))
+                                   :lon (to-float (me:longitude-i pos))
+                                   :alt (me:altitude pos)
+                                   :time (me:time pos))))))
 
 (defun process-received ()
   "Walks *RECEIVED* FROM-RADIOs and saves relevant data."
@@ -167,7 +185,12 @@
                                           (t
                                            (qlog "message state changed: ~A" state)
                                            :not-received))
-                                        (princ-to-string (me:request-id decoded)))))))))) ; STRING for JS
+                                        (princ-to-string (me:request-id decoded))))) ; STRING for JS
+                   ;; GPS location
+                   (:position-app
+                    (unless (zerop (length payload))
+                      (set-gps-position (me:from packet)
+                                        (pr:deserialize-from-bytes 'me:position payload)))))))))
           ;; my-info
           ((me:from-radio.has-my-info struct)
            (setf *my-node-info* (me:my-node-num (me:my-info struct))))
@@ -178,6 +201,8 @@
                  (setf *my-node-info* info)
                  (setf *node-infos*
                        (nconc *node-infos* (list info))))
+             (x:when-it (me:position info)
+               (set-gps-position (me:num info) x:it))
              (when *schedule-clear*
                (radios:clear)
                (group:clear))
@@ -192,6 +217,7 @@
                         :node-num (princ-to-string (me:num info)) ; STRING for JS
                         :current (equal name (app:setting :latest-receiver)))))
                (when (find name *ble-names* :test 'string=)
+                 (setf radios:*found* t)
                  (radios:add-radio
                   (list :name name
                         :hw-model (symbol-name (me:hw-model (me:user info)))
@@ -213,6 +239,7 @@
           ;; config-complete-id
           ((me:from-radio.has-config-complete-id struct)
            (when (= *config-id* (me:config-complete-id struct))
+             (setf *config-complete* t)
              (q> |playing| ui:*busy* nil)
              (qlog "config-complete id: ~A" *config-id*)
              (unless (find (my-name) (app:setting :configured) :test 'string=)
@@ -256,12 +283,12 @@
   (qsleep 20)
   (start-device-discovery (app:setting :device)))
 
-(defun change-region (region) ; called from QML
+(defun change-region (region) ; see QML
   (app:change-setting :region (app:kw region))
   (qlater 'change-lora-config)
   (values))
 
-(defun change-modem-preset (modem-preset) ; called from QML
+(defun change-modem-preset (modem-preset) ; see QML
   (app:change-setting :modem-preset (app:kw modem-preset))
   (qlater 'change-lora-config)
   (values))
@@ -276,6 +303,27 @@
                            :psk (to-bytes (list 1))) ; encrypted with fixed (known) key
                 :role :primary))
   (change-lora-config))
+
+(defun send-position (pos &optional (to (my-num)))
+  "Send GPS position to radio."
+  (flet ((to-int (f)
+           (floor (* f (expt 10 7)))))
+    (send-to-radio
+     (me:make-to-radio
+      :packet (me:make-mesh-packet
+               :from (my-num)
+               :to to
+               :id (incf msg:*message-id*)
+               :hop-limit 3
+               :priority :background
+               :decoded (me:make-data
+                         :portnum :position-app
+                         :payload (pr:serialize-to-bytes
+                                   (me:make-position
+                                    :latitude-i (to-int (getf pos :lat))
+                                    :longitude-i (to-int (getf pos :lon))
+                                    :time (getf pos :time)))
+                         :want-response t))))))
 
 (defun channel-to-url (&optional channel)
   (let ((base64 (base64:usb8-array-to-base64-string
@@ -295,7 +343,7 @@
           (set-channel channel)
           channel))))
 
-(defun change-receiver (receiver) ; called from QML
+(defun change-receiver (receiver) ; see QML
   (setf *receiver* (parse-integer receiver)) ; STRING for JS
   (app:change-setting :latest-receiver (node-to-name *receiver*))
   (msg:receiver-changed)

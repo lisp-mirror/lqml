@@ -1,8 +1,14 @@
 #include "qt.h"
 #include "ble_meshtastic.h"
+#include <ecl_fun.h>
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QtDebug>
+
+#ifdef Q_OS_ANDROID
+  #include <QtAndroid>
+  #include <QAndroidJniEnvironment>
+#endif
 
 QT_BEGIN_NAMESPACE
 
@@ -15,7 +21,12 @@ QObject* ini() {
 }
 
 QT::QT() : QObject() {
+  // BLE
   ble = new BLE_ME;
+  ble->connect(ble, &BLE::deviceDiscovered,
+               [](const QString& fullName) {
+                 ecl_fun("radios:device-discovered", fullName.right(4));
+               });
 }
 
 // BLE_ME
@@ -45,6 +56,48 @@ QVariant QT::read2() {
 QVariant QT::write2(const QVariant& bytes) {
   ble->write(bytes.toByteArray());
   return QVariant();
+}
+
+// GPS
+
+#ifdef Q_OS_ANDROID
+static void clearEventualExceptions() {
+  QAndroidJniEnvironment env;
+  if (env->ExceptionCheck()) {
+    env->ExceptionClear();
+  }
+}
+
+static qlonglong getLongField(const char* name) {
+  QAndroidJniObject activity = QtAndroid::androidActivity();
+  return static_cast<qlonglong>(activity.getField<jlong>(name));
+}
+
+static double getDoubleField(const char* name) {
+  QAndroidJniObject activity = QtAndroid::androidActivity();
+  return static_cast<double>(activity.getField<jdouble>(name));
+}
+#endif
+
+QVariant QT::iniPositioning() {
+#ifdef Q_OS_ANDROID
+  QtAndroid::runOnAndroidThread([] {
+    QAndroidJniObject activity = QtAndroid::androidActivity();
+    activity.callMethod<void>("iniLocation", "()V");
+    clearEventualExceptions();
+  });
+#endif
+  return QVariant();
+}
+
+QVariant QT::lastPosition() {
+  QVariantList pos;
+#ifdef Q_OS_ANDROID
+  pos << getDoubleField("_position_lat_")
+      << getDoubleField("_position_lon_")
+      << QString::number(getLongField("_position_time_")); // 'QString': see QML 'lastPosition()'
+#endif
+  return pos;
 }
 
 // SQLite

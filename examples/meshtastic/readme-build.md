@@ -10,6 +10,8 @@ See also notes in [my-cl-protobufs.asd](my-cl-protobufs.asd).
 You will also need **uiop** installed under e.g. `~/quicklisp/local-projects/`
 (see ASDF sources).
 
+For android please see [qt-location-hack](qt-location-hack/).
+
 
 
 Prepare

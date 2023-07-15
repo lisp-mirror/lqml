@@ -72,7 +72,7 @@ Rectangle {
 
     Item {
       id: delegate
-      width: Math.max(text.paintedWidth, rowSender.width + 4 * text.padding) + 2 * text.padding
+      width: Math.max(text.paintedWidth, rowSender.width + 4 * text.padding) + 2 * text.padding + 4
       height: visible ? (text.contentHeight + 2 * text.padding + sender.contentHeight + 8) : 0
 
       Rectangle {
@@ -95,7 +95,7 @@ Rectangle {
           AnimatedImage {
             id: semaphore
             playing: false
-            y: 3
+            y: 4
             width: 8
             height: width
             source: "../img/semaphore.gif"
@@ -105,7 +105,7 @@ Rectangle {
 
           Text {
             id: sender
-            font.pixelSize: 11
+            font.pixelSize: 12
             font.family: fontText.name
             color: "#8B0000"
             text: model.senderName ? model.senderName : model.sender
@@ -116,7 +116,7 @@ Rectangle {
           id: timestamp
           x: delegate.width - contentWidth - text.padding
           y: text.padding
-          font.pixelSize: 11
+          font.pixelSize: 12
           font.family: fontText.name
           color: "#505050"
           text: model.hour

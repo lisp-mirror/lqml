@@ -33,6 +33,7 @@ public:
 
 Q_SIGNALS:
   // notify
+  void deviceDiscovered(const QString&);
   void mainServiceReady();
   void deviceDisconnecting();
 

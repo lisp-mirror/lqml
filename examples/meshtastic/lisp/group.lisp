@@ -13,7 +13,7 @@
 (defun radio-names ()
   (qjs |radioNames| ui:*group*))
 
-(defun name-edited (radio name) ; called from QML
+(defun name-edited (radio name) ; see QML
   (app:change-setting radio name :sub-key :custom-name)
   (values))
 

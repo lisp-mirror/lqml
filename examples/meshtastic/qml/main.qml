@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Window 2.15
+import QtPositioning 5.15
 import "ext/" as Ext
 
 Item {
@@ -72,6 +73,31 @@ Item {
     source: "img/busy.gif"
     visible: playing
     playing: false
+  }
+
+  // GPS
+
+  PositionSource {
+    objectName: "position_source"
+    updateInterval: 2000
+    active: false
+
+    property double lat:  0
+    property double lon:  0
+    property string time: "" // no 'long' in JS
+
+    onPositionChanged: {
+      if (position.latitudeValid && position.longitudeValid) {
+        var coor = position.coordinate;
+        lat = coor.latitude
+        lon = coor.longitude
+        time = coor.timestamp ? String(coor.timestamp) : ""
+      }
+    }
+
+    function lastLocation() {
+      return [lat, lon, time]
+    }
   }
 
   Ext.Toast {}

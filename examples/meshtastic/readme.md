@@ -5,8 +5,11 @@ Info
 Please note: this is **WIP!**
 
 Currently it can be used to send direct messages between any number of radios.
-Eventually it will (hopefully) catch up with the official app versions.
- 
+
+It's basically meant to be used in an emergency situation, where internet is
+not available, in order to communicate with simple text messages. This kind of
+mesh network is limited to about 70 nodes/radios/users to remain reliable.
+
 
 
 Technical notes
@@ -79,25 +82,6 @@ A generic bluetooth app like **nRF Connect** may help in order to see if the
 devices themselves work and are able to connect.
 
 See also [readme-usage](readme-usage.md).
-
-
-
-TODO / ideas
-------------
-
-(1) Since this uses Lisp, there's the possibility to integrate a programmable
-interface, where users can define their own functions and extend the UI.
-
-Think of simple scripts, which send protobufs to the radio and process the
-received data, while having access to all the variables and functions of
-the app itself.
-
-Those extensions could also be shared among users.
-
-(2) Regarding encryption: since I don't like QR codes for sharing a channel,
-there's the possibility to just share a made up phrase which can easily be
-remembered, and use the letters of the phrase as encryption key, so people can
-share their channel in a simple way.
 
 
 

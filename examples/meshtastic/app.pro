@@ -27,7 +27,7 @@ QMAKE_EXTRA_COMPILERS += lisp
 win32:  PRE_TARGETDEPS = tmp/app.lib
 !win32: PRE_TARGETDEPS = tmp/libapp.a
 
-QT          += quick qml bluetooth sql
+QT          += quick qml bluetooth sql positioning
 TEMPLATE    = app
 CONFIG      += c++17 no_keywords release
 DEFINES     += DESKTOP_APP INI_ECL_CONTRIB QT_EXTENSION BACKGROUND_INI_LISP

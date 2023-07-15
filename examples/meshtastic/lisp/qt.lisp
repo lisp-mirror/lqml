@@ -4,6 +4,8 @@
    #:*cpp*
    #:ini
    #:ini-db
+   #:ini-positioning
+   #:last-position
    #:start-device-discovery
    #:read*
    #:short-names

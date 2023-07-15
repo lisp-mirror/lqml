@@ -14,6 +14,7 @@
    #:*messages*
    #:*message-view*
    #:*modem*
+   #:*position-source*
    #:*radio-icon*
    #:*radios*
    #:*region*
@@ -33,6 +34,7 @@
 (defparameter *messages*        "messages")
 (defparameter *message-view*    "message_view")
 (defparameter *modem*           "modem")
+(defparameter *position-source* "position_source")
 (defparameter *radio-icon*      "radio_icon")
 (defparameter *radios*          "radios")
 (defparameter *region*          "region")

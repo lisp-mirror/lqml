@@ -31,7 +31,9 @@ void BLE::startDeviceDiscovery() {
 
 void BLE::addDevice(const QBluetoothDeviceInfo& device) {
   if (deviceFilter(device)) {
-    qDebug() << "device added:" << device.name();
+    QString name(device.name());
+    qDebug() << "device added:" << name;
+    Q_EMIT deviceDiscovered(name);
   }
 }
 

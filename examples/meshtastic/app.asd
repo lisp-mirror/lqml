@@ -12,5 +12,6 @@
                (:file "lisp/messages")
                (:file "lisp/radios")
                (:file "lisp/lora")
+               (:file "lisp/location")
                (:file "lisp/main")))
 

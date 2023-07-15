@@ -64,6 +64,10 @@ If you use more than 1 radio, just switch here to the radio you want to use.
 Changing a radio will take several seconds, because the initial configuration
 needs to be repeated.
 
+Initially, the list will contain gray items, so you can choose another radio
+if you experience that the connection didn't work, in case the selected radio
+is currently not available.
+
 A press-and-hold on the radio icon will restart bluetooth device discovery.
 This may be useful if you forgot to enable bluetooth before starting the app,
 or if your radio is not being discovered the first time.
@@ -77,6 +81,13 @@ inform you of new, unread messages from another user.
 
 Switching to **Group**, a red circle with the number of unread messages is
 shown on the right of every person.
+
+
+GPS position
+------------
+
+On mobile, and if the radio doesn't have a GPS module, the location of the
+phone is sent once (at startup) to the radio.
 
 
 Tips
