@@ -41,6 +41,10 @@ the desired person in the **Group** view (swipe to the left).
 
 To copy a message to the clipboard, simply press-and-hold it.
 
+The search function (icon on the right) should be intuitive. The search term
+(case insensitive) is highlighted in red. Tap again on the search icon to leave
+search mode.
+
 
 Group
 -----

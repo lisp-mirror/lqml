@@ -95,7 +95,7 @@ Item {
       }
     }
 
-    function lastLocation() {
+    function lastPosition() {
       return [lat, lon, time]
     }
   }
