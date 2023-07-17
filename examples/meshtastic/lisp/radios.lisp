@@ -23,8 +23,6 @@
 
 (defun change-radio (name) ; see QML
   (app:change-setting :device name)
-  (unless *found*
-    (clear))
   (qlater (lambda () (lora:start-device-discovery name)))
   (values))
 

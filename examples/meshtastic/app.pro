@@ -87,10 +87,10 @@ ios {
   LIBS        += -L../../../platforms/ios/lib
 
   QMAKE_INFO_PLIST     = platforms/ios/Info.plist
-  #QMAKE_ASSET_CATALOGS += platforms/ios/Assets.xcassets
+  QMAKE_ASSET_CATALOGS += platforms/ios/Assets.xcassets
 
-  #launch.files      = platforms/ios/designable.storyboard platforms/img/logo.png
-  #QMAKE_BUNDLE_DATA += launch
+  launch.files      = platforms/ios/designable.storyboard platforms/img/logo.png
+  QMAKE_BUNDLE_DATA += launch
 }
 
 32bit {

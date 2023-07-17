@@ -40,6 +40,8 @@
 (defun start-device-discovery (&optional (name ""))
   (setf *schedule-clear* t)
   (setf *ble-names* nil)
+  (unless radios:*found*
+    (radios:clear))
   (qt:start-device-discovery qt:*cpp* name)
   (q> |playing| ui:*busy* t))
 
