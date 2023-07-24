@@ -18,11 +18,32 @@ Build cross-compiled ECL for iOS
 As of May 2023, please use latest ECL from development branch.
 
 **Important**: pay attention to file `src/c/unixsys.d`, function `si_system()`.
-Function `system()` inside of it needs to work when running the script **1**,
-and needs not to be there when running script **2**.
+Function `system()` inside of it needs to work when running script **1**, and
+needs to just return `NIL` when running script **2**.
 
 Different ECL versions handle this problem differently, but none of them
-worked for me, so you need to find a hack for yourself for achieving the above.
+worked for me, so you need to find a hack for yourself for achieving the above,
+like:
+
+for script **1** put:
+```
+cl_object
+xsi_system(cl_object cmd_string)
+{
+  cl_object cmd = si_copy_to_simple_base_string(cmd_string);
+  int code = system((const char *)(cmd->base_string.self));
+  @(return ecl_make_fixnum(code));
+}
+```
+for script **2** put:
+```
+cl_object
+si_system(cl_object cmd_string)
+{
+  FElibc_error("si_system not implemented",1);
+  @(return ECL_NIL);
+}
+```
 
 * extract a fresh copy of the ECL sources in e.g. `~/ecl`, and rename
   `ecl-21.2.1` to `ios`
