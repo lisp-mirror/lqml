@@ -6,7 +6,7 @@
   (lora:ini)
   (db:ini)
   (loc:ini)
-  (setf msg:*message-id* (1+ (db:max-message-id)))
+  (setf msg:*message-id* (db:max-message-id))
   (if (setting :latest-receiver)
       (msg:show-messages)
       (q> |currentIndex| ui:*main-view* 0)) ; 'Group'

@@ -72,10 +72,6 @@ Initially, the list will contain gray items, so you can choose another radio
 if you experience that the connection didn't work, in case the selected radio
 is currently not available.
 
-A press-and-hold on the radio icon will restart bluetooth device discovery.
-This may be useful if you forgot to enable bluetooth before starting the app,
-or if your radio is not being discovered the first time.
-
 
 Unread messages
 ---------------

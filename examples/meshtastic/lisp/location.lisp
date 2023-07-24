@@ -19,12 +19,13 @@
   (qjs |lastPosition| ui:*position-source*))
 
 #+mobile
-(defun update-my-position ()
+(defun update-my-position (&optional (sec 60)) ; try for 1 min
   "Mobile only: update position from GPS of mobile device."
   (destructuring-bind (lat lon time)
       (last-gps-position)
     (if (zerop lat)
-        (qsingle-shot 1000 'update-my-position)
+        (unless (zerop sec)
+          (qsingle-shot 1000 (lambda () (update-my-position (1- sec)))))
         (let ((pos (list :lat lat
                          :lon lon
                          :time (if (zerop (length time)) 0 (parse-integer time)))))
