@@ -2,22 +2,12 @@
 
 (in-package :qml)
 
-#-interpreter
-(ffi:clines "extern void init_lib_ASDF(cl_object);")
-
 (defun %sym (symbol package)
   (intern (symbol-name symbol) package))
 
 ;;; Quicklisp setup
 
-(defun ensure-asdf ()
-  (unless (find-package :asdf)
-    (ffi:c-inline nil nil :void "ecl_init_module(NULL, init_lib_ASDF)" :one-liner t)
-    (in-package :qml-user))
-  :asdf)
-
 (defun quicklisp ()
-  (ensure-asdf)
   (unless (find-package :quicklisp)
     #+android
     (progn
@@ -45,7 +35,6 @@
                          (load-contribs t) (setup t) (delete t) (quiet t)
                          (dont-close t) log-events)
   (unless (find-package :swank)
-    (ensure-asdf)
     (funcall (%sym 'load-system :asdf) :swank))
   (funcall (%sym 'init :swank-loader)
            :load-contribs load-contribs

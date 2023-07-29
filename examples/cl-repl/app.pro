@@ -30,7 +30,7 @@ win32:  PRE_TARGETDEPS = tmp/app.lib
 QT          += quick qml
 TEMPLATE    = app
 CONFIG      += c++17 no_keywords release
-DEFINES     += DESKTOP_APP INI_ASDF INI_LISP INI_ECL_CONTRIB QT_EXTENSION
+DEFINES     += DESKTOP_APP INI_LISP INI_ASDF INI_ECL_CONTRIB QT_EXTENSION
 INCLUDEPATH = /usr/local/include
 ECL_VERSION = $$lower($$system(ecl -v))
 ECL_VERSION = $$replace(ECL_VERSION, " ", "-")
@@ -54,7 +54,7 @@ win32 {
 
 android {
   QT          += androidextras
-  DEFINES     += INI_ASDF NO_TEXT_HANDLES
+  DEFINES     += NO_TEXT_HANDLES
   DEFINES     -= DESKTOP_APP
   INCLUDEPATH = $$ECL/include
   ECL_VERSION = $$lower($$system($$ECL/../ecl-android-host/bin/ecl -v))
@@ -81,7 +81,7 @@ android {
 }
 
 ios {
-  DEFINES     += INI_ASDF NO_TEXT_HANDLES DISABLE_SMART_QUOTES
+  DEFINES     += NO_TEXT_HANDLES DISABLE_SMART_QUOTES
   DEFINES     -= DESKTOP_APP
   INCLUDEPATH = $$(ECL_IOS)/include
   ECL_VERSION = $$lower($$system($ECL_IOS/../ecl-ios-host/bin/ecl -v))

@@ -79,7 +79,7 @@ version (tested with gmp 6.2.1). Just substitute it in `src/gmp/`:
 
 * download [gmp](https://gmplib.org/download/gmp/gmp-6.2.1.tar.xz)
 
-* extract it with `tar -xvf gmp-6.2.1.tar.xz` and replace the version in `src/gmp/`
+* extract it with `tar xvf gmp-6.2.1.tar.xz` and replace the version in `src/gmp/`
 
 * run second script again, passing **sim**
 ```
