@@ -30,13 +30,13 @@ win32:  PRE_TARGETDEPS = tmp/app.lib
 QT          += quick qml bluetooth sql positioning
 TEMPLATE    = app
 CONFIG      += c++17 no_keywords release
-DEFINES     += DESKTOP_APP INI_ECL_CONTRIB QT_EXTENSION BACKGROUND_INI_LISP
+DEFINES     += DESKTOP_APP BACKGROUND_INI_LISP INI_ECL_CONTRIB QT_EXTENSION
 INCLUDEPATH = /usr/local/include
 ECL_VERSION = $$lower($$system(ecl -v))
 ECL_VERSION = $$replace(ECL_VERSION, " ", "-")
 LIBS        = -L/usr/local/lib -lecl
 LIBS        += -L/usr/local/lib/$$ECL_VERSION
-LIBS        += -lecl-help -ldeflate -lecl-cdb -lecl-curl -lql-minitar -lsockets
+LIBS        += -lasdf -lecl-help -ldeflate -lecl-cdb -lecl-curl -lql-minitar -lsockets
 DESTDIR     = .
 TARGET      = app
 OBJECTS_DIR = tmp
@@ -54,13 +54,14 @@ win32 {
 
 android {
   QT          += androidextras
+  DEFINES     += INI_ASDF
   DEFINES     -= DESKTOP_APP
   INCLUDEPATH = $$ECL/include
   ECL_VERSION = $$lower($$system($$ECL/../ecl-android-host/bin/ecl -v))
   ECL_VERSION = $$replace(ECL_VERSION, " ", "-")
   LIBS        = -L$$ECL/lib -lecl
   LIBS        += -L$$ECL/lib/$$ECL_VERSION
-  LIBS        += -lecl-help -ldeflate -lecl-cdb -lecl-curl -lql-minitar -lsockets
+  LIBS        += -lasdf -lecl-help -ldeflate -lecl-cdb -lecl-curl -lql-minitar -lsockets
   LIBS        += -L../../../platforms/android/lib
 
   ANDROID_EXTRA_LIBS         += $$ECL/lib/libecl.so
@@ -76,6 +77,7 @@ android {
 }
 
 ios {
+  DEFINES     += INI_ASDF
   DEFINES     -= DESKTOP_APP
   INCLUDEPATH = $$(ECL_IOS)/include
   ECL_VERSION = $$lower($$system($ECL_IOS/../ecl-ios-host/bin/ecl -v))
@@ -83,12 +85,14 @@ ios {
   LIBS        = -L$$(ECL_IOS)/lib -lecl
   LIBS        += -leclatomic -leclffi -leclgc -leclgmp
   LIBS        += -L$$(ECL_IOS)/lib/$$ECL_VERSION
-  LIBS        += -lecl-help -ldeflate -lecl-cdb -lecl-curl -lql-minitar -lsockets
+  LIBS        += -lasdf -lecl-help -ldeflate -lecl-cdb -lecl-curl -lql-minitar -lsockets
   LIBS        += -L../../../platforms/ios/lib
 
   QMAKE_INFO_PLIST     = platforms/ios/Info.plist
   QMAKE_ASSET_CATALOGS += platforms/ios/Assets.xcassets
 
+  assets.files      = $$files($$PWD/platforms/ios/assets)
+  QMAKE_BUNDLE_DATA += assets
   launch.files      = platforms/ios/designable.storyboard platforms/img/logo.png
   QMAKE_BUNDLE_DATA += launch
 }

@@ -101,6 +101,11 @@ your radio, just press-and-hold on the **Group** icon.
 
 Both of above is meant to avoid app restart.
 
+For a trivial signal test you can use the special command **:echo**, which will
+send back the text you sent, adding signal snr/rssi, position, distance. This
+is convenient to test signal strength from different places, and have it logged
+in your messages.
+
 
 Hacker tips
 -----------
@@ -109,3 +114,7 @@ If it occurs that a RAK device goes into an undefined state and doesn't seem
 to work anymore, you can try to reset the flash memory from an arduino IDE,
 see the RAK github and file `reset-flash.ino`. I successfully recovered a
 RAK device with corrupted memory using this method.
+
+If you are a Lisp hacker, you may enjoy the integrated Swank server (on
+mobile). Just type `:s` as your text message. A message with the IP to connect
+to will be shown once the server is running.

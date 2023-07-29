@@ -7,6 +7,8 @@
   :components ((:file "lisp/package")
                (:file "lisp/qt")
                (:file "lisp/ui-vars")
+               #+mobile
+               (:file "lisp/swank-quicklisp")
                (:file "lisp/db")
                (:file "lisp/group")
                (:file "lisp/messages")

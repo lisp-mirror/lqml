@@ -13,10 +13,13 @@
 
 #+mobile
 (defun last-gps-position ()
-  #+android
-  (qt:last-position qt:*cpp*)
-  #+ios
-  (qjs |lastPosition| ui:*position-source*))
+  (let* ((pos #+android (qrun* (qt:last-position qt:*cpp*)) ; 'qrun*': return value
+              #+ios     (qjs |lastPosition| ui:*position-source*))
+         (time (third pos)))
+    (when time
+      (setf (third pos)
+            (if (zerop (length time)) 0 (parse-integer time))))
+    pos))
 
 #+mobile
 (defun update-my-position (&optional (sec 60)) ; try for 1 min
@@ -26,9 +29,7 @@
     (if (zerop lat)
         (unless (zerop sec)
           (qsingle-shot 1000 (lambda () (update-my-position (1- sec)))))
-        (let ((pos (list :lat lat
-                         :lon lon
-                         :time (if (zerop (length time)) 0 (parse-integer time)))))
+        (let ((pos (list :lat lat :lon lon :time time)))
           (setf *my-position* pos)
           (qlog "position-updated: ~A" pos)
           (set-position (lora:my-num) pos)
@@ -45,4 +46,30 @@
   (let ((lat (getf pos :lat)))
     (when (and node lat (not (zerop lat)))
       (setf (getf *positions* node) pos))))
+
+;;; distance
+
+(defconstant +earth-mean-radius+ 6371.0072d0)
+
+(defun to-rad (deg)
+  (/ (* deg pi) 180))
+
+(defun distance (from to)
+  ;; Haversine formula
+  (destructuring-bind ((lat-1 . lon-1) (lat-2 . lon-2))
+      (list from to)
+    (if (and (numberp lat-1)
+             (numberp lat-2))
+        (let* ((dlat (to-rad (- lat-2 lat-1)))
+               (dlon (to-rad (- lon-2 lon-1)))
+               (h-dlat (sin (/ dlat 2)))
+               (h-dlon (sin (/ dlon 2))))
+          (setf h-dlat (expt h-dlat 2)
+                h-dlon (expt h-dlon 2))
+          (let* ((y (+ h-dlat (* (cos (to-rad lat-1))
+                                 (cos (to-rad lat-2))
+                                 h-dlon)))
+                 (x (* 2 (asin (sqrt y)))))
+            (floor (+ 0.5 (* x +earth-mean-radius+ 1000)))))
+        0)))
 

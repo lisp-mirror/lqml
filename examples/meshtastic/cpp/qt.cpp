@@ -3,6 +3,8 @@
 #include <ecl_fun.h>
 #include <QSqlQuery>
 #include <QSqlError>
+#include <QNetworkInterface>
+#include <QHostAddress>
 #include <QtDebug>
 
 #ifdef Q_OS_ANDROID
@@ -134,6 +136,33 @@ QVariant QT::sqlQuery(const QVariant& vQuery, const QVariant& vValues) {
     text = db.lastError().text();
   }
   qDebug() << "SQL error:" << text;
+  return QVariant();
+}
+
+// etc
+
+QVariant QT::localIp() {
+  // Returns the local IP string. Private networks may use:
+  // 10.*.*.*
+  // 172.16.*.*
+  // 192.168.*.*
+  const auto addresses = QNetworkInterface::allAddresses();
+  QStringList ips;
+  for (QHostAddress adr : addresses) {
+    if (adr.protocol() == QAbstractSocket::IPv4Protocol) {
+      QString ip(adr.toString());
+      if (ip.startsWith("10.") ||
+          ip.startsWith("172.16.") ||
+          ip.startsWith("192.168.")) {
+        ips << ip;
+      }
+    }
+  }
+  if (!ips.isEmpty()) {
+    // hack for rare, ambiguous cases
+    ips.sort();
+    return ips.first();
+  }
   return QVariant();
 }
 

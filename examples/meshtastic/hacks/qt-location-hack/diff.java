@@ -46,10 +46,7 @@
 >         try {
 >             //Log.d(LQML, "ini GPS location...");
 >             LocationManager mLocationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
->             mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
->                                                     2000, // 2 secs
->                                                     100,  // HIGH_ACCURACY
->                                                     mLocationListenerGPS);
+>             mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 100, mLocationListenerGPS);
 >             //Log.d(LQML, "ini GPS location OK");
 >         }
 >         catch (Exception e) {

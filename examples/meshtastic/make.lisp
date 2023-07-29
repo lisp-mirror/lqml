@@ -12,7 +12,7 @@
 #+(or android ios)
 (pushnew :mobile *features*)
 
-;;; copy ECL 'encodings/' (mobile only)
+;;; copy Swank and ECL contrib files (mobile only)
 
 (defun cc (&rest args)
   (apply 'concatenate 'string args))
@@ -22,16 +22,28 @@
                  #+ios     "../platforms/ios/assets/Library/")
 
 #+mobile
+(defun find-swank ()
+  (probe-file (cc *assets* "quicklisp/local-projects/slime/swank.lisp")))
+
+#+mobile
 (defun shell (command)
   (ext:run-program "sh" (list "-c" command)))
 
 #+mobile
-(unless (probe-file (cc *assets* "encodings"))
-  (ensure-directories-exist *assets*)
-  (let ((lib (cc (ext:getenv #+android (if *32bit* "ECL_ANDROID_32" "ECL_ANDROID")
-                             #+ios "ECL_IOS")
-                 "/lib/ecl-*/")))
-    (shell (cc "cp -r " lib "encodings " *assets*))))
+(progn
+  (unless (find-swank)
+    (let ((to (cc *assets* "quicklisp/local-projects/slime/")))
+      (ensure-directories-exist to)
+      (shell (cc "cp -r ../../../slime/src/* " to))))
+  (unless (probe-file (cc *assets* "encodings"))
+    (let ((lib (cc (ext:getenv #+android "ECL_ANDROID" #+ios "ECL_IOS")
+                   "/lib/ecl-*/")))
+      (shell (cc "cp " lib "*.doc " *assets*))
+      (shell (cc "cp -r " lib "encodings " *assets*)))))
+
+#+mobile
+(unless (find-swank)
+  (error "Swank files missing, please see <LQML root>/slime/src/readme-sources.md"))
 
 ;;; compile ASDF system
 
@@ -58,11 +70,13 @@
   (load "src/lisp/tr"))
 
 #-mobile
-(asdf:make-build "app"
-                 :monolithic t
-                 :type :static-library
-                 :move-here (cc *current* "build/tmp/")
-                 :init-name "ini_app")
+(progn
+  (require :ecl-curl)
+  (asdf:make-build "app"
+                   :monolithic t
+                   :type :static-library
+                   :move-here (cc *current* "build/tmp/")
+                   :init-name "ini_app"))
 
 #+mobile
 (progn
@@ -90,4 +104,3 @@
   (when (probe-file to*)
     (delete-file to*))
   (rename-file from to))
-

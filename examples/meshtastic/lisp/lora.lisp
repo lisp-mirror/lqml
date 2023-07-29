@@ -3,13 +3,14 @@
 (defvar *settings* (list :region :eu-868
                          :modem-preset :long-fast))
 
-(defvar *my-channel*   nil)
-(defvar *channels*     nil)
-(defvar *my-node-info* nil)
-(defvar *node-infos*   nil)
-(defvar *receiver*     nil)
-(defvar *config-lora*  nil)
-(defvar *ble-names*    nil)
+(defvar *my-channel-name* "cl-app") ; max 12 bytes
+(defvar *my-channel*      nil)
+(defvar *channels*        nil)
+(defvar *my-node-info*    nil)
+(defvar *node-infos*      nil)
+(defvar *receiver*        nil)
+(defvar *config-lora*     nil)
+(defvar *ble-names*       nil)
 
 ;;; header
 
@@ -76,30 +77,35 @@
 
 (defun send-message (text)
   "Sends TEXT to radio and adds it to QML item model."
-  (msg:check-utf8-length (q< |text| ui:*edit*)) 
-  (unless (q< |tooLong| ui:*edit*)
-    (incf msg:*message-id*)
-    (when (stringp *receiver*)
-      (setf *receiver* (name-to-node *receiver*)))
-    (send-to-radio
-     (me:make-to-radio
-      :packet (me:make-mesh-packet
-               :from (my-num)
-               :to *receiver*
-               :id msg:*message-id*
-               :want-ack t
-               :decoded (me:make-data
-                         :portnum :text-message-app
-                         :payload (qto-utf8 text)))))
-    (msg:add-message
-     (list :receiver (node-to-name *receiver*)
-           :sender (my-name)
-           :timestamp (princ-to-string (get-universal-time)) ; STRING for JS
-           :hour (timestamp-to-hour)
-           :text (add-line-breaks text)
-           :mid (princ-to-string msg:*message-id*)           ; STRING for JS
-           :ack-state (position :sending msg:*states*)
-           :me t))))
+  ;; check special keywords first
+  (cond ((string= ":s" text) ; for Lisp hackers only
+         (start-swank)
+         (q! |clear| ui:*edit*))
+        (t
+         (msg:check-utf8-length (q< |text| ui:*edit*))
+         (unless (q< |tooLong| ui:*edit*)
+           (incf msg:*message-id*)
+           (when (stringp *receiver*)
+             (setf *receiver* (name-to-node *receiver*)))
+           (send-to-radio
+            (me:make-to-radio
+             :packet (me:make-mesh-packet
+                      :from (my-num)
+                      :to *receiver*
+                      :id msg:*message-id*
+                      :want-ack t
+                      :decoded (me:make-data
+                                :portnum :text-message-app
+                                :payload (qto-utf8 text)))))
+           (msg:add-message
+            (list :receiver (node-to-name *receiver*)
+                  :sender (my-name)
+                  :timestamp (princ-to-string (get-universal-time)) ; STRING for JS
+                  :hour (timestamp-to-hour)
+                  :text (add-line-breaks text)
+                  :mid (princ-to-string msg:*message-id*)           ; STRING for JS
+                  :ack-state (position :sending msg:*states*)
+                  :me t))))))
 
 (defun read-radio ()
   "Triggers a read on the radio. Will call RECEIVED-FROM-RADIO on success."
@@ -168,15 +174,33 @@
                    ;; text-message
                    (:text-message-app
                     (let ((timestamp (get-universal-time)) ; or (me:rx-time packet) ?
-                          (mid (me:id packet)))
+                          (mid (me:id packet))
+                          (text (qfrom-utf8 payload)))
                       (setf msg:*message-id* (max mid msg:*message-id*))
-                      (msg:add-message
-                       (list :receiver (my-name)
-                             :sender (node-to-name (me:from packet))
-                             :timestamp (princ-to-string timestamp) ; STRING for JS
-                             :hour (timestamp-to-hour timestamp)
-                             :text (add-line-breaks (qfrom-utf8 payload))
-                             :mid (princ-to-string mid)))))         ; STRING for JS
+                      (if (x:starts-with ":echo" text)
+                          (send-message (x:cc "echo:" (subseq text #.(length ":echo"))))
+                          (progn
+                            (when (x:starts-with "echo:" text)
+                              ;; send convenient response containing signal info, position, distance
+                              (let ((pos (getf loc:*positions* (me:from packet)))
+                                    (my-pos (loc:last-gps-position)))
+                                (setf text (format nil "~A~%~%snr: <b>~F</b> rssi: <b>~D</b>~%lat: ~F lon: ~F~%distance: <b>~:D</b>"
+                                                   text
+                                                   (me:rx-snr packet)
+                                                   (me:rx-rssi packet)
+                                                   (if pos (getf pos :lat) "-")
+                                                   (if pos (getf pos :lon) "-")
+                                                   (if (and pos my-pos)
+                                                       (loc:distance (cons (first my-pos) (second my-pos))
+                                                                     (cons (getf pos :lat) (getf pos :lon)))
+                                                       "-")))))
+                            (msg:add-message
+                             (list :receiver (my-name)
+                                   :sender (node-to-name (me:from packet))
+                                   :timestamp (princ-to-string timestamp) ; STRING for JS
+                                   :hour (timestamp-to-hour timestamp)
+                                   :text (add-line-breaks text)
+                                   :mid (princ-to-string mid)))))))       ; STRING for JS
                    ;; for :ack-state (acknowledgement state)
                    (:routing-app
                     (let ((state (me:routing.error-reason
@@ -244,8 +268,8 @@
              (setf *config-complete* t)
              (q> |playing| ui:*busy* nil)
              (qlog "config-complete id: ~A" *config-id*)
-             (unless (find (my-name) (app:setting :configured) :test 'string=)
-               (app:change-setting :configured (my-name) :cons t)
+             (unless (string= *my-channel-name*
+                              (me:name (me:settings *my-channel*)))
                (qlater 'config-device))))))
   (setf *received* nil))
 
@@ -301,7 +325,7 @@
   ;; channel settings for direct messages
   (set-channel (me:make-channel
                 :settings (me:make-channel-settings
-                           :name "cl-app"            ; max 12 bytes
+                           :name *my-channel-name*
                            :psk (to-bytes (list 1))) ; encrypted with fixed (known) key
                 :role :primary))
   (change-lora-config))

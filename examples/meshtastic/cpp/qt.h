@@ -33,6 +33,9 @@ public:
   Q_INVOKABLE QVariant iniDb(const QVariant&);
   Q_INVOKABLE QVariant sqlQuery(const QVariant&, const QVariant&);
 
+  // etc
+  Q_INVOKABLE QVariant localIp();
+
   QT();
 
   BLE_ME* ble;

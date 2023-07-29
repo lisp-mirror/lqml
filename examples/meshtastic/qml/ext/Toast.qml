@@ -32,6 +32,11 @@ Rectangle {
     width: toast.parent.width - 2 * toast.radius - 10
     horizontalAlignment: Text.AlignHCenter
     verticalAlignment: Text.AlignVCenter
+
+    MouseArea {
+      anchors.fill: parent
+      onClicked: toast.visible = false
+    }
   }
 
   SequentialAnimation {

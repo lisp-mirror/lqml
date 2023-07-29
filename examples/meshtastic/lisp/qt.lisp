@@ -6,6 +6,7 @@
    #:ini-db
    #:ini-positioning
    #:last-position
+   #:local-ip
    #:start-device-discovery
    #:read*
    #:short-names
@@ -22,4 +23,3 @@
         #-qt-plugin (qfind-child nil "QT"))
   (let ((*package* (find-package :qt)))
     (define-qt-wrappers *cpp*)))
-

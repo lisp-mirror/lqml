@@ -30,7 +30,3 @@
   ;; TODO: add in UI settings
   (app:change-setting :device nil))
 
-(defun reset-configured ()
-  ;; TODO: add in UI settings
-  (app:change-setting :configured nil))
-

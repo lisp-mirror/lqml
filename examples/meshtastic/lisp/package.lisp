@@ -5,6 +5,7 @@
    #:icon-press-and-hold
    #:ini
    #:load-settings
+   #:my-ip
    #:save-settings
    #:setting
    #:toast
@@ -98,7 +99,9 @@
   (:export
    #:*my-position*
    #:*positions*
+   #:distance
    #:ini
+   #:last-gps-position
    #:set-position
    #:update-my-position))
 
