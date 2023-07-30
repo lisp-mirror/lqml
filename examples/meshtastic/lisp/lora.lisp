@@ -173,18 +173,18 @@
                  (case (me:portnum decoded)
                    ;; text-message
                    (:text-message-app
-                    (let ((timestamp (get-universal-time)) ; or (me:rx-time packet) ?
+                    (let ((timestamp (get-universal-time))
                           (mid (me:id packet))
                           (text (qfrom-utf8 payload)))
                       (setf msg:*message-id* (max mid msg:*message-id*))
-                      (if (x:starts-with ":echo" text)
-                          (send-message (x:cc "echo:" (subseq text #.(length ":echo"))))
+                      (if (x:starts-with ":e" text) ; 'echo'
+                          (qsingle-shot 1000 (lambda () (send-message (x:cc "<b>echo:</b>" (subseq text #.(length ":e"))))))
                           (progn
-                            (when (x:starts-with "echo:" text)
+                            (when (x:starts-with "<b>echo:</b>" text)
                               ;; send convenient response containing signal info, position, distance
                               (let ((pos (getf loc:*positions* (me:from packet)))
                                     (my-pos (loc:last-gps-position)))
-                                (setf text (format nil "~A~%~%snr: <b>~F</b> rssi: <b>~D</b>~%lat: ~F lon: ~F~%distance: <b>~:D</b>"
+                                (setf text (format nil "~A~%~%snr: <b>~F</b> rssi: <b>~D</b>~%lat: ~F lon: ~F~%distance: <b>~:D m</b>"
                                                    text
                                                    (me:rx-snr packet)
                                                    (me:rx-rssi packet)

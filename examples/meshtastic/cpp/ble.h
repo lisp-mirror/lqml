@@ -36,6 +36,7 @@ Q_SIGNALS:
   void deviceDiscovered(const QString&);
   void mainServiceReady();
   void deviceDisconnecting();
+  void bleError();
 
 public Q_SLOTS:
   void startDeviceDiscovery();

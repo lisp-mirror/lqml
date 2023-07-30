@@ -90,7 +90,6 @@
    #:change-radio
    #:clear
    #:device-discovered
-   #:reset-configured
    #:reset-default-radio))
 
 (defpackage :location

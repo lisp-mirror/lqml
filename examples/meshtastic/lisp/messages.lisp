@@ -45,7 +45,8 @@
     (q! |clear| ui:*messages*)
     (dolist (message (db:load-messages (parse-integer x:it :radix 16)))
       (add-message (read-from-string message) t))
-    (qsingle-shot 100 (lambda () (q! |positionViewAtEnd| ui:*message-view*)))))
+    (dotimes (n 2) ; Qt bug
+      (q! |positionViewAtEnd| ui:*message-view*))))
 
 (defun receiver-changed ()
   (qsleep 0.1)

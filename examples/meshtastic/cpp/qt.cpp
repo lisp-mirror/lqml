@@ -29,6 +29,10 @@ QT::QT() : QObject() {
                [](const QString& fullName) {
                  ecl_fun("radios:device-discovered", fullName.right(4));
                });
+  ble->connect(ble, &BLE::bleError,
+               []() {
+                 ecl_fun("radios:reset-default-radio");
+               });
 }
 
 // BLE_ME

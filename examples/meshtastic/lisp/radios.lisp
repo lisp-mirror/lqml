@@ -28,5 +28,6 @@
 
 (defun reset-default-radio ()
   ;; TODO: add in UI settings
-  (app:change-setting :device nil))
+  (app:change-setting :device nil)
+  (lora:start-device-discovery))
 

@@ -153,6 +153,7 @@ void BLE::retryScan() {
 
 void BLE::errorReceived(QLowEnergyController::Error) {
   qDebug() << "BLE error: " << controller->errorString();
+  Q_EMIT bleError();
 }
 
 void BLE::disconnectFromDevice() {
