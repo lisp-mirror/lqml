@@ -24,7 +24,7 @@ Rectangle {
     // hack to define all model key _types_
     ListElement {
       receiver: ""; sender: ""; senderName: ""; timestamp: ""; hour: "";
-      text: ""; text2: ""; mid: ""; ackState: 0; me: true
+      text: ""; text2: ""; mid: ""; ackState: 0; me: true; hidden: false
     }
 
     function addMessage(message) { append(message) }
@@ -48,7 +48,7 @@ Rectangle {
           }
           setProperty(i, "text", highlighted)
         }
-        view.itemAtIndex(i).visible = !!highlighted
+        setProperty(i, "hidden", !highlighted)
       }
       view.positionViewAtBeginning()
     }
@@ -60,7 +60,7 @@ Rectangle {
           setProperty(i, "text", text2)
           setProperty(i, "text2", "")
         }
-        view.itemAtIndex(i).visible = true
+        setProperty(i, "hidden", false)
       }
     }
 
@@ -73,7 +73,8 @@ Rectangle {
     Item {
       id: delegate
       width: Math.max(text.paintedWidth, rowSender.width + 4 * text.padding) + 2 * text.padding + 4
-      height: visible ? (text.contentHeight + 2 * text.padding + sender.contentHeight + 8) : 0
+      height: model.hidden ? 0 : (text.contentHeight + 2 * text.padding + sender.contentHeight + 8)
+      clip: true
 
       Rectangle {
         anchors.centerIn: parent
