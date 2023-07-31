@@ -78,34 +78,45 @@
 (defun send-message (text)
   "Sends TEXT to radio and adds it to QML item model."
   ;; check special keywords first
-  (cond ((string= ":s" text) ; for Lisp hackers only
-         (start-swank)
-         (q! |clear| ui:*edit*))
-        (t
-         (msg:check-utf8-length (q< |text| ui:*edit*))
-         (unless (q< |tooLong| ui:*edit*)
-           (incf msg:*message-id*)
-           (when (stringp *receiver*)
-             (setf *receiver* (name-to-node *receiver*)))
-           (send-to-radio
-            (me:make-to-radio
-             :packet (me:make-mesh-packet
-                      :from (my-num)
-                      :to *receiver*
-                      :id msg:*message-id*
-                      :want-ack t
-                      :decoded (me:make-data
-                                :portnum :text-message-app
-                                :payload (qto-utf8 text)))))
-           (msg:add-message
-            (list :receiver (node-to-name *receiver*)
-                  :sender (my-name)
-                  :timestamp (princ-to-string (get-universal-time)) ; STRING for JS
-                  :hour (timestamp-to-hour)
-                  :text (add-line-breaks text)
-                  :mid (princ-to-string msg:*message-id*)           ; STRING for JS
-                  :ack-state (position :sending msg:*states*)
-                  :me t))))))
+  (flet ((clear ()
+           (q! |clear| ui:*edit*)))
+    (cond #+mobile
+          ((string= ":s" text)   ; for Lisp hackers only
+           (start-swank)
+           (clear))
+          #+mobile
+          ((string= ":w" text)   ; for saving/restoring message DB and settings
+           (s-http-server:start)
+           (clear))
+          #+mobile
+          ((string= ":ws" text)  ; stop web-server after save/restore
+           (s-http-server:stop)
+           (clear))
+          (t
+           (msg:check-utf8-length (q< |text| ui:*edit*))
+           (unless (q< |tooLong| ui:*edit*)
+             (incf msg:*message-id*)
+             (when (stringp *receiver*)
+               (setf *receiver* (name-to-node *receiver*)))
+             (send-to-radio
+              (me:make-to-radio
+               :packet (me:make-mesh-packet
+                        :from (my-num)
+                        :to *receiver*
+                        :id msg:*message-id*
+                        :want-ack t
+                        :decoded (me:make-data
+                                  :portnum :text-message-app
+                                  :payload (qto-utf8 text)))))
+             (msg:add-message
+              (list :receiver (node-to-name *receiver*)
+                    :sender (my-name)
+                    :timestamp (princ-to-string (get-universal-time)) ; STRING for JS
+                    :hour (timestamp-to-hour)
+                    :text (add-line-breaks text)
+                    :mid (princ-to-string msg:*message-id*)           ; STRING for JS
+                    :ack-state (position :sending msg:*states*)
+                    :me t)))))))
 
 (defun read-radio ()
   "Triggers a read on the radio. Will call RECEIVED-FROM-RADIO on success."

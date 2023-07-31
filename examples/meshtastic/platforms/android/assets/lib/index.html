@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+  <head>
+    <title>meshtastic data exchange</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <style>
+      body { color: #303030; font-family: sans-serif; margin: 30px 20px; }
+      a:link, a:visited { text-decoration: none; color: blue; }
+      a:hover { text-decoration: underline; }
+      .upload { background-color: #f0f0f0; color: black; border: 3px solid #29c840; border-radius: 3px; }
+      .upload:hover { background-color: #d0d0d0; }
+      .upload:active { background-color: #b0b0b0; }
+    </style>
+    <script>
+      function setOrange() { document.getElementById("upload").style.border = "3px solid #febc2e" }
+    </script>
+  </head>
+  <body>
+    <h3>Save / Restore data from meshtastic cl-app</h3>
+    <p>
+      <b>Save</b> data first (backup): enter URL (see app message)
+      <br><code>http://192.168.1.x:1701/meshtastic-data.zip</code>
+    </p>
+    <form enctype="multipart/form-data" method="post" action="/">
+      <p>
+        <b>Restore</b> from saved backup file: choose <code>meshtastic-data.zip</code>
+        <br>
+        <input name="file" type="file" onclick="setOrange()">
+      </p>
+      <p>
+        <input type="submit" value="Restore" id="upload" class="upload">
+      </p>
+    </form>
+  </body>
+</html>

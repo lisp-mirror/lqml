@@ -36,6 +36,7 @@ Rectangle {
     anchors.fill: parent
     anchors.margins: 9
     spacing: 9
+    clip: true
     delegate: groupDelegate
     model: group
     currentIndex: -1
@@ -51,10 +52,41 @@ Rectangle {
     }
 
     function addPerson(person) {
-      append(person)
+      // insert sorted
+      var i = 0;
+      for (; i < count; i++) {
+        if (person.customName < get(i).customName) {
+          insert(i, person)
+          break
+        }
+      }
+      if (i === count) {
+        append(person)
+      }
+
       if (person.current) {
         view.currentIndex = view.count - 1
+        view.positionViewAtIndex(view.currentIndex, ListView.Contain)
       }
+    }
+
+    function sortRenamed(name, index) {
+      var to = -1
+      if (name < get(0).customName) {
+        to = 0
+      } else if (name > get(count - 1).customName) {
+        to = count - 1
+      } else {
+        for (var i = 1; i < count; i++) {
+          if ((i !== index) && (name < get(i).customName)) {
+            to = (index > i) ? i : i - 1
+            break
+          }
+        }
+      }
+      move(index, to, 1)
+      view.currentIndex = to
+      view.positionViewAtIndex(to, ListView.Contain)
     }
 
     function radioNames() {
@@ -149,9 +181,13 @@ Rectangle {
         }
 
         onEditingFinished: {
-          readOnly = true
-          if (text === "") text = qsTr("Anonym")
-          Lisp.call("group:name-edited", model.radioName, text)
+          if (!readOnly) {
+            readOnly = true
+            if (text === "") text = qsTr("Anonym")
+            group.setProperty(index, "customName", text)
+            group.sortRenamed(text, index)
+            Lisp.call("group:name-edited", model.radioName, text)
+          }
         }
 
         onReleased: if (readOnly) selected()

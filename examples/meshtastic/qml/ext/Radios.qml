@@ -36,6 +36,7 @@ Rectangle {
     anchors.fill: parent
     anchors.margins: 9
     spacing: 9
+    clip: true
     delegate: radioDelegate
     model: radios
   }

@@ -90,6 +90,20 @@ On mobile, and if the radio doesn't have a GPS module, the location of the
 phone is sent once (at startup) to the radio.
 
 
+Save / Restore data
+-------------------
+
+A web-server is included on mobile for saving and restoring the message DB and
+the app settings. Just use special command **:w** (for 'web-server') and
+**:ws** (for 'stop web-server') after you're done.
+
+After starting the server, just enter the shown URL in your desktop browser,
+and follow the instructions.
+
+Using this method you can easily transfer all data from one mobile device to
+any other device.
+
+
 Tips
 ----
 

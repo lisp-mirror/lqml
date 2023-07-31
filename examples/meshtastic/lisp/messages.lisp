@@ -11,7 +11,8 @@
 (defun add-message (message &optional loading)
   "Adds passed MESSAGE (a PLIST) to the QML item model and saves it to the DB.
   The model keys are:
-  :receiver :sender :sender-name :timestamp :hour :text :mid :ack-state :me"
+  :receiver :sender :sender-name :timestamp :hour :text :mid :ack-state :me
+  :hidden"
   (unless (or loading (getf message :me))
     (x:when-it (app:setting (getf message :sender) :custom-name)
       (setf (getf message :sender-name) x:it)))
