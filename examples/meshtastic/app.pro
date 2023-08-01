@@ -46,6 +46,10 @@ linux: LIBS += -L../../../platforms/linux/lib
 macx:  LIBS += -L../../../platforms/macos/lib
 win32: LIBS += -L../../../platforms/windows/lib
 
+macx {
+  QMAKE_INFO_PLIST = platforms/macos/Info.plist
+}
+
 win32 {
   LIBS += -lws2_32
 
