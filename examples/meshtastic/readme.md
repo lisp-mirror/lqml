@@ -84,6 +84,15 @@ devices themselves work and are able to connect.
 See also [readme-usage](readme-usage.md).
 
 
+Build
+-----
+
+Please apply [hacks](hacks/) before trying to build.
+
+On **iOS** see also note in [upload-download.lisp](lisp/upload-download.lisp)
+regarding function `read-sequence`, which needs to be replaced in the Quicklisp
+**zip** library.
+
 
 Run
 ---

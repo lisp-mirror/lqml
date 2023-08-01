@@ -31,9 +31,12 @@
            :dont-close dont-close
            :style style))
 
-(defun start-swank (&key (port 4005) (interface "0.0.0.0") (style :spawn)
-                         (load-contribs t) (setup t) (delete t) (quiet t)
-                         (dont-close t) log-events)
+(defun start-swank ()
+  (mp:process-run-function :swank 'do-start-swank))
+
+(defun do-start-swank (&key (port 4005) (interface "0.0.0.0") (style :spawn)
+                            (load-contribs t) (setup t) (delete t) (quiet t)
+                            (dont-close t) log-events)
   (unless (find-package :swank)
     (funcall (%sym 'load-system :asdf) :swank))
   (funcall (%sym 'init :swank-loader)

@@ -93,9 +93,9 @@ phone is sent once (at startup) to the radio.
 Save / Restore data
 -------------------
 
-A web-server is included on mobile for saving and restoring the message DB and
-the app settings. Just use special command **:w** (for 'web-server') and
-**:ws** (for 'stop web-server') after you're done.
+A local web-server is included on mobile for saving and restoring the message
+DB and the app settings. Just use special text message `:w` (for 'web-server')
+and `:ws` (for 'stop web-server') after you're done.
 
 After starting the server, just enter the shown URL in your desktop browser,
 and follow the instructions.
@@ -115,10 +115,10 @@ your radio, just press-and-hold on the **Group** icon.
 
 Both of above is meant to avoid app restart.
 
-For a trivial signal test you can use the special command **:e** (for 'echo'),
-which will send back the text you sent, adding signal snr/rssi, position and
-distance. This is convenient to test signal strength from different places, and
-have it logged in your messages.
+For a trivial signal test you can use the special text message `:e` (for
+'echo'), which will send back the text you sent, adding signal SNR/RSSI,
+position and distance. This is convenient to test signal strength from
+different places, and have it logged in your messages.
 
 
 Hacker tips
@@ -132,5 +132,8 @@ Alternatively you can completely erase the flash memory from an arduino IDE,
 see RAK on github and file `reset-flash.ino` (re-flash firmware afterwards).
 
 If you are a Lisp hacker, you may enjoy the integrated Swank server (on
-mobile). Just type `:s` as your text message. A message with the IP to connect
-to will be shown once the server is running.
+mobile). Just type special text message `:s`. A message with the IP to connect
+to will be shown once the server is running. Beware though that Swank on mobile
+isn't very stable, but it's perfect for simple debugging purposes, or to
+get/set variables on the fly (but it might crash regularily if you try to eval
+some buffer).
