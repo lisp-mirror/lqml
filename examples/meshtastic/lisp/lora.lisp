@@ -189,20 +189,24 @@
                           (text (qfrom-utf8 payload)))
                       (setf msg:*message-id* (max mid msg:*message-id*))
                       (if (x:starts-with ":e" text) ; 'echo'
-                          (qsingle-shot 1000 (lambda () (send-message (x:cc "<b>echo:</b>" (subseq text #.(length ":e"))))))
+                          (progn
+                            #+mobile
+                            (qlater 'loc:update-my-position)
+                            (qsingle-shot 2000 (lambda () (send-message (x:cc "<b>echo:</b>" (subseq text #.(length ":e")))))))
                           (progn
                             (when (x:starts-with "<b>echo:</b>" text)
                               ;; send convenient response containing signal info, position, distance
                               (let ((pos (getf loc:*positions* (me:from packet)))
-                                    (my-pos (loc:last-gps-position)))
-                                (setf text (format nil "~A~%~%snr: <b>~F</b> rssi: <b>~D</b>~%lat: ~F lon: ~F~%distance: <b>~:D m</b>"
+                                    (my-pos #+mobile (loc:last-gps-position)
+                                            #-mobile nil))
+                                (setf text (format nil "~A~%~%snr: <b>~F</b> rssi: <b>~D</b>~%lat: ~,5F lon: ~,5F~%distance: <b>~:D m</b>"
                                                    text
                                                    (me:rx-snr packet)
                                                    (me:rx-rssi packet)
-                                                   (if pos (getf pos :lat) "-")
-                                                   (if pos (getf pos :lon) "-")
+                                                   (if my-pos (first my-pos)  "-")
+                                                   (if my-pos (second my-pos) "-")
                                                    (if (and pos my-pos)
-                                                       (loc:distance (cons (first my-pos) (second my-pos))
+                                                       (loc:distance (cons (first my-pos)  (second my-pos))
                                                                      (cons (getf pos :lat) (getf pos :lon)))
                                                        "-")))))
                             (msg:add-message

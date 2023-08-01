@@ -32,6 +32,7 @@ Rectangle {
 
   ListView {
     id: view
+    objectName: "group_view"
     anchors.topMargin: rowModem.height
     anchors.fill: parent
     anchors.margins: 9
@@ -65,7 +66,7 @@ Rectangle {
       }
 
       if (person.current) {
-        view.currentIndex = view.count - 1
+        view.currentIndex = i
         view.positionViewAtIndex(view.currentIndex, ListView.Contain)
       }
     }

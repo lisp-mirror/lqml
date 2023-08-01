@@ -7,6 +7,7 @@
    #:*edit*
    #:*group*
    #:*group-icon*
+   #:*group-view*
    #:*find*
    #:*find-text*
    #:*loading*
@@ -27,6 +28,7 @@
 (defparameter *edit*            "edit")
 (defparameter *group*           "group")
 (defparameter *group-icon*      "group_icon")
+(defparameter *group-view*      "group_view")
 (defparameter *find*            "find")
 (defparameter *find-text*       "find_text")
 (defparameter *loading*         "loading")
