@@ -85,9 +85,11 @@ Rectangle {
           }
         }
       }
-      move(index, to, 1)
-      view.currentIndex = to
-      view.positionViewAtIndex(to, ListView.Contain)
+      if (to !== -1) {
+        move(index, to, 1)
+        view.currentIndex = to
+        view.positionViewAtIndex(to, ListView.Contain)
+      }
     }
 
     function radioNames() {
@@ -186,7 +188,7 @@ Rectangle {
             readOnly = true
             if (text === "") text = qsTr("Anonym")
             group.setProperty(index, "customName", text)
-            group.sortRenamed(text, index)
+            Qt.callLater(group.sortRenamed, text, index)
             Lisp.call("group:name-edited", model.radioName, text)
           }
         }

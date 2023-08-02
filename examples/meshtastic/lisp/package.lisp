@@ -77,6 +77,7 @@
    #:change-state
    #:check-utf8-length
    #:clear-find
+   #:echo-message
    #:find-text
    #:message-press-and-hold
    #:receiver-changed

@@ -107,3 +107,20 @@
         (format s "<font color='red'>~A</font>"
                 (subseq text e (+ e len)))))))
 
+(defun echo-message (text from snr rssi)
+  "Meant for radio signal testing: one static node (with GPS module), while
+  another mobile node is moving to different places (using GPS of phone),
+  sending an ':e ...' text message, which will be echoed with info about signal
+  strength, position and distance."
+  (let ((from-pos (getf loc:*positions* from))
+        (my-pos #+mobile (loc:last-gps-position)
+                #-mobile nil))
+    (format nil "~A~%~%snr: <b>~F</b> rssi: <b>~D</b>~%lat: ~,5F lon: ~,5F~%distance: <b>~:D m</b>"
+                text snr rssi
+                (if my-pos (first my-pos)  "-")
+                (if my-pos (second my-pos) "-")
+                (if (and from-pos my-pos)
+                    (loc:distance (cons (first my-pos) (second my-pos))
+                                  (cons (getf from-pos :lat) (getf from-pos :lon)))
+                    "-"))))
+
