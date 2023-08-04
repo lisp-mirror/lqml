@@ -113,7 +113,7 @@
   sending an ':e ...' text message, which will be echoed with info about signal
   strength, position and distance."
   (let ((from-pos (loc:position* from))
-        (my-pos #+mobile (loc:last-gps-position)
+        (my-pos #+mobile (nbutlast (loc:last-gps-position) 1)
                 #-mobile nil))
     (format nil "~A~%~%snr: <b>~F</b> rssi: <b>~D</b>~%lat: ~,5F lon: ~,5F~%distance: <b>~:D m</b>"
                 text snr rssi
