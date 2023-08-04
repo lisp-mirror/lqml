@@ -25,11 +25,12 @@ Item {
       }
 
       function updatePositions(group) {
+        var n = 0
         for (var i = 0; i < group.count; i++) {
           var data = group.get(i)
           var pos = Lisp.call("loc:position*", data.nodeNum)
           if (pos) {
-            var marker = markers.itemAt(i)
+            var marker = markers.itemAt(n++)
             marker.radioName = data.radioName
             marker.customName = data.customName
             marker.coordinate = coordinate(pos)
