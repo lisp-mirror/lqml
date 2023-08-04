@@ -76,7 +76,8 @@
   (save-settings))
 
 (defun my-ip ()
-  (qrun* (qt:local-ip qt:*cpp*))) ; 'qrun*' for return value
+  (let ((ip (qrun* (qt:local-ip qt:*cpp*)))) ; 'qrun*' for return value
+    (or ip "127.0.0.1")))
 
 ;;; toast
 

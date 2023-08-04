@@ -91,7 +91,7 @@
     (destructuring-bind (lat lon time)
         (last-gps-position)
       (unless (zerop lat)
-        (qjs |setCenter| ui:*map* lat lon)))
+        (qjs |setCenter| ui:*map* (list lat lon))))
     #-mobile
     (let ((my-pos (position* (lora:my-num))))
       (when my-pos

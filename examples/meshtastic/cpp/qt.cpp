@@ -173,12 +173,12 @@ QVariant QT::localIp() {
 
 QVariant QT::startTileServer() {
   static bool start = true;
-  int port = 1702;
   if (start) {
     start = false;
+    int port = 1702;
     new TileServer(port);
   }
-  return port;
+  return QVariant();
 }
 
 QT_END_NAMESPACE

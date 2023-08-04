@@ -2,6 +2,7 @@
 
 #include <QTcpServer>
 #include <QTcpSocket>
+#include <QtDebug>
 
 // trivial local tile web-server which doesn't need an API key
 
@@ -9,11 +10,9 @@ class TileServer : public QTcpServer {
   Q_OBJECT
 
 public:
-  int port;
-
-  TileServer(int p = 0, QObject* parent = nullptr) : QTcpServer(parent) {
-    listen(QHostAddress::Any, p);
-    port = serverPort();
+  TileServer(int port = 0, QObject* parent = nullptr) : QTcpServer(parent) {
+    listen(QHostAddress::Any, port);
+    qDebug() << "tile server started at IP" << serverAddress() << "port" << serverPort();
   }
 
   void incomingConnection(qintptr socket) override {

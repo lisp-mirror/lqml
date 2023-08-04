@@ -65,7 +65,7 @@ Item {
         // local tile web-server (no API key needed), see 'cpp/tile_server.h'
         PluginParameter {
           name: "osm.mapping.providersrepository.address"
-          value: "http://127.0.0.1:1702/"
+          value: "http://" + Lisp.call("app:my-ip") + ":1702/"
         }
       }
 

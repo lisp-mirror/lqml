@@ -27,7 +27,7 @@ QMAKE_EXTRA_COMPILERS += lisp
 win32:  PRE_TARGETDEPS = tmp/app.lib
 !win32: PRE_TARGETDEPS = tmp/libapp.a
 
-QT          += quick qml bluetooth sql positioning
+QT          += quick qml bluetooth sql positioning location
 TEMPLATE    = app
 CONFIG      += c++17 no_keywords release
 DEFINES     += DESKTOP_APP BACKGROUND_INI_LISP INI_ECL_CONTRIB QT_EXTENSION
@@ -73,6 +73,12 @@ android {
   ANDROID_MIN_SDK_VERSION    = 21
   ANDROID_TARGET_SDK_VERSION = 31
 
+  # OpenSSL libs not included here, but can be downloaded from:
+  # https://github.com/KDAB/android_openssl/tree/master/latest
+  # required for downloading map tiles, please note naming convention for Qt:
+  SSL_PATH = ../../../platforms/android/lib
+  ANDROID_EXTRA_LIBS += $$SSL_PATH/libcrypto_1_1.so $$SSL_PATH/libssl_1_1.so
+
   32bit {
     ANDROID_ABIS = "armeabi-v7a"
   } else {
@@ -91,6 +97,11 @@ ios {
   LIBS        += -L$$(ECL_IOS)/lib/$$ECL_VERSION
   LIBS        += -lasdf -lecl-help -ldeflate -lecl-cdb -lecl-curl -lql-minitar -lsockets
   LIBS        += -L../../../platforms/ios/lib
+
+  # OpenSSL libs not included here, required for downloading map tiles
+  # either build them by yourself or find a trusted source for downloading,
+  # and put them here: '../../../platforms/ios/lib/'
+  LIBS        += -lcrypto -lssl
 
   QMAKE_INFO_PLIST     = platforms/ios/Info.plist
   QMAKE_ASSET_CATALOGS += platforms/ios/Assets.xcassets
@@ -114,6 +125,7 @@ HEADERS += \
   ../../src/cpp/main.h \
   cpp/ble.h \
   cpp/ble_meshtastic.h \
+  cpp/tile_server.h \
   cpp/qt.h
 
 SOURCES += \
