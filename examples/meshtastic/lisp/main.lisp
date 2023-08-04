@@ -22,7 +22,8 @@
   (when (and (= 1 index)
              (not (app:setting :latest-receiver)))
     (q> |currentIndex| ui:*main-view* 0))
-  (q> |visible| ui:*find* (= 1 index))
+  (q> |visible| ui:*location* (= 0 index))
+  (q> |visible| ui:*find*     (= 1 index))
   (values))
 
 (defun icon-press-and-hold (name) ; see QML

@@ -20,12 +20,27 @@ Item {
     height: width
   }
 
-  Image {
+  Image { // location icon ('Group')
+    objectName: "location"
+    source: "img/location.png"
+    width: headerHeight
+    height: width
+    anchors.right: parent.right
+    visible: false
+
+    MouseArea {
+      anchors.fill: parent
+      onClicked: Lisp.call("loc:show-map-clicked")
+    }
+  }
+
+  Image { // find icon ('Messages')
     objectName: "find"
     source: "img/find.png"
     width: headerHeight
     height: width
     anchors.right: parent.right
+    visible: false
 
     MouseArea {
       anchors.fill: parent

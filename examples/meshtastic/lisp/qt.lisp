@@ -8,6 +8,7 @@
    #:last-position
    #:local-ip
    #:start-device-discovery
+   #:start-tile-server
    #:read*
    #:short-names
    #:sql-query

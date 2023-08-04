@@ -54,7 +54,7 @@ Item {
     currentIndex: 1
     interactive: false
 
-    Ext.Group {}
+    Ext.Group { id: group }
     Ext.Messages {}
     Ext.Radios {}
 

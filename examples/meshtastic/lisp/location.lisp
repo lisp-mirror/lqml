@@ -1,6 +1,6 @@
 (in-package :loc)
 
-(defvar *positions*   nil) ; will be shown on an offline map (TODO)
+(defvar *positions*   nil)
 (defvar *my-position* nil)
 
 (defun ini ()
@@ -42,6 +42,13 @@
         (lora:send-position *my-position*))
       (qsingle-shot 1000 'send-to-radio)))
 
+(defun position* (node)
+  (when (stringp node)
+    (setf node (parse-integer node))) ; for JS
+  (x:when-it (getf *positions* node)
+    (list (getf x:it :lat)
+          (getf x:it :lon))))
+
 (defun set-position (node pos)
   (let ((lat (getf pos :lat)))
     (when (and node lat (not (zerop lat)))
@@ -56,7 +63,7 @@
 
 (defun distance (from to)
   ;; Haversine formula
-  (destructuring-bind ((lat-1 . lon-1) (lat-2 . lon-2))
+  (destructuring-bind ((lat-1 lon-1) (lat-2 lon-2))
       (list from to)
     (if (and (numberp lat-1)
              (numberp lat-2))
@@ -72,4 +79,37 @@
                  (x (* 2 (asin (sqrt y)))))
             (floor (+ 0.5 (* x +earth-mean-radius+ 1000)))))
         0)))
+
+(defun tile-path ()
+  (namestring (merge-pathnames "data/tiles/")))
+
+(defun activate-map ()
+  (unless (q< |active| ui:*map-loader*)
+    (qt:start-tile-server qt:*cpp*)
+    (q> |active| ui:*map-loader* t)
+    #+mobile
+    (destructuring-bind (lat lon time)
+        (last-gps-position)
+      (unless (zerop lat)
+        (qjs |setCenter| ui:*map* lat lon)))
+    #-mobile
+    (let ((my-pos (position* (lora:my-num))))
+      (when my-pos
+        (qjs |setCenter| ui:*map* my-pos)))))
+
+(defun show-map-clicked () ; see QML
+  (let ((show (not (q< |visible| ui:*map-view*))))
+    (when show
+      (activate-map)
+      (qjs |updatePositions| ui:*map*
+           (find-quick-item ui:*group*)))
+    (q> |visible| ui:*map-view* show)
+    ;; move map (not page) when swiping to left
+    (q> |interactive| ui:*main-view* (not show))
+    (unless show
+      (q> |active| ui:*map-loader* nil)))
+  (values))
+
+(defun position-count ()
+  (length *positions*))
 

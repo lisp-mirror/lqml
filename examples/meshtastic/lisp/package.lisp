@@ -99,9 +99,13 @@
   (:export
    #:*my-position*
    #:*positions*
+   #:activate-map
    #:distance
    #:ini
    #:last-gps-position
+   #:position*
+   #:position-count
    #:set-position
+   #:tile-path
    #:update-my-position))
 

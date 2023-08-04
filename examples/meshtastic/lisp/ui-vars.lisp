@@ -11,7 +11,11 @@
    #:*find*
    #:*find-text*
    #:*loading*
+   #:*location*
    #:*main-view*
+   #:*map*
+   #:*map-loader*
+   #:*map-view*
    #:*messages*
    #:*message-view*
    #:*modem*
@@ -32,6 +36,10 @@
 (defparameter *find*            "find")
 (defparameter *find-text*       "find_text")
 (defparameter *loading*         "loading")
+(defparameter *location*        "location")
+(defparameter *map*             "map")
+(defparameter *map-loader*      "map_loader")
+(defparameter *map-view*        "map_view")
 (defparameter *main-view*       "main_view")
 (defparameter *messages*        "messages")
 (defparameter *message-view*    "message_view")

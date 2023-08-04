@@ -55,6 +55,11 @@ person is associated to a specific radio. This view is populated automatically.
 You can set a name to every person associated to a radio, which defaults to
 'Anonym': a press-and-hold on the name will enter edit mode.
 
+A tap on the location item on the right shows a map with all known positions of
+the persons. The map tiles are cached automatically for offline usage, which
+means: once you visited a place on the map, it will remain available even
+without internet connection.
+
 
 Radios
 ------
@@ -137,3 +142,4 @@ to will be shown once the server is running. Beware though that Swank on mobile
 isn't very stable, but it's perfect for simple debugging purposes, or to
 get/set variables on the fly (but it might crash regularily if you try to eval
 some buffer).
+

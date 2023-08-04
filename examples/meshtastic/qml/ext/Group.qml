@@ -221,5 +221,11 @@ Rectangle {
       }
     }
   }
+
+  Ext.Map {
+    objectName: "map_view"
+    anchors.fill: rect
+    visible: false
+  }
 }
 

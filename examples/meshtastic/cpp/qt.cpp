@@ -1,5 +1,6 @@
 #include "qt.h"
 #include "ble_meshtastic.h"
+#include "tile_server.h"
 #include <ecl_fun.h>
 #include <QSqlQuery>
 #include <QSqlError>
@@ -168,6 +169,16 @@ QVariant QT::localIp() {
     return ips.first();
   }
   return QVariant();
+}
+
+QVariant QT::startTileServer() {
+  static bool start = true;
+  int port = 1702;
+  if (start) {
+    start = false;
+    new TileServer(port);
+  }
+  return port;
 }
 
 QT_END_NAMESPACE

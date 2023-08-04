@@ -12,6 +12,7 @@ MOC_DIR     = ./tmp/
 HEADERS += \
   ble.h \
   ble_meshtastic.h \
+  tile_server.h \
   qt.h
 
 SOURCES += \
