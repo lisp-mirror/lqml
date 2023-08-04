@@ -76,7 +76,11 @@ android {
   # OpenSSL libs not included here, but can be downloaded from:
   # https://github.com/KDAB/android_openssl/tree/master/latest
   # required for downloading map tiles, please note naming convention for Qt:
-  SSL_PATH = ../../../platforms/android/lib
+  32bit {
+    SSL_PATH = ../../../platforms/android/lib32
+  } else {
+    SSL_PATH = ../../../platforms/android/lib
+  }
   ANDROID_EXTRA_LIBS += $$SSL_PATH/libcrypto_1_1.so $$SSL_PATH/libssl_1_1.so
 
   32bit {
