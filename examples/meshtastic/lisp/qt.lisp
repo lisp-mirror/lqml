@@ -2,6 +2,7 @@
   (:use :cl :qml)
   (:export
    #:*cpp*
+   #:data-path
    #:ini
    #:ini-db
    #:ini-positioning

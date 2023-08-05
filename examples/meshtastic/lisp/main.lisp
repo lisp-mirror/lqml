@@ -18,6 +18,12 @@
     (ensure-permissions :bluetooth-scan :bluetooth-connect)) ; android >= 12
   (lora:start-device-discovery (or (setting :device) "")))
 
+(defun in-data-path (file)
+  #+mobile
+  (merge-pathnames (x:cc "data/" file))
+  #-mobile
+  (x:cc (qt:data-path qt:*cpp*) file))
+
 (defun view-index-changed (index) ; see QML
   (when (and (= 1 index)
              (not (app:setting :latest-receiver)))
@@ -37,17 +43,17 @@
 
 ;;; settings
 
-(defvar *file* (merge-pathnames "data/settings.exp"))
-
-(defun load-settings ()
-  (when (probe-file *file*)
-    (with-open-file (s *file*)
-      (setf lora:*settings* (read s)))))
-
-(defun save-settings ()
-  (with-open-file (s *file* :direction :output :if-exists :supersede)
-    (let ((*print-pretty* nil))
-      (prin1 lora:*settings* s))))
+(let (file)
+  (defun load-settings ()
+    (unless file
+      (setf file (in-data-path "settings.exp")))
+    (when (probe-file file)
+      (with-open-file (s file)
+        (setf lora:*settings* (read s)))))
+  (defun save-settings ()
+    (with-open-file (s file :direction :output :if-exists :supersede)
+      (let ((*print-pretty* nil))
+        (prin1 lora:*settings* s)))))
 
 (defun kw (string)
   "Intern in KEYWORD package."

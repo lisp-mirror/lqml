@@ -1,11 +1,12 @@
 (in-package :db)
 
-(defvar *file* (merge-pathnames "data/db"))
+(defvar *file* nil)
 
 (defun query (query &rest values)
   (qt:sql-query qt:*cpp* query values))
 
 (defun ini ()
+  (setf *file* (app:in-data-path "db"))
   (ensure-directories-exist *file*)
   (qt:ini-db qt:*cpp* (namestring *file*))
   (query "create table if not exists messages (mid integer primary key, uid integer, message text)"))

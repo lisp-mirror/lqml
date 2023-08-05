@@ -3,6 +3,7 @@
   (:export
    #:change-setting
    #:icon-press-and-hold
+   #:in-data-path
    #:ini
    #:load-settings
    #:my-ip

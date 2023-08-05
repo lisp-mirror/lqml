@@ -99,14 +99,21 @@ Save / Restore data
 -------------------
 
 A local web-server is included on mobile for saving and restoring the message
-DB and the app settings. Just use special text message `:w` (for 'web-server')
-and `:ws` (for 'stop web-server') after you're done.
+DB, the app settings, plus eventually cached map tiles (for offline usage).
+Just use special text message `:w` (for 'web-server') and `:ws` (for 'stop
+web-server') after you're done.
 
 After starting the server, just enter the shown URL in your desktop browser,
 and follow the instructions.
 
 Using this method you can easily transfer all data from one mobile device to
 any other device.
+
+The desktop data paths are:
+
+* Linux: `~/.local/share/cl-meshtastic/data/`
+* macOS: `~/Library/Application Support/cl-meshtastic/data/`
+* Windows: TODO
 
 
 Tips

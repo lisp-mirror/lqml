@@ -146,6 +146,17 @@ QVariant QT::sqlQuery(const QVariant& vQuery, const QVariant& vValues) {
 
 // etc
 
+QVariant QT::dataPath() {
+  // for desktop
+  static QString path;
+  if (path.isEmpty()) {
+    path = QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation);
+    path.truncate(path.lastIndexOf(QChar('/')));
+    path.append("/cl-meshtastic/data/");
+  }
+  return path;
+}
+
 QVariant QT::localIp() {
   // Returns the local IP string. Private networks may use:
   // 10.*.*.*

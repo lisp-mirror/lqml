@@ -81,7 +81,7 @@
         0)))
 
 (defun tile-path ()
-  (namestring (merge-pathnames "data/tiles/")))
+  (namestring (app:in-data-path "tiles/")))
 
 (defun activate-map ()
   (unless (q< |active| ui:*map-loader*)
