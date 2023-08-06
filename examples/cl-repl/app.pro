@@ -64,14 +64,19 @@ android {
   LIBS        += -lasdf -lecl-help -ldeflate -lecl-cdb -lecl-curl -lql-minitar -lsockets
   LIBS        += -L../../../platforms/android/lib
 
-  ANDROID_EXTRA_LIBS += $$ECL/lib/libecl.so
+  ANDROID_MIN_SDK_VERSION    = 21
+  ANDROID_TARGET_SDK_VERSION = 31
+  ANDROID_EXTRA_LIBS         += $$ECL/lib/libecl.so
+  ANDROID_PACKAGE_SOURCE_DIR = ../platforms/android
 
   # optional (not included), can be downloaded from:
   # https://github.com/KDAB/android_openssl/tree/master/latest
-  #SSL_PATH = ../../../platforms/android/lib
+  32bit {
+    SSL_PATH = ../../../platforms/android/lib32
+  } else {
+    SSL_PATH = ../../../platforms/android/lib
+  }
   #ANDROID_EXTRA_LIBS += $$SSL_PATH/libcrypto.so $$SSL_PATH/libssl.so
-
-  ANDROID_PACKAGE_SOURCE_DIR = ../platforms/android
 
   32bit {
     ANDROID_ABIS = "armeabi-v7a"

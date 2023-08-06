@@ -3,7 +3,7 @@
 # (1) run 'make apk' before running this script
 #
 # (2) don't set min sdk and target sdk in 'AndroidManifest.xml'; instead,
-#     set them in 'android-build/build.gradle', see section 'defaultConfig'.
+#     set them in 'app.pro'
 
 # hack to not include Qt Widgets on mobile (not used)
 rm -f android-build/libs/arm64-v8a/libQt5Widgets_arm64-v8a.so

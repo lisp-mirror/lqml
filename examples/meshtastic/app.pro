@@ -68,10 +68,10 @@ android {
   LIBS        += -lasdf -lecl-help -ldeflate -lecl-cdb -lecl-curl -lql-minitar -lsockets
   LIBS        += -L../../../platforms/android/lib
 
-  ANDROID_EXTRA_LIBS         += $$ECL/lib/libecl.so
-  ANDROID_PACKAGE_SOURCE_DIR = ../platforms/android
   ANDROID_MIN_SDK_VERSION    = 21
   ANDROID_TARGET_SDK_VERSION = 31
+  ANDROID_EXTRA_LIBS         += $$ECL/lib/libecl.so
+  ANDROID_PACKAGE_SOURCE_DIR = ../platforms/android
 
   # OpenSSL libs not included here, but can be downloaded from:
   # https://github.com/KDAB/android_openssl/tree/master/latest
