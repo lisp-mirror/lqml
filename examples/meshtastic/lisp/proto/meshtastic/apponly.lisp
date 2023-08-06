@@ -21,10 +21,7 @@
     :syntax :proto3
 
      :package "meshtastic"
-     :import '(;;"meshtastic/channel.proto"
-               ;;"meshtastic/config.proto"
-               ))
-)
+))
 
 
 ;;; Top-Level messages

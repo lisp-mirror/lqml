@@ -21,14 +21,7 @@
     :syntax :proto3
 
      :package "meshtastic"
-     :import '(;;"meshtastic/channel.proto"
-               ;;"meshtastic/config.proto"
-               ;;"meshtastic/module_config.proto"
-               ;;"meshtastic/portnums.proto"
-               ;;"meshtastic/telemetry.proto"
-               ;;"meshtastic/xmodem.proto"
-               ))
-)
+))
 
 
 ;;; Top-Level enums
@@ -53,7 +46,9 @@
   (:tlora-v2-1-1p8 :index 15)
   (:tlora-t3-s3 :index 16)
   (:nano-g1-explorer :index 17)
+  (:nano-g2-ultra :index 18)
   (:station-g1 :index 25)
+  (:rak11310 :index 26)
   (:lora-relay-v1 :index 32)
   (:nrf52840dk :index 33)
   (:ppr :index 34)
@@ -69,6 +64,11 @@
   (:heltec-wsl-v3 :index 44)
   (:betafpv-2400-tx :index 45)
   (:betafpv-900-nano-tx :index 46)
+  (:rpi-pico :index 47)
+  (:heltec-wireless-tracker :index 48)
+  (:heltec-wireless-paper :index 49)
+  (:t-deck :index 50)
+  (:t-watch-s3 :index 51)
   (:private-hw :index 255))
 
 (pi:define-enum constants
@@ -246,6 +246,19 @@
   (icon
    :index 8 :type cl-protobufs:fixed32 :kind :scalar :label (:optional) :json-name "icon"))
 
+(pi:define-message mqtt-client-proxy-message
+    ()
+  ;; Fields
+  (pi:define-oneof payload-variant ()
+    (data
+     :index 2 :type cl-protobufs:byte-vector :kind :scalar :label (:optional) :json-name "data")
+    (text
+     :index 3 :type cl:string :kind :scalar :label (:optional) :json-name "text"))
+  (topic
+   :index 1 :type cl:string :kind :scalar :label (:optional) :json-name "topic")
+  (retained
+   :index 4 :type cl:boolean :kind :scalar :label (:optional) :json-name "retained"))
+
 (pi:define-message mesh-packet
     ()
   ;; Nested enums
@@ -410,7 +423,9 @@
     (xmodem-packet
      :index 12 :type cl-protobufs.meshtastic::x-modem :kind :message :label (:optional) :json-name "xmodemPacket")
     (metadata
-     :index 13 :type device-metadata :kind :message :label (:optional) :json-name "metadata"))
+     :index 13 :type device-metadata :kind :message :label (:optional) :json-name "metadata")
+    (mqtt-client-proxy-message
+     :index 14 :type mqtt-client-proxy-message :kind :message :label (:optional) :json-name "mqttClientProxyMessage"))
   (id
    :index 1 :type cl-protobufs:uint32 :kind :scalar :label (:optional) :json-name "id"))
 
@@ -425,7 +440,9 @@
     (disconnect
      :index 4 :type cl:boolean :kind :scalar :label (:optional) :json-name "disconnect")
     (xmodem-packet
-     :index 5 :type cl-protobufs.meshtastic::x-modem :kind :message :label (:optional) :json-name "xmodemPacket")))
+     :index 5 :type cl-protobufs.meshtastic::x-modem :kind :message :label (:optional) :json-name "xmodemPacket")
+    (mqtt-client-proxy-message
+     :index 6 :type mqtt-client-proxy-message :kind :message :label (:optional) :json-name "mqttClientProxyMessage")))
 
 (pi:define-message compressed
     ()
@@ -473,7 +490,9 @@
   (position-flags
    :index 8 :type cl-protobufs:uint32 :kind :scalar :label (:optional) :json-name "positionFlags")
   (hw-model
-   :index 9 :type hardware-model :kind :enum :label (:optional) :json-name "hwModel" :default :unset))
+   :index 9 :type hardware-model :kind :enum :label (:optional) :json-name "hwModel" :default :unset)
+  (has-remote-hardware
+   :index 10 :type cl:boolean :kind :scalar :label (:optional) :json-name "hasRemoteHardware"))
 
 (cl:export '(air-period-rx
              air-period-tx
@@ -526,6 +545,7 @@
              has-bluetooth
              has-ethernet
              has-gps
+             has-remote-hardware
              has-wifi
              hdop
              hop-limit
@@ -562,6 +582,7 @@
              metadata
              min-app-version
              module-config
+             mqtt-client-proxy-message
              my-info
              my-node-info
              my-node-num
@@ -592,6 +613,7 @@
              reply-id
              request-id
              res
+             retained
              role
              route
              route-discovery
@@ -610,11 +632,13 @@
              short-name
              snr
              source
+             text
              time
              timestamp
              timestamp-millis-adjust
              to
              to-radio
+             topic
              user
              vdop
              want-ack

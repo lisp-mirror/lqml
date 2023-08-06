@@ -43,8 +43,8 @@ plist for every message.
 
 The reason I chose Qt qsqlite over cl-sqlite is mobile: Qt comes with its own
 version, which is pulled in automatically, so one doesn't need to care about
-the OS limitations or indirect requirements. Additionally, cffi (as a
-dependency of cl-sqlite) currently needs a small hack to even work on mobile.
+OS limitations or indirect requirements. Additionally, cffi (as a dependency
+of cl-sqlite) currently needs a small hack to even work on mobile.
 
 
 

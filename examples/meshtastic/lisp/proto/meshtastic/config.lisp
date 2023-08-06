@@ -65,7 +65,9 @@
     (node-info-broadcast-secs
      :index 7 :type cl-protobufs:uint32 :kind :scalar :label (:optional) :json-name "nodeInfoBroadcastSecs")
     (double-tap-as-button-press
-     :index 8 :type cl:boolean :kind :scalar :label (:optional) :json-name "doubleTapAsButtonPress"))
+     :index 8 :type cl:boolean :kind :scalar :label (:optional) :json-name "doubleTapAsButtonPress")
+    (is-managed
+     :index 9 :type cl:boolean :kind :scalar :label (:optional) :json-name "isManaged"))
 
   (pi:define-message config.position-config
       ()
@@ -126,7 +128,9 @@
     (ls-secs
      :index 7 :type cl-protobufs:uint32 :kind :scalar :label (:optional) :json-name "lsSecs")
     (min-wake-secs
-     :index 8 :type cl-protobufs:uint32 :kind :scalar :label (:optional) :json-name "minWakeSecs"))
+     :index 8 :type cl-protobufs:uint32 :kind :scalar :label (:optional) :json-name "minWakeSecs")
+    (device-battery-ina-address
+     :index 9 :type cl-protobufs:uint32 :kind :scalar :label (:optional) :json-name "deviceBatteryInaAddress"))
 
   (pi:define-message config.network-config
       ()
@@ -374,6 +378,7 @@
              config.power-config
              debug-log-enabled
              device
+             device-battery-ina-address
              display
              displaymode
              dns
@@ -394,6 +399,7 @@
              ignore-incoming
              ip
              ipv4-config
+             is-managed
              is-power-saving
              lora
              ls-secs

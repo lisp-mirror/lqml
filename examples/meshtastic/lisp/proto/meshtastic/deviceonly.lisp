@@ -21,11 +21,7 @@
     :syntax :proto3
 
      :package "meshtastic"
-     :import '(;;"meshtastic/channel.proto"
-               ;;"meshtastic/localonly.proto"
-               ;;"meshtastic/mesh.proto"
-               ))
-)
+))
 
 
 ;;; Top-Level enums
@@ -56,7 +52,45 @@
   (no-save
    :index 9 :type cl:boolean :kind :scalar :label (:optional) :json-name "noSave")
   (did-gps-reset
-   :index 11 :type cl:boolean :kind :scalar :label (:optional) :json-name "didGpsReset"))
+   :index 11 :type cl:boolean :kind :scalar :label (:optional) :json-name "didGpsReset")
+  (rx-waypoint
+   :index 12 :type cl-protobufs.meshtastic::mesh-packet :kind :message :label (:optional) :json-name "rxWaypoint")
+  (node-remote-hardware-pins
+   :index 13 :type node-remote-hardware-pin :kind :message :label (:repeated :list) :json-name "nodeRemoteHardwarePins")
+  (node-db-lite
+   :index 14 :type node-info-lite :kind :message :label (:repeated :list) :json-name "nodeDbLite"))
+
+(pi:define-message node-info-lite
+    ()
+  ;; Fields
+  (num
+   :index 1 :type cl-protobufs:uint32 :kind :scalar :label (:optional) :json-name "num")
+  (user
+   :index 2 :type cl-protobufs.meshtastic::user :kind :message :label (:optional) :json-name "user")
+  (position
+   :index 3 :type position-lite :kind :message :label (:optional) :json-name "position")
+  (snr
+   :index 4 :type cl:float :kind :scalar :label (:optional) :json-name "snr")
+  (last-heard
+   :index 5 :type cl-protobufs:fixed32 :kind :scalar :label (:optional) :json-name "lastHeard")
+  (device-metrics
+   :index 6 :type cl-protobufs.meshtastic::device-metrics :kind :message :label (:optional) :json-name "deviceMetrics")
+  (channel
+   :index 7 :type cl-protobufs:uint32 :kind :scalar :label (:optional) :json-name "channel"))
+
+(pi:define-message position-lite
+    ()
+  ;; Fields
+  (latitude-i
+   :index 1 :type cl-protobufs:sfixed32 :kind :scalar :label (:optional) :json-name "latitudeI")
+  (longitude-i
+   :index 2 :type cl-protobufs:sfixed32 :kind :scalar :label (:optional) :json-name "longitudeI")
+  (altitude
+   :index 3 :type cl-protobufs:int32 :kind :scalar :label (:optional) :json-name "altitude")
+  (time
+   :index 4 :type cl-protobufs:fixed32 :kind :scalar :label (:optional) :json-name "time")
+  (location-source
+   :index 5 :type cl-protobufs.meshtastic::position.loc-source :kind :enum :label (:optional) :json-name "locationSource" :default :loc-unset))
 
 (pi:define-message channel-file
     ()
@@ -87,14 +121,35 @@
   (oem-local-module-config
    :index 8 :type cl-protobufs.meshtastic::local-module-config :kind :message :label (:optional) :json-name "oemLocalModuleConfig"))
 
-(cl:export '(channel-file
+(pi:define-message node-remote-hardware-pin
+    ()
+  ;; Fields
+  (node-num
+   :index 1 :type cl-protobufs:uint32 :kind :scalar :label (:optional) :json-name "nodeNum")
+  (pin
+   :index 2 :type cl-protobufs.meshtastic::remote-hardware-pin :kind :message :label (:optional) :json-name "pin"))
+
+(cl:export '(altitude
+             channel
+             channel-file
              channels
+             device-metrics
              device-state
              deviceonly
              did-gps-reset
+             last-heard
+             latitude-i
+             location-source
+             longitude-i
              my-node
              no-save
              node-db
+             node-db-lite
+             node-info-lite
+             node-num
+             node-remote-hardware-pin
+             node-remote-hardware-pins
+             num
              oem-aes-key
              oem-font
              oem-icon-bits
@@ -105,9 +160,16 @@
              oem-store
              oem-text
              owner
+             pin
+             position
+             position-lite
              receive-queue
              rx-text-message
+             rx-waypoint
              screen-fonts
              screen-fonts-int-to-keyword
              screen-fonts-keyword-to-int
+             snr
+             time
+             user
              version))

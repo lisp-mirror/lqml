@@ -80,7 +80,7 @@
             (floor (+ 0.5 (* x +earth-mean-radius+ 1000)))))
         0)))
 
-(defun tile-path ()
+(defun tile-path () ; see QML
   (namestring (app:in-data-path "tiles/")))
 
 (defun activate-map ()
@@ -110,6 +110,6 @@
       (q> |active| ui:*map-loader* nil)))
   (values))
 
-(defun position-count ()
+(defun position-count () ; see QML
   (length *positions*))
 

@@ -21,9 +21,7 @@
     :syntax :proto3
 
      :package "meshtastic"
-     :import '(;;"meshtastic/localonly.proto"
-               ))
-)
+))
 
 
 ;;; Top-Level messages

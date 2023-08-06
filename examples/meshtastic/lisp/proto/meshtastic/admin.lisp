@@ -21,13 +21,7 @@
     :syntax :proto3
 
      :package "meshtastic"
-     :import '(;;"meshtastic/channel.proto"
-               ;;"meshtastic/config.proto"
-               ;;"meshtastic/mesh.proto"
-               ;;"meshtastic/module_config.proto"
-               ;;"meshtastic/connection_status.proto"
-               ))
-)
+))
 
 
 ;;; Top-Level messages
@@ -56,7 +50,8 @@
     (:telemetry-config :index 5)
     (:cannedmsg-config :index 6)
     (:audio-config :index 7)
-    (:remotehardware-config :index 8))
+    (:remotehardware-config :index 8)
+    (:ambientlighting-config :index 10))
   ;; Fields
   (pi:define-oneof payload-variant ()
     (get-channel-request
@@ -93,6 +88,10 @@
      :index 17 :type cl-protobufs.meshtastic::device-connection-status :kind :message :label (:optional) :json-name "getDeviceConnectionStatusResponse")
     (set-ham-mode
      :index 18 :type ham-parameters :kind :message :label (:optional) :json-name "setHamMode")
+    (get-node-remote-hardware-pins-request
+     :index 19 :type cl:boolean :kind :scalar :label (:optional) :json-name "getNodeRemoteHardwarePinsRequest")
+    (get-node-remote-hardware-pins-response
+     :index 20 :type node-remote-hardware-pins-response :kind :message :label (:optional) :json-name "getNodeRemoteHardwarePinsResponse")
     (set-owner
      :index 32 :type cl-protobufs.meshtastic::user :kind :message :label (:optional) :json-name "setOwner")
     (set-channel
@@ -134,6 +133,12 @@
   (short-name
    :index 4 :type cl:string :kind :scalar :label (:optional) :json-name "shortName"))
 
+(pi:define-message node-remote-hardware-pins-response
+    ()
+  ;; Fields
+  (node-remote-hardware-pins
+   :index 1 :type cl-protobufs.meshtastic::node-remote-hardware-pin :kind :message :label (:repeated :list) :json-name "nodeRemoteHardwarePins"))
+
 (cl:export '(admin
              admin-message
              admin-message.config-type
@@ -160,11 +165,15 @@
              get-device-metadata-response
              get-module-config-request
              get-module-config-response
+             get-node-remote-hardware-pins-request
+             get-node-remote-hardware-pins-response
              get-owner-request
              get-owner-response
              get-ringtone-request
              get-ringtone-response
              ham-parameters
+             node-remote-hardware-pins
+             node-remote-hardware-pins-response
              nodedb-reset
              reboot-ota-seconds
              reboot-seconds

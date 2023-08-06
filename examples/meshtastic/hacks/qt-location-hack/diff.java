@@ -46,7 +46,7 @@
 >         try {
 >             //Log.d(LQML, "ini GPS location...");
 >             LocationManager mLocationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
->             mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 100, mLocationListenerGPS);
+>             mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 2000, 0, mLocationListenerGPS);
 >             //Log.d(LQML, "ini GPS location OK");
 >         }
 >         catch (Exception e) {

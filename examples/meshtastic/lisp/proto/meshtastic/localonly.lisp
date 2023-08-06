@@ -21,10 +21,7 @@
     :syntax :proto3
 
      :package "meshtastic"
-     :import '(;;"meshtastic/config.proto"
-               ;;"meshtastic/module_config.proto"
-               ))
-)
+))
 
 
 ;;; Top-Level messages
@@ -70,6 +67,8 @@
    :index 9 :type cl-protobufs.meshtastic::module-config.audio-config :kind :message :label (:optional) :json-name "audio")
   (remote-hardware
    :index 10 :type cl-protobufs.meshtastic::module-config.remote-hardware-config :kind :message :label (:optional) :json-name "remoteHardware")
+  (neighbor-info
+   :index 11 :type cl-protobufs.meshtastic::module-config.neighbor-info-config :kind :message :label (:optional) :json-name "neighborInfo")
   (version
    :index 8 :type cl-protobufs:uint32 :kind :scalar :label (:optional) :json-name "version"))
 
@@ -84,6 +83,7 @@
              localonly
              lora
              mqtt
+             neighbor-info
              network
              position
              power
