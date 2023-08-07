@@ -75,6 +75,12 @@
   (when *config-complete*
     (me:num *my-node-info*)))
 
+(defun to-radio (&key from to id hop-limit want-ack priority decoded)
+  (me:make-to-radio
+   :packet (me:make-mesh-packet
+            :from from :to to :id id :hop-limit hop-limit :want-ack want-ack
+            :priority priority :decoded decoded)))
+
 (defun send-message (text)
   "Sends TEXT to radio and adds it to QML item model."
   ;; check special keywords first
@@ -99,15 +105,13 @@
              (when (stringp *receiver*)
                (setf *receiver* (name-to-node *receiver*)))
              (send-to-radio
-              (me:make-to-radio
-               :packet (me:make-mesh-packet
-                        :from (my-num)
+              (to-radio :from (my-num)
                         :to *receiver*
                         :id msg:*message-id*
                         :want-ack t
                         :decoded (me:make-data
                                   :portnum :text-message-app
-                                  :payload (qto-utf8 text)))))
+                                  :payload (qto-utf8 text))))
              (msg:add-message
               (list :receiver (node-to-name *receiver*)
                     :sender (my-name)
@@ -189,10 +193,7 @@
                           (text (qfrom-utf8 payload)))
                       (setf msg:*message-id* (max mid msg:*message-id*))
                       (if (x:starts-with ":e" text) ; 'echo'
-                          (progn
-                            #+mobile
-                            (qlater 'loc:update-my-position)
-                            (qsingle-shot 2000 (lambda () (send-message (x:cc "<b>echo:</b>" (subseq text #.(length ":e")))))))
+                          (qsingle-shot 1000 (lambda () (send-message (x:cc "<b>echo:</b>" (subseq text #.(length ":e"))))))
                           (progn
                             (when (x:starts-with "<b>echo:</b>" text)
                               (setf text (msg:echo-message text (me:from packet) (me:rx-snr packet) (me:rx-rssi packet))))
@@ -277,9 +278,7 @@
 
 (defun send-admin (admin-message)
   (send-to-radio
-   (me:make-to-radio
-    :packet (me:make-mesh-packet
-             :to (me:num *my-node-info*)
+   (to-radio :to (me:num *my-node-info*)
              :id (incf msg:*message-id*)
              :hop-limit 3
              :want-ack t
@@ -287,7 +286,7 @@
              :decoded (me:make-data
                        :portnum :admin-app
                        :payload (pr:serialize-to-bytes admin-message)
-                       :want-response t)))))
+                       :want-response t))))
 
 (defun set-channel (channel)
   (send-admin (me:make-admin-message
@@ -337,11 +336,8 @@
   (flet ((to-int (f)
            (floor (* f (expt 10 7)))))
     (send-to-radio
-     (me:make-to-radio
-      :packet (me:make-mesh-packet
-               :from (my-num)
+     (to-radio :from (my-num)
                :to to
-               :id (incf msg:*message-id*)
                :hop-limit 3
                :priority :background
                :decoded (me:make-data
@@ -351,7 +347,7 @@
                                     :latitude-i (to-int (getf pos :lat))
                                     :longitude-i (to-int (getf pos :lon))
                                     :time (getf pos :time)))
-                         :want-response t))))))
+                         :want-response t)))))
 
 (defun channel-to-url (&optional channel)
   (let ((base64 (base64:usb8-array-to-base64-string

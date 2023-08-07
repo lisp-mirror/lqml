@@ -75,7 +75,11 @@ Pairing of your LoRa radios is generally not needed beforehand, the app will
 ask for pairing/PIN during BLE ini. If your device doesn't have a display, use
 `123456` as your PIN.
 
-It may occur that the devices are sometimes not found; in those cases
+It may occur that your radio device is sometimes not found; first
+
+* try to press-and-hold on the radio icon (will restart device discovery)
+
+Only if this doesn't work, you may
 
 * try to turn bluetooth off and on again, and/or:
 * try to reboot your radios, and/or:

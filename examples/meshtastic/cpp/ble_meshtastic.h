@@ -2,8 +2,8 @@
 
 #include "ble.h"
 
-#define UUID QBluetoothUuid
-#define STR  QStringLiteral
+#define UID QBluetoothUuid
+#define STR QStringLiteral
 
 class BLE_ME : public BLE {
   Q_OBJECT
@@ -11,10 +11,10 @@ class BLE_ME : public BLE {
 public:
   BLE_ME();
 
-  static const UUID uuid_service;
-  static const UUID uuid_fromRadio;
-  static const UUID uuid_fromNum;
-  static const UUID uuid_toRadio;
+  static const UID uuid_service;
+  static const UID uuid_fromRadio;
+  static const UID uuid_fromNum;
+  static const UID uuid_toRadio;
 
   QLowEnergyCharacteristic fromRadio;
   QLowEnergyCharacteristic fromNum;

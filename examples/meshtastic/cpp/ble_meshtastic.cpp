@@ -9,12 +9,12 @@
 #endif
 
 // service
-const UUID BLE_ME::uuid_service   = UUID(STR("{6ba1b218-15a8-461f-9fa8-5dcae273eafd}"));
+const UID BLE_ME::uuid_service   = UID(STR("{6ba1b218-15a8-461f-9fa8-5dcae273eafd}"));
 
 // characteristics
-const UUID BLE_ME::uuid_toRadio   = UUID(STR("{f75c76d2-129e-4dad-a1dd-7866124401e7}"));
-const UUID BLE_ME::uuid_fromRadio = UUID(STR("{2c55e69e-4993-11ed-b878-0242ac120002}"));
-const UUID BLE_ME::uuid_fromNum   = UUID(STR("{ed9da18c-a800-4f66-a670-aa7547e34453}"));
+const UID BLE_ME::uuid_toRadio   = UID(STR("{f75c76d2-129e-4dad-a1dd-7866124401e7}"));
+const UID BLE_ME::uuid_fromRadio = UID(STR("{2c55e69e-4993-11ed-b878-0242ac120002}"));
+const UID BLE_ME::uuid_fromNum   = UID(STR("{ed9da18c-a800-4f66-a670-aa7547e34453}"));
 
 BLE_ME::BLE_ME() : BLE(uuid_service) {
   connect(this, &BLE::mainServiceReady, this, &BLE_ME::ini);
