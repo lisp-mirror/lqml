@@ -11,6 +11,7 @@
       (msg:show-messages)
       (q> |currentIndex| ui:*main-view* 0)) ; 'Group'
   (q> |playing| ui:*loading* nil)
+  (q> |visible| ui:*message-view* t)
   #+android
   (progn
     (ensure-permissions :access-fine-location) ; for sharing location

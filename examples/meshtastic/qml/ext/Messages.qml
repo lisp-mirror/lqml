@@ -14,6 +14,7 @@ Rectangle {
     anchors.margins: 5
     model: messages
     clip: true
+    visible: false
 
     delegate: SwipeDelegate {
       id: swipeDelegate
@@ -123,10 +124,14 @@ Rectangle {
           source: "../img/delete.png"
         }
 
-        SwipeDelegate.onClicked: {
-          var mid = model.mid
-          view.model.remove(index)
-          Lisp.call("db:delete-message", mid)
+        MouseArea {
+          anchors.fill: parent
+
+          onClicked: {
+            var mid = model.mid
+            view.model.remove(index)
+            Lisp.call("db:delete-message", mid)
+          }
         }
       }
     }
