@@ -31,3 +31,7 @@
   (let ((val (first (query "select max(mid) from messages"))))
     (if (numberp val) val 0)))
 
+(defun delete-message (mid)
+  (query "delete from messages where mid = ?"
+         mid))
+

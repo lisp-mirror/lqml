@@ -12,9 +12,124 @@ Rectangle {
     anchors.fill: parent
     anchors.bottomMargin: rectEdit.height + 3
     anchors.margins: 5
-    delegate: messageDelegate
     model: messages
     clip: true
+
+    delegate: SwipeDelegate {
+      id: swipeDelegate
+      width: view.width
+      height: delegate.height
+      clip: true
+
+      onPressAndHold: Lisp.call("msg:message-press-and-hold", model.text)
+
+      background: Item {
+        id: delegate
+        width: Math.max(text.paintedWidth, rowSender.width + 4 * text.padding) + 2 * text.padding + 4
+        height: model.hidden ? 0 : (text.contentHeight + 2 * text.padding + sender.contentHeight + 8)
+
+        Rectangle {
+          anchors.centerIn: parent
+          width: parent.width
+          height: parent.height - 4
+          color: model.me ? "#f2f2f2" : "#ffffcc"
+          radius: 12
+
+          Row {
+            id: rowSender
+            padding: text.padding
+            spacing: padding - 2
+
+            AnimatedImage {
+              id: semaphore
+              playing: false
+              y: 4
+              width: 8
+              height: width
+              source: "../img/semaphore.gif"
+              currentFrame: model.ackState
+              visible: model.me
+            }
+
+            Text {
+              id: sender
+              font.pixelSize: 12
+              font.family: fontText.name
+              color: "#8B0000"
+              text: model.senderName ? model.senderName : model.sender
+            }
+          }
+
+          Text {
+            id: timestamp
+            x: delegate.width - contentWidth - text.padding
+            y: text.padding
+            font.pixelSize: 12
+            font.family: fontText.name
+            color: "#505050"
+            text: model.hour
+
+            MouseArea {
+              anchors.fill: parent
+              onClicked: Lisp.call("msg:show-date", model.timestamp)
+            }
+          }
+
+          Text {
+            id: text
+            y: sender.contentHeight
+            width: main.width - 10
+            padding: 5
+            wrapMode: Text.Wrap
+            font.pixelSize: 18
+            font.family: fontText.name
+            color: "#303030"
+            textFormat: Text.StyledText // for 'paintedWidth' to always work
+            text: model.text
+          }
+        }
+      }
+
+      ListView.onRemove: SequentialAnimation {
+        PropertyAction {
+          target: swipeDelegate
+          property: "ListView.delayRemove"
+          value: true
+        }
+        NumberAnimation {
+          target: swipeDelegate
+          property: "height"
+          to: 0
+          easing.type: Easing.InOutQuad
+        }
+        PropertyAction {
+          target: swipeDelegate
+          property: "ListView.delayRemove"
+          value: false
+        }
+      }
+
+      swipe.left: Rectangle {
+        y: 2
+        width: 35
+        height: parent.height - 2 * y
+        color: "#ff4141"
+        radius: 12
+
+        Image {
+          anchors.centerIn: parent
+          width: 12
+          height: width
+          source: "../img/delete.png"
+        }
+
+        SwipeDelegate.onClicked: {
+          var mid = model.mid
+          view.model.remove(index)
+          Lisp.call("db:delete-message", mid)
+        }
+      }
+    }
   }
 
   ListModel {
@@ -65,83 +180,6 @@ Rectangle {
     }
 
     Component.onCompleted: remove(0) // see hack above
-  }
-
-  Component {
-    id: messageDelegate
-
-    Item {
-      id: delegate
-      width: Math.max(text.paintedWidth, rowSender.width + 4 * text.padding) + 2 * text.padding + 4
-      height: model.hidden ? 0 : (text.contentHeight + 2 * text.padding + sender.contentHeight + 8)
-      clip: true
-
-      Rectangle {
-        anchors.centerIn: parent
-        width: parent.width
-        height: parent.height - 4
-        color: model.me ? "#f2f2f2" : "#ffffcc"
-        radius: 12
-
-        MouseArea {
-          anchors.fill: parent
-          onPressAndHold: Lisp.call("msg:message-press-and-hold", model.text)
-        }
-
-        Row {
-          id: rowSender
-          padding: text.padding
-          spacing: padding - 2
-
-          AnimatedImage {
-            id: semaphore
-            playing: false
-            y: 4
-            width: 8
-            height: width
-            source: "../img/semaphore.gif"
-            currentFrame: model.ackState
-            visible: model.me
-          }
-
-          Text {
-            id: sender
-            font.pixelSize: 12
-            font.family: fontText.name
-            color: "#8B0000"
-            text: model.senderName ? model.senderName : model.sender
-          }
-        }
-
-        Text {
-          id: timestamp
-          x: delegate.width - contentWidth - text.padding
-          y: text.padding
-          font.pixelSize: 12
-          font.family: fontText.name
-          color: "#505050"
-          text: model.hour
-
-          MouseArea {
-            anchors.fill: parent
-            onClicked: Lisp.call("msg:show-date", model.timestamp)
-          }
-        }
-
-        Text {
-          id: text
-          y: sender.contentHeight
-          width: main.width - 10
-          padding: 5
-          wrapMode: Text.Wrap
-          font.pixelSize: 18
-          font.family: fontText.name
-          color: "#303030"
-          textFormat: Text.StyledText // for 'paintedWidth' to always work
-          text: model.text
-        }
-      }
-    }
   }
 
   // find text

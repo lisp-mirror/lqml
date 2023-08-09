@@ -11,7 +11,6 @@
       (msg:show-messages)
       (q> |currentIndex| ui:*main-view* 0)) ; 'Group'
   (q> |playing| ui:*loading* nil)
-  (q> |interactive| ui:*main-view* t)
   #+android
   (progn
     (ensure-permissions :access-fine-location) ; for sharing location
@@ -30,6 +29,7 @@
     (q> |currentIndex| ui:*main-view* 0))
   (q> |visible| ui:*location* (= 0 index))
   (q> |visible| ui:*find*     (= 1 index))
+  (q> |interactive| ui:*main-view* (/= 1 index)) ; swipe single message, not view
   (values))
 
 (defun icon-press-and-hold (name) ; see QML

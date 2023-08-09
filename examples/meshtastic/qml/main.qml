@@ -40,7 +40,6 @@ Item {
     width: headerHeight
     height: width
     anchors.right: parent.right
-    visible: false
 
     MouseArea {
       anchors.fill: parent

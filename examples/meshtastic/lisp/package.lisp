@@ -61,6 +61,7 @@
 (defpackage :db
   (:use :cl)
   (:export
+   #:delete-message
    #:ini
    #:load-message
    #:load-messages

@@ -37,11 +37,13 @@ Messages
 --------
 
 The initial view shows the messages between you and a chosen person. You choose
-the desired person in the **Group** view (swipe to the left).
+the desired person in the **Group** view (tap on group icon).
 
 To copy a message to the clipboard, press-and-hold it.
 
 To see the exact date of a message, tap on its hour.
+
+To delete a message, swipe it to the right and tap on the delete button.
 
 The search function (icon on the right) should be intuitive. The search term
 (case insensitive) is highlighted in red. Tap again on the search icon to leave
@@ -51,7 +53,7 @@ search mode.
 Group
 -----
 
-Swiping to the left (from **Messages**), you see the list of all persons. Every
+Tapping on group (in **Messages**), you'll see the list of all persons. Every
 person is associated to a specific radio. This view is populated automatically.
 
 You can set a name to every person associated to a radio, which defaults to
@@ -66,7 +68,7 @@ without internet connection.
 Radios
 ------
 
-Swiping to the right (from **Messages**), you see the list of all radios
+Tapping on radio (in **Messages**), you'll see the list of all radios
 visible to your phone's bluetooth. You generally just choose 1 device, which
 will be remembered.
 
