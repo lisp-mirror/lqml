@@ -31,6 +31,7 @@
 (defvar *ready*           nil)
 (defvar *reading*         nil)
 (defvar *received*        nil)
+(defvar *received-faulty* nil)
 (defvar *schedule-clear*  t)
 
 (defun to-bytes (list)
@@ -101,7 +102,7 @@
           (t
            (msg:check-utf8-length (q< |text| ui:*edit*))
            (unless (q< |tooLong| ui:*edit*)
-             (incf msg:*message-id*)
+             (msg:message-id)
              (when (stringp *receiver*)
                (setf *receiver* (name-to-node *receiver*)))
              (send-to-radio
@@ -139,10 +140,16 @@
       (progn
         (setf *notify-id* bytes)
         (read-radio))
-      (let ((from-radio (pr:deserialize-from-bytes 'me:from-radio bytes)))
+      (multiple-value-bind (from-radio error)
+          (ignore-errors (pr:deserialize-from-bytes 'me:from-radio bytes))
         (setf *reading* t)
-        (pr:print-json from-radio)
-        (push from-radio *received*)))
+        (if from-radio
+            (progn
+              (pr:print-json from-radio)
+              (push from-radio *received*))
+            (progn
+              (qlog "received faulty bytes: ~A" error)
+              (push bytes *received-faulty*)))))
   (values))
 
 (defun receiving-done () ; see Qt
@@ -279,7 +286,7 @@
 (defun send-admin (admin-message)
   (send-to-radio
    (to-radio :to (me:num *my-node-info*)
-             :id (incf msg:*message-id*)
+             :id (msg:message-id)
              :hop-limit 3
              :want-ack t
              :priority :reliable

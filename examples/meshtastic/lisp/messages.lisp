@@ -3,6 +3,9 @@
 (defvar *message-id* 0)
 (defvar *states*     '(:not-received :sending :received))
 
+(defun message-id ()
+  (mod (incf *message-id*) #.(expt 2 32)))
+
 (defun show-message-p (message)
   (let ((user (app:setting :latest-receiver)))
     (and user (or (string= user (getf message :receiver))
@@ -72,6 +75,12 @@
   (set-clipboard-text text)
   (app:toast (tr "message copied") 2)
   (values))
+
+(defun show-date (timestamp) ; see QML
+  (multiple-value-bind (sec min hour day month year)
+      (decode-universal-time (parse-integer timestamp))
+    (app:toast (format nil "~D-~2,'0D-~2,'0D ~2,'0D:~2,'0D:~2,'0D"
+                       year month day hour min sec))))
 
 (defun find-clicked ()
   (let ((show (not (q< |visible| ui:*find-text*))))

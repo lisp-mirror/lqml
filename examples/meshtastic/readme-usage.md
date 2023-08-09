@@ -39,7 +39,9 @@ Messages
 The initial view shows the messages between you and a chosen person. You choose
 the desired person in the **Group** view (swipe to the left).
 
-To copy a message to the clipboard, simply press-and-hold it.
+To copy a message to the clipboard, press-and-hold it.
+
+To see the exact date of a message, tap on its hour.
 
 The search function (icon on the right) should be intuitive. The search term
 (case insensitive) is highlighted in red. Tap again on the search icon to leave
@@ -115,9 +117,9 @@ any other device.
 
 The desktop data paths are:
 
-* Linux: `~/.local/share/cl-meshtastic/data/`
-* macOS: `~/Library/Application Support/cl-meshtastic/data/`
-* Windows: TODO
+* Linux: `/home/<user>/.local/share/cl-meshtastic/data/`
+* macOS: `/Users/<user>/Library/Application Support/cl-meshtastic/data/`
+* Windows: `C:\Users\<user>\AppData\Local\cl-meshtastic\data\`
 
 
 Tips

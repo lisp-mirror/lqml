@@ -80,8 +80,10 @@
    #:clear-find
    #:echo-message
    #:find-text
+   #:message-id
    #:message-press-and-hold
    #:receiver-changed
+   #:show-date
    #:show-messages))
 
 (defpackage :radios

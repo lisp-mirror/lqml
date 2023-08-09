@@ -189,7 +189,7 @@ Rectangle {
             group.setProperty(index, "customName", text)
             Lisp.call("group:name-edited", model.radioName, text)
             if (text === "") text = qsTr("Anonym")
-            Qt.callLater(group.sortRenamed, text, index)
+            Qt.callLater(group.sortRenamed, text, index) // 'Qt.callLater': prevent UI thread related crash
           }
         }
 

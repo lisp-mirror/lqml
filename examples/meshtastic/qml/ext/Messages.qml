@@ -121,6 +121,11 @@ Rectangle {
           font.family: fontText.name
           color: "#505050"
           text: model.hour
+
+          MouseArea {
+            anchors.fill: parent
+            onClicked: Lisp.call("msg:show-date", model.timestamp)
+          }
         }
 
         Text {

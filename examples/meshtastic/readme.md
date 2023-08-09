@@ -57,9 +57,8 @@ The macOS version must be compiled first and started from Finder (not the
 console), otherwise BLE permissions will not work (if run from console, the app
 will show a BLE exception and consume 100% CPU).
 
-It should also work on Windows >= 10, but this is not tested yet.
-
-Since this is WIP, it may currently not work on all platforms (e.g. mobile).
+It should also work on Windows 10 and later, but the bluetooth part is not
+tested yet.
 
 
 
