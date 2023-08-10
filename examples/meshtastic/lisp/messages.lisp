@@ -132,3 +132,7 @@
                     (loc:distance my-pos from-pos)
                     "-"))))
 
+(defun swipe-to-left () ; see QML
+  (q> |currentIndex| ui:*main-view* 0)
+  (values))
+

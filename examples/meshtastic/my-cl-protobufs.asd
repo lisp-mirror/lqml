@@ -4,6 +4,9 @@
 ;;;
 ;;; So, this is just the strict minimum necessary for being able to serialize
 ;;; and deserialize meshtastic data.
+;;;
+;;; It also has a bug fix in file 'lisp/cl-protobufs/wire-format', function
+;;; 'decode-single', which needs investigation (whose bug is it?).
 
 (defsystem :my-cl-protobufs
   :serial t
@@ -34,27 +37,6 @@
                (:file "lisp/proto/cl-proto/struct")
                (:file "lisp/proto/cl-proto/timestamp")
                (:file "lisp/proto/cl-proto/wrappers")
-               ;;(:file "lisp/proto/cl-proto/descriptor") ; not used
-               ;; meshtastic
-               (:file "lisp/proto/meshtastic/xmodem")
-               (:file "lisp/proto/meshtastic/telemetry")
-               (:file "lisp/proto/meshtastic/portnums")
-               (:file "lisp/proto/meshtastic/module-config")
-               (:file "lisp/proto/meshtastic/config")
-               (:file "lisp/proto/meshtastic/channel")
-               (:file "lisp/proto/meshtastic/connection-status")
-               (:file "lisp/proto/meshtastic/admin")
-               (:file "lisp/proto/meshtastic/mesh")
-               (:file "lisp/proto/meshtastic/storeforward")
-               (:file "lisp/proto/meshtastic/apponly")
-               (:file "lisp/proto/meshtastic/localonly")
-               (:file "lisp/proto/meshtastic/clientonly")
-               (:file "lisp/proto/meshtastic/deviceonly")
-               (:file "lisp/proto/meshtastic/remote-hardware")
-               (:file "lisp/proto/meshtastic/cannedmessages")
-               (:file "lisp/proto/meshtastic/mqtt")
-               (:file "lisp/proto/meshtastic/rtttl")
-               ;;
                (:file "lisp/cl-protobufs/serialize")
                (:file "lisp/cl-protobufs/well-known-types")
                (:file "lisp/cl-protobufs/message-api")

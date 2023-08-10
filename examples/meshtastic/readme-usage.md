@@ -49,6 +49,8 @@ The search function (icon on the right) should be intuitive. The search term
 (case insensitive) is highlighted in red. Tap again on the search icon to leave
 search mode.
 
+A double click on a message will change to Group.
+
 
 Group
 -----

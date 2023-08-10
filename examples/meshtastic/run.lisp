@@ -7,11 +7,8 @@
 (push (merge-pathnames "./")
       asdf:*central-registry*)
 
-(asdf:load-system :cl-base64)
+(asdf:load-system :my-cl-protobufs)
 (asdf:load-system :trivial-package-local-nicknames)
-
-;; may take very long on mobile devices
-(time (asdf:load-system :my-cl-protobufs))
 
 (push :depends-loaded *features*)
 

@@ -1,11 +1,11 @@
 (defsystem :app
   :serial t
-  :depends-on (#-depends-loaded :cl-base64
-               #-depends-loaded :my-cl-protobufs
+  :depends-on (#-depends-loaded :my-cl-protobufs
                #-depends-loaded :trivial-package-local-nicknames
                #+mobile :s-http-server
                #+mobile :zip) ; see 'hacks/zip/'
-  :components ((:file "lisp/package")
+  :components ((:file "lisp/load-fasc")
+               (:file "lisp/package")
                (:file "lisp/qt")
                (:file "lisp/ui-vars")
                #+mobile

@@ -85,7 +85,8 @@
    #:message-press-and-hold
    #:receiver-changed
    #:show-date
-   #:show-messages))
+   #:show-messages
+   #:swipe-to-left))
 
 (defpackage :radios
   (:use :cl :qml)

@@ -15,7 +15,10 @@ mesh network is limited to about 70 nodes/radios/users to remain reliable.
 Technical notes
 ---------------
 
-This app uses both **BLE** (bluetooth low energy) and the **protobufs**
+First of all please rebuild the lqml library, this app requires the latest
+version.
+
+The app uses both **BLE** (bluetooth low energy) and the **protobufs**
 serialization library version 3.
 
 For BLE you need to build the plugin in `cpp/` first (written in Qt5).
@@ -25,15 +28,12 @@ work without the C++ plugin installed (which we don't need here). So I made
 some small adaptions and included all generated proto Lisp files in order to be
 independent.
 
-Unfortunately cl-protobufs loads very slowly on mobile (and conses hugely
-during startup). On an older phone and a cold startup this may take more than
-20 seconds. On newer phones and warm startup it should 'only' take around 10
-seconds (which seems acceptable).
+Unfortunately the generated and C compiled meshtastic proto files load very
+slowly on mobile. To improve load time, proto files are only bytecode compiled,
+which doesn't seem to impact performance at runtime (in this use case).
 
-For the above reason, an animation is shown while loading the app, together
-with a counter. For this to work, the app is loaded in the background (that is,
-in a separate thread). You'll need to rebuild the lqml library for this to
-work.
+An animation is shown while loading the app, together with a counter. For this
+to work, the app is loaded in the background (that is, in a separate thread).
 
 You will see a json output of all data sent/received. It simply uses the
 `print-json` convenience function from cl-protobufs.

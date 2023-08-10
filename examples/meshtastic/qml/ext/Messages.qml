@@ -22,7 +22,8 @@ Rectangle {
       height: delegate.height
       clip: true
 
-      onPressAndHold: Lisp.call("msg:message-press-and-hold", model.text)
+      onPressAndHold:  Lisp.call("msg:message-press-and-hold", model.text)
+      onDoubleClicked: Lisp.call("msg:swipe-to-left")
 
       background: Item {
         id: delegate
@@ -114,7 +115,7 @@ Rectangle {
         y: 2
         width: 35
         height: parent.height - 2 * y
-        color: "#ff4141"
+        color: "#dd4141"
         radius: 12
 
         Image {
