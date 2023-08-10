@@ -1035,8 +1035,9 @@
           for places fixnum upfrom 0 by 8
           for byte fixnum = (prog1 (aref buffer index) (iincf index))
           do (setq bits (logior bits (ash byte places))))
-    (when (i= (ldb (byte 1 31) bits) 1)             ;sign bit set, so negative value
-      (decf bits #.(ash 1 32)))
+    ;; commented out by pls153 for ECL (whose bug is it?)
+    ;;(when (i= (ldb (byte 1 31) bits) 1)             ;sign bit set, so negative value
+    ;;  (decf bits #.(ash 1 32)))
     (values (float-features:bits-single-float bits) index)))
 
 (defun decode-double (buffer index)
