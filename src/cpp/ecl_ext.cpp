@@ -46,6 +46,7 @@ void iniCLFunctions() {
   DEFUN ("qto-utf8",                qto_utf8,                1)
   DEFUN ("%qinvoke-method",         qinvoke_method2,         3)
   DEFUN ("%qload-c++",              qload_cpp,               2)
+  DEFUN ("qload-rc",                qload_rc,                1)
   DEFUN ("%qlog",                   qlog2,                   1)
   DEFUN ("qnull",                   qnull,                   1)
   DEFUN ("%qml-get",                qml_get2,                2)
@@ -267,6 +268,7 @@ cl_object qload_cpp(cl_object l_lib_name, cl_object l_unload) { /// qload-c++
   ///   (defparameter *c++* (qload-c++ "my-lib"))
   ///   (qapropos nil *c++*)                      ; documentation
   ///   (define-qt-wrappers *c++*)                ; Lisp wrapper functions
+  ecl_process_env()->nvalues = 1;
   static QHash<QString, QLibrary*> libraries;
   QString libName = toQString(l_lib_name);
   bool unload = (l_unload != ECL_NIL);
@@ -302,12 +304,32 @@ cl_object qload_cpp(cl_object l_lib_name, cl_object l_unload) { /// qload-c++
       QObject* main = ini();
       if (main) {
         cl_object l_ret = from_qobject_pointer(main);
-        ecl_return1(ecl_process_env(), l_ret);
+        return l_ret;
       }
     }
   }
   error_msg("QLOAD-C++", LIST2(l_lib_name, l_unload));
-  ecl_return1(ecl_process_env(), ECL_NIL);
+  return ECL_NIL;
+}
+
+cl_object qload_rc(cl_object l_file) {
+  /// args: (file)
+  /// Loads a Lisp file added to the Qt resource system, see *.qrc files.
+  ///   (qload-rc "lisp/example.fasc")
+  ecl_process_env()->nvalues = 1;
+  QFile file(toQString(l_file).prepend(":/"));
+  if (file.open(QIODevice::ReadOnly)) {
+    QTextStream ts(&file);
+    ts.setCodec("UTF-8");
+    QString text = ts.readAll();
+    file.close();
+    if (!text.isEmpty()) {
+      cl_object l_ret = cl_load(1, cl_make_string_input_stream(1, from_qstring(text)));
+      return l_ret;
+    }
+  }
+  error_msg("QLOAD-RC", LIST1(l_file));
+  return ECL_NIL;
 }
 
 

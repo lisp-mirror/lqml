@@ -39,6 +39,7 @@
    #:qset
    #:qlater
    #:qload-c++
+   #:qload-rc
    #:qlog
    #:qnull
    #:qprocess-events

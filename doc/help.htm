@@ -198,6 +198,13 @@
     (define-qt-wrappers *c++*)                ; Lisp wrapper functions
 
 
+<b>qload-rc (file)</b>
+
+  Loads a Lisp file added to the Qt resource system, see *.qrc files.
+
+    (qload-rc "lisp/example.fasc")
+
+
 <b>qlog (arg1 &rest args)</b>
 
   For debug messages. On android they can be captured with 'adb logcat'.
