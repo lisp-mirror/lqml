@@ -1,5 +1,7 @@
-;;; loading byte-compiled proto files is much faster (especially on mobile)
-;;; and doesn't really impact performance at runtime
+;;; loading protobuf Lisp source files is much faster (especially on mobile)
+;;; and doesn't really impact performance at runtime (in this use case)
+
+(in-package :qml-user)
 
 (let ((make (find :make *features*))) ; runtime check needed
   (dolist (file (list "xmodem"
@@ -20,7 +22,10 @@
                       "cannedmessages"
                       "mqtt"
                       "rtttl"))
-    (load (merge-pathnames (format nil "~Alisp/proto/meshtastic/~A.fasc"
-                                   (if make "examples/meshtastic/" "")
-                                   file)))))
+    (if make
+        (load (format nil "examples/meshtastic/lisp/proto/meshtastic/~A.lisp" file))
+        (let ((file* (format nil "lisp/proto/meshtastic/~A.lisp" file)))
+          (if #+mobile nil #-mobile (probe-file file*)
+              (load file*)          ; development
+              (qload-rc file*)))))) ; final app
 

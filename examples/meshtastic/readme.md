@@ -29,11 +29,13 @@ some small adaptions and included all generated proto Lisp files in order to be
 independent.
 
 Unfortunately the generated and C compiled meshtastic proto files load very
-slowly on mobile. To improve load time, proto files are only bytecode compiled,
-which doesn't seem to impact performance at runtime (in this use case).
+slowly on mobile. To improve load time, meshtastic proto files are simply
+loaded as `*.lisp` source files, which doesn't seem to impact performance at
+runtime (in this use case).
 
-An animation is shown while loading the app, together with a counter. For this
-to work, the app is loaded in the background (that is, in a separate thread).
+An animation is shown while loading the app, together with a counter (for older
+and slow mobile devices). For this to work, the app is loaded in the background
+(that is, in a separate thread).
 
 You will see a json output of all data sent/received. It simply uses the
 `print-json` convenience function from cl-protobufs.

@@ -140,6 +140,7 @@ SOURCES += \
 
 RESOURCES += $$files(qml/*)
 RESOURCES += $$files(i18n/*.qm)
+RESOURCES += $$files(lisp/proto/meshtastic/*.lisp)
 
 lupdate_only {
   SOURCES += i18n/tr.h

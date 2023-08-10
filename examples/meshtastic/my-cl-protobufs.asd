@@ -17,7 +17,8 @@
                :cl-base64
                :local-time
                :float-features)
-  :components ((:file "lisp/cl-protobufs/pkgdcl")
+  :components (;; cl-protobufs
+               (:file "lisp/cl-protobufs/pkgdcl")
                (:file "lisp/cl-protobufs/utilities")
                (:file "lisp/cl-protobufs/model-classes")
                (:file "lisp/cl-protobufs/conditions")
@@ -37,6 +38,7 @@
                (:file "lisp/proto/cl-proto/struct")
                (:file "lisp/proto/cl-proto/timestamp")
                (:file "lisp/proto/cl-proto/wrappers")
+               ;; cl-protobufs
                (:file "lisp/cl-protobufs/serialize")
                (:file "lisp/cl-protobufs/well-known-types")
                (:file "lisp/cl-protobufs/message-api")

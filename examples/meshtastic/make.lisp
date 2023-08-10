@@ -27,6 +27,7 @@
 (defun find-swank ()
   (probe-file (cc *assets* "quicklisp/local-projects/slime/swank.lisp")))
 
+#+mobile
 (defun shell (command)
   (ext:run-program "sh" (list "-c" command)))
 
@@ -45,20 +46,6 @@
 #+mobile
 (unless (find-swank)
   (error "Swank files missing, please see <LQML root>/slime/src/readme-sources.md"))
-
-#+mobile
-(let ((to (cc *assets* "lisp/proto/meshtastic/")))
-  (unless (probe-file to)
-    (ensure-directories-exist to)
-    (shell (cc "cp ../lisp/proto/meshtastic/*.fasc " to))))
-
-#-mobile
-(let ((to "lisp/proto/meshtastic/"))
-  #+os-macosx
-  (setf to (x:cc "app.app/Contents/MacOS/" to))
-  (unless (probe-file to)
-    (ensure-directories-exist to)
-    (shell (cc "cp ../lisp/proto/meshtastic/*.fasc " to))))
 
 ;;; compile ASDF system
 
