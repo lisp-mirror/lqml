@@ -1,4 +1,4 @@
-(pushnew :make *features*)
+(pushnew :build-app *features*)
 
 ;;; check target
 

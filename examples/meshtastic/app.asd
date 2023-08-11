@@ -4,7 +4,7 @@
                #-depends-loaded :trivial-package-local-nicknames
                #+mobile :s-http-server
                #+mobile :zip) ; see 'hacks/zip/'
-  :components ((:file "lisp/load-fasc")
+  :components ((:file "lisp/meshtastic-proto")
                (:file "lisp/package")
                (:file "lisp/qt")
                (:file "lisp/ui-vars")
