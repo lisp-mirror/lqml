@@ -36,7 +36,7 @@ public:
   // etc
   Q_INVOKABLE QVariant dataPath();
   Q_INVOKABLE QVariant localIp();
-  Q_INVOKABLE QVariant startTileServer();
+  Q_INVOKABLE QVariant startTileProvider();
 
   QT();
 

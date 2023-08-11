@@ -315,7 +315,7 @@ cl_object qload_cpp(cl_object l_lib_name, cl_object l_unload) { /// qload-c++
 cl_object qload_rc(cl_object l_file) {
   /// args: (file)
   /// Loads a Lisp file added to the Qt resource system, see *.qrc files.
-  ///   (qload-rc "lisp/example.fasc")
+  ///   (qload-rc "lisp/example.lisp")
   ecl_process_env()->nvalues = 1;
   QFile file(toQString(l_file).prepend(":/"));
   if (file.open(QIODevice::ReadOnly)) {

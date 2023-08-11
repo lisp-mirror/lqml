@@ -55,9 +55,9 @@ Tested
 
 Tested on Linux, macOS, android, iOS.
 
-The macOS version must be compiled first and started from Finder (not the
-console), otherwise BLE permissions will not work (if run from console, the app
-will show a BLE exception and consume 100% CPU).
+The macOS version must be compiled first, moved to `/Applications/` and started
+from Finder (not the console), otherwise BLE permissions will not work (if run
+from console, the app will show a BLE exception and consume 100% CPU).
 
 Windows 10+ will follow soon.
 

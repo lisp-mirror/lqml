@@ -9,7 +9,7 @@
    #:last-position
    #:local-ip
    #:start-device-discovery
-   #:start-tile-server
+   #:start-tile-provider
    #:read*
    #:short-names
    #:sql-query

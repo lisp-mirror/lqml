@@ -4,21 +4,22 @@
 #include <QTcpSocket>
 #include <QtDebug>
 
-// trivial local tile web-server which doesn't need an API key
+// trivial local tile provider which doesn't need an API key
+// (default Qt provider requires an API key from thunderforest.com)
 
-class TileServer : public QTcpServer {
+class TileProvider : public QTcpServer {
   Q_OBJECT
 
 public:
-  TileServer(int port = 0, QObject* parent = nullptr) : QTcpServer(parent) {
+  TileProvider(int port = 0, QObject* parent = nullptr) : QTcpServer(parent) {
     listen(QHostAddress::Any, port);
     qDebug() << "tile server started at IP" << serverAddress() << "port" << serverPort();
   }
 
   void incomingConnection(qintptr socket) override {
     QTcpSocket* s = new QTcpSocket(this);
-    connect(s, &QTcpSocket::readyRead, this, &TileServer::readClient);
-    connect(s, &QTcpSocket::disconnected, this, &TileServer::discardClient);
+    connect(s, &QTcpSocket::readyRead, this, &TileProvider::readClient);
+    connect(s, &QTcpSocket::disconnected, this, &TileProvider::discardClient);
     s->setSocketDescriptor(socket);
   }
 
