@@ -108,8 +108,8 @@ phone is sent once (at startup) to the radio.
 Save / Restore data
 -------------------
 
-A local web-server is included on mobile for saving and restoring the message
-DB, the app settings, plus eventually cached map tiles (for offline usage).
+A local web-server is included on mobile for saving and restoring all of:
+message DB, app settings, eventually cached map tiles (for offline usage).
 Just use special text message `:w` (for 'web-server') and `:ws` (for 'stop
 web-server') after you're done.
 
@@ -146,11 +146,11 @@ different places, and have it logged in your messages.
 Hacker tips
 -----------
 
-If it occurs that a RAK device goes into an undefined state and doesn't seem
+If it occurs that a radio device goes into an undefined state and doesn't seem
 to work anymore, you can try a factory reset (see CLI) and flash the latest
 firmware.
 
-Alternatively you can completely erase the flash memory from an arduino IDE,
+RAK devices can also completely erase the flash memory from an arduino IDE,
 see RAK on github and file `reset-flash.ino` (re-flash firmware afterwards).
 
 If you are a Lisp hacker, you may enjoy the integrated Swank server (on
@@ -158,5 +158,8 @@ mobile). Just type special text message `:s`. A message with the IP to connect
 to will be shown once the server is running. Beware though that Swank on mobile
 isn't very stable, but it's perfect for simple debugging purposes, or to
 get/set variables on the fly (but it might crash regularily if you try to eval
-some buffer).
+some buffer, or even during auto-completion).
+
+For full Swank/Slime power you'll need the desktop version anyway (this is how
+this app was developed).
 

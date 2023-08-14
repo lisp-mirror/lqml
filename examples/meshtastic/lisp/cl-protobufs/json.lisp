@@ -473,6 +473,7 @@ PRINT-JSON-IMPL for any types."
            (print-json-impl packed-message indent stream camel-case-p
                             numeric-enums-p t))))
     ((google:timestamp)
+     #-os-windows
      (let* ((nsec (google:timestamp.nanos object))
             (timestamp (local-time:unix-to-timestamp
                         (google:timestamp.seconds object)
@@ -567,6 +568,7 @@ calls to PARSE-JSON-IMPL."
              (wkt:pack-any ret)))))
 
     ((google:timestamp)
+     #-os-windows
      (let* ((timestring (pi::parse-string stream))
             (timestamp (local-time:parse-rfc3339-timestring timestring)))
        (google:make-timestamp

@@ -15,6 +15,7 @@
                :alexandria
                :trivial-garbage
                :cl-base64
+               #-os-windows
                :local-time
                :float-features)
   :components (;; cl-protobufs

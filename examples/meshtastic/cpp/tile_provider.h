@@ -13,7 +13,7 @@ class TileProvider : public QTcpServer {
 public:
   TileProvider(int port = 0, QObject* parent = nullptr) : QTcpServer(parent) {
     listen(QHostAddress::Any, port);
-    qDebug() << "tile server started at IP" << serverAddress() << "port" << serverPort();
+    qDebug() << "tile provider started at IP" << serverAddress() << "port" << serverPort();
   }
 
   void incomingConnection(qintptr socket) override {

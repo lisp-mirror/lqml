@@ -92,7 +92,7 @@
            (start-swank)
            (clear))
           #+mobile
-          ((string= ":w" text)   ; for saving/restoring message DB and settings
+          ((string= ":w" text)   ; for saving/restoring message DB, settings, map tiles
            (s-http-server:start)
            (clear))
           #+mobile

@@ -53,13 +53,11 @@ of cl-sqlite) currently needs a small hack to even work on mobile.
 Tested
 ------
 
-Tested on Linux, macOS, android, iOS.
+Tested on Linux, macOS, Windows 10+, android, iOS.
 
 The macOS version must be compiled first, moved to `/Applications/` and started
 from Finder (not the console), otherwise BLE permissions will not work (if run
 from console, the app will show a BLE exception and consume 100% CPU).
-
-Windows 10+ will follow soon.
 
 
 
@@ -71,9 +69,11 @@ start the app.
 
 On android coarse location permission is required for BLE to work.
 
-Pairing of your LoRa radios is generally not needed beforehand, the app will
-ask for pairing/PIN during BLE ini. If your device doesn't have a display, use
-`123456` as your PIN.
+Except for Windows, pairing of your LoRa radios is generally not needed
+beforehand, the app will ask for pairing/PIN during BLE ini. If your device
+doesn't have a display, use `123456` as your PIN.
+
+On Windows it didn't work for me if not paired previously.
 
 It may occur that your radio device is sometimes not found; first
 
