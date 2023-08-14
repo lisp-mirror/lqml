@@ -150,7 +150,6 @@ int main(int argc, char* argv[]) {
     arguments.removeAll("-norc");
   } else {
 #if (!defined Q_OS_ANDROID) && (!defined Q_OS_IOS) && (!defined DESKTOP_APP)
-qDebug() << "LOADING ECLRC";
   LQML::eval("(x:when-it (probe-file \"~/.eclrc\")"
              "  (load x:it))");
 #endif

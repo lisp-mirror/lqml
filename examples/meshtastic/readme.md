@@ -2,12 +2,10 @@
 Info
 ----
 
-Please note: this is **WIP!**
-
-Currently it can be used to send direct messages between any number of radios.
+Currently the app can only send direct messages between the radios.
 
 It's basically meant to be used in an emergency situation, where internet is
-not available, in order to communicate with simple text messages. This kind of
+not available, in order to communicate with short text messages. This kind of
 mesh network is limited to about 70 nodes/radios/users to remain reliable.
 
 
@@ -15,7 +13,7 @@ mesh network is limited to about 70 nodes/radios/users to remain reliable.
 Technical notes
 ---------------
 
-First of all please rebuild the lqml library, this app requires the latest
+You'll probably need to rebuild the lqml library, this app requires the latest
 version.
 
 The app uses both **BLE** (bluetooth low energy) and the **protobufs**
@@ -45,8 +43,7 @@ plist for every message.
 
 The reason I chose Qt qsqlite over cl-sqlite is mobile: Qt comes with its own
 version, which is pulled in automatically, so one doesn't need to care about
-OS limitations or indirect requirements. Additionally, cffi (as a dependency
-of cl-sqlite) currently needs a small hack to even work on mobile.
+OS limitations or indirect requirements.
 
 
 

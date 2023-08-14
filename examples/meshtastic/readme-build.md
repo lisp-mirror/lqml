@@ -7,9 +7,6 @@ plus the hack described in [hacks](hacks/).
 
 See also notes in [my-cl-protobufs.asd](my-cl-protobufs.asd).
 
-You will also need **uiop** installed under e.g. `~/quicklisp/local-projects/`
-(see ASDF sources).
-
 For android please see [qt-location-hack](hacks/qt-location-hack/).
 
 
