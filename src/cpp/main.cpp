@@ -71,7 +71,7 @@ int main(int argc, char* argv[]) {
 #ifdef INI_WEBVIEW
   QtWebView::initialize();
 #endif
-  EventFilterApp app(argc, argv);
+  GuiApplication app(argc, argv);
   app.setApplicationName(QFileInfo(app.applicationFilePath()).baseName());
   QStringList arguments(QCoreApplication::arguments());
 
@@ -149,13 +149,10 @@ int main(int argc, char* argv[]) {
   if (arguments.contains("-norc")) {
     arguments.removeAll("-norc");
   } else {
-#if (defined Q_OS_ANDROID) || (defined Q_OS_IOS)
-    // nothing
-#else
-  #ifndef DESKTOP_APP
-    LQML::eval("(x:when-it (probe-file \"~/.eclrc\")"
-               "  (load x:it))");
-  #endif
+#if (!defined Q_OS_ANDROID) && (!defined Q_OS_IOS) && (!defined DESKTOP_APP)
+qDebug() << "LOADING ECLRC";
+  LQML::eval("(x:when-it (probe-file \"~/.eclrc\")"
+             "  (load x:it))");
 #endif
   }
 

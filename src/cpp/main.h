@@ -26,10 +26,10 @@ public:
   Q_INVOKABLE void clearCache() { clearComponentCache(); }
 };
 
-class EventFilterApp : public QGuiApplication {
+class GuiApplication : public QGuiApplication {
   Q_OBJECT
 public:
-  EventFilterApp(int& argc, char* argv[]) : QGuiApplication(argc, argv) {
+  GuiApplication(int& argc, char* argv[]) : QGuiApplication(argc, argv) {
 #if (defined Q_OS_IOS) && (defined DISABLE_SMART_QUOTES)
     installEventFilter(this);
 #endif
