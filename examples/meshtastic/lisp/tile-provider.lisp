@@ -5,7 +5,7 @@
  \"UrlTemplate\": \"https://tile.openstreetmap.org/%z/%x/%y.png\",
  \"ImageFormat\": \"png\",
  \"QImageFormat\": \"Indexed8\",
- \"ID\": \"wmf-intl-1x\",
+ \"ID\": \"cl-meshtastic\",
  \"MaximumZoomLevel\": 19,
  \"MapCopyRight\": \"<a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>\",
  \"DataCopyRight\": \"\"
