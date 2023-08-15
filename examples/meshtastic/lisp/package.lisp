@@ -111,6 +111,7 @@
    #:position*
    #:position-count
    #:set-position
+   #:start-tile-provider
    #:tile-path
    #:update-my-position))
 

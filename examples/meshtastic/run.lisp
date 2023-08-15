@@ -9,6 +9,7 @@
 
 (asdf:load-system :my-cl-protobufs)
 (asdf:load-system :trivial-package-local-nicknames)
+(asdf:load-system :usocket-server)
 
 (push :depends-loaded *features*)
 

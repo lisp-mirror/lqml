@@ -1,6 +1,5 @@
 #include "qt.h"
 #include "ble_meshtastic.h"
-#include "tile_provider.h"
 #include <ecl_fun.h>
 #include <QSqlQuery>
 #include <QSqlError>
@@ -178,16 +177,6 @@ QVariant QT::localIp() {
     // hack for rare, ambiguous cases
     ips.sort();
     return ips.first();
-  }
-  return QVariant();
-}
-
-QVariant QT::startTileProvider() {
-  static bool start = true;
-  if (start) {
-    start = false;
-    int port = 1702;
-    new TileProvider(port);
   }
   return QVariant();
 }

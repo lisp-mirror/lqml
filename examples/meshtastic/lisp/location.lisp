@@ -85,7 +85,7 @@
 
 (defun activate-map ()
   (unless (q< |active| ui:*map-loader*)
-    (qt:start-tile-provider qt:*cpp*)
+    (start-tile-provider)
     (q> |active| ui:*map-loader* t)
     #+mobile
     (destructuring-bind (lat lon time)

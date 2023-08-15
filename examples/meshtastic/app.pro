@@ -129,7 +129,6 @@ HEADERS += \
   ../../src/cpp/main.h \
   cpp/ble.h \
   cpp/ble_meshtastic.h \
-  cpp/tile_provider.h \
   cpp/qt.h
 
 SOURCES += \
