@@ -24,18 +24,23 @@ Item {
         center = coordinate(pos)
       }
 
-      function updatePositions(group) {
+      function showMarker(n, nodeNum, name, customName = "") {
+        var pos = Lisp.call("loc:position*", nodeNum)
+        if (pos) {
+          var marker = markers.itemAt(n)
+          marker.radioName = name
+          marker.customName = customName
+          marker.coordinate = coordinate(pos)
+          marker.visible = true
+        }
+      }
+
+      function updatePositions(myNum, myName, group) {
         var n = 0
+        showMarker(n++, myNum, myName)
         for (var i = 0; i < group.count; i++) {
           var data = group.get(i)
-          var pos = Lisp.call("loc:position*", data.nodeNum)
-          if (pos) {
-            var marker = markers.itemAt(n++)
-            marker.radioName = data.radioName
-            marker.customName = data.customName
-            marker.coordinate = coordinate(pos)
-            marker.visible = true
-          }
+          showMarker(n++, data.nodeNum, data.radioName, data.customName)
         }
       }
 

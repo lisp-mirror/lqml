@@ -25,25 +25,24 @@ public:
 
 public Q_SLOTS:
   void readClient() {
-    QString xml = QStringLiteral(
-    "{\"UrlTemplate\" : \"https://tile.openstreetmap.org/%z/%x/%y.png\","
-    " \"ImageFormat\" : \"png\","
-    " \"QImageFormat\" : \"Indexed8\","
-    " \"ID\" : \"wmf-intl-1x\","
-    " \"MaximumZoomLevel\" : 19,"
-    " \"MapCopyRight\" : \"<a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>\","
-    " \"DataCopyRight\" : \"\"}");
+    QString json = QStringLiteral(
+    "{\"UrlTemplate\": \"https://tile.openstreetmap.org/%z/%x/%y.png\","
+    " \"ImageFormat\": \"png\","
+    " \"QImageFormat\": \"Indexed8\","
+    " \"ID\": \"wmf-intl-1x\","
+    " \"MaximumZoomLevel\": 19,"
+    " \"MapCopyRight\": \"<a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>\","
+    " \"DataCopyRight\": \"\"}");
 
     QTcpSocket* socket = static_cast<QTcpSocket*>(sender());
     if (socket->canReadLine()) {
       QString line = socket->readLine();
-      QStringList tokens = line.split(QRegExp("[ \r\n][ \r\n]*"));
-      if (tokens.at(0) == "GET") {
+      if (line.startsWith("GET")) {
         QTextStream s(socket);
         s.setCodec("UTF-8");
         s << QStringLiteral("HTTP/1.0 200 Ok\r\n"
-                            "Content-Type: text/html; charset=\"utf-8\"\r\n\r\n")
-          << xml
+                            "Content-Type: application/json; charset=\"utf-8\"\r\n\r\n")
+          << json
           << QStringLiteral("\r\n");
         socket->close();
 

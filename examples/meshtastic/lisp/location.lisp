@@ -102,7 +102,7 @@
     (when show
       (activate-map)
       (qjs |updatePositions| ui:*map*
-           (find-quick-item ui:*group*)))
+           (lora:my-num) (lora:my-name) (find-quick-item ui:*group*)))
     (q> |visible| ui:*map-view* show)
     ;; move map (not page) when swiping to left
     (q> |interactive| ui:*main-view* (not show))

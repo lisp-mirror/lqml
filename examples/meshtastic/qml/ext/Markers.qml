@@ -23,7 +23,7 @@ Repeater {
         y: image.height + 5
         width: customName.width + 42
         height: 20
-        color: "darkcyan"
+        color: (index === 0) ? "#ff3d00" : "darkcyan"
         radius: height / 2
 
         Rectangle {
