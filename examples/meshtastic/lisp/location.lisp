@@ -109,7 +109,8 @@
     ;; move map (not page) when swiping to left
     (q> |interactive| ui:*main-view* (not show))
     (unless show
-      (q> |active| ui:*map-loader* nil)))
+      (q> |active| ui:*map-loader* nil)
+      (stop-tile-provider)))
   (values))
 
 (defun position-count () ; see QML

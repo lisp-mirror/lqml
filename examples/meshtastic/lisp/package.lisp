@@ -112,6 +112,7 @@
    #:position-count
    #:set-position
    #:start-tile-provider
+   #:stop-tile-provider
    #:tile-path
    #:update-my-position))
 
