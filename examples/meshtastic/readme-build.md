@@ -9,6 +9,11 @@ See also notes in [my-cl-protobufs.asd](my-cl-protobufs.asd).
 
 For android please see [qt-location-hack](hacks/qt-location-hack/).
 
+For Windows you need to include the OpenSSL libs for the map to work (tile
+download). If you used the Qt online installer (recommended), just run the
+Qt maintainance tool and select the OpenSSL libs, and include both
+`libssl-1_1-x64.dll` and `libcrypto-1_1-x64.dll` in your installation folder.
+
 
 
 Prepare

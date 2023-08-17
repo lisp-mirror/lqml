@@ -16,7 +16,7 @@
 (defun tile-provider-handler (stream)
   (x:when-it (read-line stream nil nil)
     (when (x:starts-with "GET" x:it)
-      (princ (format nil "HTTP/1.0 200 Ok~AContent-Type: application/json; charset=\"utf-8\"~A~A"
+      (princ (format nil "HTTP/1.1 200 OK~AContent-type: application/json~A~A"
                      *newline* *newline* *newline*)
              stream)
       (princ *tile-provider-json* stream)
@@ -29,7 +29,7 @@
   (unless *tile-provider*
     (setf *tile-provider*
           (usocket:socket-server (app:my-ip) 1702 'tile-provider-handler nil
-                                 :in-new-thread t))))
+                                 :in-new-thread t :multi-threading t))))
 
 (defun stop-tile-provider ()
   (when *tile-provider*
