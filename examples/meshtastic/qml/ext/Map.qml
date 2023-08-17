@@ -68,10 +68,10 @@ Item {
           name: "osm.mapping.cache.disk.size"
           value: 10000
         }
-        // local tile provider (no API key needed), see 'cpp/tile_provider.h'
+        // local tile provider (no API key needed)
         PluginParameter {
           name: "osm.mapping.providersrepository.address"
-          value: "http://" + Lisp.call("app:my-ip") + ":1702/"
+          value: Lisp.call("loc:tile-provider-path")
         }
       }
 

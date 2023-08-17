@@ -83,9 +83,13 @@
 (defun tile-path () ; see QML
   (namestring (app:in-data-path "tiles/")))
 
+(defun tile-provider-path () ; see QML
+  (if (probe-file "qml/tile-provider/")
+      (x:cc "file://" (namestring (merge-pathnames "qml/tile-provider/"))) ; development
+      "qrc:///qml/tile-provider/"))                                        ; final app
+
 (defun activate-map ()
   (unless (q< |active| ui:*map-loader*)
-    (start-tile-provider)
     (q> |active| ui:*map-loader* t)
     #+mobile
     (destructuring-bind (lat lon time)
@@ -109,8 +113,7 @@
     ;; move map (not page) when swiping to left
     (q> |interactive| ui:*main-view* (not show))
     (unless show
-      (q> |active| ui:*map-loader* nil)
-      (stop-tile-provider)))
+      (q> |active| ui:*map-loader* nil)))
   (values))
 
 (defun position-count () ; see QML
