@@ -1,9 +1,12 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import "." as Ext
 
 Rectangle {
   id: main
   color: loading.visible ? "#1974d3" : "#e5d8bd"
+
+  property bool mobile: (Qt.platform.os === "android") || (Qt.platform.os === "ios")
 
   ListView {
     id: view
@@ -246,6 +249,7 @@ Rectangle {
     }
 
     Image {
+      id: send
       anchors.right: parent.right
       anchors.bottom: parent.top
       anchors.margins: 3
@@ -263,5 +267,27 @@ Rectangle {
         }
       }
     }
+
+    Image {
+      anchors.right: send.left
+      anchors.bottom: parent.top
+      anchors.margins: 3
+      width: 38
+      height: width
+      source: "../img/emoji.png"
+      visible: !main.mobile && edit.focus
+
+      MouseArea {
+        anchors.fill: parent
+        onClicked: emojis.visible = true
+      }
+    }
+  }
+
+  Ext.Emojis {
+    id: emojis
+    anchors.bottom: rectEdit.top
+    width: main.width
+    visible: false
   }
 }

@@ -5,6 +5,7 @@
   (:export
    #:*busy*
    #:*edit*
+   #:*emojis*
    #:*group*
    #:*group-icon*
    #:*group-view*
@@ -22,6 +23,7 @@
    #:*position-source*
    #:*radio-icon*
    #:*radios*
+   #:*recent-emojis*
    #:*region*
    #:*toast*
    #:*unread-messages*))
@@ -30,6 +32,7 @@
 
 (defparameter *busy*            "busy")
 (defparameter *edit*            "edit")
+(defparameter *emojis*          "emojis")
 (defparameter *group*           "group")
 (defparameter *group-icon*      "group_icon")
 (defparameter *group-view*      "group_view")
@@ -47,6 +50,7 @@
 (defparameter *position-source* "position_source")
 (defparameter *radio-icon*      "radio_icon")
 (defparameter *radios*          "radios")
+(defparameter *recent-emojis*   "recent_emojis")
 (defparameter *region*          "region")
 (defparameter *toast*           "toast")
 (defparameter *unread-messages* "unread_messages")

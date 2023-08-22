@@ -10,6 +10,9 @@
   (if (setting :latest-receiver)
       (msg:show-messages)
       (q> |currentIndex| ui:*main-view* 0)) ; 'Group'
+  (x:when-it (setting :recent-emojis)
+    (setf *recent-emojis* (mapcar 'qfrom-utf8 x:it))
+    (q> |model| ui:*recent-emojis* *recent-emojis*))
   (q> |playing| ui:*loading* nil)
   (q> |visible| ui:*message-view* t)
   #+android
@@ -85,6 +88,22 @@
 (defun my-ip ()
   (let ((ip (qrun* (qt:local-ip qt:*cpp*)))) ; 'qrun*' for return value
     (or ip "127.0.0.1")))
+
+;;; emojis (by default desktop only)
+
+(defvar *recent-emojis* (q< |model| ui:*recent-emojis*))
+
+(defun emoji-clicked (emoji) ; see QML
+  (q! |insert| ui:*edit*
+      (q< |cursorPosition| ui:*edit*) emoji)
+  (q> |visible| ui:*emojis* nil)
+  (setf *recent-emojis* (delete emoji *recent-emojis* :test 'string=))
+  (pushnew emoji *recent-emojis* :test 'string=)
+  (when (> (length *recent-emojis*) 10)
+    (setf *recent-emojis* (butlast *recent-emojis*)))
+  (q> |model| ui:*recent-emojis* *recent-emojis*)
+  (change-setting :recent-emojis (mapcar 'qto-utf8 *recent-emojis*))
+  (values))
 
 ;;; toast
 
