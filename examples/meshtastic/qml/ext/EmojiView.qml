@@ -24,7 +24,7 @@ ScrollView {
       height: emojis.itemSize
       horizontalAlignment: Text.AlignHCenter
       verticalAlignment: Text.AlignVCenter
-      font.pixelSize: emojis.itemSize - 2
+      font.pixelSize: emojis.itemSize - 4
       text: modelData
     }
 

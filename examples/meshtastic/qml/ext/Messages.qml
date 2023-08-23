@@ -246,6 +246,23 @@ Rectangle {
       property bool tooLong: false
 
       onLengthChanged: if (length > 150) Lisp.call("msg:check-utf8-length", text)
+      Keys.onEscapePressed: emojis.visible = false
+
+      Image {
+        y: 8
+        anchors.right: parent.right
+        anchors.rightMargin: 7
+        width: edit.font.pixelSize + 1
+        height: width
+        source: "../img/emoji.png"
+        opacity: 0.55
+        visible: !main.mobile && edit.focus
+
+        MouseArea {
+          anchors.fill: parent
+          onClicked: emojis.visible = true
+        }
+      }
     }
 
     Image {
@@ -267,26 +284,12 @@ Rectangle {
         }
       }
     }
-
-    Image {
-      anchors.right: send.left
-      anchors.bottom: parent.top
-      anchors.margins: 3
-      width: 38
-      height: width
-      source: "../img/emoji.png"
-      visible: !main.mobile && edit.focus
-
-      MouseArea {
-        anchors.fill: parent
-        onClicked: emojis.visible = true
-      }
-    }
   }
 
   Ext.Emojis {
     id: emojis
     anchors.bottom: rectEdit.top
+    anchors.bottomMargin: -1
     width: main.width
     visible: false
   }
