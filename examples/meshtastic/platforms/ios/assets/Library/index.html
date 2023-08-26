@@ -17,19 +17,22 @@
     </script>
   </head>
   <body>
-    <h3>Save / Restore data from meshtastic cl-app</h3>
+    <h3>Save / Restore data from cl-meshtastic</h3>
     <p>
-      <b>Save</b> data first (backup): enter URL (see app message)
-      <br><code>http://192.168.1.x:1701/meshtastic-data.zip</code>
+      <b>Save</b> data first (backup):
+      <br>&nbsp;<a href="mt-data.zip" download><code><b>mt-data.zip</b></code></a>
+      <br>&nbsp;<a href="map.bin" download><code><b>map.bin</b></code></a> (offline map, optional)
     </p>
     <form enctype="multipart/form-data" method="post" action="/">
       <p>
-        <b>Restore</b> from saved backup file: choose <code>meshtastic-data.zip</code>
+        <b>Restore</b> from saved backup file(s):
+        <br>&nbsp;1) choose <code><b>map.bin</b></code> (offline map, optional)
+        <br>&nbsp;2) choose <code><b>mt-data.zip</b></code> (app will close, restart needed)
         <br>
         <input name="file" type="file" onclick="setOrange()">
       </p>
       <p>
-        <input type="submit" value="Restore" id="upload" class="upload">
+        <input type="submit" value="Upload" id="upload" class="upload">
       </p>
     </form>
   </body>

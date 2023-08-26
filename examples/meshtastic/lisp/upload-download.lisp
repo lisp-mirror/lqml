@@ -33,7 +33,7 @@
 
 (in-package :s-http-server)
 
-(defvar *data-file*  "meshtastic-data.zip")
+(defvar *data-file*  "mt-data.zip")
 (defvar *web-server* nil)
 (defvar *empty-line* #.(map 'vector 'char-code (list #\Return #\Linefeed
                                                      #\Return #\Linefeed)))
@@ -67,7 +67,8 @@
     (x:while-it (search boundary content :start2 start)
       (let ((filename (form-data-filename content (+ start 2) (- x:it 2))))
         (unless (x:empty-string filename)
-          (let ((pathname (merge-pathnames (x:cc "data/" filename))))
+          (let ((pathname (merge-pathnames (x:cc (if (string= "bin" (pathname-type filename)) "" "data/")
+                                                 filename))))
             (ensure-directories-exist pathname)
             (with-open-file (out pathname :direction :output :if-exists :supersede
                                           :element-type '(unsigned-byte 8))
@@ -107,6 +108,8 @@ it saves uploaded files on the server."
                   (save-file (get-stream (get-http-connection http-request))
                              (parse-integer (cdr (assoc :content-length headers)))
                              boundary)
+                  ;; eventual tiles to extract
+                  (loc:check-offline-map)
                   ;; if uploaded file is *data-file*, unzip data, close app
                   ;; (restart needed)
                   (let ((data.zip (x:cc "data/" *data-file*)))
@@ -129,12 +132,13 @@ it saves uploaded files on the server."
       (setf *web-server* (make-s-http-server)))
     (start-server *web-server*)
     (when ini
-      (qml::zip *data-file* "data/") ; zip all data, ready to be downloaded
+      (qml::zip *data-file* "data/") ; zip data for downloaded
+      (loc:make-map-bin)             ; 'map.bin' for download (no need to zip compressed images)
       (qml:qlog "data zipped, ready for download")
       (register-context-handler *web-server* "/" 'static-resource/upload-handler
                                 :arguments (list *default-pathname-defaults*))))
   (x:when-it (app:my-ip)
-    (app:toast (format nil "http://~A:1701" x:it) 15)))
+    (app:toast (format nil "http://~A:1701" x:it) 0)))
 
 (defun stop ()
   (stop-server *web-server*)

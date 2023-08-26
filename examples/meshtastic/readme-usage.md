@@ -114,7 +114,7 @@ Just use special text message `:w` (for 'web-server') and `:ws` (for 'stop
 web-server') after you're done.
 
 After starting the server, just enter the shown URL in your desktop browser,
-and follow the instructions.
+and follow the instructions. To hide the URL message on the phone, tap on it.
 
 Using this method you can easily transfer all data from one mobile device to
 any other device.
@@ -155,10 +155,11 @@ see RAK on github and file `reset-flash.ino` (re-flash firmware afterwards).
 
 If you are a Lisp hacker, you may enjoy the integrated Swank server (on
 mobile). Just type special text message `:s`. A message with the IP to connect
-to will be shown once the server is running. Beware though that Swank on mobile
-isn't very stable, but it's perfect for simple debugging purposes, or to
-get/set variables on the fly (but it might crash regularily if you try to eval
-some buffer, or even during auto-completion).
+to will be shown once the server is running (just tap on it to make it
+disappear). Beware though that Swank on mobile isn't very stable, but it's
+perfect for simple debugging purposes, or to get/set variables on the fly (but
+it might crash regularily if you try to eval some buffer, or even during
+auto-completion).
 
 For full Swank/Slime power you'll need the desktop version anyway (this is how
 this app was developed).

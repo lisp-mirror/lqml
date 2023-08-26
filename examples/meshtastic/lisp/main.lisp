@@ -21,11 +21,11 @@
     (ensure-permissions :bluetooth-scan :bluetooth-connect)) ; android >= 12
   (lora:start-device-discovery (or (setting :device) "")))
 
-(defun in-data-path (file)
+(defun in-data-path (file &optional (prefix "data/"))
   #+mobile
-  (merge-pathnames (x:cc "data/" file))
+  (merge-pathnames (x:cc prefix file))
   #-mobile
-  (x:cc (qt:data-path qt:*cpp*) file))
+  (x:cc (qrun* (qt:data-path qt:*cpp* prefix)) file))
 
 (defun view-index-changed (index) ; see QML
   (when (and (= 1 index)
@@ -108,6 +108,8 @@
 ;;; toast
 
 (defun toast (message &optional (seconds 3))
+  "Shows a temporary message/notification. If the passed time is 0 seconds, the
+  message will be shown until the user taps on the message."
   (qjs |message| ui:*toast* message seconds))
 
 (qlater 'ini)

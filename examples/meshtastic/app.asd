@@ -2,6 +2,7 @@
   :serial t
   :depends-on (#-depends-loaded :my-cl-protobufs
                #-depends-loaded :trivial-package-local-nicknames
+               #-depends-loaded :cl-fad
                #+mobile :s-http-server
                #+mobile :zip) ; see 'hacks/zip/'
   :components ((:file "lisp/meshtastic-proto")

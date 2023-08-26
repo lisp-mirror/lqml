@@ -105,9 +105,12 @@
    #:*my-position*
    #:*positions*
    #:activate-map
+   #:check-offline-map
    #:distance
+   #:extract-map-bin
    #:ini
    #:last-gps-position
+   #:make-map-bin
    #:position*
    #:position-count
    #:set-position

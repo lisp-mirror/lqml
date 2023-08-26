@@ -2,6 +2,8 @@
 Info
 ----
 
+Please note that this is WIP/experimental.
+
 Currently the app can only send direct messages between the radios.
 
 It's basically meant to be used in an emergency situation, where internet is

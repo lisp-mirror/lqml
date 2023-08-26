@@ -34,7 +34,7 @@ public:
   Q_INVOKABLE QVariant sqlQuery(const QVariant&, const QVariant&);
 
   // etc
-  Q_INVOKABLE QVariant dataPath();
+  Q_INVOKABLE QVariant dataPath(const QVariant&);
   Q_INVOKABLE QVariant localIp();
 
   QT();

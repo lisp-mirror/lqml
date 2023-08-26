@@ -9,6 +9,7 @@
 
 (asdf:load-system :my-cl-protobufs)
 (asdf:load-system :trivial-package-local-nicknames)
+(asdf:load-system :cl-fad)
 
 (push :depends-loaded *features*)
 

@@ -8,6 +8,7 @@
   (qt:ini-positioning qt:*cpp*)
   #+ios
   (q> |active| ui:*position-source* t)
+  (check-offline-map)
   #+mobile
   (update-my-position))
 
@@ -81,7 +82,7 @@
         0)))
 
 (defun tile-path () ; see QML
-  (namestring (app:in-data-path "tiles/")))
+  (namestring (app:in-data-path "" "tiles/")))
 
 (defun tile-provider-path () ; see QML
   (if (probe-file "qml/tile-provider/")
@@ -118,4 +119,69 @@
 
 (defun position-count () ; see QML
   (length *positions*))
+
+;;; save/restore tiles
+
+(defun copy-stream (from to &optional (size most-positive-fixnum))
+  (let* ((buf-size (min 8192 size))
+         (buf (make-array buf-size :element-type (stream-element-type from))))
+    (loop :for pos = (read-sequence buf from :end (min buf-size size))
+          :do (write-sequence buf to :end pos)
+              (decf size pos)
+          :until (or (zerop pos)
+                     (zerop size))))
+  (values))
+
+(defun make-map-bin ()
+  "Writes all tiles in a single file, because images are already compressed.
+  This is meant to avoid useless (and possibly slow) zipping."
+  (with-open-file (out (app:in-data-path "map.bin" "")
+                       :direction :output :if-exists :supersede
+                       :element-type '(unsigned-byte 8))
+    (let ((directories (directory (app:in-data-path "**/" "tiles/"))))
+      (when directories
+        (let ((p (search "tiles/" (namestring (first directories)) :from-end t)))
+          (flet ((add-string (str)
+                   (write-sequence (x:string-to-bytes str) out))
+                 (sep ()
+                   (write-byte #.(char-code #\|) out)))
+            (dolist (dir directories)
+              (add-string (subseq (namestring dir) p))
+              (sep))
+            (let ((files (directory (app:in-data-path "**/*.*" "tiles/"))))
+              (dolist (file files)
+                (with-open-file (in file :element-type (stream-element-type out))
+                  (add-string (subseq (namestring file) p))
+                  (sep)
+                  (add-string (princ-to-string (file-length in)))
+                  (sep)
+                  (copy-stream in out))))))))))
+
+(defun extract-map-bin (&optional delete)
+  "Restores tiles from a previously saved single binary file named 'map.bin'."
+  (let ((blob (app:in-data-path "map.bin" "")))
+    (when (probe-file blob)
+      (with-open-file (in blob :element-type '(unsigned-byte 8))
+        (flet ((read-string ()
+                 (let ((bytes (loop :for byte = (read-byte in nil nil)
+                                    :while (and byte (/= byte #.(char-code #\|)))
+                                    :collect byte)))
+                   (if bytes
+                       (x:bytes-to-string bytes)
+                       (progn
+                         (when delete
+                           (close in)
+                           (delete-file blob))
+                         (return-from extract-map-bin))))))
+          (loop
+            (let ((name (app:in-data-path (read-string) "")))
+              (if (cl-fad:directory-pathname-p name)
+                  (ensure-directories-exist name)
+                  (let ((size (parse-integer (read-string))))
+                    (with-open-file (out name :direction :output :if-exists :supersede
+                                              :element-type (stream-element-type in))
+                      (copy-stream in out size)))))))))))
+
+(defun check-offline-map ()
+  (extract-map-bin t))
 

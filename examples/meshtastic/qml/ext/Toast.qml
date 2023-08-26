@@ -16,7 +16,7 @@ Rectangle {
   visible: false
 
   function message(text, seconds) { // called from Lisp
-    pause.duration = 1000 * seconds
+    pause.duration = 1000 * ((seconds === 0) ? (24 * 60 * 60) : seconds)
     toast.visible = true
     msg.text = text
     anim.start()

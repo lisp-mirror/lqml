@@ -16,22 +16,22 @@
   The model keys are:
   :receiver :sender :sender-name :timestamp :hour :text :mid :ack-state :me
   :hidden"
-  (unless (or loading (getf message :me))
-    (x:when-it (app:setting (getf message :sender) :custom-name)
-      (setf (getf message :sender-name) x:it)))
-  (unless loading
-    (db:save-message (parse-integer (getf message :mid))
-                     (parse-integer (getf message (if (getf message :me) :receiver :sender))
-                                    :radix 16)
-                     (prin1-to-string message)))
-  (if (or loading (show-message-p message))
-      (qjs |addMessage| ui:*messages* message)
-      (let* ((sender (getf message :sender))
-             (unread (1+ (or (app:setting sender :unread-messages) 0))))
-        (app:change-setting sender unread :sub-key :unread-messages)
-        (group:set-unread sender unread)))
-  (unless loading
-    (q! |positionViewAtEnd| ui:*message-view*)))
+  (x:when-it (getf message (if (getf message :me) :receiver :sender))
+    (unless (or loading (getf message :me))
+      (x:when-it* (app:setting (getf message :sender) :custom-name)
+        (setf (getf message :sender-name) x:it*)))
+    (unless loading
+      (db:save-message (parse-integer (getf message :mid)) ; mid
+                       (parse-integer x:it :radix 16)      ; uid
+                       (prin1-to-string message)))
+    (if (or loading (show-message-p message))
+        (qjs |addMessage| ui:*messages* message)
+        (let* ((sender (getf message :sender))
+               (unread (1+ (or (app:setting sender :unread-messages) 0))))
+          (app:change-setting sender unread :sub-key :unread-messages)
+          (group:set-unread sender unread)))
+    (unless loading
+      (q! |positionViewAtEnd| ui:*message-view*))))
 
 (defun change-state (state mid)
   (let* ((i-state (position state *states*))
