@@ -93,7 +93,7 @@ it saves uploaded files on the server."
                   (save-file (get-stream (get-http-connection http-request))
                              (parse-integer (cdr (assoc :content-length headers)))
                              boundary)
-                  (loc:check-offline-map) ; evtl. tiles to extract
+                  (loc:extract-map-bin t) ; evtl. tiles to extract
                   ;; if uploaded file is app:*backup-data-file*, unzip data, close app
                   ;; (restart needed)
                   (let ((data.zip (x:cc "data/" app:*backup-data-file*)))

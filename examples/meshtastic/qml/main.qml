@@ -18,7 +18,7 @@ Item {
   Menu {
     id: menu
 
-    MenuItem {
+    Ext.MenuItem {
       text: qsTr("Make backup")
       onTriggered: Lisp.call("app:make-backup")
       enabled: !mobile
