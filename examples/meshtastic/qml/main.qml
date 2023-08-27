@@ -11,13 +11,29 @@ Item {
   height: 550
 
   property double headerHeight: 48
+  property bool mobile: (Qt.platform.os === "android") || (Qt.platform.os === "ios")
 
   Ext.MainView { id: view }
+
+  Menu {
+    id: menu
+
+    MenuItem {
+      text: qsTr("Make backup")
+      onTriggered: Lisp.call("app:make-backup")
+      enabled: !mobile
+    }
+  }
 
   Image {
     source: "img/logo-128.png"
     width: headerHeight
     height: width
+
+    MouseArea {
+      anchors.fill: parent
+      onClicked: menu.popup(0, headerHeight)
+    }
   }
 
   Image { // location icon ('Group')

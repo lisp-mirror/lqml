@@ -6,8 +6,6 @@ Rectangle {
   id: main
   color: loading.visible ? "#1974d3" : "#e5d8bd"
 
-  property bool mobile: (Qt.platform.os === "android") || (Qt.platform.os === "ios")
-
   ListView {
     id: view
     objectName: "message_view"
@@ -256,7 +254,7 @@ Rectangle {
         height: width
         source: "../img/emoji.png"
         opacity: 0.55
-        visible: !main.mobile && edit.focus
+        visible: !main.parent.parent.mobile && edit.focus
 
         MouseArea {
           anchors.fill: parent

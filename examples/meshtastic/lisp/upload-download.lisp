@@ -15,25 +15,10 @@
       (file-position stream (+ p1 p2))) ; update manually
     p2))
 
-(defun zip (zip-file directory)
-  "Creates a *.zip file of passed directory, _not_ including the directory name."
-  (zip:zip (merge-pathnames zip-file)
-           (probe-file directory)
-           :if-exists :supersede)
-  zip-file)
-
-(defun unzip (zip-file &optional (directory "."))
-  "Extracts (previously uploaded) *.zip file."
-  (zip:unzip (merge-pathnames zip-file)
-             (probe-file directory)
-             :if-exists :supersede)
-  zip-file)
-
 ;;; web server handler
 
 (in-package :s-http-server)
 
-(defvar *data-file*  "mt-data.zip")
 (defvar *web-server* nil)
 (defvar *empty-line* #.(map 'vector 'char-code (list #\Return #\Linefeed
                                                      #\Return #\Linefeed)))
@@ -108,15 +93,14 @@ it saves uploaded files on the server."
                   (save-file (get-stream (get-http-connection http-request))
                              (parse-integer (cdr (assoc :content-length headers)))
                              boundary)
-                  ;; eventual tiles to extract
-                  (loc:check-offline-map)
-                  ;; if uploaded file is *data-file*, unzip data, close app
+                  (loc:check-offline-map) ; evtl. tiles to extract
+                  ;; if uploaded file is app:*backup-data-file*, unzip data, close app
                   ;; (restart needed)
-                  (let ((data.zip (x:cc "data/" *data-file*)))
+                  (let ((data.zip (x:cc "data/" app:*backup-data-file*)))
                     (x:when-it (probe-file data.zip)
                       (qml:qlog "data file found, unzipping...")
-                      (qml::unzip data.zip "data/")
-                      (delete-file data.zip)
+                      (app:unzip x:it (app:in-data-path ""))
+                      (delete-file x:it)
                       (app:toast (qml:tr "Data uploaded, closing app..."))
                       (qml:qlog "closing app...")
                       (qml:qsingle-shot 10000 'qml:qquit))))))
@@ -132,8 +116,7 @@ it saves uploaded files on the server."
       (setf *web-server* (make-s-http-server)))
     (start-server *web-server*)
     (when ini
-      (qml::zip *data-file* "data/") ; zip data for downloaded
-      (loc:make-map-bin)             ; 'map.bin' for download (no need to zip compressed images)
+      (app:make-backup)
       (qml:qlog "data zipped, ready for download")
       (register-context-handler *web-server* "/" 'static-resource/upload-handler
                                 :arguments (list *default-pathname-defaults*))))

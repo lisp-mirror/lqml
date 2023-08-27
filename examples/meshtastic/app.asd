@@ -3,8 +3,8 @@
   :depends-on (#-depends-loaded :my-cl-protobufs
                #-depends-loaded :trivial-package-local-nicknames
                #-depends-loaded :cl-fad
-               #+mobile :s-http-server
-               #+mobile :zip) ; see 'hacks/zip/'
+               #-depends-loaded :zip ; see 'hacks/zip/'
+               #+mobile :s-http-server)
   :components ((:file "lisp/meshtastic-proto")
                (:file "lisp/package")
                (:file "lisp/qt")

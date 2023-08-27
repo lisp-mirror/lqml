@@ -10,6 +10,7 @@
 (asdf:load-system :my-cl-protobufs)
 (asdf:load-system :trivial-package-local-nicknames)
 (asdf:load-system :cl-fad)
+(asdf:load-system :zip)
 
 (push :depends-loaded *features*)
 

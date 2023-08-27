@@ -1,17 +1,23 @@
 (defpackage :app
   (:use :cl :qml)
   (:export
+   #:*backup-data-file*
+   #:*backup-map-file*
    #:change-setting
    #:icon-press-and-hold
    #:in-data-path
    #:ini
    #:load-settings
+   #:make-backup
    #:my-ip
+   #:restore-eventual-backup
    #:save-settings
    #:setting
    #:toast
    #:kw
-   #:view-index-changed))
+   #:unzip
+   #:view-index-changed
+   #:zip))
 
 (defpackage :lora
   (:use :cl :qml)
@@ -105,7 +111,6 @@
    #:*my-position*
    #:*positions*
    #:activate-map
-   #:check-offline-map
    #:distance
    #:extract-map-bin
    #:ini

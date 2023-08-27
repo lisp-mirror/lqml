@@ -8,7 +8,6 @@
   (qt:ini-positioning qt:*cpp*)
   #+ios
   (q> |active| ui:*position-source* t)
-  (check-offline-map)
   #+mobile
   (update-my-position))
 
@@ -44,11 +43,12 @@
       (qsingle-shot 1000 'send-to-radio)))
 
 (defun position* (node)
-  (when (stringp node)
-    (setf node (parse-integer node))) ; for JS
-  (x:when-it (getf *positions* node)
-    (list (getf x:it :lat)
-          (getf x:it :lon))))
+  (when node
+    (when (stringp node)
+      (setf node (parse-integer node))) ; for JS
+    (x:when-it (getf *positions* node)
+      (list (getf x:it :lat)
+            (getf x:it :lon)))))
 
 (defun set-position (node pos)
   (let ((lat (getf pos :lat)))
@@ -106,10 +106,11 @@
   (let ((show (not (q< |visible| ui:*map-view*))))
     (when show
       (activate-map)
-      (qjs |updatePositions| ui:*map*
-           (princ-to-string (lora:my-num)) ; STRING for JS
-           (lora:my-name)
-           (find-quick-item ui:*group*)))
+      (x:when-it (lora:my-num)
+        (qjs |updatePositions| ui:*map*
+             (princ-to-string x:it) ; STRING for JS
+             (lora:my-name)
+             (find-quick-item ui:*group*))))
     (q> |visible| ui:*map-view* show)
     ;; move map (not page) when swiping to left
     (q> |interactive| ui:*main-view* (not show))
@@ -135,7 +136,7 @@
 (defun make-map-bin ()
   "Writes all tiles in a single file, because images are already compressed.
   This is meant to avoid useless (and possibly slow) zipping."
-  (with-open-file (out (app:in-data-path "map.bin" "")
+  (with-open-file (out (app:in-data-path app:*backup-map-file* "backup/")
                        :direction :output :if-exists :supersede
                        :element-type '(unsigned-byte 8))
     (let ((directories (directory (app:in-data-path "**/" "tiles/"))))
@@ -159,7 +160,7 @@
 
 (defun extract-map-bin (&optional delete)
   "Restores tiles from a previously saved single binary file named 'map.bin'."
-  (let ((blob (app:in-data-path "map.bin" "")))
+  (let ((blob (app:in-data-path app:*backup-map-file* "")))
     (when (probe-file blob)
       (with-open-file (in blob :element-type '(unsigned-byte 8))
         (flet ((read-string ()
@@ -181,7 +182,4 @@
                     (with-open-file (out name :direction :output :if-exists :supersede
                                               :element-type (stream-element-type in))
                       (copy-stream in out size)))))))))))
-
-(defun check-offline-map ()
-  (extract-map-bin t))
 

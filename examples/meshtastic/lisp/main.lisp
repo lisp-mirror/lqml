@@ -2,6 +2,7 @@
 
 (defun ini ()
   (qt:ini)
+  (restore-eventual-backup)
   (load-settings)
   (lora:ini)
   (db:ini)
@@ -111,5 +112,36 @@
   "Shows a temporary message/notification. If the passed time is 0 seconds, the
   message will be shown until the user taps on the message."
   (qjs |message| ui:*toast* message seconds))
+
+;;; backup/restore all app data
+
+(defvar *backup-data-file* "mt-data.zip")
+(defvar *backup-map-file*  "map.bin")
+
+(defun zip (zip-file directory)
+  "Creates a *.zip file of passed directory, _not_ including the directory name."
+  (zip:zip zip-file directory :if-exists :supersede)
+  zip-file)
+
+(defun unzip (zip-file &optional (directory "."))
+  "Extracts (previously uploaded) *.zip file."
+  (zip:unzip zip-file directory :if-exists :supersede)
+  zip-file)
+
+(defun make-backup ()
+  "Creates backup files in local data directory '.../cl-mestastic/backup/'."
+  (ensure-directories-exist (in-data-path "" "backup/"))
+  (zip (in-data-path *backup-data-file* "backup/")
+       (in-data-path ""))
+  (loc:make-map-bin))
+
+(defun restore-eventual-backup ()
+  "Checks if there are backup files in local data directory
+  '.../cl-mestastic/'. If found, the data is restored and the backup files are
+  deleted."
+  (x:when-it (probe-file (in-data-path *backup-data-file* ""))
+    (unzip x:it (app:in-data-path ""))
+    (delete-file x:it))
+  (loc:extract-map-bin t))
 
 (qlater 'ini)

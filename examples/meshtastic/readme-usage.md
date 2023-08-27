@@ -121,9 +121,16 @@ any other device.
 
 The desktop data paths are:
 
-* Linux: `/home/<user>/.local/share/cl-meshtastic/data/`
-* macOS: `/Users/<user>/Library/Application Support/cl-meshtastic/data/`
-* Windows: `C:\Users\<user>\AppData\Local\cl-meshtastic\data\`
+* Linux: `/home/<user>/.local/share/cl-meshtastic/`
+* macOS: `/Users/<user>/Library/Application Support/cl-meshtastic/`
+* Windows: `C:\Users\<user>\AppData\Local\cl-meshtastic\`
+
+Eventual backups are saved in above path under `backups/`. On the desktop
+see menu (tap on top left) and 'Make backup'.
+
+To autmatically restore data from a backup on the desktop, put the backup files
+directly in above path (that is, under `.../cl-meshtastic/` and restart the
+app. The data will be restored and the (obsolete) backup files will be deleted.
 
 
 Tips
@@ -162,5 +169,5 @@ it might crash regularily if you try to eval some buffer, or even during
 auto-completion).
 
 For full Swank/Slime power you'll need the desktop version anyway (this is how
-this app was developed).
+this app is being developed [...]).
 
