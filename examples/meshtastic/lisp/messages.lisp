@@ -3,6 +3,9 @@
 (defvar *message-id* 0)
 (defvar *states*     '(:not-received :sending :received))
 
+(defun ini ()
+  (q> |fontSize| ui:*message-view* (or (app:setting :message-font-size) 18)))
+
 (defun message-id ()
   (mod (incf *message-id*) #.(expt 2 32)))
 
@@ -134,5 +137,18 @@
 
 (defun swipe-to-left () ; see QML
   (q> |currentIndex| ui:*main-view* 0)
+  (values))
+
+(defun font-size-dialog ()
+  (app:confirm-dialog
+   (tr "Size") (tr "Message font size:") 'font-size-changed
+   :from 12 :to 48 :value (or (app:setting :message-font-size) 18)))
+
+(defun font-size-changed (ok) ; callback from QML
+  (when ok
+    (let ((size (q< |value| ui:*dialog-spin-box*)))
+      (setf size (min 48 (max 12 size)))
+      (q> |fontSize| ui:*message-view* size)
+      (app:change-setting :message-font-size size)))
   (values))
 

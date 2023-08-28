@@ -8,7 +8,7 @@ Item {
   Rectangle {
     id: header
     width: parent.width
-    height: main.headerHeight
+    height: rootItem.headerHeight
     color: "#f2f2f2"
 
     Row {

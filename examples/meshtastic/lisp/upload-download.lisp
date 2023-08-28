@@ -99,7 +99,7 @@ it saves uploaded files on the server."
                   (let ((data.zip (x:cc "data/" app:*backup-data-file*)))
                     (x:when-it (probe-file data.zip)
                       (qml:qlog "data file found, unzipping...")
-                      (app:unzip x:it (app:in-data-path ""))
+                      (app:unzip x:it (app:in-data-path))
                       (delete-file x:it)
                       (app:toast (qml:tr "Data uploaded, closing app..."))
                       (qml:qlog "closing app...")
@@ -121,7 +121,7 @@ it saves uploaded files on the server."
       (register-context-handler *web-server* "/" 'static-resource/upload-handler
                                 :arguments (list *default-pathname-defaults*))))
   (x:when-it (app:my-ip)
-    (app:toast (format nil "http://~A:1701" x:it) 0)))
+    (app:message-dialog (format nil "http://~A:1701" x:it))))
 
 (defun stop ()
   (stop-server *web-server*)

@@ -4,6 +4,8 @@
   (:use :cl)
   (:export
    #:*busy*
+   #:*dialogs*
+   #:*dialog-spin-box*
    #:*edit*
    #:*emojis*
    #:*group*
@@ -31,6 +33,8 @@
 (in-package :ui)
 
 (defparameter *busy*            "busy")
+(defparameter *dialogs*         "dialogs")
+(defparameter *dialog-spin-box* "dialog_spin_box")
 (defparameter *edit*            "edit")
 (defparameter *emojis*          "emojis")
 (defparameter *group*           "group")

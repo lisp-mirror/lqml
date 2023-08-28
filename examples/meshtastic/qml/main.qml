@@ -3,9 +3,10 @@ import QtQuick.Controls 2.15
 import QtQuick.Window 2.15
 import QtPositioning 5.15
 import "ext/" as Ext
+import "ext/dialogs/" as Dlg
 
 Item {
-  id: main
+  id: rootItem
   objectName: "main"
   width: 350
   height: 550
@@ -13,10 +14,19 @@ Item {
   property double headerHeight: 48
   property bool mobile: (Qt.platform.os === "android") || (Qt.platform.os === "ios")
 
+  function showKeyboard(show) {
+    show ? Qt.inputMethod.show() : Qt.inputMethod.hide()
+  }
+
   Ext.MainView { id: view }
 
   Menu {
     id: menu
+
+    Ext.MenuItem {
+      text: qsTr("Message font size...")
+      onTriggered: Lisp.call("msg:font-size-dialog")
+    }
 
     Ext.MenuItem {
       text: qsTr("Make backup")
@@ -131,6 +141,8 @@ Item {
   }
 
   Ext.Toast {}
+
+  Dlg.Dialogs {}
 
   FontLoader { id: fontText;  source: "fonts/Ubuntu.ttf" }
   FontLoader { id: fontText2; source: "fonts/Ubuntu-Medium.ttf" }

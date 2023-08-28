@@ -52,7 +52,7 @@
        "SLIME-listener"
        (lambda () (swank/create-server interface port dont-close style))))
   (x:when-it (app:my-ip)
-    (app:toast (x:cc "slime-connect " x:it) 0)))
+    (app:message-dialog (x:cc "slime-connect " x:it))))
 
 (defun stop-swank (&optional (port 4005))
   (when (find-package :swank)

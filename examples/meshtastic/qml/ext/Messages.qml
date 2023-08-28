@@ -17,6 +17,8 @@ Rectangle {
     clip: true
     visible: false
 
+    property int fontSize: 18
+
     delegate: SwipeDelegate {
       id: swipeDelegate
       width: view.width
@@ -28,7 +30,8 @@ Rectangle {
 
       background: Item {
         id: delegate
-        width: Math.max(text.paintedWidth, rowSender.width + 4 * text.padding) + 2 * text.padding + 4
+        width: Math.max(text.paintedWidth, rowSender.width + view.fontSize / 4 * text.padding)
+               + 2 * text.padding + view.fontSize / 4
         height: model.hidden ? 0 : (text.contentHeight + 2 * text.padding + sender.contentHeight + 8)
 
         Rectangle {
@@ -56,7 +59,7 @@ Rectangle {
 
             Text {
               id: sender
-              font.pixelSize: 12
+              font.pixelSize: 2/3 * view.fontSize
               font.family: fontText.name
               color: "#8B0000"
               text: model.senderName ? model.senderName : model.sender
@@ -67,7 +70,7 @@ Rectangle {
             id: timestamp
             x: delegate.width - contentWidth - text.padding
             y: text.padding
-            font.pixelSize: 12
+            font.pixelSize: 2/3 * view.fontSize
             font.family: fontText.name
             color: "#505050"
             text: model.hour
@@ -84,7 +87,7 @@ Rectangle {
             width: main.width - 10
             padding: 5
             wrapMode: Text.Wrap
-            font.pixelSize: 18
+            font.pixelSize: view.fontSize
             font.family: fontText.name
             color: "#303030"
             textFormat: Text.StyledText // for 'paintedWidth' to always work
@@ -197,7 +200,7 @@ Rectangle {
     y: 1
     width: parent.width
     height: visible ? (edit.paintedHeight + 14) : 0
-    font.pixelSize: 18
+    font.pixelSize: view.fontSize
     font.family: fontText.name
     selectionColor: "#228ae3"
     selectedTextColor: "white"
@@ -233,7 +236,7 @@ Rectangle {
       objectName: "edit"
       anchors.fill: parent
       textFormat: TextEdit.PlainText
-      font.pixelSize: 18
+      font.pixelSize: view.fontSize
       font.family: fontText.name
       selectionColor: "#228ae3"
       selectedTextColor: "white"
@@ -254,7 +257,7 @@ Rectangle {
         height: width
         source: "../img/emoji.png"
         opacity: 0.55
-        visible: !main.parent.parent.mobile && edit.focus
+        visible: !rootItem.mobile && edit.focus
 
         MouseArea {
           anchors.fill: parent

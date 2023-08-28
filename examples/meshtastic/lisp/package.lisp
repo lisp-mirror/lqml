@@ -4,10 +4,12 @@
    #:*backup-data-file*
    #:*backup-map-file*
    #:change-setting
+   #:confirm-dialog
    #:icon-press-and-hold
    #:in-data-path
    #:ini
    #:load-settings
+   #:message-dialog
    #:make-backup
    #:my-ip
    #:restore-eventual-backup
@@ -87,6 +89,9 @@
    #:clear-find
    #:echo-message
    #:find-text
+   #:font-size-changed
+   #:font-size-dialog
+   #:ini
    #:message-id
    #:message-press-and-hold
    #:receiver-changed

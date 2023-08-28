@@ -5,6 +5,7 @@
   (restore-eventual-backup)
   (load-settings)
   (lora:ini)
+  (msg:ini)
   (db:ini)
   (loc:ini)
   (setf msg:*message-id* (db:max-message-id))
@@ -22,7 +23,7 @@
     (ensure-permissions :bluetooth-scan :bluetooth-connect)) ; android >= 12
   (lora:start-device-discovery (or (setting :device) "")))
 
-(defun in-data-path (file &optional (prefix "data/"))
+(defun in-data-path (&optional (file "") (prefix "data/"))
   #+mobile
   (merge-pathnames (x:cc prefix file))
   #-mobile
@@ -39,10 +40,10 @@
 
 (defun icon-press-and-hold (name) ; see QML
   (cond ((string= ui:*radio-icon* name)
-         ;; force update devices
+         ;; force update of: device discovery
          (lora:start-device-discovery (or (setting :device) "")))
         ((string= ui:*group-icon* name)
-         ;; force update nodes
+         ;; force update of: node configuration
          (lora:start-config)))
   (values))
 
@@ -113,6 +114,16 @@
   message will be shown until the user taps on the message."
   (qjs |message| ui:*toast* message seconds))
 
+;;; dialogs
+
+(defun message-dialog (text)
+  (qjs |message| ui:*dialogs* text))
+
+(defun confirm-dialog (title text callback &key from to value)
+  (qjs |confirm| ui:*dialogs*
+       title text (x:callback-name callback)
+       from to value)) ; for (optional) SpinBox
+
 ;;; backup/restore all app data
 
 (defvar *backup-data-file* "mt-data.zip")
@@ -132,7 +143,7 @@
   "Creates backup files in local data directory '.../cl-mestastic/backup/'."
   (ensure-directories-exist (in-data-path "" "backup/"))
   (zip (in-data-path *backup-data-file* "backup/")
-       (in-data-path ""))
+       (in-data-path))
   (loc:make-map-bin))
 
 (defun restore-eventual-backup ()
@@ -140,7 +151,7 @@
   '.../cl-mestastic/'. If found, the data is restored and the backup files are
   deleted."
   (x:when-it (probe-file (in-data-path *backup-data-file* ""))
-    (unzip x:it (app:in-data-path ""))
+    (unzip x:it (app:in-data-path))
     (delete-file x:it))
   (loc:extract-map-bin t))
 
