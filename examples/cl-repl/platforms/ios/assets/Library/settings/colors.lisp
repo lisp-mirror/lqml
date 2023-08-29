@@ -18,6 +18,9 @@
 (setf *output-trace-color*      "darkmagenta")
 (setf *output-error-color*      "red")
 
+(setf *button-color*            "#e0e0e0")
+(setf *button-text-color*       "#26282a")
+
 (progn
   (qrun* (apply-colors))
   (q! |clear| ui:*output-model*)

@@ -23,6 +23,9 @@
 (defvar *output-trace-color*      "darkmagenta")
 (defvar *output-error-color*      "red")
 
+(defvar *button-color*            "#e0e0e0")
+(defvar *button-text-color*       "#26282a")
+
 (defun apply-colors ()
   (qt:set-format qt:*cpp* *lisp-keyword-format*
                  (list :color *lisp-keyword-color*
@@ -46,6 +49,13 @@
   (dolist (item (list ui:*edit* ui:*command*))
     (q> |selectedTextColor| item *selected-text-color*)
     (q> |selectionColor| item *selection-color*))
+  (dolist (item (list (root-item) ui:*clipboard-menu*))
+    (q> |palette.button| item *button-color*)
+    (q> |palette.buttonText| item *button-text-color*))
+  (dolist (item (list ui:*paren-open* ui:*paren-close*))
+    (q> |icon.color| item *button-text-color*))
+  (dolist (button (list ui:*left* ui:*right* ui:*up* ui:*down*))
+    (q> |palette.windowText| button *button-text-color*))
   (unless (zerop (q< |length| ui:*edit*))
     ;; apply to editor
     (q! |selectAll| ui:*edit*)

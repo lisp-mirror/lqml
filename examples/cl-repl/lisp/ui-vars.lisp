@@ -36,6 +36,8 @@
    #:*open-file*
    #:*output*
    #:*output-model*
+   #:*paren-close*
+   #:*paren-open*
    #:*paste*
    #:*path*
    #:*progress*
@@ -92,6 +94,8 @@
 (defparameter *open-file*          "open_file")
 (defparameter *output-model*       "output_model")
 (defparameter *output*             "output")
+(defparameter *paren-close*        "paren_close")
+(defparameter *paren-open*         "paren_open")
 (defparameter *paste*              "paste")
 (defparameter *path*               "path")
 (defparameter *progress*           "progress")

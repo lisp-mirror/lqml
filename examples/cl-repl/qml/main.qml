@@ -395,15 +395,18 @@ StackView {
 
             Row {
               id: rowParens
-              padding: 5
-              spacing: 5
+              padding: -parenOpen.width / 30
+              spacing: -parenOpen.width / 6
 
               Ext.ParenButton {
-                source: "img/paren-open.png"
+                id: parenOpen
+                objectName: "paren_open"
+                icon.source: "img/paren-open.png"
                 onClicked: Lisp.call("editor:insert", "(")
               }
               Ext.ParenButton {
-                source: "img/paren-close.png"
+                objectName: "paren_close"
+                icon.source: "img/paren-close.png"
                 onClicked:      Lisp.call("editor:insert", ")")
                 onPressAndHold: Lisp.call("editor:close-all-parens")
               }
