@@ -22,7 +22,7 @@ Dialog {
       width: parent.width
       wrapMode: Text.Wrap
       font.pixelSize: 18
-      visible: text !== ""
+      visible: (text !== "")
     }
 
     SpinBox {

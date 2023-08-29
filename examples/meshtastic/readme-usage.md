@@ -126,7 +126,7 @@ The desktop data paths are:
 * Windows: `C:\Users\<user>\AppData\Local\cl-meshtastic\`
 
 Eventual backups are saved in above path under `backups/`. On the desktop
-see menu (tap on top left) and 'Make backup'.
+see 'Make backup' in menu (tap on logo on top left).
 
 To autmatically restore data from a backup on the desktop, put the backup files
 directly in above path (that is, under `.../cl-meshtastic/` and restart the

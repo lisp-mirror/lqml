@@ -19,7 +19,7 @@ Dialog {
       id: message
       width: parent.width
       wrapMode: Text.Wrap
-      visible: text !== ""
+      visible: (text !== "")
     }
 
     SpinBox {

@@ -144,7 +144,8 @@
   (ensure-directories-exist (in-data-path "" "backup/"))
   (zip (in-data-path *backup-data-file* "backup/")
        (in-data-path))
-  (loc:make-map-bin))
+  (loc:make-map-bin)
+  (toast (tr "backup ready")))
 
 (defun restore-eventual-backup ()
   "Checks if there are backup files in local data directory

@@ -142,12 +142,12 @@
 (defun font-size-dialog ()
   (app:confirm-dialog
    (tr "Size") (tr "Message font size:") 'font-size-changed
-   :from 12 :to 48 :value (or (app:setting :message-font-size) 18)))
+   :from 10 :to 48 :value (or (app:setting :message-font-size) 18)))
 
 (defun font-size-changed (ok) ; callback from QML
   (when ok
     (let ((size (q< |value| ui:*dialog-spin-box*)))
-      (setf size (min 48 (max 12 size)))
+      (setf size (min 48 (max 10 size)))
       (q> |fontSize| ui:*message-view* size)
       (app:change-setting :message-font-size size)))
   (values))

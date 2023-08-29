@@ -48,10 +48,11 @@ Rectangle {
 
             AnimatedImage {
               id: semaphore
-              playing: false
-              y: 4
-              width: 8
+              anchors.verticalCenter: sender.verticalCenter
+              anchors.verticalCenterOffset: -0.5
+              width: view.fontSize / 2 - 1
               height: width
+              playing: false
               source: "../img/semaphore.gif"
               currentFrame: model.ackState
               visible: model.me
