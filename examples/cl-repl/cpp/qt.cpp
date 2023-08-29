@@ -94,8 +94,8 @@ QVariant QT::connectDocumentChanged(const QVariant& vDocument, const QVariant& v
 
 #ifdef Q_OS_IOS
 QVariant QT::connectKeyPressed() {
-  EventFilterApp* sender = static_cast<EventFilterApp*>(qGuiApp);
-  connect(sender, &EventFilterApp::keyPressed,
+  GuiApplication* sender = static_cast<GuiApplication*>(qGuiApp);
+  connect(sender, &GuiApplication::keyPressed,
           [](const QString& key, const QString& objectName) {
             ecl_fun("editor:key-pressed", key, objectName);
           });
