@@ -25,6 +25,7 @@
 
 (defvar *button-color*            "#e0e0e0")
 (defvar *button-text-color*       "#26282a")
+(defvar *button-opacity*          0.12) ; arrow and paren buttons only
 
 (defun apply-colors ()
   (qt:set-format qt:*cpp* *lisp-keyword-format*
@@ -52,9 +53,11 @@
   (dolist (item (list (root-item) ui:*clipboard-menu*))
     (q> |palette.button| item *button-color*)
     (q> |palette.buttonText| item *button-text-color*))
-  (dolist (item (list ui:*paren-open* ui:*paren-close*))
-    (q> |icon.color| item *button-text-color*))
+  (dolist (button (list ui:*paren-open* ui:*paren-close*))
+    (q> |opacity| button *button-opacity*)
+    (q> |icon.color| button *button-text-color*))
   (dolist (button (list ui:*left* ui:*right* ui:*up* ui:*down*))
+    (q> |opacity| button *button-opacity*)
     (q> |palette.windowText| button *button-text-color*))
   (unless (zerop (q< |length| ui:*edit*))
     ;; apply to editor
