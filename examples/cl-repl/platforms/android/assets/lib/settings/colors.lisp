@@ -20,6 +20,7 @@
 
 (setf *button-color*            "#e0e0e0")
 (setf *button-text-color*       "#26282a")
+(setf *button-opacity*          0.12) ; arrow and paren buttons only
 
 (progn
   (qrun* (apply-colors))
