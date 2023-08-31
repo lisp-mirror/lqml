@@ -22,6 +22,8 @@
 (setf *button-text-color*       "#26282a")
 (setf *button-opacity*          0.12) ; arrow and paren buttons only
 
+(setf *cursor-color*            "blue")
+
 (progn
   (qrun* (apply-colors))
   (q! |clear| ui:*output-model*)

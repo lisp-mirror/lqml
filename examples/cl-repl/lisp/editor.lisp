@@ -27,6 +27,8 @@
 (defvar *button-text-color*       "#26282a")
 (defvar *button-opacity*          0.12) ; arrow and paren buttons only
 
+(defvar *cursor-color*            "blue")
+
 (defun apply-colors ()
   (qt:set-format qt:*cpp* *lisp-keyword-format*
                  (list :color *lisp-keyword-color*
@@ -59,6 +61,7 @@
   (dolist (button (list ui:*left* ui:*right* ui:*up* ui:*down*))
     (q> |opacity| button *button-opacity*)
     (q> |palette.windowText| button *button-text-color*))
+  (q> |cursorColor| ui:*main* *cursor-color*)
   (unless (zerop (q< |length| ui:*edit*))
     ;; apply to editor
     (q! |selectAll| ui:*edit*)

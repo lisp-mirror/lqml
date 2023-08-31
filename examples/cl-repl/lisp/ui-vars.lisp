@@ -9,6 +9,7 @@
    #:*clipboard-menu*
    #:*command*
    #:*copy*
+   #:*cursor-color*
    #:*cut*
    #:*debug-dialog*
    #:*debug-input*
@@ -67,6 +68,7 @@
 (defparameter *clipboard-menu*     "clipboard_menu")
 (defparameter *command*            "command")
 (defparameter *copy*               "copy")
+(defparameter *cursor-color*       "cursor_color")
 (defparameter *cut*                "cut")
 (defparameter *debug-dialog*       "debug_dialog")
 (defparameter *debug-input*        "debug_input")

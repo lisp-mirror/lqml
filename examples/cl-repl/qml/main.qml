@@ -15,6 +15,7 @@ StackView {
   property bool small: (Math.max(width, height) < 1000)
   property bool skipEnsureVisible: false
   property double editorHeight: 0.5 // preferred initial height (50%)
+  property string cursorColor: "blue"
 
   function availableHeight() {
     var h = Math.round(Qt.inputMethod.keyboardRectangle.y /
@@ -474,7 +475,7 @@ StackView {
 
       Rectangle {
         width: 2
-        color: "blue"
+        color: main.cursorColor
         visible: parent.activeFocus
 
         SequentialAnimation on opacity {
