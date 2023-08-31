@@ -33,7 +33,9 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>To share location.</string>
 	<key>UILaunchStoryboardName</key>
-	<string>designable.storyboard</string>
+	<string>designable</string>
+	<key>UILaunchStoryboardName_iPad</key>
+	<string>designable_iPad</string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
