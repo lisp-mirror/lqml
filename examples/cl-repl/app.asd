@@ -1,8 +1,8 @@
 (defsystem :app
   :serial t
   :depends-on (#-depends-loaded :cl-ppcre
-               #+(or mobile (not depends-loaded)) :s-http-server
-               #+(or mobile (not depends-loaded)) :zip) ; see 'patch/'
+               #+mobile :s-http-server
+               #+mobile :zip) ; see 'patch/'
   :components ((:file "lisp/package")
                (:file "lisp/ui-vars")
                (:file "lisp/qt")
