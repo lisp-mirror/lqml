@@ -45,6 +45,7 @@
    #:change-modem-preset
    #:channel-to-url
    #:ini
+   #:keywords
    #:my-name
    #:my-num
    #:send-position
@@ -62,6 +63,7 @@
   (:export
    #:add-person
    #:clear
+   #:ini
    #:name-edited
    #:receiver-changed
    #:set-unread))
@@ -107,6 +109,7 @@
    #:change-radio
    #:clear
    #:device-discovered
+   #:ini
    #:reset-default-radio))
 
 (defpackage :location

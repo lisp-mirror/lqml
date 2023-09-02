@@ -1,5 +1,14 @@
 (in-package :group)
 
+(defun ini ()
+  (q> |model| ui:*modem*
+      (mapcar (lambda (kw) (string-downcase (symbol-name kw)))
+              (lora:keywords :modem-preset)))
+  (x:when-it (app:setting :modem-preset)
+    (q> |currentIndex| ui:*modem*
+        (q! |indexOfValue| ui:*modem*
+            (string-downcase (symbol-name x:it))))))
+
 (defun add-person (person)
   "Adds passed PERSON (a PLIST) to QML item model.
   The model keys are:

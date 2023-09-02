@@ -2,6 +2,14 @@
 
 (defvar *found* nil)
 
+(defun ini ()
+  (q> |model| ui:*region*
+      (cons "-" (rest (mapcar 'symbol-name (lora:keywords :region-code)))))
+  (x:when-it (app:setting :region)
+    (q> |currentIndex| ui:*region*
+        (q! |indexOfValue| ui:*region*
+            (symbol-name x:it)))))
+
 (defun device-discovered (name)
   "Show discovered (cached) device, which may not be reachable / turned on."
   (unless *found*
@@ -27,7 +35,6 @@
   (values))
 
 (defun reset-default-radio ()
-  ;; TODO: add in UI settings
   (app:change-setting :device nil)
   (lora:start-device-discovery))
 

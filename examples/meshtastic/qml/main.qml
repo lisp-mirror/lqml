@@ -29,6 +29,11 @@ Item {
     }
 
     Ext.MenuItem {
+      text: qsTr("Update group/nodes")
+      onTriggered: Lisp.call("lora:start-config")
+    }
+
+    Ext.MenuItem {
       text: qsTr("Make backup")
       onTriggered: Lisp.call("app:make-backup")
       enabled: !mobile

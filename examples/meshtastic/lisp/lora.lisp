@@ -12,6 +12,9 @@
 (defvar *config-lora*     nil)
 (defvar *ble-names*       nil)
 
+(defun ini ()
+  (setf *receiver* (app:setting :latest-receiver)))
+
 ;;; header
 
 (defun lsb (size)
@@ -381,20 +384,10 @@
   (group:receiver-changed)
   (values))
 
-(defun ini ()
-  (setf *receiver* (app:setting :latest-receiver))
-  ;; populate and set current region, modem-preset
-  (q> |model| ui:*region*
-      (cons "-" (rest (mapcar 'symbol-name (pr:enum-keywords 'me:config.lo-ra-config.region-code)))))
-  (q> |model| ui:*modem*
-      (mapcar (lambda (kw) (string-downcase (symbol-name kw)))
-              (pr:enum-keywords 'me:config.lo-ra-config.modem-preset)))
-  (x:when-it (app:setting :region)
-    (q> |currentIndex| ui:*region*
-        (q! |indexOfValue| ui:*region*
-            (symbol-name x:it))))
-  (x:when-it (app:setting :modem-preset)
-    (q> |currentIndex| ui:*modem*
-        (q! |indexOfValue| ui:*modem*
-            (string-downcase (symbol-name x:it))))))
+(defun keywords (name)
+  (pr:enum-keywords (ecase name
+                      (:modem-preset
+                       'me:config.lo-ra-config.modem-preset)
+                      (:region-code
+                       'me:config.lo-ra-config.region-code))))
 

@@ -5,7 +5,9 @@
   (restore-eventual-backup)
   (load-settings)
   (lora:ini)
+  (group:ini)
   (msg:ini)
+  (radios:ini)
   (db:ini)
   (loc:ini)
   (setf msg:*message-id* (db:max-message-id))
@@ -155,5 +157,20 @@
     (unzip x:it (app:in-data-path))
     (delete-file x:it))
   (loc:extract-map-bin t))
+
+;;; check app version (mobile)
+
+#+mobile
+(defconstant +version+ 1)
+
+#+mobile
+(let ((.version (merge-pathnames ".version")))
+  (when (or (not (probe-file .version))
+            (> +version+
+               (parse-integer (alexandria:read-file-into-string .version))))
+    ;; asset files may have changed
+    (copy-all-asset-files)
+    (alexandria:write-string-into-file
+     (princ-to-string +version+) .version :if-exists :supersede)))
 
 (qlater 'ini)
