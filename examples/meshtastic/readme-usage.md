@@ -168,5 +168,5 @@ get/set variables on the fly (but it might crash regularily if you try to eval
 some buffer, or even during auto-completion).
 
 For full Swank/Slime power you'll need the desktop version anyway (this is how
-this app is being developed [...]).
+this app is being developed).
 

@@ -46,7 +46,7 @@
          (lora:start-device-discovery (or (setting :device) "")))
         ((string= ui:*group-icon* name)
          ;; force update of: node configuration
-         (lora:start-config)))
+         (lora:get-node-config)))
   (values))
 
 ;;; settings

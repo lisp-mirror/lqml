@@ -30,7 +30,7 @@ Item {
 
     Ext.MenuItem {
       text: qsTr("Update group/nodes")
-      onTriggered: Lisp.call("lora:start-config")
+      onTriggered: Lisp.call("lora:get-node-config")
     }
 
     Ext.MenuItem {

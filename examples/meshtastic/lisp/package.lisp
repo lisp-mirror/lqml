@@ -44,12 +44,12 @@
    #:change-region
    #:change-modem-preset
    #:channel-to-url
+   #:get-node-config
    #:ini
    #:keywords
    #:my-name
    #:my-num
    #:send-position
-   #:start-config
    #:start-device-discovery
    #:read-radio
    #:received-from-radio

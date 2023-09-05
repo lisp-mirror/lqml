@@ -50,7 +50,7 @@
   (qt:start-device-discovery qt:*cpp* name)
   (q> |playing| ui:*busy* t))
 
-(defun start-config ()
+(defun get-node-config ()
   (when *ready*
     (setf *schedule-clear* t)
     (setf *config-complete* nil
@@ -59,13 +59,14 @@
     (incf *config-id*)
     (send-to-radio
      (me:make-to-radio :want-config-id *config-id*))
-    (q> |playing| ui:*busy* t)))
+    (q> |playing| ui:*busy* t)
+    (qsingle-shot (* 15 60 1000) 'get-node-config))) ; every 15 min
 
 (defun set-ready (name &optional (ready t)) ; see Qt
   (setf *ready* ready)
   (when ready
     (app:toast (x:cc (tr "radio") ": " name) 2)
-    (qlater 'start-config))
+    (qlater 'get-node-config))
   (values))
 
 (defun add-line-breaks (text)
