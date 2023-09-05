@@ -227,5 +227,12 @@ Rectangle {
     anchors.fill: rect
     visible: false
   }
+
+  Timer {
+    interval: 15 * 60 * 1000 // 15 min
+    repeat: true
+    running: true
+    onTriggered: Lisp.call("lora:get-node-config")
+  }
 }
 

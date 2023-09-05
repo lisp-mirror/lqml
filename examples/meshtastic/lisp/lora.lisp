@@ -51,6 +51,7 @@
   (q> |playing| ui:*busy* t))
 
 (defun get-node-config ()
+  ;; see also Timer in 'qml/ext/Group.qml'
   (when *ready*
     (setf *schedule-clear* t)
     (setf *config-complete* nil
@@ -59,8 +60,7 @@
     (incf *config-id*)
     (send-to-radio
      (me:make-to-radio :want-config-id *config-id*))
-    (q> |playing| ui:*busy* t)
-    (qsingle-shot (* 15 60 1000) 'get-node-config))) ; every 15 min
+    (q> |playing| ui:*busy* t)))
 
 (defun set-ready (name &optional (ready t)) ; see Qt
   (setf *ready* ready)

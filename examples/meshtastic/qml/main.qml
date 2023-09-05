@@ -42,6 +42,8 @@ Item {
 
   Image {
     source: "img/logo-128.png"
+    x: 2
+    y: 2
     width: headerHeight
     height: width
 
