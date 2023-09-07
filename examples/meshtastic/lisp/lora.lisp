@@ -379,7 +379,6 @@
           channel))))
 
 (defun change-receiver (receiver) ; see QML
-  (setf receiver (floor receiver)) ; JS double
   (setf *receiver* receiver)
   (app:change-setting :latest-receiver (node-to-name *receiver*))
   (msg:receiver-changed)

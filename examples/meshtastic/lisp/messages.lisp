@@ -79,7 +79,6 @@
   (values))
 
 (defun show-date (timestamp) ; see QML
-  (setf timestamp (floor timestamp)) ; JS double
   (multiple-value-bind (sec min hour day month year)
       (decode-universal-time timestamp)
     (app:toast (format nil "~D-~2,'0D-~2,'0D ~2,'0D:~2,'0D:~2,'0D"

@@ -13,6 +13,23 @@ static QVariant qmlApply(QObject* caller,
                  QVariant(arguments));
 }
 
+static QVariant toVariant(const QJSValue& value) {
+  QVariant var = value.toVariant();
+#if QT_VERSION < 0x060000
+  const int type = var.type();
+#else
+  const int type = var.typeId();
+#endif
+  if (type == QMetaType::Double) {
+    // workaround for uint32, see '>>>0' in QML
+    quint32 uint = var.toUInt();
+    if (uint == var.toDouble()) {
+      return QVariant(uint);
+    }
+  }
+  return var;
+}
+
 QVariant Lisp::call(const QJSValue& caller_or_function,
                     const QJSValue& function_or_arg0,
                     const QJSValue& arg1,
@@ -40,41 +57,41 @@ QVariant Lisp::call(const QJSValue& caller_or_function,
   } else if (caller_or_function.isString()) {
     function = caller_or_function.toString();
     if (!function_or_arg0.isUndefined()) {
-      arguments << function_or_arg0.toVariant();
+      arguments << toVariant(function_or_arg0);
     }
   }
   if (!arg1.isUndefined()) {
-    arguments << arg1.toVariant();
+    arguments << toVariant(arg1);
     if (!arg2.isUndefined()) {
-      arguments << arg2.toVariant();
+      arguments << toVariant(arg2);
       if (!arg3.isUndefined()) {
-        arguments << arg3.toVariant();
+        arguments << toVariant(arg3);
         if (!arg4.isUndefined()) {
-          arguments << arg4.toVariant();
+          arguments << toVariant(arg4);
           if (!arg5.isUndefined()) {
-            arguments << arg5.toVariant();
+            arguments << toVariant(arg5);
             if (!arg6.isUndefined()) {
-              arguments << arg6.toVariant();
+              arguments << toVariant(arg6);
               if (!arg7.isUndefined()) {
-                arguments << arg7.toVariant();
+                arguments << toVariant(arg7);
                 if (!arg8.isUndefined()) {
-                  arguments << arg8.toVariant();
+                  arguments << toVariant(arg8);
                   if (!arg9.isUndefined()) {
-                    arguments << arg9.toVariant();
+                    arguments << toVariant(arg9);
                     if (!arg10.isUndefined()) {
-                      arguments << arg10.toVariant();
+                      arguments << toVariant(arg10);
                       if (!arg11.isUndefined()) {
-                        arguments << arg11.toVariant();
+                        arguments << toVariant(arg11);
                         if (!arg12.isUndefined()) {
-                          arguments << arg12.toVariant();
+                          arguments << toVariant(arg12);
                           if (!arg13.isUndefined()) {
-                            arguments << arg13.toVariant();
+                            arguments << toVariant(arg13);
                             if (!arg14.isUndefined()) {
-                              arguments << arg14.toVariant();
+                              arguments << toVariant(arg14);
                               if (!arg15.isUndefined()) {
-                                arguments << arg15.toVariant();
+                                arguments << toVariant(arg15);
                                 if (!arg16.isUndefined()) {
-                                  arguments << arg16.toVariant();
+                                  arguments << toVariant(arg16);
                                 }
                               }
                             }

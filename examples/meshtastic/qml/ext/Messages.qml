@@ -78,7 +78,7 @@ Rectangle {
 
             MouseArea {
               anchors.fill: parent
-              onClicked: Lisp.call("msg:show-date", model.timestamp>>>0)
+              onClicked: Lisp.call("msg:show-date", model.timestamp>>>0) // uint32
             }
           }
 
@@ -136,7 +136,7 @@ Rectangle {
           onClicked: {
             var mid = model.mid
             view.model.remove(index)
-            Lisp.call("db:delete-message", mid>>>0)
+            Lisp.call("db:delete-message", mid>>>0) // uint32
           }
         }
       }

@@ -143,7 +143,7 @@ Rectangle {
 
       function selected() {
         view.currentIndex = index
-        Lisp.call("lora:change-receiver", model.nodeNum>>>0)
+        Lisp.call("lora:change-receiver", model.nodeNum>>>0) // uint32
       }
 
       MouseArea {
