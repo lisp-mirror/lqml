@@ -16,9 +16,8 @@
   (let* ((pos #+android (qrun* (qt:last-position qt:*cpp*)) ; 'qrun*': return value
               #+ios     (qjs |lastPosition| ui:*position-source*))
          (time (third pos)))
-    (when time
-      (setf (third pos)
-            (if (zerop (length time)) 0 (parse-integer time))))
+    (when (stringp time)
+      (setf (third pos) (parse-integer time))) ; see QML
     pos))
 
 #+mobile
@@ -44,8 +43,6 @@
 
 (defun position* (node)
   (when node
-    (when (stringp node)
-      (setf node (parse-integer node))) ; for JS
     (x:when-it (getf *positions* node)
       (list (getf x:it :lat)
             (getf x:it :lon)))))
@@ -108,7 +105,7 @@
       (activate-map)
       (x:when-it (lora:my-num)
         (qjs |updatePositions| ui:*map*
-             (princ-to-string x:it) ; STRING for JS
+             x:it
              (lora:my-name)
              (find-quick-item ui:*group*))))
     (q> |visible| ui:*map-view* show)

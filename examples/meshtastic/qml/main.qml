@@ -129,16 +129,16 @@ Item {
     updateInterval: 2000
     active: false
 
-    property double lat:  0
-    property double lon:  0
-    property string time: "" // no 'long' in JS
+    property double lat: 0
+    property double lon: 0
+    property string time: "0" // no 'long' in JS
 
     onPositionChanged: {
       if (position.latitudeValid && position.longitudeValid) {
         var coor = position.coordinate;
         lat = coor.latitude
         lon = coor.longitude
-        time = coor.timestamp ? String(coor.timestamp) : ""
+        time = coor.timestamp ? String(coor.timestamp.getTime()) : "0"
       }
     }
 

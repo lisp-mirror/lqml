@@ -101,7 +101,7 @@ QVariant QT::lastPosition() {
 #ifdef Q_OS_ANDROID
   pos << getDoubleField("_position_lat_")
       << getDoubleField("_position_lon_")
-      << QString::number(getLongField("_position_time_") / 1000); // 'QString': see QML 'lastPosition()'
+      << getLongField("_position_time_");
 #endif
   return pos;
 }

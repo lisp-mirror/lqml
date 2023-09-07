@@ -13,7 +13,7 @@
   (setf msg:*message-id* (db:max-message-id))
   (if (setting :latest-receiver)
       (msg:show-messages)
-      (q> |currentIndex| ui:*main-view* 0)) ; 'Group'
+      (qlater (lambda () (q> |currentIndex| ui:*main-view* 0)))) ; 'Group'
   (x:when-it (setting :recent-emojis)
     (setf *recent-emojis* (mapcar 'qfrom-utf8 x:it))
     (q> |model| ui:*recent-emojis* *recent-emojis*))

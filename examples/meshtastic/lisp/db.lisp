@@ -31,7 +31,8 @@
   (let ((val (first (query "select max(mid) from messages"))))
     (if (numberp val) val 0)))
 
-(defun delete-message (mid)
+(defun delete-message (mid) ; see QML
+  (setf mid (floor mid)) ; JS double
   (query "delete from messages where mid = ?"
          mid))
 

@@ -24,8 +24,8 @@
       (x:when-it* (app:setting (getf message :sender) :custom-name)
         (setf (getf message :sender-name) x:it*)))
     (unless loading
-      (db:save-message (parse-integer (getf message :mid)) ; mid
-                       (parse-integer x:it :radix 16)      ; uid
+      (db:save-message (getf message :mid)            ; mid
+                       (parse-integer x:it :radix 16) ; uid
                        (prin1-to-string message)))
     (if (or loading (show-message-p message))
         (qjs |addMessage| ui:*messages* message)
@@ -37,13 +37,12 @@
       (q! |positionViewAtEnd| ui:*message-view*))))
 
 (defun change-state (state mid)
-  (let* ((i-state (position state *states*))
-         (mid* (parse-integer mid))
-         (message (db:load-message mid*)))
+  (let ((i-state (position state *states*))
+        (message (db:load-message mid)))
     (when message
       (setf message (read-from-string message))
       (setf (getf message :ack-state) i-state)
-      (db:update-message mid* (prin1-to-string message))
+      (db:update-message mid (prin1-to-string message))
       (qjs |changeState| ui:*messages*
            i-state mid))))
 
@@ -80,8 +79,9 @@
   (values))
 
 (defun show-date (timestamp) ; see QML
+  (setf timestamp (floor timestamp)) ; JS double
   (multiple-value-bind (sec min hour day month year)
-      (decode-universal-time (parse-integer timestamp))
+      (decode-universal-time timestamp)
     (app:toast (format nil "~D-~2,'0D-~2,'0D ~2,'0D:~2,'0D:~2,'0D"
                        year month day hour min sec))))
 

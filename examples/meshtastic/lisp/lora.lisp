@@ -120,10 +120,10 @@
              (msg:add-message
               (list :receiver (node-to-name *receiver*)
                     :sender (my-name)
-                    :timestamp (princ-to-string (get-universal-time)) ; STRING for JS
+                    :timestamp (get-universal-time)
                     :hour (timestamp-to-hour)
                     :text (add-line-breaks text)
-                    :mid (princ-to-string msg:*message-id*)           ; STRING for JS
+                    :mid msg:*message-id*
                     :ack-state (position :sending msg:*states*)
                     :me t)))))))
 
@@ -211,10 +211,10 @@
                             (msg:add-message
                              (list :receiver (my-name)
                                    :sender (node-to-name (me:from packet))
-                                   :timestamp (princ-to-string timestamp) ; STRING for JS
+                                   :timestamp timestamp
                                    :hour (timestamp-to-hour timestamp)
                                    :text (add-line-breaks text)
-                                   :mid (princ-to-string mid)))))))       ; STRING for JS
+                                   :mid mid))))))
                    ;; for :ack-state (acknowledgement state)
                    (:routing-app
                     (let ((state (me:routing.error-reason
@@ -225,7 +225,7 @@
                                           (t
                                            (qlog "message state changed: ~A" state)
                                            :not-received))
-                                        (princ-to-string (me:request-id decoded))))) ; STRING for JS
+                                        (me:request-id decoded))))
                    ;; GPS location
                    (:position-app
                     (unless (zerop (length payload))
@@ -254,7 +254,7 @@
                  (group:add-person
                   (list :radio-name name
                         :custom-name (or (app:setting name :custom-name) "")
-                        :node-num (princ-to-string (me:num info)) ; STRING for JS
+                        :node-num (me:num info)
                         :current (equal name (app:setting :latest-receiver)))))
                (when (find name *ble-names* :test 'string=)
                  (setf radios:*found* t)
@@ -379,7 +379,8 @@
           channel))))
 
 (defun change-receiver (receiver) ; see QML
-  (setf *receiver* (parse-integer receiver)) ; STRING for JS
+  (setf receiver (floor receiver)) ; JS double
+  (setf *receiver* receiver)
   (app:change-setting :latest-receiver (node-to-name *receiver*))
   (msg:receiver-changed)
   (group:receiver-changed)

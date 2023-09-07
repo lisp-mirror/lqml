@@ -49,7 +49,7 @@ Rectangle {
 
     // hack to define all model key _types_
     ListElement {
-      radioName: ""; customName: ""; nodeNum: ""; unread: 0; current: false
+      radioName: ""; customName: ""; nodeNum: 0; unread: 0; current: false
     }
 
     function addPerson(person) {
@@ -75,7 +75,7 @@ Rectangle {
       var to = -1
       if (name < get(0).customName) {
         to = 0
-      } else if (name > get(count - 1).customName) {
+      } else if (name >= get(count - 1).customName) {
         to = count - 1
       } else {
         for (var i = 1; i < count; i++) {
@@ -143,7 +143,7 @@ Rectangle {
 
       function selected() {
         view.currentIndex = index
-        Lisp.call("lora:change-receiver", model.nodeNum)
+        Lisp.call("lora:change-receiver", model.nodeNum>>>0)
       }
 
       MouseArea {
