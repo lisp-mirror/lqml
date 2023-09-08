@@ -138,7 +138,12 @@ Item {
         var coor = position.coordinate;
         lat = coor.latitude
         lon = coor.longitude
-        time = coor.timestamp ? String(coor.timestamp.getTime()) : "0"
+        if (position.timestamp) {
+          var stime = String(position.timestamp.getTime())
+          time = stime.substring(0, stime.length - 3)
+        } else {
+          time = "0"
+        }
       }
     }
 
