@@ -54,27 +54,28 @@ Rectangle {
 
     function addPerson(person) {
       // insert sorted
-      var i = 0;
+      var i = 1; // 0 is broadcast
+      var broadcast = (count === 0)
       for (; i < count; i++) {
         if (person.customName < get(i).customName) {
           insert(i, person)
           break
         }
       }
-      if (i === count) {
+      if (broadcast || (i === count)) {
         append(person)
       }
 
       if (person.current) {
-        view.currentIndex = i
+        view.currentIndex = broadcast ? 0 : i
         view.positionViewAtIndex(view.currentIndex, ListView.Contain)
       }
     }
 
     function sortRenamed(name, index) {
       var to = -1
-      if (name < get(0).customName) {
-        to = 0
+      if (name < get(1).customName) { // 0 is broadcast
+        to = 1
       } else if (name >= get(count - 1).customName) {
         to = count - 1
       } else {
@@ -124,12 +125,20 @@ Rectangle {
 
       Rectangle {
         id: rectRadio
-        x: 10
-        width: 42
-        height: 15
+        x: (index === 0) ? 18 : 10
+        width: (index === 0) ? 28 : 42
+        height: (index === 0) ? width : 15
         anchors.verticalCenter: parent.verticalCenter
         color: "#f0f0f0"
         radius: height / 2
+
+        Image {
+          anchors.centerIn: parent
+          width: 20
+          height: width
+          source: "../img/broadcast.png"
+          visible: (index === 0)
+        }
 
         Text {
           anchors.centerIn: parent
@@ -138,6 +147,7 @@ Rectangle {
           font.weight: Font.DemiBold
           color: "black"
           text: model.radioName
+          visible: (index !== 0)
         }
       }
 
@@ -178,9 +188,11 @@ Rectangle {
         }
 
         onPressAndHold: {
-          readOnly = false
-          selectAll()
-          forceActiveFocus()
+          if (index !== 0) {
+            readOnly = false
+            selectAll()
+            forceActiveFocus()
+          }
         }
 
         onEditingFinished: {

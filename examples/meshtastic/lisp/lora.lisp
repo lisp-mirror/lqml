@@ -28,6 +28,9 @@
 
 ;;; ini/send/receive
 
+(defconstant  +broadcast-id+   #xffffffff)
+(defparameter *broadcast-name* "ffff")
+
 (defvar *config-id*       0)
 (defvar *config-complete* nil)
 (defvar *notify-id*       nil)
@@ -162,9 +165,11 @@
   (values))
 
 (defun node-to-name (num)
-  (dolist (info *node-infos*)
-    (when (= num (me:num info))
-      (return (me:short-name (me:user info))))))
+  (if (= +broadcast-id+ num)
+      *broadcast-name*
+      (dolist (info *node-infos*)
+        (when (= num (me:num info))
+          (return (me:short-name (me:user info)))))))
 
 (defun name-to-node (name)
   (dolist (info *node-infos*)

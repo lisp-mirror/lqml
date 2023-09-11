@@ -26,6 +26,8 @@
   (:local-nicknames (:pr :cl-protobufs)
                     (:me :cl-protobufs.meshtastic))
   (:export
+   #:+broadcast-id+
+   #:*broadcast-name*
    #:*channel*
    #:*channels*
    #:*config-complete*

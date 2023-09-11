@@ -5,6 +5,8 @@ import "." as Ext
 Item {
   anchors.fill: parent
 
+  property alias currentIndex: swipeView.currentIndex
+
   Rectangle {
     id: header
     width: parent.width
