@@ -24,8 +24,6 @@ wipe off the whole example and start over.
 Build executable
 ----------------
 
-Currently still using qmake, will eventually be ported to CMake.
-
 You probably want to create an alias for qmake, like:
 ```
 alias qmake='<path-to-qt>/<compiler>/bin/qmake'
@@ -40,6 +38,11 @@ $ cd src/build
 $ qmake ../lqml.pro
 $ make -j4
 $ sudo make install
+```
+
+On Unix systems you may need to create the following link:
+```
+sudo ln -s /usr/local/lib/libecl.so.23.9 /usr/lib/libecl.so.23.9
 ```
 
 

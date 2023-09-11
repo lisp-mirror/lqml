@@ -58,6 +58,8 @@ Group
 Tapping on group (in **Messages**), you'll see the list of all persons. Every
 person is associated to a specific radio. This view is populated automatically.
 
+Choose 'Broadcast' (on top) to send a message to every person in the group.
+
 You can set a name to every person associated to a radio, which defaults to
 'Anonym': a press-and-hold on the name will enter edit mode.
 

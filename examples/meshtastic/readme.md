@@ -4,7 +4,8 @@ Info
 
 Please note that this is WIP/experimental.
 
-Currently the app can only send direct messages between the radios.
+The app can either send direct messages between the radios, or broadcast
+messages (received by all radios).
 
 It's basically meant to be used in an emergency situation, where internet is
 not available, in order to communicate with short text messages. This kind of
