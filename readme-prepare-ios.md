@@ -15,7 +15,7 @@ immediately in your current terminal session.)
 Build cross-compiled ECL for iOS
 --------------------------------
 
-As of May 2023, please use latest ECL from development branch.
+You'll need ECL 23.9.9.
 
 **Important**: pay attention to file `src/c/unixsys.d`, function `si_system()`.
 Function `system()` inside of it needs to work when running script **1**, and
@@ -46,7 +46,7 @@ si_system(cl_object cmd_string)
 ```
 
 * extract a fresh copy of the ECL sources in e.g. `~/ecl`, and rename
-  `ecl-21.2.1` to `ios`
+  `ecl-23.9.9` to `ios`
 * copy the 2 scripts from [platforms/ios/build-ecl/](platforms/ios/build-ecl/)
   to `~/ecl/ios/`
 * run first script
