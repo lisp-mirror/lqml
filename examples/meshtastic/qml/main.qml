@@ -13,6 +13,7 @@ Item {
 
   property double headerHeight: 48
   property bool mobile: (Qt.platform.os === "android") || (Qt.platform.os === "ios")
+  property bool broadcast: false
 
   function showKeyboard(show) {
     show ? Qt.inputMethod.show() : Qt.inputMethod.hide()

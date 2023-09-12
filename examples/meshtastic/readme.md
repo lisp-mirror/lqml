@@ -75,15 +75,11 @@ doesn't have a display, use `123456` as your PIN.
 
 On Windows it didn't work for me if not paired previously.
 
-It may occur that your radio device is sometimes not found; first
+It may occur that your radio device is sometimes not found; some suggestions:
 
-* try to press-and-hold on the radio icon (will restart device discovery)
-
-Only if this doesn't work, you may
-
-* try to turn bluetooth off and on again, and/or:
-* try to reboot your radios, and/or:
-* try to unpair your radios from all computers/devices
+* try to unpair your radio from current device
+* try to turn bluetooth off and on again
+* try to reboot your radio
 
 A generic bluetooth app like **nRF Connect** may help in order to see if the
 devices themselves work and are able to connect.

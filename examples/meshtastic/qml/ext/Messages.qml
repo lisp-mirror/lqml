@@ -286,6 +286,38 @@ Rectangle {
         }
       }
     }
+
+    Image {
+      id: broadcast
+      anchors.right: send.left
+      anchors.bottom: parent.top
+      anchors.margins: 3
+      width: 38
+      height: width
+      opacity: 0.7
+      source: "../img/broadcast.png"
+      visible: send.visible && animation.running
+
+      SequentialAnimation {
+        id: animation
+        loops: Animation.Infinite
+        running: rootItem.broadcast
+
+        ScaleAnimator {
+          target: broadcast
+          from: 0.8; to: 1.0
+          duration: 500
+          easing.type: Easing.InOutSine
+        }
+
+        ScaleAnimator {
+          target: broadcast
+          from: 1.0; to: 0.8
+          duration: 500
+          easing.type: Easing.InOutSine
+        }
+      }
+    }
   }
 
   Ext.Emojis {

@@ -69,6 +69,7 @@ Rectangle {
       if (person.current) {
         view.currentIndex = broadcast ? 0 : i
         view.positionViewAtIndex(view.currentIndex, ListView.Contain)
+        rootItem.broadcast = broadcast
       }
     }
 
@@ -154,6 +155,7 @@ Rectangle {
       function selected() {
         view.currentIndex = index
         Lisp.call("lora:change-receiver", model.nodeNum>>>0) // uint32
+        rootItem.broadcast = (index === 0)
       }
 
       MouseArea {
