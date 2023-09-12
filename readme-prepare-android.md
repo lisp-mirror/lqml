@@ -64,6 +64,12 @@ For older devices you may need a 32bit version. Just use the build scripts in
 [platforms/android/build-ecl/32bit/](platforms/android/build-ecl/32bit/) and
 set `ECL_ANDROID_32` (see above).
 
+Before running the scripts, you need to add this on top of file
+`src/bdwgc/pthread_stop_world.c`:
+```
+#undef USE_TKILL_ON_ANDROID
+```
+
 For 32bit builds you need to substitute every `qmake-android ...` with:
 ```
 qmake-android "CONFIG+=32bit" ...
