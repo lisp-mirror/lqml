@@ -7,8 +7,8 @@ the official apps.
 The main focus here is simple, basic usage, like in an emergency situation,
 where we don't need all the special features, just basic communication.
 
-Currently you can only send direct messages to any device which is within the
-range of your mesh network.
+You can send both direct and broadcast messages to any device which is within
+the range of your mesh network.
 
 Starting this app will automatically do a basic setup of your radio, so no
 additional setup is needed.

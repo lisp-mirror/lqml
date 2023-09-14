@@ -25,6 +25,11 @@ Item {
     id: menu
 
     Ext.MenuItem {
+      text: qsTr("Help")
+      onTriggered: help.active ? help.item.enabled = !help.item.enabled : help.active = true
+    }
+
+    Ext.MenuItem {
       text: qsTr("Message font size...")
       onTriggered: Lisp.call("msg:font-size-dialog")
     }
@@ -156,6 +161,15 @@ Item {
   Ext.Toast {}
 
   Dlg.Dialogs {}
+
+  Loader {
+    id: help
+    y: headerHeight
+    width: parent.width
+    height: parent.height - headerHeight
+    source: "ext/Help.qml"
+    active: false
+  }
 
   FontLoader { id: fontText;  source: "fonts/Ubuntu.ttf" }
   FontLoader { id: fontText2; source: "fonts/Ubuntu-Medium.ttf" }
