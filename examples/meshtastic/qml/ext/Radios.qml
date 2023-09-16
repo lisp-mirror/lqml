@@ -117,4 +117,11 @@ Rectangle {
       }
     }
   }
+
+  Timer {
+    interval: 60 * 60 * 1000 // 1 hour
+    repeat: true
+    running: rootItem.mobile
+    onTriggered: Lisp.call("loc:update-my-position")
+  }
 }

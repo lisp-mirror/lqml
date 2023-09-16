@@ -103,8 +103,7 @@ shown on the right of every person.
 GPS position
 ------------
 
-On mobile, and if the radio doesn't have a GPS module, the location of the
-phone is sent once (at startup) to the radio.
+On mobile, the location of the phone is sent once an hour to the radio.
 
 
 Save / Restore data

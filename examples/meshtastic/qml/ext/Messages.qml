@@ -4,7 +4,7 @@ import "." as Ext
 
 Rectangle {
   id: main
-  color: loading.visible ? "#1974d3" : "#e5d8bd"
+  color: hourglass.visible ? "#d2eecc" : "#e5d8bd"
 
   ListView {
     id: view

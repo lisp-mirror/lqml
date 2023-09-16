@@ -17,7 +17,7 @@
   (x:when-it (setting :recent-emojis)
     (setf *recent-emojis* (mapcar 'qfrom-utf8 x:it))
     (q> |model| ui:*recent-emojis* *recent-emojis*))
-  (q> |playing| ui:*loading* nil)
+  (q> |running| ui:*hourglass* nil)
   (q> |visible| ui:*message-view* t)
   #+android
   (progn

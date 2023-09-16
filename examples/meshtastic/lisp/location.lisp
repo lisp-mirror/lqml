@@ -32,7 +32,7 @@
           (setf *my-position* pos)
           (qlog "position-updated: ~A" pos)
           (set-position (lora:my-num) pos)
-          (send-to-radio))))) ; just once on startup (for now)
+          (send-to-radio)))))
 
 #+mobile
 (defun send-to-radio ()

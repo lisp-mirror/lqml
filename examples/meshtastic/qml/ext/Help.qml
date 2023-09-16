@@ -4,12 +4,13 @@ import QtQuick.Controls 2.15
 Rectangle {
   id: help
   y: -rootItem.height
-  color: "#e0f0e0"
+  color: "#e0e0f0"
+  opacity: 0
 
   Button {
     width: 42
     height: width
-    z: 1 // hack
+    z: 1 // stay on top
     anchors.right: parent.right
     flat: true
     font.family: fontText.name
@@ -106,13 +107,11 @@ Using this method you can easily transfer all data from one mobile device to any
 </p>
 <p>
 The desktop data paths are:
-
 <ul>
 <li><b>Linux</b>: <br><code>/home/&lt;user&gt;/.local/share/cl-meshtastic/</code>
 <li><b>macOS</b>: <br><code>/Users/&lt;user&gt;/Library/Application Support/cl-meshtastic/</code>
 <li><b>Windows</b>: <br><code>C:\\Users\\&lt;user&gt;\\AppData\\Local\\cl-meshtastic\\</code>
 </ul>
-
 <p>
 Eventual backups are saved in above path under <code>backups/</code>. On the desktop see 'Make backup' in main menu.
 </p>
@@ -123,11 +122,11 @@ To autmatically restore data from a backup on the desktop, put the backup files 
   }
 
   states: [
-    State { when: help.enabled;  PropertyChanges { target: help; y: 0; }}, 
-    State { when: !help.enabled; PropertyChanges { target: help; y: -rootItem.height; }}
+    State { when: help.enabled;  PropertyChanges { target: help; opacity: 1; y: 0; }},
+    State { when: !help.enabled; PropertyChanges { target: help; opacity: 0; y: -rootItem.height; }}
   ]
 
   transitions: [
-    Transition { NumberAnimation { properties: "y"; duration: 250; easing.type: Easing.InCubic }}
+    Transition { NumberAnimation { properties: "opacity,y"; duration: 300; easing.type: Easing.InOutQuad }}
   ]
 }

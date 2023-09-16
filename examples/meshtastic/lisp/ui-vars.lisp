@@ -8,12 +8,12 @@
    #:*dialog-spin-box*
    #:*edit*
    #:*emojis*
+   #:*find*
+   #:*find-text*
    #:*group*
    #:*group-icon*
    #:*group-view*
-   #:*find*
-   #:*find-text*
-   #:*loading*
+   #:*hourglass*
    #:*location*
    #:*main-view*
    #:*map*
@@ -37,12 +37,12 @@
 (defparameter *dialog-spin-box* "dialog_spin_box")
 (defparameter *edit*            "edit")
 (defparameter *emojis*          "emojis")
+(defparameter *find*            "find")
+(defparameter *find-text*       "find_text")
 (defparameter *group*           "group")
 (defparameter *group-icon*      "group_icon")
 (defparameter *group-view*      "group_view")
-(defparameter *find*            "find")
-(defparameter *find-text*       "find_text")
-(defparameter *loading*         "loading")
+(defparameter *hourglass*       "hourglass")
 (defparameter *location*        "location")
 (defparameter *map*             "map")
 (defparameter *map-loader*      "map_loader")

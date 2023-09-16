@@ -86,35 +86,8 @@ Item {
     }
   }
 
-  // shown while loading app (may take a while)
-
-  Item {
-    visible: loading.visible
-    anchors.fill: parent
-
-    AnimatedImage {
-      id: loading
-      objectName: "loading"
-      anchors.centerIn: parent
-      source: "img/busy.webp"
-      visible: playing
-      playing: true
-    }
-
-    Text {
-      id: iniCount
-      anchors.centerIn: parent
-      color: "white"
-      font.family: fontText.name
-      font.pixelSize: 22
-    }
-
-    Timer {
-      running: loading.playing
-      interval: 4500
-      repeat: true
-      onTriggered: iniCount.text = Number(iniCount.text) + 1
-    }
+  Ext.Hourglass { // animation while loading app
+    id: hourglass
   }
 
   AnimatedImage {
