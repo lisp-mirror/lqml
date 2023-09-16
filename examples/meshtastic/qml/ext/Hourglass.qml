@@ -11,7 +11,7 @@ Rectangle {
     anchors.centerIn: parent
     width: 40
     fillMode: Image.PreserveAspectFit
-    source: "../img/hourglass-1.png"
+    source: "../img/hourglass.png"
   }
 
   Image {
@@ -19,7 +19,7 @@ Rectangle {
     anchors.centerIn: parent
     width: hourglass1.width
     fillMode: Image.PreserveAspectFit
-    source: "../img/hourglass-2.png"
+    source: "../img/hourglass.png"
     opacity: 0
   }
 
