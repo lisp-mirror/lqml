@@ -13,6 +13,7 @@
    #:disable-clipboard-menu
    #:ensure-permissions
    #:find-quick-item
+   #:hex
    #:pixel-ratio
    #:qapropos
    #:qapropos*

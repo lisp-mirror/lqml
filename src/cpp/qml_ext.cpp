@@ -20,11 +20,16 @@ static QVariant toVariant(const QJSValue& value) {
 #else
   const int type = var.typeId();
 #endif
-  if (type == QMetaType::Double) {
-    // workaround for uint32, see '>>>0' in QML
-    quint32 uint = var.toUInt();
-    if (uint == var.toDouble()) {
-      return QVariant(uint);
+  if (type == QMetaType::QString) {
+    QString s(var.toString());
+    // numbers passed with '(qml:hex number)' to QML (and stored there as
+    // strings) are automatically converted back to a number (qint64).
+    if (s.startsWith("#x")) {
+      bool ok;
+      qint64 num = s.mid(2).toLongLong(&ok, 16);
+      if (ok) {
+        return QVariant(num);
+      }
     }
   }
   return var;
