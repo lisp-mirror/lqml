@@ -18,7 +18,9 @@
   "args: (integer)
   Meant for passing INTEGER to QML/JS, where we only have floats. The integer
   is stored as a hex string in QML, and automatically converted back to a
-  'qint64' integer when passed with 'Lisp.call()'."
+  'qint64' integer when passed with 'Lisp.call()'.
+  If the conversion to 'qint64' is not possible, the hex string is returned,
+  which can be passed to READ-FROM-STRING to get arbitrary integer length."
   (assert (integerp integer))
   (let ((*print-base* 16))
     (x:cc "#x" (princ-to-string integer))))
