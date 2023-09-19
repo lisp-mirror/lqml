@@ -49,11 +49,11 @@
   like in a QML Repeater.
 
 
-<b>hex (number)</b>
+<b>hex (integer)</b>
 
-  Meant for passing NUMBER to QML/JS, where we only have floats. The number is
-  stored as a hex string in QML, and automatically converted back to a number
-  when passed with 'Lisp.call()'.
+  Meant for passing INTEGER to QML/JS, where we only have floats. The integer
+  is stored as a hex string in QML, and automatically converted back to a
+  'qint64' integer when passed with 'Lisp.call()'.
 
 
 <b>pixel-ratio ()</b>

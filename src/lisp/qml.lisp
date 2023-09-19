@@ -14,11 +14,12 @@
                               pkg))
         (find-symbol upper))))
 
-(defun hex (number)
-  "args: (number)
-  Meant for passing NUMBER to QML/JS, where we only have floats. The number is
-  stored as a hex string in QML, and automatically converted back to a number
-  when passed with 'Lisp.call()'."
+(defun hex (integer)
+  "args: (integer)
+  Meant for passing INTEGER to QML/JS, where we only have floats. The integer
+  is stored as a hex string in QML, and automatically converted back to a
+  'qint64' integer when passed with 'Lisp.call()'."
+  (assert (integerp integer))
   (let ((*print-base* 16))
     (x:cc "#x" (princ-to-string number))))
 
