@@ -21,7 +21,7 @@
   'qint64' integer when passed with 'Lisp.call()'."
   (assert (integerp integer))
   (let ((*print-base* 16))
-    (x:cc "#x" (princ-to-string number))))
+    (x:cc "#x" (princ-to-string integer))))
 
 ;;; function calls from QML
 
