@@ -23,6 +23,7 @@
 #+mobile
 (defun update-my-position (&optional (sec 60)) ; try for 1 min
   "Mobile only: update position from GPS of mobile device."
+  ;; see also Timer in 'qml/ext/Radios.qml'
   (destructuring-bind (lat lon time)
       (last-gps-position)
     (if (zerop lat)

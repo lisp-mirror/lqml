@@ -18,9 +18,10 @@
     (qjs |addPerson| ui:*group*
          (list :radio-name lora:*broadcast-name*
                :custom-name (tr "Broadcast")
-               :node-num lora:+broadcast-id+
+               :node-num (hex lora:+broadcast-id+)
                :current (equal (app:setting :latest-receiver)
                                lora:*broadcast-name*))))
+  (setf (getf person :node-num) (hex (getf person :node-num)))
   (qjs |addPerson| ui:*group* person))
 
 (defun clear ()

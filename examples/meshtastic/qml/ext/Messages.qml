@@ -78,7 +78,7 @@ Rectangle {
 
             MouseArea {
               anchors.fill: parent
-              onClicked: Lisp.call("msg:show-date", model.timestamp>>>0) // uint32
+              onClicked: Lisp.call("msg:show-date", model.timestamp)
             }
           }
 
@@ -136,7 +136,7 @@ Rectangle {
           onClicked: {
             var mid = model.mid
             view.model.remove(index)
-            Lisp.call("db:delete-message", mid>>>0) // uint32
+            Lisp.call("db:delete-message", mid)
           }
         }
       }
@@ -149,8 +149,8 @@ Rectangle {
 
     // hack to define all model key _types_
     ListElement {
-      receiver: ""; sender: ""; senderName: ""; timestamp: 0; hour: "";
-      text: ""; text2: ""; mid: 0; ackState: 0; me: true; hidden: false
+      receiver: ""; sender: ""; senderName: ""; timestamp: ""; hour: "";
+      text: ""; text2: ""; mid: ""; ackState: 0; me: true; hidden: false
     }
 
     function addMessage(message) { append(message) }

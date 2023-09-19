@@ -49,7 +49,7 @@ Rectangle {
 
     // hack to define all model key _types_
     ListElement {
-      radioName: ""; customName: ""; nodeNum: 0; unread: 0; current: false
+      radioName: ""; customName: ""; nodeNum: ""; unread: 0; current: false
     }
 
     function addPerson(person) {
@@ -154,7 +154,7 @@ Rectangle {
 
       function selected() {
         view.currentIndex = index
-        Lisp.call("lora:change-receiver", model.nodeNum>>>0) // uint32
+        Lisp.call("lora:change-receiver", model.nodeNum)
         rootItem.broadcast = (index === 0)
       }
 
