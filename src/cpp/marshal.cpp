@@ -318,8 +318,8 @@ cl_object from_qvariant(const QVariant& var) {
       case QMetaType::QUrl:       l_obj = from_qstring(var.toString());                 break;
       // special case (can be nested)
       case QMetaType::QVariantList: {
-        QVariantList list(var.value<QVariantList>());
-        for (QVariant v : qAsConst(list)) {
+        const QVariantList list(var.value<QVariantList>());
+        for (QVariant v : list) {
           l_obj = CONS(from_qvariant(v), l_obj);
         }
         l_obj = cl_nreverse(l_obj);

@@ -217,9 +217,9 @@ cl_object qfind_children2(cl_object l_obj, cl_object l_name, cl_object l_class) 
   QByteArray className(toCString(l_class));
   QObject* qobject = toQObjectPointer(l_obj);
   if (qobject != nullptr) {
-    QObjectList children = qobject->findChildren<QObject*>(objectName);
+    const QObjectList children = qobject->findChildren<QObject*>(objectName);
     cl_object l_children = ECL_NIL;
-    for (QObject* child : qAsConst(children)) {
+    for (QObject* child : children) {
       QByteArray className2(child->metaObject()->className());
       if (className.isEmpty() || (className == className2)) {
         l_children = CONS(from_qobject_pointer(child),
@@ -240,9 +240,9 @@ cl_object qchildren(cl_object l_item) {
   QObject* qobject = toQObjectPointer(l_item);
   QQuickItem* item = qobject_cast<QQuickItem*>(qobject); // type check
   if (item != nullptr) {
-    QList<QQuickItem*> children = item->childItems();
+    const QList<QQuickItem*> children = item->childItems();
     cl_object l_children = ECL_NIL;
-    for (QQuickItem* child : qAsConst(children)) {
+    for (QQuickItem* child : children) {
       l_children = CONS(from_qobject_pointer(child),
                         l_children);
     }
@@ -410,7 +410,7 @@ cl_object qexec2(cl_object l_milliseconds) {
 cl_object qexit() {
   /// args: ()
   /// Calls QEventLoop::exit(), in order to exit event processing after a call
-  /// QEXEC with a timeout. Returns T if the event loop has effectively been
+  /// to QEXEC with a timeout. Returns T if the event loop has effectively been
   /// exited.
   ecl_process_env()->nvalues = 1;
   if (LQML::eventLoop) {
@@ -670,9 +670,9 @@ cl_object qdirectory(cl_object l_dir) {
   /// paths.
   ///   (qdirectory "assets:/lib")
   QDir dir(toQString(l_dir));
-  QFileInfoList infos(dir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot));
+  const QFileInfoList infos(dir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot));
   cl_object l_files = ECL_NIL;
-  for (QFileInfo info : qAsConst(infos)) {
+  for (QFileInfo info : infos) {
     QString path(info.absoluteFilePath());
     if (info.isDir()) {
       path.append("/");

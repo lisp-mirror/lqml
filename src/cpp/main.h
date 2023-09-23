@@ -103,7 +103,7 @@ public:
           const int code = s.at(0).unicode();
           switch (code) {
             // replace iOS smart quotation marks with standard ones
-            // (Frensh, ...)
+            // (French, ...)
             case 171:
             case 187:
               s[0] = QChar('"');
