@@ -48,6 +48,7 @@ Qt Creator.
 TODO
 ----
 
+* port to SailfishOS (using the SFOS Qt5.15 libs project)
 * port to CMake (?)
 
 
