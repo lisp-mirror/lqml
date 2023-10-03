@@ -54,7 +54,7 @@ Rectangle {
               height: width
               playing: false
               source: "../img/semaphore.gif"
-              currentFrame: model.ackState
+              currentFrame: model.ackState ? model.ackState.substr(2) : 0 // see 'qml:hex'
               visible: model.me
             }
 
@@ -150,7 +150,7 @@ Rectangle {
     // hack to define all model key _types_
     ListElement {
       receiver: ""; sender: ""; senderName: ""; timestamp: ""; hour: "";
-      text: ""; text2: ""; mid: ""; ackState: 0; me: true; hidden: false
+      text: ""; text2: ""; mid: ""; ackState: ""; me: true; hidden: false
     }
 
     function addMessage(message) { append(message) }

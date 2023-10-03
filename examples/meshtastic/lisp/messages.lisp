@@ -28,10 +28,7 @@
                        (parse-integer x:it :radix 16) ; uid
                        (prin1-to-string message)))
     (if (or loading (show-message-p message))
-        (progn
-          (setf (getf message :timestamp) (hex (getf message :timestamp))
-                (getf message :mid)       (hex (getf message :mid)))
-          (qjs |addMessage| ui:*messages* message))
+        (qjs |addMessage| ui:*messages* message)
         (let* ((sender (getf message :sender))
                (unread (1+ (or (app:setting sender :unread-messages) 0))))
           (app:change-setting sender unread :sub-key :unread-messages)
@@ -47,7 +44,7 @@
       (setf (getf message :ack-state) i-state)
       (db:update-message mid (prin1-to-string message))
       (qjs |changeState| ui:*messages*
-           i-state (hex mid)))))
+           i-state mid))))
 
 (defun show-messages ()
   (x:when-it (app:setting :latest-receiver)
