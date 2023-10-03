@@ -213,13 +213,20 @@ QString toCamelCase(const QString& name) {
 
 QVariant toQVariantMap(cl_object l_list) {
   // special case for JS dictionary, for e.g. populating a Model in QML
+  STATIC_SYMBOL_PKG (s_hex, "HEX", "QML")
   QVariantMap map;
   cl_object l_do_args = l_list;
   while (l_do_args != ECL_NIL) {
     cl_object l_keyword = cl_first(l_do_args);
     if (cl_keywordp(l_keyword) == ECL_T) {
+      cl_object l_value = cl_second(l_do_args);
+      // convert INTEGER to hex string, since we only have floats in JS
+      // will be converted back automatically if passed with 'Lisp.call()'
+      if (cl_integerp(l_value) == ECL_T) {
+        l_value = cl_funcall(2, s_hex, l_value);
+      }
       map.insert(toCamelCase(toQString(cl_symbol_name(l_keyword)).toLower()),
-                 toQVariant(cl_second(l_do_args)));
+                 toQVariant(l_value));
       l_do_args = cl_cddr(l_do_args);
     } else {
       // might not be an error, e.g. unintended return value of Lisp.call()

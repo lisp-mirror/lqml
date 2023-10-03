@@ -51,9 +51,12 @@
 
 <b>hex (integer)</b>
 
-  Meant for passing INTEGER to QML/JS, where we only have floats. The integer
-  is stored as a hex string in QML, and automatically converted back to a
-  'qint64' integer when passed with 'Lisp.call()'.
+  Used internally, you should never need to call this explicitly.
+  Since we only have floats in QML/JS, INTEGERs from Lisp are converted
+  automatically to hex strings, if (1) populating an item model, or (2) passed
+  with function QJS.
+  Those hex strings are automatically converted back to a 'qint64' integer when
+  passed with 'Lisp.call()'.
   If the conversion to 'qint64' is not possible, the hex string is returned,
   which can be passed to READ-FROM-STRING to get arbitrary integer length.
 

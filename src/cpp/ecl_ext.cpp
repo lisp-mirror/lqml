@@ -490,14 +490,24 @@ cl_object qinvoke_method2(cl_object l_obj, cl_object l_name, cl_object l_args) {
   // For the complete list of supported types see 'marshal.cpp:toQVariant()'.
   // On Qt side, only QVariant arguments are allowed.
   // N.B. does not support default arguments, if used to call JS functions
+  STATIC_SYMBOL_PKG (s_hex, "HEX", "QML")
   ecl_process_env()->nvalues = 1;
   const int MAX = 10;
   QVariant arg[MAX];
   QGenericArgument genA[MAX];
   const char* v = "QVariant";
   int i = 0;
+  QObject* qobject = toQObjectPointer(l_obj);
+  const bool qjs_call = (qobject_cast<QQuickItem*>(qobject) != nullptr);
   for (cl_object l_do_list = l_args; l_do_list != ECL_NIL; l_do_list = cl_cdr(l_do_list), i++) {
     cl_object l_el = cl_car(l_do_list);
+    if (qjs_call) {
+      // convert INTEGER to hex string, since we only have floats in JS
+      // will be converted back automatically if passed with 'Lisp.call()'
+      if (cl_integerp(l_el) == ECL_T) {
+        l_el = cl_funcall(2, s_hex, l_el);
+      }
+    }
     arg[i] = toQVariant(l_el);
     genA[i] = QGenericArgument(v, &arg[i]);
   }
@@ -505,7 +515,6 @@ cl_object qinvoke_method2(cl_object l_obj, cl_object l_name, cl_object l_args) {
   for (; i < MAX; i++) {
     genA[i] = null;
   }
-  QObject* qobject = toQObjectPointer(l_obj);
   QByteArray name(toCString(l_name));
   if ((qobject != nullptr) && !name.isEmpty()) {
     QVariant ret;
