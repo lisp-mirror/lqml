@@ -12,7 +12,7 @@ Item {
   height: 550
 
   property double headerHeight: 48
-  property bool mobile: (Qt.platform.os === "android") || (Qt.platform.os === "ios")
+  property bool mobile: Lisp.call("mobile-p")
   property bool broadcast: false
 
   function showKeyboard(show) {
