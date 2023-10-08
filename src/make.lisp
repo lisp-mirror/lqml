@@ -7,7 +7,10 @@
         (list "/ecl-android" "/ecl-ios")
         (list :android :ios)))
 
-#+(or android ios)
+(when (probe-file "/etc/sailfish-release")
+  (pushnew :sailfish *features*))
+
+#+(or android ios sailfish)
 (pushnew :mobile *features*)
 
 ;;; compile ASDF system
@@ -53,7 +56,8 @@
                      #-msvc    "a"))
        (to   #+msvc "lisp.lib"
              #-msvc (format nil "liblisp~A.a"
-                            (if (<= most-positive-fixnum (expt 2 32)) "32" "")))
+                            #+android (if (<= most-positive-fixnum (expt 2 32)) "32" "")
+                            #-android ""))
        (to*  (format nil "platforms/~A/lib/~A"
                      #+(and linux  (not android)) "linux"
                      #+(and darwin (not ios))     "macos"

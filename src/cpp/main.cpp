@@ -4,11 +4,11 @@
 #include <QDir>
 #include <QTimer>
 #include <QRegularExpression>
-#include <QQmlEngine>
-#include <QQmlFileSelector>
-#include <QQuickView>
 #include <QTranslator>
 #include <QtDebug>
+#include <QtQml/QQmlEngine>
+#include <QtQml/QQmlFileSelector>
+#include <QtQuick/QQuickView>
 #include <iostream>
 
 #ifdef INI_WEBVIEW
@@ -58,7 +58,7 @@ cl_object do_ini_app() {
 #ifdef BACKGROUND_INI_LISP
   ecl_init_module(NULL, ini_app);
 #endif
-  return Cnil;
+  return ECL_NIL;
 }
 
 int main(int argc, char* argv[]) {

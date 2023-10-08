@@ -120,9 +120,7 @@ Rectangle {
       y: main.small ? 7 : 10
       anchors.horizontalCenter: parent.horizontalCenter
       spacing: 20
-      visible: ((Qt.platform.os === "android") ||
-                (Qt.platform.os === "ios"))
-               ? path.focus : false
+      visible: Lisp.call("qml:mobile-p") ? path.focus : false
 
       // cursor back
       Ext.ArrowButton {

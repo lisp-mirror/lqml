@@ -7,7 +7,10 @@
         (list "/ecl-android" "/ecl-ios")
         (list :android :ios)))
 
-#+(or android ios)
+(when (probe-file "/etc/sailfish-release")
+  (pushnew :sailfish *features*))
+
+#+(or android ios sailfish)
 (pushnew :mobile *features*)
 
 ;;; copy ECL '*.doc' and 'encodings/' (mobile only)

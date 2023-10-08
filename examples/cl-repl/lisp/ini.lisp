@@ -29,7 +29,7 @@
 
 ;;; create default '.eclrc'
 
-#+mobile
+#+(or android ios)
 (let ((ecl-rc (merge-pathnames ".eclrc")))
   (unless (probe-file ecl-rc)
     (with-open-file (s ecl-rc :direction :output)
@@ -41,10 +41,10 @@
 
 ;;; check version
 
-#+mobile
+#+(or android ios)
 (defconstant +version+ 6)
 
-#+mobile
+#+(or android ios)
 (let ((.version (merge-pathnames ".version")))
   (when (or (not (probe-file .version))
             (> +version+

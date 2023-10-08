@@ -88,8 +88,8 @@ it saves uploaded files on the server."
     (start-server *web-server*)
     (when ini
       (register-context-handler *web-server* "/" 'static-resource/upload-handler
-                                :arguments (list #+mobile *default-pathname-defaults*
-                                                 #-mobile (merge-pathnames "www/")))))
+                                :arguments (list #+(or android ios) *default-pathname-defaults*
+                                                 #-(or android ios) (merge-pathnames "www/")))))
   (x:when-it (qml:my-ip)
     (format nil "http://~A:1701/" x:it)))
 

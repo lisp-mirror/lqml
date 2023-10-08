@@ -14,6 +14,7 @@
    #:ensure-permissions
    #:find-quick-item
    #:hex
+   #:mobile-p
    #:pixel-ratio
    #:qapropos
    #:qapropos*

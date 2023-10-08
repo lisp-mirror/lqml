@@ -1,6 +1,6 @@
 (in-package :qml)
 
-#-mobile
+#-(or android ios)
 (require :ecl-curl)
 
 (defun curl (url)

@@ -5,16 +5,16 @@
 #include <QTimer>
 #include <QLibrary>
 #include <QLibraryInfo>
-#include <QGuiApplication>
 #include <QThread>
 #include <QFile>
 #include <QDir>
-#include <QClipboard>
-#include <QQuickItem>
-#include <QQuickView>
-#include <QQmlEngine>
-#include <QQmlExpression>
-#include <QQmlProperty>
+#include <QtGui/QClipboard>
+#include <QtGui/QGuiApplication>
+#include <QtQml/QQmlEngine>
+#include <QtQml/QQmlExpression>
+#include <QtQml/QQmlProperty>
+#include <QtQuick/QQuickItem>
+#include <QtQuick/QQuickView>
 
 #ifdef Q_OS_ANDROID
   #include <QtAndroid>
@@ -32,6 +32,7 @@ void iniCLFunctions() {
   DEFUN ("%disable-clipboard-menu", disable_clipboard_menu2, 1)
   DEFUN ("%ensure-permissions",     ensure_permissions2,     1)
   DEFUN ("%js",                     js2,                     2)
+  DEFUN ("mobile-p",                mobile_p,                0)
   DEFUN ("pixel-ratio",             pixel_ratio,             0)
   DEFUN ("%qapropos",               qapropos2,               3)
   DEFUN ("qchildren",               qchildren,               1)
@@ -502,7 +503,7 @@ cl_object qinvoke_method2(cl_object l_obj, cl_object l_name, cl_object l_args) {
   for (cl_object l_do_list = l_args; l_do_list != ECL_NIL; l_do_list = cl_cdr(l_do_list), i++) {
     cl_object l_el = cl_car(l_do_list);
     if (qjs_call) {
-      // convert INTEGER to hex string, since we only have floats in JS
+      // convert INTEGER to hex string, since we only have floats in JS;
       // will be converted back automatically if passed with 'Lisp.call()'
       if (cl_integerp(l_el) == ECL_T) {
         l_el = cl_funcall(2, s_hex, l_el);
@@ -625,6 +626,19 @@ cl_object qquit2(cl_object l_status) {
     abort();
   } else {
     exit(s);
+  }
+  return ECL_NIL;
+}
+
+cl_object mobile_p() {
+  /// args: ()
+  /// Returns T on android, iOS, SailfishOS.
+  ecl_process_env()->nvalues = 1;
+  QString platform = qGuiApp->platformName();
+  if ((platform == QStringLiteral("android")) ||
+      (platform == QStringLiteral("ios")) ||
+      QFile::exists("/etc/sailfish-release")) {
+    return ECL_T;
   }
   return ECL_NIL;
 }

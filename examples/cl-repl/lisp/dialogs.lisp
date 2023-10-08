@@ -123,11 +123,11 @@
 
 (defun location (name)
   (cond ((string= ":data" name)
-         #+mobile
+         #+(or android ios)
          (progn
            #+android "/sdcard/Documents/"
            #+ios     (namestring (truename (merge-pathnames "../Documents/"))))
-         #-mobile
+         #-(or android ios)
          (namestring (merge-pathnames "Documents/" (user-homedir-pathname))))
         ((string= ":home" name)
          (namestring *default-pathname-defaults*))))

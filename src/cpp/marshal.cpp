@@ -1,10 +1,10 @@
 #include "marshal.h"
-#include <QColor>
 #include <QUrl>
 #include <QVariant>
 #include <QObject>
 #include <QVariant>
-#include <QJSValue>
+#include <QtGui/QColor>
+#include <QtQml/QJSValue>
 
 QT_BEGIN_NAMESPACE
 
@@ -220,7 +220,7 @@ QVariant toQVariantMap(cl_object l_list) {
     cl_object l_keyword = cl_first(l_do_args);
     if (cl_keywordp(l_keyword) == ECL_T) {
       cl_object l_value = cl_second(l_do_args);
-      // convert INTEGER to hex string, since we only have floats in JS
+      // convert INTEGER to hex string, since we only have floats in JS;
       // will be converted back automatically if passed with 'Lisp.call()'
       if (cl_integerp(l_value) == ECL_T) {
         l_value = cl_funcall(2, s_hex, l_value);
@@ -258,7 +258,7 @@ cl_object from_cstring(const QByteArray& s) {
 
 cl_object from_qbytearray(const QByteArray& ba) {
   STATIC_SYMBOL_PKG (s_make_byte_vector, "%MAKE-BYTE-VECTOR", "QML") // see 'ini.lisp'
-  cl_object l_list = Cnil;
+  cl_object l_list = ECL_NIL;
   for (int i = 0; i < ba.size(); i++) {
     l_list = CONS(ecl_make_fixnum(static_cast<uchar>(ba.at(i))), l_list);
   }

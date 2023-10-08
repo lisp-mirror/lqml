@@ -54,6 +54,7 @@ cl_object clipboard_text          ();
 cl_object disable_clipboard_menu2 (cl_object);
 cl_object ensure_permissions2     (cl_object);
 cl_object js2                     (cl_object, cl_object);
+cl_object mobile_p                ();
 cl_object pixel_ratio             ();
 cl_object qapropos2               (cl_object, cl_object, cl_object);
 cl_object qchildren               (cl_object);

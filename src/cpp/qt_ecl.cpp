@@ -8,7 +8,7 @@ QT_BEGIN_NAMESPACE
 static QHash<QByteArray, void*> lisp_functions;
 
 static cl_object lisp_apply(cl_object l_fun, cl_object l_args) {
-  cl_object l_ret = Cnil;
+  cl_object l_ret = ECL_NIL;
   const cl_env_ptr l_env = ecl_process_env();
   CL_CATCH_ALL_BEGIN(l_env) {
     CL_UNWIND_PROTECT_BEGIN(l_env) {
@@ -46,17 +46,17 @@ QVariant ecl_fun(const QByteArray& pkgFun,
     QByteArray pkg = (p == -1) ? "qml-user" : pkgFun.left(p);
     QByteArray fun = pkgFun.mid(pkgFun.lastIndexOf(':') + 1);
     cl_object l_pkg = cl_find_package(make_constant_base_string(pkg.toUpper().constData()));
-    if (l_pkg != Cnil) {
+    if (l_pkg != ECL_NIL) {
       cl_object l_sym = cl_find_symbol(2,
                                        make_constant_base_string(fun.toUpper().constData()),
                                        l_pkg);
-      if (cl_fboundp(l_sym) != Cnil) {
+      if (cl_fboundp(l_sym) != ECL_NIL) {
         symbol = l_sym;
         lisp_functions[pkgFun] = symbol;
       }
     }
   }
-  cl_object l_args = Cnil;
+  cl_object l_args = ECL_NIL;
   if (!a1.isNull()) { PUSH_ARG(a1);
     if (!a2.isNull()) { PUSH_ARG(a2);
       if (!a3.isNull()) { PUSH_ARG(a3);

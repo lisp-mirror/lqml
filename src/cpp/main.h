@@ -3,9 +3,9 @@
 #undef SLOT
 
 #include <ecl/ecl.h>
-#include <QQmlEngine>
-#include <QGuiApplication>
-#include <QInputMethodEvent>
+#include <QtQml/QQmlEngine>
+#include <QtGui/QGuiApplication>
+#include <QtGui/QInputMethodEvent>
 
 QT_BEGIN_NAMESPACE
 

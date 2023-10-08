@@ -11,8 +11,7 @@ Item {
   }
 
   function message(text) {
-    if ((Qt.platform.os === "android") ||
-        (Qt.platform.os === "ios")) {
+    if (Lisp.call("qml:mobile-p")) {
       loader.source = "MessageMobile.qml"
     } else {
       loader.source = "Message.qml"
@@ -23,8 +22,7 @@ Item {
   }
 
   function confirm(title, text, callback) {
-    if ((Qt.platform.os === "android") ||
-        (Qt.platform.os === "ios")) {
+    if (Lisp.call("qml:mobile-p")) {
       loader.source = "ConfirmMobile.qml"
     } else {
       loader.source = "Confirm.qml"
