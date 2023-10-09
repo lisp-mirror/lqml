@@ -1,4 +1,4 @@
-QT          += bluetooth sql positioning network
+QT          += bluetooth sql network # positioning
 TEMPLATE    = lib
 CONFIG      += c++17 plugin release no_keywords
 DEFINES     += PLUGIN

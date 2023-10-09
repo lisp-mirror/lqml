@@ -6,7 +6,7 @@ A lightweight ECL based QML-only binding to Qt5/Qt6.
 
 This small project aims to simplify all the steps needed for building
 cross-platform apps. The same sources can be used to build executables for both
-desktop (Linux/macOS/Windows) and mobile (android/iOS).
+desktop (Linux/macOS/Windows) and mobile (android/iOS/SailfishOS).
 
 
 QML auto reload
@@ -48,7 +48,6 @@ Qt Creator.
 TODO
 ----
 
-* port to SailfishOS (using the SFOS Qt5.15 libs project)
 * port to CMake (?)
 
 
@@ -67,6 +66,15 @@ Windows note
 
 The Windows version is only meant to run on the desktop, using the (free) MSVC
 compiler. Please see [readme-windows](readme-windows.md) for details.
+
+
+SailfishOS note
+---------------
+
+On Sailfish it runs using **Qt5.15** and **qt-runner**, so it's not really
+'native' (in a pure sense) and doesn't have native look and feel, but that's
+the only feasable way to run it on that platform, see
+[readme-sailfish](readme-sailfish.md).
 
 
 Known issues

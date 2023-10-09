@@ -23,7 +23,11 @@
   Those hex strings are automatically converted back to a 'qint64' integer when
   passed with 'Lisp.call()'.
   If the conversion to 'qint64' is not possible, the hex string is returned,
-  which can be passed to READ-FROM-STRING to get arbitrary integer length."
+  which can be passed to READ-FROM-STRING to get arbitrary integer length.
+
+  Important note: because of the automatic conversion of INTEGERs, you need to
+  explicitly add '(float x)' to values you don't want to be converted to hex
+  strings, like drawing a line in a QML Canvas."
   (assert (integerp integer))
   (let ((*print-base* 16))
     (x:cc "#x" (princ-to-string integer))))

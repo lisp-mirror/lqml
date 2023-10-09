@@ -9,13 +9,13 @@
 
 (defmacro with-path ((color &optional (line-width 14)) &body body)
   `(progn
-     (qjs |begin| *canvas* ,color ,line-width)
+     (qjs |begin| *canvas* ,color ,(float line-width))
      ,@body
      (qjs |end| *canvas*)))
 
 (defun draw-line (x1 y1 x2 y2)
   (qjs |drawLine| *canvas*
-       x1 y1 x2 y2))
+       (float x1) (float y1) (float x2) (float y2)))
 
 (defun draw-number (number)
   (setf *number* number)

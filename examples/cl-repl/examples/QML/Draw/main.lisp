@@ -13,17 +13,17 @@
 (defvar *canvas* "canvas")
 
 (defun line (x1 y1 x2 y2)
-  (qjs |line| *canvas* x1 y1 x2 y2))
+  (qjs |line| *canvas* (float x1) (float y1) (float x2) (float y2)))
 
 (defun move-to (x y)
-  (qjs |moveTo| *canvas* x y))
+  (qjs |moveTo| *canvas* (float x) (float y)))
 
 (defun line-to (x y)
-  (qjs |lineTo| *canvas* x y))
+  (qjs |lineTo| *canvas* (float x) (float y)))
 
 (defmacro with-path ((color line-width) &body body)
   `(progn
-     (qjs |begin| *canvas* ,color ,line-width)
+     (qjs |begin| *canvas* ,color ,(float line-width))
      ,@body
      (qjs |end| *canvas*)))
 
