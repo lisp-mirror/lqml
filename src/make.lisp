@@ -7,10 +7,7 @@
         (list "/ecl-android" "/ecl-ios")
         (list :android :ios)))
 
-(when (probe-file "/etc/sailfish-release")
-  (pushnew :sailfish *features*))
-
-#+(or android ios sailfish)
+#+(or android ios)
 (pushnew :mobile *features*)
 
 ;;; compile ASDF system
