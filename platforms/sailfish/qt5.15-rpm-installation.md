@@ -6,7 +6,7 @@ Please note that this is not a straightforward way to install, and may turn out
 being tedious (I'm not a SailfishOS expert and have very limited experience).
 
 To download all rpms (on desktop Linux), set architecture (default: `armv7hl`)
-in file `donwload-rpms.lisp` and run it in ECL:
+in file `download-rpms.lisp` and run it in ECL:
 ```
 ecl -shell download-rpms.lisp ; will download to 'rpms/<arch>/'
 ```
@@ -17,6 +17,7 @@ ecl -shell download-rpms.lisp ; will download to 'rpms/<arch>/'
 Copy the rpms to device (see `sshfs`) and install with (beware that this will
 give some unmet dependencies):
 ```
+$ cd rpms/<arch>
 $ ./install.sh
 ```
 

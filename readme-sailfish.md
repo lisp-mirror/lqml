@@ -15,14 +15,14 @@ little tedious. Anyway I got it to work as described here.
 
 After connecting your Sailfish device via USB, open 2 console tabs on Linux:
 
-tab 1: shell
+### tab 1: shell
 ```
 ssh -L4005:127.0.0.1:4005 defaultuser@192.168.2.15`
 ```
 You need to manually do `source ~/.bashrc` for e.g. your personal aliases to
 work.
 
-tab 2: file access
+### tab 2: file access
 ```
 mkdir ~/phone
 sshfs defaultuser@192.168.2.15: ~/phone
