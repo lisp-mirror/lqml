@@ -1,10 +1,17 @@
 Building ECL + LQML
 -------------------
 
+*Please note that using the optional Qt5.15 libs (otherwise lqml would not
+compile) means that we won't have native look & feel, and integration with
+SailfishOS is not optimal, but this seems the only feasible way to run it,
+because backporting everything to Qt5.6 (from native SailfishOS) is not a
+realistic option.*
+
 If you run Linux on your desktop, the simplest way to build and develop is just
-doing it directly on the device (only this route is described here - no bloated
-SDK or similar is needed, but Qt5.15 installation may result being tedious, but
-I got it to work like described here).
+doing it directly on the device (only this route is described here).
+
+No bloated SDK or similar is needed, although Qt5.15 devel installation is a
+little tedious. Anyway I got it to work as described here.
 
 After connecting your Sailfish device via USB, open 2 console tabs on Linux:
 

@@ -30,3 +30,4 @@ qrc_*.cpp
 assets
 android-build
 *.tgz
+*.rpm

@@ -73,7 +73,7 @@ SailfishOS note
 
 On Sailfish it runs using **Qt5.15** and **qt-runner**, so it's not really
 'native' (in a pure sense) and doesn't have native look and feel, but that's
-the only feasable way to run it on that platform, see
+the only feasible way to run it on that platform, see
 [readme-sailfish](readme-sailfish.md).
 
 
