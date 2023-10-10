@@ -78,3 +78,12 @@ You should always kill `sshfs` after you are done using it:
 ```
 pkill sshfs
 ```
+
+
+Alternative approach
+--------------------
+
+The Sailfish Qt5.15 project (which inspired this) can be found
+[here](https://github.com/sailfishos-chum/qt5/wiki/Getting-Started).
+
+It uses the official Sailfish SDK for development.
