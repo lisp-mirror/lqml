@@ -6,7 +6,7 @@ Go to this site [chumrpm.netlify.app](https://chumrpm.netlify.app/) and
 download/install **sailfishos-chum-gui** (you don't need the gui, but it's
 practical to see what's installed on your phone).
 
-Important: choose **4.5.0.19** as chum-gui version, this is guaranteed
+Important: choose **4.5.0.19** as **SailfishOS** version, this is guaranteed
 to work with Qt5.15 (not all versions have all required rpms we need).
 
 Above app will add the [chum](https://repo.sailfishos.org/obs/sailfishos:/chum/)
