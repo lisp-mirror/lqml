@@ -8,30 +8,28 @@ because backporting everything to Qt5.6 (from native SailfishOS) is not a
 realistic option.*
 
 If you run Linux on your desktop, the simplest way to build and develop is just
-doing it directly on the device (only this route is described here).
-
-No bloated SDK or similar is needed, although Qt5.15 devel installation is a
-little tedious. Anyway I got it to work as described here.
+doing it directly on the device (only this route is described here). No bloated
+SDK or similar is needed.
 
 After connecting your Sailfish device via USB, open 2 console tabs on Linux:
 
 ### Tab 1: shell
 ```
-ssh -L4005:127.0.0.1:4005 defaultuser@192.168.2.15`
+$ ssh -L4005:127.0.0.1:4005 defaultuser@192.168.2.15`
 ```
 You need to manually do `source ~/.bashrc` for e.g. your personal aliases to
 work.
 
 ### Tab 2: file access
 ```
-mkdir ~/phone
-sshfs defaultuser@192.168.2.15: ~/phone
+$ mkdir ~/phone
+$ sshfs defaultuser@192.168.2.15: ~/phone
 ```
 
 First try to compile/install ECL (tab 1) just like you would do on the desktop.
 
 Then follow the description
-[qt5.15-rpm-installation](platforms/sailfish/qt5.15-rpm-installation.md).
+[qt5.15-rpm-installation](platforms/sailfish/qt5.15-installation.md).
 
 Add an alias in `~/.bashrc` on the device:
 ```
@@ -47,7 +45,7 @@ Run `qt-runner` without arguments to check the following 2 settings:
 Now you should be able to build/install lqml using `qmake` from above
 installation. Note that you always need to start the apps using `qt-runner`:
 ```
-qt-runner lqml run.lisp
+$ qt-runner lqml run.lisp
 ```
 
 For your final apps, just compile them in `build/`, rename `app` accordingly
@@ -56,7 +54,7 @@ resources, nothing else needs to be installed.
 
 If you want to run a compiled but not installed app, you need to pass the path:
 ```
-qt-runner ./my-app
+$ qt-runner ./my-app
 ```
 
 
@@ -65,7 +63,7 @@ Developing with Slime directly on device
 
 Using the 2 console tabs as described above, you can start Swank in tab 1:
 ```
-qt-runner lqml run.lisp -slime
+$ qt-runner lqml run.lisp -slime
 ```
 Add `-auto` for QML auto reload (just like on the desktop).
 
@@ -87,9 +85,9 @@ For the desktop icon see example for `cl-repl` in
 Tips
 ----
 
-You should always kill `sshfs` after you are done using it:
+You should always kill `sshfs` (desktop Linux) after you are done using it:
 ```
-pkill sshfs
+$ pkill sshfs
 ```
 
 
