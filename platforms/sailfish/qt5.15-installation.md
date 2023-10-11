@@ -9,9 +9,10 @@ practical to see what's installed on your phone).
 Important: choose **4.5.0.19** as chum-gui version, this is guaranteed
 to work with Qt5.15 (not all versions have all required rpms we need).
 
-Above app will add the `chum` repo we will need here.
+Above app will add the [chum](https://repo.sailfishos.org/obs/sailfishos:/chum/)
+repo that we need here.
 
-Just install the following packages (that's all we need here):
+Install the following packages:
 ```
 $ devel-su zypper install qt-runner
 $ devel-su zypper install opt-qt5-qtdeclarative-devel
