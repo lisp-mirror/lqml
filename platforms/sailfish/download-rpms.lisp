@@ -75,6 +75,9 @@
    "qqc2-breeze-style-5.27.4+git1-1.2.8.jolla.~A.rpm" ; armv7hl
    "qqc2-breeze-style-5.27.4+git1-1.2.7.jolla.~A.rpm" ; aarch64
    "qt-runner-0.4.0-1.6.1.jolla.~A.rpm"))
+
+(defun cc (&rest args)
+  (apply 'concatenate 'string args))
  
 (defun run ()
   (let ((to-dir (format nil "rpms/~A/" *arch*))
@@ -86,11 +89,10 @@
              (url (format nil *url* *arch* (if noarch "noarch" *arch*)))
              (rpm (if noarch
                       file
-                      (format nil file *arch*))))
-        (unless (probe-file (concatenate 'string to-dir rpm))
-          (let ((s (ext:run-program "wget" (list (concatenate 'string url rpm)
-                                                 "-P"
-                                                 (if devel to-dir-devel to-dir)))))
+                      (format nil file *arch*)))
+             (to-dir* (if devel to-dir-devel to-dir)))
+        (unless (probe-file (cc to-dir* rpm))
+          (let ((s (ext:run-program "wget" (list (cc url rpm) "-P" to-dir*))))
             (loop :for line = (read-line s nil nil)
                   :while line :do (princ line) (terpri)
                   :finally (close s))))))))

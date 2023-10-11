@@ -15,14 +15,14 @@ little tedious. Anyway I got it to work as described here.
 
 After connecting your Sailfish device via USB, open 2 console tabs on Linux:
 
-### tab 1: shell
+### Tab 1: shell
 ```
 ssh -L4005:127.0.0.1:4005 defaultuser@192.168.2.15`
 ```
 You need to manually do `source ~/.bashrc` for e.g. your personal aliases to
 work.
 
-### tab 2: file access
+### Tab 2: file access
 ```
 mkdir ~/phone
 sshfs defaultuser@192.168.2.15: ~/phone
@@ -54,6 +54,11 @@ For your final apps, just compile them in `build/`, rename `app` accordingly
 and copy it under e.g. `/usr/local/bin/`. Since the executables contain all
 resources, nothing else needs to be installed.
 
+If you want to run a compiled but not installed app, you need to pass the path:
+```
+qt-runner ./my-app
+```
+
 
 Developing with Slime directly on device
 ----------------------------------------
@@ -69,6 +74,14 @@ Emacs and connect:
 ```
 :slime-connect RET RET
 ```
+
+
+Desktop icon
+------------
+
+For the desktop icon see example for `cl-repl` in
+[readme](platforms/sailfish/desktop-icon-example/readme.md) and files in
+`platforms/sailfish/desktop-icon-example`.
 
 
 Tips
