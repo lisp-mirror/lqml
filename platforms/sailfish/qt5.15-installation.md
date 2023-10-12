@@ -34,9 +34,6 @@ Solution 3: break libhybris-devel by ignoring some of its dependencies
 
 Now you should be able to build/install the `lqml` executable and library.
 
-If the compiler emits an error like
-```
-fatal error: KHR/khrplatform.h: No such file or directory
-```
-then copy the missing headers/directories from e.g. any android NDK and put
-them under `/usr/include/`.
+If the compiler complains about missing headers `GLES3/*.h` and `KHR/*.h`,
+extract [missing-headers.tgz](missing-headers.tgz) in `/usr/include/`.
+Alternatively copy the missing headers from any android NDK.

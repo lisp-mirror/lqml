@@ -15,7 +15,7 @@ After connecting your Sailfish device via USB, open 2 console tabs on Linux:
 
 ### Tab 1: shell
 ```
-$ ssh -L4005:127.0.0.1:4005 defaultuser@192.168.2.15`
+$ ssh -L4005:127.0.0.1:4005 defaultuser@192.168.2.15
 ```
 You need to manually do `source ~/.bashrc` for e.g. your personal aliases to
 work.
