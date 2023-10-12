@@ -31,4 +31,12 @@ You can safely ignore this warning, nothing will really break, just choose:
 ```
 Solution 3: break libhybris-devel by ignoring some of its dependencies
 ```
+
 Now you should be able to build/install the `lqml` executable and library.
+
+If the compiler emits an error like
+```
+fatal error: KHR/khrplatform.h: No such file or directory
+```
+then copy the missing headers/directories from e.g. any android NDK and put
+them under `/usr/include/`.
