@@ -141,7 +141,10 @@
 (defun font-size-dialog ()
   (app:confirm-dialog
    (tr "Size") (tr "Message font size:") 'font-size-changed
-   :from 10 :to 48 :value (or (app:setting :message-font-size) 18)))
+   :from 10.0
+   :to   48.0
+   :value (float (or (app:setting :message-font-size)
+                     18.0))))
 
 (defun font-size-changed (ok) ; callback from QML
   (when ok

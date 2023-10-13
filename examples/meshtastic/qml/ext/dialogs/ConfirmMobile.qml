@@ -3,6 +3,7 @@ import QtQuick.Controls 2.15
 
 Dialog {
   anchors.centerIn: parent
+  width: 300 // needed for SailfishOS
   font.pixelSize: 18
   modal: true
   standardButtons: Dialog.Ok | Dialog.Cancel

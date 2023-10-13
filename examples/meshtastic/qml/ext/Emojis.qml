@@ -11,7 +11,7 @@ Rectangle {
   border.width: 1
   border.color: "gray"
 
-  property int itemSize: 24
+  property int itemSize: 42
 
   Column {
     id: column
