@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+X-Nemo-Single-Instance=no
+X-Nemo-Application-Type=no-invoker
+Icon=meshtastic
+Exec=qt-runner meshtastic
+Name=meshtastic
+
+X-Desktop-File-Install-Version=0.26
+
+[X-Sailjail]
+Sandboxing=Disabled
