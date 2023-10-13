@@ -194,6 +194,7 @@ Rectangle {
             readOnly = false
             selectAll()
             forceActiveFocus()
+            Qt.inputMethod.show() // needed for SailfishOS
           }
         }
 

@@ -87,6 +87,14 @@ devices themselves work and are able to connect.
 See also [readme-usage](readme-usage.md).
 
 
+
+Emojis (Linux/SailfishOS)
+-------------------------
+
+See [emojis-howto](platforms/linux/emojis-howto.md).
+
+
+
 Build
 -----
 

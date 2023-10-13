@@ -258,7 +258,7 @@ Rectangle {
         height: width
         source: "../img/emoji.png"
         opacity: 0.55
-        visible: !rootItem.mobile && edit.focus
+        visible: edit.focus && (Qt.platform.os !== "android") && (Qt.platform.os !== "ios")
 
         MouseArea {
           anchors.fill: parent
