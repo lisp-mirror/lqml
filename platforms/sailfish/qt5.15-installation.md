@@ -27,7 +27,8 @@ In one occasion (opt-qtdeclarative-devel) it will say:
 Problem: This request will break your system!
 nothing provides 'pkgconfig(android-headers)' needed by the to be installed libhybris-devel
 ```
-You can safely ignore this warning, nothing will really break, just choose:
+You can safely ignore this warning, nothing will really break (see below),
+so just choose:
 ```
 Solution 3: break libhybris-devel by ignoring some of its dependencies
 ```

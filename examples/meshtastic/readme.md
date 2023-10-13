@@ -53,14 +53,11 @@ OS limitations or indirect requirements.
 Tested
 ------
 
-Tested on Linux, macOS, Windows 10+, android, iOS.
+Tested on Linux, macOS, Windows 10+, android, iOS, SailfishOS.
 
 The macOS version must be compiled first, moved to `/Applications/` and started
 from Finder (not the console), otherwise BLE permissions will not work (if run
 from console, the app will show a BLE exception and consume 100% CPU).
-
-TODO: SailfishOS, using the Qt5.15 port (that is, SailfishOS using Qt5.6, with
-additional Qt5.15 installed).
 
 
 

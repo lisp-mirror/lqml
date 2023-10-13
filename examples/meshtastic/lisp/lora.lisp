@@ -266,7 +266,7 @@
                  (radios:add-radio
                   (list :name name
                         :hw-model (symbol-name (me:hw-model (me:user info)))
-                        :battery-level (if metrics (me:battery-level metrics) 0)
+                        :battery-level (float (if metrics (me:battery-level metrics) 0))
                         :current current))
                  (when current
                    (app:change-setting :device name))))))
