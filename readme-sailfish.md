@@ -39,7 +39,9 @@ alias qmake5.15=/opt/qt5/bin/qmake
 Run `qt-runner` without arguments to check the following 2 settings:
 
 - "Override DPI": set to 2/3 of max value, e.g. 458 * 2/3 = 305 (on my phone)
-- Select "Reduce window when keyboard is shown"
+- select "Reduce window when keyboard is shown"
+- set variable `QT_QUICK_CONTROLS_STYLE` to something neutral like `default`
+  (the original `breeze` style setting doesn't work with lqml)
 - apply changes (top right)
 
 Now you should be able to build/install lqml using `qmake` from above
