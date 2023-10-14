@@ -41,7 +41,7 @@
 (defun set-unread (name n)
   (unless (string= lora:*broadcast-name* name)
     (qjs |setUnread| ui:*group*
-         name n)
+         name (float n)) ; see 'qml:hex'
     (when (plusp n)
       (set-unread-state t))))
 

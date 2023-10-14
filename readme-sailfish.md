@@ -36,7 +36,7 @@ Add an alias in `~/.bashrc` on the device:
 alias qmake5.15=/opt/qt5/bin/qmake
 ```
 
-Run `qt-runner` without arguments to check the following 2 settings:
+Run `qt-runner` without arguments to check the following settings:
 
 - "Override DPI": set to 2/3 of max value, e.g. 458 * 2/3 = 305 (on my phone)
 - select "Reduce window when keyboard is shown"
