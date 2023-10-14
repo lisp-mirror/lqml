@@ -21,13 +21,11 @@
   automatically to hex strings, if (1) populating an item model, or (2) passed
   with function QJS.
   Those hex strings are automatically converted back to a 'qint64' integer when
-  passed with 'Lisp.call()'.
-  If the conversion to 'qint64' is not possible, the hex string is returned,
-  which can be passed to READ-FROM-STRING to get arbitrary integer length.
+  passed with 'Lisp.call()' or 'Lisp.apply()'.
 
   Important note: because of the automatic conversion of INTEGERs, you need to
-  explicitly add '(float x)' to values you don't want to be converted to hex
-  strings, like drawing a line in a QML Canvas."
+  explicitly add '(float x)' in Lisp to values you don't want to be converted
+  to hex strings, like drawing a line in a QML Canvas, or FIXNUM integers."
   (assert (integerp integer))
   (let ((*print-base* 16))
     (x:cc "#x" (princ-to-string integer))))
@@ -38,12 +36,20 @@
   ;; Every 'Lisp.call()' or 'Lisp.apply()' function call in QML will call this
   ;: function. The variable *CALLER* will be bound to the calling QQuickItem,
   ;; if passed with 'this' as first argument to 'Lisp.call()' / 'Lisp.apply()'.
+  ;; Possible integers encoded as hex strings in JS (see function HEX above)
+  ;; are automatically converted back to integers.
   (let ((fun (string-to-symbol function))
         (*caller* (if (zerop caller)
                       *caller*
                       (qt-object caller))))
     (if (fboundp fun)
-        (apply fun arguments)
+        (apply fun (mapcar (lambda (arg)
+                             (if (and (stringp arg)
+                                      (x:starts-with "#x" arg))
+                                 (or (ignore-errors (read-from-string arg))
+                                     arg)
+                                 arg))
+                           arguments))
         (let ((msg (format nil "[LQML:error] Lisp.call(): ~S is undefined." function)))
           (when *break-on-errors*
             (break msg)

@@ -13,28 +13,6 @@ static QVariant qmlApply(QObject* caller,
                  QVariant(arguments));
 }
 
-static QVariant toVariant(const QJSValue& value) {
-  QVariant var = value.toVariant();
-#if QT_VERSION < 0x060000
-  const int type = var.type();
-#else
-  const int type = var.typeId();
-#endif
-  if (type == QMetaType::QString) {
-    QString s(var.toString());
-    // numbers passed with '(qml:hex number)' to QML (and stored there as
-    // strings) are automatically converted back to a number (qint64).
-    if (s.startsWith("#x")) {
-      bool ok;
-      qint64 num = s.mid(2).toLongLong(&ok, 16);
-      if (ok) {
-        return QVariant(num);
-      }
-    }
-  }
-  return var;
-}
-
 QVariant Lisp::call(const QJSValue& caller_or_function,
                     const QJSValue& function_or_arg0,
                     const QJSValue& arg1,
@@ -62,41 +40,41 @@ QVariant Lisp::call(const QJSValue& caller_or_function,
   } else if (caller_or_function.isString()) {
     function = caller_or_function.toString();
     if (!function_or_arg0.isUndefined()) {
-      arguments << toVariant(function_or_arg0);
+      arguments << function_or_arg0.toVariant();
     }
   }
   if (!arg1.isUndefined()) {
-    arguments << toVariant(arg1);
+    arguments << arg1.toVariant();
     if (!arg2.isUndefined()) {
-      arguments << toVariant(arg2);
+      arguments << arg2.toVariant();
       if (!arg3.isUndefined()) {
-        arguments << toVariant(arg3);
+        arguments << arg3.toVariant();
         if (!arg4.isUndefined()) {
-          arguments << toVariant(arg4);
+          arguments << arg4.toVariant();
           if (!arg5.isUndefined()) {
-            arguments << toVariant(arg5);
+            arguments << arg5.toVariant();
             if (!arg6.isUndefined()) {
-              arguments << toVariant(arg6);
+              arguments << arg6.toVariant();
               if (!arg7.isUndefined()) {
-                arguments << toVariant(arg7);
+                arguments << arg7.toVariant();
                 if (!arg8.isUndefined()) {
-                  arguments << toVariant(arg8);
+                  arguments << arg8.toVariant();
                   if (!arg9.isUndefined()) {
-                    arguments << toVariant(arg9);
+                    arguments << arg9.toVariant();
                     if (!arg10.isUndefined()) {
-                      arguments << toVariant(arg10);
+                      arguments << arg10.toVariant();
                       if (!arg11.isUndefined()) {
-                        arguments << toVariant(arg11);
+                        arguments << arg11.toVariant();
                         if (!arg12.isUndefined()) {
-                          arguments << toVariant(arg12);
+                          arguments << arg12.toVariant();
                           if (!arg13.isUndefined()) {
-                            arguments << toVariant(arg13);
+                            arguments << arg13.toVariant();
                             if (!arg14.isUndefined()) {
-                              arguments << toVariant(arg14);
+                              arguments << arg14.toVariant();
                               if (!arg15.isUndefined()) {
-                                arguments << toVariant(arg15);
+                                arguments << arg15.toVariant();
                                 if (!arg16.isUndefined()) {
-                                  arguments << toVariant(arg16);
+                                  arguments << arg16.toVariant();
                                 }
                               }
                             }
