@@ -9,6 +9,9 @@
 #+(or android ios)
 (pushnew :mobile *features*)
 
+(when (probe-file "/etc/sailfish-release")
+  (pushnew :sfos *features*))
+
 (require :asdf)
 (require :cmp)
 

@@ -17,14 +17,19 @@ After connecting your Sailfish device via USB, open 2 console tabs on Linux:
 ```
 $ ssh -L4005:127.0.0.1:4005 defaultuser@192.168.2.15
 ```
-You need to manually do `source ~/.bashrc` for e.g. your personal aliases to
-work.
+I needed to do
+```
+$ cp .bash_profile .profile
+```
+in order to have `.bashrc` loaded on `ssh` login.
 
 ### Tab 2: file access
 ```
 $ mkdir ~/phone
 $ sshfs defaultuser@192.168.2.15: ~/phone
 ```
+
+--
 
 First try to compile/install ECL (tab 1) just like you would do on the desktop.
 

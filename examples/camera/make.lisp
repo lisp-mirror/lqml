@@ -10,6 +10,9 @@
 #+(or android ios)
 (pushnew :mobile *features*)
 
+(when (probe-file "/etc/sailfish-release")
+  (pushnew :sfos *features*))
+
 ;;; copy ECL '*.doc' and 'encodings/' (mobile only)
 
 (defun cc (&rest args)

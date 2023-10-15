@@ -636,7 +636,6 @@ cl_object mobile_p() {
   STATIC_SYMBOL_PKG (s_android, "ANDROID", "KEYWORD")
   STATIC_SYMBOL_PKG (s_ios,     "IOS",     "KEYWORD")
   STATIC_SYMBOL_PKG (s_sfos,    "SFOS",    "KEYWORD")
-  ecl_process_env()->nvalues = 1;
   cl_object l_ret = ECL_NIL;
   QString platform = qGuiApp->platformName();
   if (platform == QStringLiteral("android")) {
@@ -646,7 +645,7 @@ cl_object mobile_p() {
   } else if (QFile::exists("/etc/sailfish-release")) {
     l_ret = s_sfos;
   }
-  return l_ret;
+  ecl_return1(ecl_process_env(), l_ret);
 }
 
 cl_object pixel_ratio() {

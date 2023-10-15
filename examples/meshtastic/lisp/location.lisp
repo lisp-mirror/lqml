@@ -6,12 +6,12 @@
 (defun ini ()
   #+android
   (qt:ini-positioning qt:*cpp*)
-  #+ios
+  #+(or ios sfos)
   (q> |active| ui:*position-source* t)
-  #+mobile
+  #+(or android ios sfos)
   (update-my-position))
 
-#+mobile
+#+(or android ios sfos)
 (defun last-gps-position ()
   (let* ((pos #+android (qrun* (qt:last-position qt:*cpp*)) ; 'qrun*': return value
               #+ios     (qjs |lastPosition| ui:*position-source*))
@@ -20,7 +20,7 @@
       (setf (third pos) (parse-integer time))) ; see QML
     pos))
 
-#+mobile
+#+(or android ios sfos)
 (defun update-my-position (&optional (sec 60)) ; try for 1 min
   "Mobile only: update position from GPS of mobile device."
   ;; see also Timer in 'qml/ext/Radios.qml'
@@ -35,7 +35,7 @@
           (set-position (lora:my-num) pos)
           (send-to-radio)))))
 
-#+mobile
+#+(or android ios sfos)
 (defun send-to-radio ()
   (if lora:*config-complete*
       (unless (getf *positions* (lora:my-num))
@@ -90,12 +90,12 @@
 (defun activate-map ()
   (unless (q< |active| ui:*map-loader*)
     (q> |active| ui:*map-loader* t)
-    #+mobile
+    #+(or android ios sfos)
     (destructuring-bind (lat lon time)
         (last-gps-position)
       (unless (zerop lat)
         (qjs |setCenter| ui:*map* (list lat lon))))
-    #-mobile
+    #-(or android ios sfos)
     (let ((my-pos (position* (lora:my-num))))
       (when my-pos
         (qjs |setCenter| ui:*map* my-pos)))))

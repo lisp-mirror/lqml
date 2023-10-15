@@ -14,6 +14,9 @@
 #+(or android ios)
 (pushnew :mobile *features*)
 
+(when (probe-file "/etc/sailfish-release")
+  (pushnew :sfos *features*))
+
 ;;; copy Swank and ECL contrib files (mobile only)
 
 (defun cc (&rest args)

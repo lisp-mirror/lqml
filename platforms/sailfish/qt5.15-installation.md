@@ -10,7 +10,7 @@ Important: choose **4.5.0.19** as **SailfishOS** version, this is guaranteed
 to work with Qt5.15 (not all versions have all required rpms we need).
 
 Above app will add the [chum](https://repo.sailfishos.org/obs/sailfishos:/chum/)
-repo that we need here.
+repo that we need here (so just run it once to have it set up).
 
 Install the following packages:
 ```
