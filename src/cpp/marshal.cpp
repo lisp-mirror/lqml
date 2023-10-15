@@ -164,6 +164,8 @@ QVariant toQVariant(cl_object l_arg, int type) {
       var = QVariant(toFloat<double>(l_arg));
     } else if (cl_stringp(l_arg) == ECL_T) {        // string
       var = QVariant(toQString(l_arg));
+    } else if (cl_symbolp(l_arg) == ECL_T) {        // symbol
+      var = QVariant(toQString(cl_string_downcase(1, cl_symbol_name(l_arg))));
     } else if (cl_characterp(l_arg) == ECL_T) {     // char
       var = QChar(toInt(cl_char_code(l_arg)));
     } else if (l_arg == ECL_T) {                    // true

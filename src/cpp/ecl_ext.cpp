@@ -632,15 +632,21 @@ cl_object qquit2(cl_object l_status) {
 
 cl_object mobile_p() {
   /// args: ()
-  /// Returns T on android, iOS, SailfishOS.
+  /// On mobile returns one of :ANDROID, :IOS, :SFOS.
+  STATIC_SYMBOL_PKG (s_android, "ANDROID", "KEYWORD")
+  STATIC_SYMBOL_PKG (s_ios,     "IOS",     "KEYWORD")
+  STATIC_SYMBOL_PKG (s_sfos,    "SFOS",    "KEYWORD")
   ecl_process_env()->nvalues = 1;
+  cl_object l_ret = ECL_NIL;
   QString platform = qGuiApp->platformName();
-  if ((platform == QStringLiteral("android")) ||
-      (platform == QStringLiteral("ios")) ||
-      QFile::exists("/etc/sailfish-release")) {
-    return ECL_T;
+  if (platform == QStringLiteral("android")) {
+    l_ret = s_android;
+  } else if (platform == QStringLiteral("ios")) {
+    l_ret = s_ios;
+  } else if (QFile::exists("/etc/sailfish-release")) {
+    l_ret = s_sfos;
   }
-  return ECL_NIL;
+  return l_ret;
 }
 
 cl_object pixel_ratio() {

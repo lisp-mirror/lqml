@@ -20,12 +20,13 @@
   Since we only have floats in QML/JS, INTEGERs from Lisp are converted
   automatically to hex strings, if (1) populating an item model, or (2) passed
   with function QJS.
-  Those hex strings are automatically converted back to a 'qint64' integer when
+  Those hex strings are automatically converted back to a Lisp INTEGER when
   passed with 'Lisp.call()' or 'Lisp.apply()'.
 
   Important note: because of the automatic conversion of INTEGERs, you need to
   explicitly add '(float x)' in Lisp to values you don't want to be converted
-  to hex strings, like drawing a line in a QML Canvas, or FIXNUM integers."
+  to hex strings, like drawing a line in a QML Canvas, or a FIXNUM integer
+  which you want as number type in JS."
   (assert (integerp integer))
   (let ((*print-base* 16))
     (x:cc "#x" (princ-to-string integer))))
