@@ -353,3 +353,8 @@
 (alias qrun qrun-on-ui-thread)
 (alias qq   qquit)
 
+;;; features
+
+(when (probe-file "/etc/sailfish-release")
+  (pushnew :sfos *features*))
+

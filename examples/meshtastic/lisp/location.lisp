@@ -14,7 +14,7 @@
 #+(or android ios sfos)
 (defun last-gps-position ()
   (let* ((pos #+android (qrun* (qt:last-position qt:*cpp*)) ; 'qrun*': return value
-              #+ios     (qjs |lastPosition| ui:*position-source*))
+              #-android (qjs |lastPosition| ui:*position-source*))
          (time (third pos)))
     (when (stringp time)
       (setf (third pos) (parse-integer time))) ; see QML
