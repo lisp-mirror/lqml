@@ -14,19 +14,19 @@
 
 (defun set-style (color width)
   (qjs |setStyle| *canvas*
-       color width))
+       color (float width)))
 
 (defun draw-line (x1 y1 x2 y2)
   (qjs |drawLine| *canvas*
-       x1 y1 x2 y2))
+       (float x1) (float y1) (float x2) (float y2)))
 
 (defun rotate (angle)
   (qjs |rotate| *canvas*
-       angle))
+       (float angle)))
 
 (defun arc (x y r start end)
   (qjs |arc| *canvas*
-       x y r start end))
+       (float x) (float y) (float r) (float start) (float end)))
 
 (defmacro with-path (&body body)
   `(progn
