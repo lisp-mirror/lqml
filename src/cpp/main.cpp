@@ -9,6 +9,7 @@
 #include <QtQml/QQmlEngine>
 #include <QtQml/QQmlFileSelector>
 #include <QtQuick/QQuickView>
+#include <QtQuickControls2/QQuickStyle>
 #include <iostream>
 
 #ifdef INI_WEBVIEW
@@ -68,6 +69,9 @@ int main(int argc, char* argv[]) {
 #ifdef NO_TEXT_HANDLES
   qputenv("QT_QPA_NO_TEXT_HANDLES", "1");
 #endif
+  if (QFile::exists("/etc/sailfish-release")) { // SFOS
+    QQuickStyle::setStyle("Basic");
+  }
 #ifdef INI_WEBVIEW
   QtWebView::initialize();
 #endif

@@ -1,4 +1,4 @@
-QT          += quick qml
+QT          += quick qml quickcontrols2
 TEMPLATE    = app
 CONFIG      += c++17 no_keywords release
 INCLUDEPATH = /usr/local/include

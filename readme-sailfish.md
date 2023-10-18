@@ -45,9 +45,8 @@ Run `qt-runner` without arguments to check the following settings:
 
 - "Override DPI": set to 2/3 of max value, e.g. 458 * 2/3 = 305 (on my phone)
 - select "Reduce window when keyboard is shown"
-- set variable `QT_QUICK_CONTROLS_STYLE` to something neutral like `default`
-  (the original `breeze` style setting doesn't work with lqml)
-- apply changes (top right)
+
+Remember to apply the changes (top right).
 
 Now you should be able to build/install lqml using `qmake` from above
 installation. Note that you always need to start the apps using `qt-runner`:

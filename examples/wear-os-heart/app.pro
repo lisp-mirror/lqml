@@ -25,7 +25,7 @@ QMAKE_EXTRA_COMPILERS += lisp
 win32:  PRE_TARGETDEPS = tmp/app.lib
 !win32: PRE_TARGETDEPS = tmp/libapp.a
 
-QT          += quick qml
+QT          += quick qml quickcontrols2
 TEMPLATE    = app
 CONFIG      += c++17 no_keywords release
 DEFINES     = DESKTOP_APP INI_LISP

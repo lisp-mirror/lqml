@@ -76,6 +76,9 @@ On Sailfish it runs using **Qt5.15** and **qt-runner**, so it's not really
 the only feasible way to run it on that platform, see
 [readme-sailfish](readme-sailfish.md).
 
+*(Needless to say, this is - by far - the nicest experience you can have
+developing for mobile.)*
+
 
 Known issues
 ------------
