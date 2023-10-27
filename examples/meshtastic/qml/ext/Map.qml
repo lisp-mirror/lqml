@@ -1,4 +1,5 @@
 import QtQuick 2.15
+import QtQuick.Controls 2.15
 import QtLocation 5.15
 import QtPositioning 5.15
 import "." as Ext
@@ -15,6 +16,60 @@ Item {
       anchors.fill: parent
       plugin: mapPlugin
       zoomLevel: 14
+
+      property bool manualLocation: false
+      property var myMarker
+
+      Ext.MapButton {
+        id: hand
+        objectName: "add_default_marker"
+        anchors.top: parent.top
+        icon.source: "../img/hand.png"
+
+        onClicked: {
+          manualLocation = !manualLocation
+          if (manualLocation) {
+            if (markers.count === 0) {
+              Lisp.call("loc:add-default-marker")
+            }
+            myMarker = markers.itemAt(0)
+          } else {
+            myMarker = null
+          }
+        }
+      }
+
+      Ext.MapButton {
+        objectName: "remove_marker"
+        anchors.top: hand.bottom
+        icon.source: "../img/remove-marker.png"
+
+        onClicked: {
+          markers.itemAt(0).visible = false
+          Lisp.call("loc:remove-marker")
+          visible = false
+        }
+      }
+
+      SequentialAnimation {
+        id: markerAnimation
+        loops: Animation.Infinite
+        running: manualLocation && !!myMarker
+
+        OpacityAnimator { target: myMarker; from: 1.0; to: 0.2; duration: 500; easing.type: Easing.InOutSine }
+        OpacityAnimator { target: myMarker; from: 0.2; to: 1.0; duration: 500; easing.type: Easing.InOutSine }
+      }
+
+      MouseArea {
+        anchors.fill: parent
+        onClicked: {
+          manualLocation = false
+          var coord = map.toCoordinate(Qt.point(mouse.x, mouse.y))
+          myMarker.coordinate = coord
+          myMarker.opacity = 1
+          Lisp.call("loc:position-selected", coord.latitude, coord.longitude)
+        }
+      }
 
       function coordinate(pos) {
         return QtPositioning.coordinate(pos[0], pos[1])
@@ -77,6 +132,7 @@ Item {
 
       Ext.Markers {
         id: markers
+        objectName: "markers"
       }
     }
   }

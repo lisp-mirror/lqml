@@ -262,7 +262,7 @@ Rectangle {
 
         MouseArea {
           anchors.fill: parent
-          onClicked: emojis.visible = true
+          onClicked: emojis.visible = !emojis.visible
         }
       }
     }

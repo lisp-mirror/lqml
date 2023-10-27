@@ -34,6 +34,7 @@
    #:*config-lora*
    #:*my-node-info*
    #:*node-infos*
+   #:*print-json*
    #:*primary-channel*
    #:*reading*
    #:*ready*
@@ -118,6 +119,7 @@
   (:nicknames :loc)
   (:use :cl :qml)
   (:export
+   #:*default-position*
    #:*my-position*
    #:*positions*
    #:activate-map
@@ -128,6 +130,7 @@
    #:make-map-bin
    #:position*
    #:position-count
+   #:remove-marker
    #:set-position
    #:tile-path
    #:tile-provider-path

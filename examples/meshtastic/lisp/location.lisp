@@ -3,16 +3,17 @@
 (defvar *positions*   nil)
 (defvar *my-position* nil)
 
-(defun ini ()
-  #+android
-  (qt:ini-positioning qt:*cpp*)
-  #+(or ios sfos)
-  (q> |active| ui:*position-source* t)
-  #+(or android ios sfos)
-  (update-my-position))
+(defparameter *default-position* (list :lat 41.89193 :lon 12.51133 :time 0) ; Rome
+  "Position of map center for manual position selection (no GPS).")
 
-#+(or android ios sfos)
-(defun last-gps-position ()
+(defun ini ()
+  #+android       (qt:ini-positioning qt:*cpp*)
+  #+(or ios sfos) (q> |active| ui:*position-source* t)
+  (x:if-it (app:setting :selected-position)
+           (setf *my-position* x:it)
+           #+(or android ios sfos) (update-my-position)))
+
+(defun latest-gps-position ()
   (let* ((pos #+android (qrun* (qt:last-position qt:*cpp*)) ; 'qrun*': return value
               #-android (qjs |lastPosition| ui:*position-source*))
          (time (third pos)))
@@ -22,36 +23,52 @@
 
 #+(or android ios sfos)
 (defun update-my-position (&optional (sec 60)) ; try for 1 min
-  "Mobile only: update position from GPS of mobile device."
+  "If no manual position is set, update position from GPS of mobile device."
   ;; see also Timer in 'qml/ext/Radios.qml'
-  (destructuring-bind (lat lon time)
-      (last-gps-position)
-    (if (zerop lat)
-        (unless (zerop sec)
-          (qsingle-shot 1000 (lambda () (update-my-position (1- sec)))))
-        (let ((pos (list :lat lat :lon lon :time time)))
-          (setf *my-position* pos)
-          (qlog "position-updated: ~A" pos)
-          (set-position (lora:my-num) pos)
-          (send-to-radio)))))
+  (unless (app:setting :selected-position)
+    (destructuring-bind (lat lon time)
+        (latest-gps-position)
+      (if (zerop lat)
+          (unless (zerop sec)
+            (qsingle-shot 1000 (lambda () (update-my-position (1- sec)))))
+          (let ((pos (list :lat lat :lon lon :time time)))
+            (setf *my-position* pos)
+            (qlog "position-updated: ~A" pos)
+            (send-to-radio))))))
 
-#+(or android ios sfos)
 (defun send-to-radio ()
   (if lora:*config-complete*
-      (unless (getf *positions* (lora:my-num))
-        (lora:send-position *my-position*))
+      (lora:send-position *my-position*)
       (qsingle-shot 1000 'send-to-radio)))
 
 (defun position* (node)
   (when node
-    (x:when-it (getf *positions* node)
+    (x:when-it (or (getf *positions* node)
+                   (and (= node (lora:my-num))
+                        *my-position*))
       (list (getf x:it :lat)
             (getf x:it :lon)))))
 
 (defun set-position (node pos)
-  (let ((lat (getf pos :lat)))
-    (when (and node lat (not (zerop lat)))
-      (setf (getf *positions* node) pos))))
+  (when (and node pos)
+    (let ((lat (getf pos :lat)))
+      (when (and node lat (not (zerop lat)))
+        (setf (getf *positions* node) pos)))))
+
+(defun position-selected (lat lon) ; see QML
+  (let ((pos (list :lat lat :lon lon :time 0)))
+    (setf *my-position* pos)
+    (app:change-setting :selected-position *my-position*)
+    (qlog "position-updated: ~A" pos))
+  (q> |visible| ui:*remove-marker* t)
+  (send-to-radio)
+  (values))
+
+(defun remove-marker () ; see QML
+  (setf *my-position* nil)
+  (app:change-setting :selected-position nil)
+  (send-to-radio)
+  (values))
 
 ;;; distance
 
@@ -87,18 +104,26 @@
       (x:cc "file://" (namestring (merge-pathnames "qml/tile-provider/"))) ; development
       "qrc:///qml/tile-provider/"))                                        ; final app
 
+(defun center-position ()
+  (flet ((mean (x)
+           (/ (reduce '+ (loop :for pr = *positions* :then (cddr pr)
+                               :while pr :collect (getf (second pr) x)))
+              (/ (length *positions*) 2))))
+    (when *positions*
+      (list :lat (mean :lat)
+            :lon (mean :lon)))))
+
+(defun set-map-center (pos)
+  (qjs |setCenter| ui:*map*
+       (list (getf pos :lat)
+             (getf pos :lon))))
+
 (defun activate-map ()
   (unless (q< |active| ui:*map-loader*)
     (q> |active| ui:*map-loader* t)
-    #+(or android ios sfos)
-    (destructuring-bind (lat lon time)
-        (last-gps-position)
-      (unless (zerop lat)
-        (qjs |setCenter| ui:*map* (list lat lon))))
-    #-(or android ios sfos)
-    (let ((my-pos (position* (lora:my-num))))
-      (when my-pos
-        (qjs |setCenter| ui:*map* my-pos)))))
+    (set-map-center (or *my-position*
+                        (center-position)
+                        *default-position*))))
 
 (defun show-map-clicked () ; see QML
   (let ((show (not (q< |visible| ui:*map-view*))))
@@ -112,12 +137,25 @@
     (q> |visible| ui:*map-view* show)
     ;; move map (not page) when swiping to left
     (q> |interactive| ui:*main-view* (not show))
-    (unless show
-      (q> |active| ui:*map-loader* nil)))
+    (if show
+        (q> |visible| ui:*remove-marker*
+            (app:setting :selected-position))
+        (q> |active| ui:*map-loader* nil)))
+  (values))
+
+(defun add-default-marker () ; see QML
+  (setf *my-position* (or (center-position)
+                          *default-position*))
+  ;; update map
+  (qlater-sequence
+   (show-map-clicked) ; remove
+   (show-map-clicked) ; load
+   (q! |onClicked| ui:*add-default-marker*))
   (values))
 
 (defun position-count () ; see QML
-  (length *positions*))
+  (set-position (lora:my-num) *my-position*)
+  (/ (length *positions*) 2)) ; property list
 
 ;;; save/restore tiles
 

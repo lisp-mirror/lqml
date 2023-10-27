@@ -11,6 +11,7 @@
 (defvar *receiver*        nil)
 (defvar *config-lora*     nil)
 (defvar *ble-names*       nil)
+(defvar *print-json*      t)
 
 (defun ini ()
   (setf *receiver* (app:setting :latest-receiver)))
@@ -136,7 +137,8 @@
 
 (defun send-to-radio (to-radio)
   "Sends passed TO-RADIO, preceded by a header."
-  (pr:print-json to-radio)
+  (when *print-json*
+    (pr:print-json to-radio))
   (let ((bytes (pr:serialize-to-bytes to-radio)))
     (qrun*
      (qt:write* qt:*cpp* (header (length bytes)))
@@ -152,7 +154,8 @@
         (setf *reading* t)
         (if from-radio
             (progn
-              (pr:print-json from-radio)
+              (when *print-json*
+                (pr:print-json from-radio))
               (push from-radio *received*))
             (progn
               (qlog "received faulty bytes: ~A" error)
@@ -359,10 +362,12 @@
                :decoded (me:make-data
                          :portnum :position-app
                          :payload (pr:serialize-to-bytes
-                                   (me:make-position
-                                    :latitude-i (to-int (getf pos :lat))
-                                    :longitude-i (to-int (getf pos :lon))
-                                    :time (getf pos :time)))
+                                   (if pos
+                                       (me:make-position
+                                        :latitude-i (to-int (getf pos :lat))
+                                        :longitude-i (to-int (getf pos :lon))
+                                        :time (getf pos :time))
+                                       (me:make-position))) ; unset
                          :want-response t)))))
 
 (defun channel-to-url (&optional channel)
