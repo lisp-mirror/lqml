@@ -191,13 +191,23 @@
   glue code function) which expects a JS dictionary, see example below.
   N.B: Does not work with JS default arguments.
 
-    (qjs |drawLine| *canvas* x1 y1 x2 y2))
+    (qjs |drawLine| *canvas* (float x1) (float y1) (float x2) (float y2))
     (qjs |addPlanet| *planets* (list :name "Jupiter" :src "img/jupiter.png"))
 
 
 <b>qlater (function)</b>
 
   Calls FUNCTION as soon as the Qt event loop is idle.
+
+
+<b>qlater-sequence (&rest forms)</b>
+
+  Example: (qlater-sequence (foo) (bar)) expands to:
+
+    (qlater (lambda ()
+              (foo)
+              (qlater (lambda ()
+                        (bar)))))
 
 
 <b>qload-c++ (library-name &optional unload)</b>

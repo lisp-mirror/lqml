@@ -24,7 +24,8 @@
                        (setf start (length q))
                        (return)))
                    start)
-                 (or (search "Item" name)
+                 (or (and (not (search "QuickItem" name))
+                          (search "Item" name))
                      (position #\_ name))))))
 
 (defmethod print-object ((object qt-object) s)
@@ -100,6 +101,20 @@
   "args: (function)
   Calls FUNCTION as soon as the Qt event loop is idle."
   `(qsingle-shot 0 ,function))
+
+(defmacro qlater-sequence (&rest forms)
+  "args: (&rest forms)
+  Example: (qlater-sequence (foo) (bar)) expands to:
+    (qlater (lambda ()
+              (foo)
+              (qlater (lambda ()
+                        (bar)))))"
+  (labels ((later (forms)
+             (when forms
+               `(qlater (lambda ()
+                          ,(first forms)
+                          ,(later (rest forms)))))))
+    (later forms)))
 
 (defun %make-byte-vector (list)
   ;; for internal use (called from marshal.cpp')

@@ -205,7 +205,7 @@
   A special use case is to populate an item model in QML (using a trivial JS
   glue code function) which expects a JS dictionary, see example below.
   N.B: Does not work with JS default arguments.
-    (qjs |drawLine| *canvas* x1 y1 x2 y2))
+    (qjs |drawLine| *canvas* (float x1) (float y1) (float x2) (float y2))
     (qjs |addPlanet| *planets* (list :name \"Jupiter\" :src \"img/jupiter.png\"))"
   `(qrun* (qfun (quick-item ,item/name)
                 ,(if (symbolp function)

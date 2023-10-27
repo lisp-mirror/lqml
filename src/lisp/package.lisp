@@ -40,6 +40,7 @@
    #:qget
    #:qset
    #:qlater
+   #:qlater-sequence
    #:qload-c++
    #:qload-rc
    #:qlog

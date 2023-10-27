@@ -70,7 +70,7 @@ int main(int argc, char* argv[]) {
   qputenv("QT_QPA_NO_TEXT_HANDLES", "1");
 #endif
   if (QFile::exists("/etc/sailfish-release")) { // SFOS
-    QQuickStyle::setStyle("Basic");
+    QQuickStyle::setStyle("Basic");             // independent from 'qt-runner'
   }
 #ifdef INI_WEBVIEW
   QtWebView::initialize();
