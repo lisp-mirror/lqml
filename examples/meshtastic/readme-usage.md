@@ -105,6 +105,9 @@ GPS position
 
 On mobile, the location of the phone is sent once an hour to the radio.
 
+It's also possible to set a position manually, which will override any GPS
+position, see 'hand' button when the map is shown.
+
 
 Save / Restore data
 -------------------

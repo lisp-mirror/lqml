@@ -22,15 +22,16 @@ Item {
 
       Ext.MapButton {
         id: hand
-        objectName: "add_default_marker"
+        objectName: "add_manual_marker"
         anchors.top: parent.top
         icon.source: "../img/hand.png"
+        visible: false
 
         onClicked: {
           manualLocation = !manualLocation
           if (manualLocation) {
             if (markers.count === 0) {
-              Lisp.call("loc:add-default-marker")
+              Lisp.call("loc:add-manual-marker")
             }
             myMarker = markers.itemAt(0)
           } else {

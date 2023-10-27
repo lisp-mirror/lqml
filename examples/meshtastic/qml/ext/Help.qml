@@ -64,6 +64,9 @@ You can set a name to every person associated to a radio, which defaults to
 <p>
 A tap on the location item on the right shows a map with all known positions of the persons. The map is cached automatically for offline usage, which means: once you visited a place on the map, it will remain available even without internet connection.
 </p>
+<p>
+To set your location manually, see 'hand' button (top right). This will override any eventually received GPS location.
+</p>
 <h3>
 <img src='../img/message.png' width=60 height=60>
 <br>Messages

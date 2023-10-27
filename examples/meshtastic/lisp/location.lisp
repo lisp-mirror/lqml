@@ -133,7 +133,8 @@
         (qjs |updatePositions| ui:*map*
              x:it
              (lora:my-name)
-             (find-quick-item ui:*group*))))
+             (find-quick-item ui:*group*))
+        (q> |visible| ui:*add-manual-marker* t)))
     (q> |visible| ui:*map-view* show)
     ;; move map (not page) when swiping to left
     (q> |interactive| ui:*main-view* (not show))
@@ -143,14 +144,14 @@
         (q> |active| ui:*map-loader* nil)))
   (values))
 
-(defun add-default-marker () ; see QML
+(defun add-manual-marker () ; see QML
   (setf *my-position* (or (center-position)
                           *default-position*))
   ;; update map
   (qlater-sequence
    (show-map-clicked) ; remove
    (show-map-clicked) ; load
-   (q! |onClicked| ui:*add-default-marker*))
+   (q! |onClicked| ui:*add-manual-marker*))
   (values))
 
 (defun position-count () ; see QML

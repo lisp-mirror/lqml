@@ -12,6 +12,7 @@
    #:message-dialog
    #:make-backup
    #:my-ip
+   #:on-config-complete
    #:restore-eventual-backup
    #:save-settings
    #:setting
@@ -123,6 +124,7 @@
    #:*my-position*
    #:*positions*
    #:activate-map
+   #:add-manual-marker
    #:distance
    #:extract-map-bin
    #:ini
