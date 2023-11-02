@@ -499,7 +499,9 @@ cl_object qinvoke_method2(cl_object l_obj, cl_object l_name, cl_object l_args) {
   const char* v = "QVariant";
   int i = 0;
   QObject* qobject = toQObjectPointer(l_obj);
-  const bool qjs_call = (qobject_cast<QQuickItem*>(qobject) != nullptr);
+  const char* class_name = qobject->metaObject()->className();
+  const bool qjs_call = (qstrcmp("QQuick", class_name) < 0) ||
+                        (qstrcmp("QQml", class_name) < 0);
   for (cl_object l_do_list = l_args; l_do_list != ECL_NIL; l_do_list = cl_cdr(l_do_list), i++) {
     cl_object l_el = cl_car(l_do_list);
     if (qjs_call) {
