@@ -53,7 +53,7 @@ private Q_SLOTS:
   void deviceScanFinished();
   void deviceScanError(QBluetoothDeviceDiscoveryAgent::Error);
 
-  // QLowEnergyController realted
+  // QLowEnergyController related
   void addLowEnergyService(const QBluetoothUuid&);
   void deviceConnected();
   void errorReceived(QLowEnergyController::Error);

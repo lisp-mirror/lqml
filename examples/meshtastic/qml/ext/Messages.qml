@@ -54,7 +54,7 @@ Rectangle {
               height: width
               playing: false
               source: "../img/semaphore.gif"
-              currentFrame: model.ackState ? model.ackState.substr(2) : 0 // see 'qml:hex'
+              currentFrame: model.ackState ? parseInt(model.ackState.substr(2), 16) : 0 // see 'qml:hex'
               visible: model.me
             }
 

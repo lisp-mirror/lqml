@@ -84,11 +84,9 @@
   (when *config-complete*
     (me:num *my-node-info*)))
 
-(defun to-radio (&key from to id hop-limit want-ack priority decoded)
+(defun to-radio (&rest args &key from to id hop-limit want-ack priority decoded)
   (me:make-to-radio
-   :packet (me:make-mesh-packet
-            :from from :to to :id id :hop-limit hop-limit :want-ack want-ack
-            :priority priority :decoded decoded)))
+   :packet (apply 'me:make-mesh-packet args)))
 
 (defun send-message (text)
   "Sends TEXT to radio and adds it to QML item model."
