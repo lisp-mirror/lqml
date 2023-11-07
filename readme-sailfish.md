@@ -55,8 +55,8 @@ $ qt-runner lqml run.lisp
 ```
 
 For your final apps, just compile them in `build/`, rename `app` accordingly
-and copy it under e.g. `/usr/local/bin/`. Since the executables contain all
-resources, nothing else needs to be installed.
+and copy it under `/usr/bin/`. Since the executables contain all resources,
+nothing else needs to be installed.
 
 If you want to run a compiled but not installed app, you need to pass the path:
 ```
