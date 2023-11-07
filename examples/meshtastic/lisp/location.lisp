@@ -78,6 +78,7 @@
   (/ (* deg pi) 180))
 
 (defun distance (from to)
+  (qlog :distance from to)
   ;; Haversine formula
   (destructuring-bind ((lat-1 lon-1) (lat-2 lon-2))
       (list from to)

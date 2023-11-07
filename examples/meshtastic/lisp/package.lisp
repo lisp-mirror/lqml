@@ -128,7 +128,7 @@
    #:distance
    #:extract-map-bin
    #:ini
-   #:last-gps-position
+   #:latest-gps-position
    #:make-map-bin
    #:position*
    #:position-count

@@ -124,15 +124,19 @@
   sending an ':e ...' text message, which will be echoed with info about signal
   strength, position and distance."
   (let ((from-pos (loc:position* from))
-        (my-pos #+mobile (nbutlast (loc:last-gps-position) 1)
+        (my-pos #+mobile (nbutlast (loc:latest-gps-position) 1)
                 #-mobile nil))
-    (format nil "~A~%~%snr: <b>~F</b> rssi: <b>~D</b>~%lat: ~,5F lon: ~,5F~%distance: <b>~:D m</b>"
-                text snr rssi
-                (if my-pos (first my-pos)  "-")
-                (if my-pos (second my-pos) "-")
-                (if (and from-pos my-pos)
-                    (loc:distance my-pos from-pos)
-                    "-"))))
+    (x:cc (format nil "~A~%~%snr: <b>~F</b> rssi: <b>~D</b>"
+                  text snr rssi)
+          (if my-pos
+              (format nil "~%lat: ~,5F lon: ~,5F"
+                      (first my-pos)
+                      (second my-pos))
+              "")
+          (if (and my-pos from-pos)
+              (format nil "~%distance: <b>~:D m</b>"
+                      (loc:distance my-pos from-pos))
+              ""))))
 
 (defun swipe-to-left () ; see QML
   (q> |currentIndex| ui:*main-view* 0)

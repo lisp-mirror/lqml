@@ -191,107 +191,110 @@
                                    :alt (me:altitude pos)
                                    :time (me:time pos))))))
 
-(defun process-received ()
-  "Walks *RECEIVED* FROM-RADIOs and saves relevant data."
-  (setf *received* (nreverse *received*))
-  (unless *ble-names*
-    (setf *ble-names* (qt:short-names qt:*cpp*)))
-  (dolist (struct *received*)
-    (cond ((me:from-radio.has-packet struct)
-           (let* ((packet (me:from-radio.packet struct))
-                  (decoded (me:decoded packet)))
-             (when decoded
-               (let ((payload (me:payload decoded)))
-                 (case (me:portnum decoded)
-                   ;; text-message
-                   (:text-message-app
-                    (let ((timestamp (get-universal-time))
-                          (mid (me:id packet))
-                          (text (qfrom-utf8 payload)))
-                      (setf msg:*message-id* (max mid msg:*message-id*))
-                      (if (x:starts-with ":e" text) ; 'echo'
-                          (qsingle-shot 1000 (lambda () (send-message (x:cc "<b>echo:</b>" (subseq text #.(length ":e"))))))
-                          (progn
-                            (when (x:starts-with "<b>echo:</b>" text)
-                              (setf text (msg:echo-message text (me:from packet) (me:rx-snr packet) (me:rx-rssi packet))))
-                            (msg:add-message
-                             (list :receiver (my-name)
-                                   :sender (node-to-name (me:from packet))
-                                   :timestamp timestamp
-                                   :hour (timestamp-to-hour timestamp)
-                                   :text (add-line-breaks text)
-                                   :mid mid))))))
-                   ;; for :ack-state (acknowledgement state)
-                   (:routing-app
-                    (let ((state (me:routing.error-reason
-                                  (pr:deserialize-from-bytes 'me:routing payload))))
-                      (msg:change-state (case state
-                                          (:none
-                                           :received)
-                                          (t
-                                           (qlog "message state changed: ~A" state)
-                                           :not-received))
-                                        (me:request-id decoded))))
-                   ;; GPS location
-                   (:position-app
-                    (unless (zerop (length payload))
-                      (set-gps-position (me:from packet)
-                                        (pr:deserialize-from-bytes 'me:position payload)))))))))
-          ;; my-info
-          ((me:from-radio.has-my-info struct)
-           (setf *my-node-info* (me:my-node-num (me:my-info struct))))
-          ;; node-info
-          ((me:from-radio.has-node-info struct)
-           (let ((info (me:node-info struct)))
-             (if (eql *my-node-info* (me:num info))
-                 (setf *my-node-info* info)
-                 (setf *node-infos*
-                       (nconc *node-infos* (list info))))
-             (x:when-it (me:position info)
-               (set-gps-position (me:num info) x:it))
-             (when *schedule-clear*
-               (radios:clear)
-               (group:clear))
-             (let ((name (me:short-name (me:user info)))
-                   (current (= (me:num info)
-                               (me:num *my-node-info*)))
-                   (metrics (me:device-metrics info)))
-               (unless current
-                 (group:add-person
-                  (list :radio-name name
-                        :custom-name (or (app:setting name :custom-name) "")
-                        :node-num (me:num info)
-                        :current (equal name (app:setting :latest-receiver)))))
-               (when (find name *ble-names* :test 'string=)
-                 (setf radios:*found* t)
-                 (radios:add-radio
-                  (list :name name
-                        :hw-model (symbol-name (me:hw-model (me:user info)))
-                        :battery-level (float (if metrics (me:battery-level metrics) 0))
-                        :current current))
-                 (when current
-                   (app:change-setting :device name))))))
-          ;; channel
-          ((me:from-radio.has-channel struct)
-           (let ((channel (me:channel struct)))
-             (when (eql :primary (me:role channel))
-               (setf *my-channel* channel))
-             (push channel *channels*)))
-          ;; config lora
-          ((me:from-radio.has-config struct)
-           (let ((config (me:config struct)))
-             (when (me:config.has-lora config)
-               (setf *config-lora* (me:lora config)))))
-          ;; config-complete-id
-          ((me:from-radio.has-config-complete-id struct)
-           (when (= *config-id* (me:config-complete-id struct))
-             (setf *config-complete* t)
-             (q> |playing| ui:*busy* nil)
-             (qlog "config-complete id: ~A" *config-id*)
-             (unless (string= *my-channel-name*
-                              (me:name (me:settings *my-channel*)))
-               (qlater 'config-device))))))
-  (setf *received* nil))
+(let (echo-text)
+  (defun process-received ()
+    "Walks *RECEIVED* FROM-RADIOs and saves relevant data."
+    (setf *received* (nreverse *received*))
+    (unless *ble-names*
+      (setf *ble-names* (qt:short-names qt:*cpp*)))
+    (dolist (struct *received*)
+      (cond ((me:from-radio.has-packet struct)
+             (let* ((packet (me:from-radio.packet struct))
+                    (decoded (me:decoded packet)))
+               (when decoded
+                 (let ((payload (me:payload decoded)))
+                   (case (me:portnum decoded)
+                     ;; text-message
+                     (:text-message-app
+                      (let ((timestamp (get-universal-time))
+                            (mid (me:id packet))
+                            (text (qfrom-utf8 payload)))
+                        (setf msg:*message-id* (max mid msg:*message-id*))
+                        (if (x:starts-with ":e" text) ; 'echo'
+                            (progn
+                              (setf echo-text (subseq text #.(length ":e")))
+                              (qsingle-shot 1000 (lambda () (send-message (x:cc "<b>echo:</b>" echo-text)))))
+                            (progn
+                              (when (x:starts-with "<b>echo:</b>" text)
+                                (setf text (msg:echo-message text (me:from packet) (me:rx-snr packet) (me:rx-rssi packet))))
+                              (msg:add-message
+                               (list :receiver (my-name)
+                                     :sender (node-to-name (me:from packet))
+                                     :timestamp timestamp
+                                     :hour (timestamp-to-hour timestamp)
+                                     :text (add-line-breaks text)
+                                     :mid mid))))))
+                     ;; for :ack-state (acknowledgement state)
+                     (:routing-app
+                      (let ((state (me:routing.error-reason
+                                    (pr:deserialize-from-bytes 'me:routing payload))))
+                        (msg:change-state (case state
+                                            (:none
+                                             :received)
+                                            (t
+                                             (qlog "message state changed: ~A" state)
+                                             :not-received))
+                                          (me:request-id decoded))))
+                     ;; GPS location
+                     (:position-app
+                      (unless (zerop (length payload))
+                        (set-gps-position (me:from packet)
+                                          (pr:deserialize-from-bytes 'me:position payload)))))))))
+            ;; my-info
+            ((me:from-radio.has-my-info struct)
+             (setf *my-node-info* (me:my-node-num (me:my-info struct))))
+            ;; node-info
+            ((me:from-radio.has-node-info struct)
+             (let ((info (me:node-info struct)))
+               (if (eql *my-node-info* (me:num info))
+                   (setf *my-node-info* info)
+                   (setf *node-infos*
+                         (nconc *node-infos* (list info))))
+               (x:when-it (me:position info)
+                 (set-gps-position (me:num info) x:it))
+               (when *schedule-clear*
+                 (radios:clear)
+                 (group:clear))
+               (let ((name (me:short-name (me:user info)))
+                     (current (= (me:num info)
+                                 (me:num *my-node-info*)))
+                     (metrics (me:device-metrics info)))
+                 (unless current
+                   (group:add-person
+                    (list :radio-name name
+                          :custom-name (or (app:setting name :custom-name) "")
+                          :node-num (me:num info)
+                          :current (equal name (app:setting :latest-receiver)))))
+                 (when (find name *ble-names* :test 'string=)
+                   (setf radios:*found* t)
+                   (radios:add-radio
+                    (list :name name
+                          :hw-model (symbol-name (me:hw-model (me:user info)))
+                          :battery-level (float (if metrics (me:battery-level metrics) 0))
+                          :current current))
+                   (when current
+                     (app:change-setting :device name))))))
+            ;; channel
+            ((me:from-radio.has-channel struct)
+             (let ((channel (me:channel struct)))
+               (when (eql :primary (me:role channel))
+                 (setf *my-channel* channel))
+               (push channel *channels*)))
+            ;; config lora
+            ((me:from-radio.has-config struct)
+             (let ((config (me:config struct)))
+               (when (me:config.has-lora config)
+                 (setf *config-lora* (me:lora config)))))
+            ;; config-complete-id
+            ((me:from-radio.has-config-complete-id struct)
+             (when (= *config-id* (me:config-complete-id struct))
+               (setf *config-complete* t)
+               (q> |playing| ui:*busy* nil)
+               (qlog "config-complete id: ~A" *config-id*)
+               (unless (string= *my-channel-name*
+                                (me:name (me:settings *my-channel*)))
+                 (qlater 'config-device))))))
+    (setf *received* nil)))
 
 (defun send-admin (admin-message)
   (send-to-radio
