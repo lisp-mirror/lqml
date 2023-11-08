@@ -6,6 +6,8 @@
    #:ini
    #:ini-db
    #:ini-positioning
+   #+(or android ios)
+   #:keep-screen-on
    #:last-position
    #:local-ip
    #:start-device-discovery

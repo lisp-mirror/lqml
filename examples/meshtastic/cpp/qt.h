@@ -36,6 +36,9 @@ public:
   // etc
   Q_INVOKABLE QVariant dataPath(const QVariant&);
   Q_INVOKABLE QVariant localIp();
+#if (defined Q_OS_ANDROID) || (defined Q_OS_IOS)
+  Q_INVOKABLE QVariant keepScreenOn(const QVariant& = true);
+#endif
 
   QT();
 

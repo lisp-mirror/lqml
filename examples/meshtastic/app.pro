@@ -68,6 +68,8 @@ android {
   LIBS        += -lasdf -lecl-help -ldeflate -lecl-cdb -lecl-curl -lql-minitar -lsockets
   LIBS        += -L../../../platforms/android/lib
 
+  SOURCES += cpp/android.cpp
+
   ANDROID_MIN_SDK_VERSION    = 21
   ANDROID_TARGET_SDK_VERSION = 33
   ANDROID_EXTRA_LIBS         += $$ECL/lib/libecl.so
@@ -106,6 +108,8 @@ ios {
   # either build them by yourself or find a trusted source for downloading,
   # and put them here: '../../../platforms/ios/lib/'
   LIBS        += -lcrypto -lssl
+
+  SOURCES += cpp/ios.mm
 
   QMAKE_INFO_PLIST     = platforms/ios/Info.plist
   QMAKE_ASSET_CATALOGS += platforms/ios/Assets.xcassets

@@ -23,6 +23,8 @@
   (progn
     (ensure-permissions :access-fine-location) ; for sharing location
     (ensure-permissions :bluetooth-scan :bluetooth-connect)) ; android >= 12
+  #+(or android ios)
+  (qlater (lambda () (qt:keep-screen-on qt:*cpp*)))
   (lora:start-device-discovery (or (setting :device) "")))
 
 (defun in-data-path (&optional (file "") (prefix "data/"))
