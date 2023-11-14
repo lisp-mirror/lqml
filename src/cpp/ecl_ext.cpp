@@ -262,6 +262,7 @@ cl_object qload_cpp(cl_object l_lib_name, cl_object l_unload) { /// qload-c++
   /// The plugin will be reloaded (if supported by the OS) every time you call
   /// this function. If the UNLOAD argument is not NIL, the plugin will be
   /// unloaded (if supported by the OS).
+  ///
   /// N.B: This works only for Qt functions with the following signature:
   /// "QVariant foo(QVariant, ...)" ; max 10 QVariant arguments
   /// Since a QVariant can also be of type QVariantList, this is a perfect fit
@@ -488,8 +489,10 @@ cl_object qinvoke_method2(cl_object l_obj, cl_object l_name, cl_object l_args) {
   // call user defined Qt/C++ plugin functions.
   // Max. 10 arguments of type T, NIL, INTEGER, FLOAT, STRING, VECTOR of
   // octets, (nested) LIST of mentioned arguments.
+  //
   // For the complete list of supported types see 'marshal.cpp:toQVariant()'.
   // On Qt side, only QVariant arguments are allowed.
+  //
   // N.B. does not support default arguments, if used to call JS functions
   STATIC_SYMBOL_PKG (s_hex, "HEX", "QML")
   ecl_process_env()->nvalues = 1;

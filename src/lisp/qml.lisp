@@ -20,6 +20,7 @@
   Since we only have floats in QML/JS, INTEGERs from Lisp are converted
   automatically to hex strings, if (1) populating an item model, or (2) passed
   with function QJS.
+
   Those hex strings are automatically converted back to a Lisp INTEGER when
   passed with 'Lisp.call()' or 'Lisp.apply()'.
 
@@ -201,9 +202,11 @@
   up to 10 arguments of the following types:
   T, NIL, INTEGER, FLOAT, STRING, VECTOR of octets, ... and (nested) lists of
   mentioned arguments.
+
   For the complete list of supported types see 'marshal.cpp:toQVariant()'.
   A special use case is to populate an item model in QML (using a trivial JS
   glue code function) which expects a JS dictionary, see example below.
+
   N.B: Does not work with JS default arguments.
     (qjs |drawLine| *canvas* (float x1) (float y1) (float x2) (float y2))
     (qjs |addPlanet| *planets* (list :name \"Jupiter\" :src \"img/jupiter.png\"))"

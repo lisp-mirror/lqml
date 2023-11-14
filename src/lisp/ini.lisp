@@ -340,6 +340,7 @@
   "args: ()
   Mobile only. Preamble: all asset files are automatically copied to the app
   directory on the very first app startup.
+
   If you eventually need to copy additional asset files, or replace the current
   ones, use this function (after installing an app update)."
   #+mobile

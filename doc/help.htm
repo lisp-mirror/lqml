@@ -17,6 +17,7 @@
 
   Mobile only. Preamble: all asset files are automatically copied to the app
   directory on the very first app startup.
+
   If you eventually need to copy additional asset files, or replace the current
   ones, use this function (after installing an app update).
 
@@ -55,6 +56,7 @@
   Since we only have floats in QML/JS, INTEGERs from Lisp are converted
   automatically to hex strings, if (1) populating an item model, or (2) passed
   with function QJS.
+
   Those hex strings are automatically converted back to a Lisp INTEGER when
   passed with 'Lisp.call()' or 'Lisp.apply()'.
 
@@ -186,9 +188,11 @@
   up to 10 arguments of the following types:
   T, NIL, INTEGER, FLOAT, STRING, VECTOR of octets, ... and (nested) lists of
   mentioned arguments.
+
   For the complete list of supported types see 'marshal.cpp:toQVariant()'.
   A special use case is to populate an item model in QML (using a trivial JS
   glue code function) which expects a JS dictionary, see example below.
+
   N.B: Does not work with JS default arguments.
 
     (qjs |drawLine| *canvas* (float x1) (float y1) (float x2) (float y2))
@@ -218,6 +222,7 @@
   The plugin will be reloaded (if supported by the OS) every time you call
   this function. If the UNLOAD argument is not NIL, the plugin will be
   unloaded (if supported by the OS).
+ 
   N.B: This works only for Qt functions with the following signature:
   "QVariant foo(QVariant, ...)" ; max 10 QVariant arguments
   Since a QVariant can also be of type QVariantList, this is a perfect fit
