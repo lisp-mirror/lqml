@@ -322,7 +322,8 @@
                         :region (app:setting :region)
                         :hop-limit 3
                         :tx-enabled t
-                        :tx-power 27))))
+                        :tx-power 27
+                        :sx126x-rx-boosted-gain t))))
   ;; device will reboot after changing lora config
   (app:toast (tr "waiting for reboot..."))
   (qsleep 5)
