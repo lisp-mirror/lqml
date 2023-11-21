@@ -150,7 +150,7 @@
    :value (float (or (app:setting :message-font-size)
                      18.0))))
 
-(defun font-size-changed (ok) ; callback from QML
+(defun font-size-changed (ok) ; see QML
   (when ok
     (let ((size (q< |value| ui:*dialog-spin-box*)))
       (setf size (min 48 (max 10 size)))
