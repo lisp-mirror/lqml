@@ -210,11 +210,12 @@
   N.B: Does not work with JS default arguments.
     (qjs |drawLine| *canvas* (float x1) (float y1) (float x2) (float y2))
     (qjs |addPlanet| *planets* (list :name \"Jupiter\" :src \"img/jupiter.png\"))"
-  `(qrun* (qfun (quick-item ,item/name)
-                ,(if (symbolp function)
-                     (symbol-name function)
-                     function)
-                ,@arguments)))
+  `(qrun* (qinvoke-method (quick-item ,item/name)
+                          ,(if (symbolp function)
+                               (symbol-name function)
+                               function)
+                          (list ,@arguments)
+                          t))) ; qjs call
 
 ;;; apropos
 

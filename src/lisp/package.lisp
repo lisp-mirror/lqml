@@ -36,7 +36,6 @@
    #:qexec
    #:qexit
    #:qfrom-utf8
-   #:qfun
    #:qget
    #:qset
    #:qlater

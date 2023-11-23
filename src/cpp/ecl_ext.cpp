@@ -45,7 +45,7 @@ void iniCLFunctions() {
   DEFUN ("%qfind-children",         qfind_children2,         3)
   DEFUN ("qfrom-utf8",              qfrom_utf8,              1)
   DEFUN ("qto-utf8",                qto_utf8,                1)
-  DEFUN ("%qinvoke-method",         qinvoke_method2,         3)
+  DEFUN ("qinvoke-method",          qinvoke_method,          4)
   DEFUN ("%qload-c++",              qload_cpp,               2)
   DEFUN ("qload-rc",                qload_rc,                1)
   DEFUN ("%qlog",                   qlog2,                   1)
@@ -484,7 +484,7 @@ cl_object qnull(cl_object l_arg) {
   ecl_return1(ecl_process_env(), (qobject == nullptr) ? ECL_T : ECL_NIL);
 }
 
-cl_object qinvoke_method2(cl_object l_obj, cl_object l_name, cl_object l_args) {
+cl_object qinvoke_method(cl_object l_obj, cl_object l_name, cl_object l_args, cl_object l_qjs_call) {
   // for internal use: this is used to call user defined JS functions, and to
   // call user defined Qt/C++ plugin functions.
   // Max. 10 arguments of type T, NIL, INTEGER, FLOAT, STRING, VECTOR of
@@ -501,13 +501,9 @@ cl_object qinvoke_method2(cl_object l_obj, cl_object l_name, cl_object l_args) {
   QGenericArgument genA[MAX];
   const char* v = "QVariant";
   int i = 0;
-  QObject* qobject = toQObjectPointer(l_obj);
-  const char* class_name = qobject->metaObject()->className();
-  const bool qjs_call = (qstrcmp("QQuick", class_name) < 0) ||
-                        (qstrcmp("QQml", class_name) < 0);
   for (cl_object l_do_list = l_args; l_do_list != ECL_NIL; l_do_list = cl_cdr(l_do_list), i++) {
     cl_object l_el = cl_car(l_do_list);
-    if (qjs_call) {
+    if (l_qjs_call == ECL_T) {
       // convert INTEGER to hex string, since we only have floats in JS;
       // will be converted back automatically if passed with 'Lisp.call()'
       if (cl_integerp(l_el) == ECL_T) {
@@ -522,6 +518,7 @@ cl_object qinvoke_method2(cl_object l_obj, cl_object l_name, cl_object l_args) {
     genA[i] = null;
   }
   QByteArray name(toCString(l_name));
+  QObject* qobject = toQObjectPointer(l_obj);
   if ((qobject != nullptr) && !name.isEmpty()) {
     QVariant ret;
     QGenericReturnArgument genR(v, &ret);

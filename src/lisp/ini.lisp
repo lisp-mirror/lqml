@@ -52,7 +52,7 @@
   ;; usage:
   ;;   (! "myFunction" *cpp* 1 2 3)
   ;;   (! |myFunction| *cpp* 1 2 3)
-  `(qfun ,qt-object ,(if (stringp fun) fun (symbol-name fun)) ,@args))
+  `(qinvoke-method ,qt-object ,(if (stringp fun) fun (symbol-name fun)) (list ,@args) nil))
 
 (defun %reference-name ()
   (format nil "%~A%" (gensym)))
@@ -199,11 +199,7 @@
             ;; (excluding non-portable hacks)
             (eval `(defgeneric ,lisp-name (object &rest arguments)))
             (eval `(defmethod ,lisp-name ((object qt-object) &rest arguments)
-                     (%qinvoke-method object ,qt-name arguments)))))))))
-
-(defun qinvoke-method (object function-name &rest arguments)
-  ;; for internal use
-  (%qinvoke-method object function-name arguments))
+                     (qinvoke-method object ,qt-name arguments nil)))))))))
 
 (defmacro qget (object name)
   `(qrun* (%qget ,object ,(if (symbolp name)
@@ -365,7 +361,6 @@
 (defmacro alias (s1 s2)
   `(setf (fdefinition ',s1) (function ,s2)))
 
-(alias qfun qinvoke-method)
 (alias qrun qrun-on-ui-thread)
 (alias qq   qquit)
 
