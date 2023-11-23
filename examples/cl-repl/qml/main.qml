@@ -32,10 +32,10 @@ StackView {
 
   function pushDialog(name)  {
     switch (name) {
-      case "file":  main.push(dialogFile);  break;
-      case "debug": main.push(dialogDebug); break;
-      case "query": main.push(dialogQuery); break;
-      case "help":  main.push(dialogHelp);  break;
+      case "query": dialogQuery.open();     break
+      case "file":  main.push(dialogFile);  break
+      case "debug": main.push(dialogDebug); break
+      case "help":  main.push(dialogHelp);  break
     }
   }
 
@@ -638,8 +638,8 @@ StackView {
 
   // not visible dialog / menu instances
 
+  Ext.QueryDialog { id: dialogQuery }
   Ext.FileBrowser { id: dialogFile;  opacity: 0 }
-  Ext.QueryDialog { id: dialogQuery; opacity: 0 }
   Ext.DebugDialog { id: dialogDebug; opacity: 0 }
   Ext.Help        { id: dialogHelp;  opacity: 0 }
 
