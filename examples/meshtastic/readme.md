@@ -34,9 +34,8 @@ slowly on mobile. To improve load time, meshtastic proto files are simply
 loaded as `*.lisp` source files, which doesn't seem to impact performance at
 runtime (in this use case).
 
-An animation is shown while loading the app, together with a counter (for older
-and slow mobile devices). For this to work, the app is loaded in the background
-(that is, in a separate thread).
+An hourglass animation is shown while loading the app. For this to work, the
+app is loaded in the background (that is, in a separate thread).
 
 You will see a json output of all data sent/received. It simply uses the
 `print-json` convenience function from cl-protobufs.
@@ -58,6 +57,9 @@ Tested on Linux, macOS, Windows 10+, android, iOS, SailfishOS.
 The macOS version must be compiled first, moved to `/Applications/` and started
 from Finder (not the console), otherwise BLE permissions will not work (if run
 from console, the app will show a BLE exception and consume 100% CPU).
+
+The iOS version also runs on older devices, like the iPod Touch, as long as
+they are 64 bit and run at least iOS 12.
 
 
 
