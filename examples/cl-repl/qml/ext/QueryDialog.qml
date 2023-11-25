@@ -35,8 +35,6 @@ Popup {
           Lisp.call("dialogs:exited")
           Lisp.call("editor:ensure-output-visible")
         }
-
-        onTextChanged: if (length === 0) main.ensureOutputVisible() // hack (see 'dialogs.lisp')
       }
 
       Text {

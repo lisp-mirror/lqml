@@ -38,12 +38,12 @@
   (qrun*
    (unless (x:empty-string query)
      (q> |text| ui:*query-text* (string-trim '(#\Newline) query)))
-   (q> |text| ui:*query-input* " ")                             ; hack 1 (see 'QueryDialog.qml')
+   (q! |clear| ui:*query-input*)
    (wait-while-transition)
    (push-dialog :query)
    (q! |forceActiveFocus| ui:*query-input*)
    (q! |showKeyboard| ui:*main* t) ; needed on recursive calls
-   (qsingle-shot 250 (lambda () (q! |clear| ui:*query-input*))) ; hack 2 (see 'QueryDialog.qml')
+   (qsingle-shot 500 (lambda () (q! |positionViewAtEnd| ui:*output*)))
    (wait-for-closed)
    (qlater (lambda () (editor:ensure-focus :show)))
    (q< |text| ui:*query-input*)))
