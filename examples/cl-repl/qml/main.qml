@@ -23,10 +23,11 @@ StackView {
     return (h === 0) ? main.height : h
   }
 
-  function divideHeight(factor) { return (availableHeight() - rectCommand.height) * factor }
-  function isLandscape()        { return (Screen.primaryOrientation === Qt.LandscapeOrientation) }
-  function keyboardVisible()    { return Qt.inputMethod.visible }
-  function showKeyboard(show)   { show ? Qt.inputMethod.show() : Qt.inputMethod.hide() }
+  function divideHeight(factor)  { return (availableHeight() - rectCommand.height) * factor }
+  function isLandscape()         { return (Screen.primaryOrientation === Qt.LandscapeOrientation) }
+  function keyboardVisible()     { return Qt.inputMethod.visible }
+  function showKeyboard(show)    { show ? Qt.inputMethod.show() : Qt.inputMethod.hide() }
+  function ensureOutputVisible() { output.positionViewAtEnd() }
 
   // show/hide dialogs
 
