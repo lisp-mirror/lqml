@@ -123,3 +123,9 @@ Closing the window quits the app. If you try to kill it with `ctrl-c`, you need
 an additional `ctrl-d` to exit from ECL. To quit from Slime, do `(qq)` which is
 short for `(qquit)`.
 
+
+Hardware example
+----------------
+
+See [radio](hardware/radio.htm) for a simple radio example and some basics you
+should know about antennas.
