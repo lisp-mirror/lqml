@@ -21,4 +21,4 @@ HowTo
 Just copy `QtActivity.java` to path in `path.txt` (for Qt 5.15);
 alternatively apply patch `diff.java`.
 
-See also [cpp/qt.cpp](../cpp/qt.cpp).
+See also [cpp/qt.cpp](../../cpp/qt.cpp).

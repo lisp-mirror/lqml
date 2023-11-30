@@ -51,6 +51,12 @@ Rectangle {
     }
 
     function addRadio(radio) {
+      // prevent multiple entries on device discovery problems
+      for (var i = 0; i < count; i++) {
+        if (get(i).name === radio.name) {
+          return
+        }
+      }
       append(radio)
       if (radio.current) {
         view.currentIndex = view.count - 1
