@@ -7,8 +7,8 @@ import 'ext/dialogs' as Dlg
 StackView {
   id: main
   objectName: "main"
-  width: Screen.desktopAvailableWidth
-  height: Screen.desktopAvailableHeight
+  width: 800  // alternatively: Screen.desktopAvailableWidth
+  height: 600 // alternatively: Screen.desktopAvailableHeight
   initialItem: mainRect
   Screen.orientationUpdateMask: Qt.LandscapeOrientation | Qt.PortraitOrientation | Qt.InvertedLandscapeOrientation
 

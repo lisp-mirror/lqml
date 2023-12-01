@@ -47,7 +47,9 @@ macx:  LIBS += -L../../../platforms/macos/lib
 win32: LIBS += -L../../../platforms/windows/lib
 
 win32 {
-  LIBS += -lws2_32
+  LIBS     += -lws2_32
+  RC_ICONS = ../platforms/windows/icon.ico
+
 
   include(../../src/windows.pri)
 }
