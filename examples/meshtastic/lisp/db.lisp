@@ -38,7 +38,7 @@
          mid)
   (values))
 
-(defun export-to-list ()
+(defun export-to-list () ; see QML
   "Exports db to a LIST and saves it as 'db.exp'."
   (with-standard-io-syntax
     (with-open-file (s (app:in-data-path "db.exp")
@@ -51,7 +51,7 @@
                  (text (babel:octets-to-string
                         (qto-utf8 (getf plist :text)))))
             (setf (getf plist :text) text
-                  (third row)       plist))
+                  (third row)        plist))
           (print row s)))
       (terpri s)
       (write-char #\) s)))

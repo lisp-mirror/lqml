@@ -115,7 +115,6 @@ QVariant QT::iniDb(const QVariant& name) {
 }
 
 QVariant QT::sqlQuery(const QVariant& vQuery, const QVariant& vValues, const QVariant& vRows) {
-  // very simple, we don't need more
   QVariantList results;
   QSqlQuery query(db);
   if (db.open()) {
@@ -132,8 +131,7 @@ QVariant QT::sqlQuery(const QVariant& vQuery, const QVariant& vValues, const QVa
           for (auto r = 0; r < rows; r++) {
             list << query.value(r);
           }
-          // 'push_back()' will append the list (instead of single values)
-          results.push_back(list);
+          results << QVariant(list);
         } else {
           results << query.value(0);
         }
