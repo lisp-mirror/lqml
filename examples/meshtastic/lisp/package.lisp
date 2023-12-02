@@ -73,9 +73,10 @@
    #:set-unread))
 
 (defpackage :db
-  (:use :cl)
+  (:use :cl :qml)
   (:export
    #:delete-message
+   #:export-to-list
    #:ini
    #:load-message
    #:load-messages

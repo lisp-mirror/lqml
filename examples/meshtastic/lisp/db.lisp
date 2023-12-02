@@ -3,7 +3,9 @@
 (defvar *file* nil)
 
 (defun query (query &rest values)
-  (qt:sql-query qt:*cpp* query values))
+  (let ((rows (and (x:starts-with "select" query)
+                   (1+ (count #\, (subseq query 0 (search "from" query)))))))
+    (qrun* (qt:sql-query qt:*cpp* query values rows))))
 
 (defun ini ()
   (setf *file* (app:in-data-path "db"))
@@ -36,3 +38,21 @@
          mid)
   (values))
 
+(defun export-to-list ()
+  "Exports db to a LIST and saves it as 'db.exp'."
+  (with-standard-io-syntax
+    (with-open-file (s (app:in-data-path "db.exp")
+                       :direction :output :if-exists :supersede)
+      (write-char #\( s)
+      (let ((rows (query "select mid, uid, message from messages order by mid")))
+        (dolist (row rows)
+          (let* ((plist (read-from-string (third row)))
+                 ;; Lisp and Qt utf-8 differ
+                 (text (babel:octets-to-string
+                        (qto-utf8 (getf plist :text)))))
+            (setf (getf plist :text) text
+                  (third row)       plist))
+          (print row s)))
+      (terpri s)
+      (write-char #\) s)))
+  (values))

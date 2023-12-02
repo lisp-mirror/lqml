@@ -40,6 +40,11 @@ Item {
     }
 
     Ext.MenuItem {
+      text: qsTr("Export DB (Lisp)")
+      onTriggered: Lisp.call("db:export-to-list")
+    }
+
+    Ext.MenuItem {
       text: qsTr("Make backup")
       onTriggered: Lisp.call("app:make-backup")
       enabled: !mobile

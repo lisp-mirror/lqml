@@ -31,7 +31,7 @@ public:
 
   // SQLite
   Q_INVOKABLE QVariant iniDb(const QVariant&);
-  Q_INVOKABLE QVariant sqlQuery(const QVariant&, const QVariant&);
+  Q_INVOKABLE QVariant sqlQuery(const QVariant&, const QVariant&, const QVariant&);
 
   // etc
   Q_INVOKABLE QVariant dataPath(const QVariant&);

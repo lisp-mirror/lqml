@@ -60,9 +60,8 @@
   (show-messages))
 
 (defun check-utf8-length (&optional (text (q< |text| ui:*edit*))) ; see QML
-  "Checks the actual number of bytes to send (e.g. an emoji is 4 utf8 bytes),
-  because we can't exceed 234 bytes, which will give 312 bytes encoded protobuf
-  payload."
+  "Checks the actual number of bytes to send (e.g. a typical emoji is 4 utf8
+  bytes), because we can't exceed 234 bytes."
   (let ((len (length (qto-utf8 text)))
         (too-long (q< |tooLong| ui:*edit*)))
     (cond ((and (not too-long)
