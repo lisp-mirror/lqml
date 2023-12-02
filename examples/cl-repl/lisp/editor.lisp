@@ -759,7 +759,8 @@
 
 (defvar *history*       (make-array 0 :adjustable t :fill-pointer t))
 (defvar *history-index* nil)
-(defvar *history-file*  (merge-pathnames ".repl-history" (user-homedir-pathname)))
+(defvar *history-file*  #+(or android ios) ".repl-history"
+                        #-(or android ios) (merge-pathnames ".cl-repl-history" (user-homedir-pathname)))
 (defvar *max-history*   100)
 
 (defun read-saved-history ()
