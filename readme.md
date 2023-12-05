@@ -83,6 +83,9 @@ developing for mobile.)*
 Known issues
 ------------
 
+* to make Qt5.15.2 work with **Xcode 15**, see patch
+  [here](platforms/macos/patch/howto-toolchain.prf.txt)
+
 * on **iOS**, functions `read-sequence`, `read-char` etc. don't update
   `file-position` (ECL bug?); for a workaround see hack
   [here](examples/cl-repl/lisp/upload-download.lisp)

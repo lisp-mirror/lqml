@@ -117,7 +117,7 @@
     (later forms)))
 
 (defun %make-byte-vector (list)
-  ;; for internal use (called from marshal.cpp')
+  ;; for internal use (called from 'marshal.cpp')
   (make-array (length list) :element-type '(unsigned-byte 8) :initial-contents list))
 
 (defun %break (&rest args)
