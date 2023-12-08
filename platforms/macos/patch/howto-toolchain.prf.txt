@@ -1,8 +1,13 @@
-Patch to make Qt5.15 work with Xcode 15
----------------------------------------
+Patch to make Qt5.15/ECL work with Xcode 15
+-------------------------------------------
 
 * copy 'toolchain.prf' from '~/lqml/platforms/macos/patch/' to:
+
   ~/Qt/5.15.2/clang_64/mkspecs/features/
   ~/Qt/5.15.2/ios/mkspecs/features/
 
 * delete 'Makefile' and '.qmake.stash' of all apps
+
+* copy libecl.dylib under Frameworks:
+
+  $ sudo cp /usr/local/lib/libecl.23.9.dylib /usr/local/Frameworks/
