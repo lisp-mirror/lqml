@@ -180,7 +180,7 @@
 (defun timestamp-to-hour (&optional (secs (get-universal-time)))
   (multiple-value-bind (_ m h)
       (decode-universal-time secs)
-    (format nil "~D:~2,'0D" h m)))
+    (format nil "~2,'0D:~2,'0D" h m)))
 
 (defun set-gps-position (node pos)
   (flet ((to-float (i)

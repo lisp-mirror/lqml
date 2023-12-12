@@ -62,8 +62,8 @@
                                             #+msvc "lib"
                                             #-msvc "a"))
              #+mobile (cc *library-path* "app--all-systems.a"))
-       (to   #+msvc "app.lib"
-             #-msvc "libapp.a")
+       (to   #-msvc "libapp.a"
+             #+msvc "app.lib")
        (to*  #-mobile (cc *current* "build/tmp/" to)
              #+mobile (cc *library-path* to)))
   (when (probe-file to*)
