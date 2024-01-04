@@ -34,6 +34,7 @@ Rectangle {
     id: view
     objectName: "group_view"
     anchors.topMargin: rowModem.height
+    anchors.bottomMargin: channel.height
     anchors.fill: parent
     anchors.margins: 9
     spacing: 9
@@ -41,6 +42,24 @@ Rectangle {
     delegate: groupDelegate
     model: group
     currentIndex: -1
+  }
+
+  Rectangle {
+    id: channel
+    anchors.bottom: parent.bottom
+    width: parent.width
+    height: 28
+    color: "#555"
+
+    Text {
+      objectName: "channel_name"
+      anchors.centerIn: parent
+      font.pixelSize: 16
+      font.family: fontText.name
+      font.weight: Font.DemiBold
+      color: rect.color
+      text: "cl-app"
+    }
   }
 
   ListModel {

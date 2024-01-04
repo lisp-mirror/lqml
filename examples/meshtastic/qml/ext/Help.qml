@@ -52,14 +52,16 @@ In the rare case your radio is not found, you may restart device discovery by a 
 <br>Group
 </h3>
 <p>
-Here you see the list of all persons. Every person is associated to a radio. This view is populated automatically.
+Here you can see the list of all radios using your same channel name. Every radio represents a person. This view is populated automatically.
 </p>
 <p>
 Choose 'Broadcast' (on top) to send a message to every person in the group.
 </p>
 <p>
-You can set a name to every person associated to a radio, which defaults to
-'Anonym': a press-and-hold on the name will enter edit mode.
+You can set a name to every radio/person listed here, which defaults to 'Anonym': a press-and-hold on the name will enter edit mode.
+</p>
+<p>
+In the main menu you can change your channel name (which defaults to 'cl-app'). Only radios which share the same channel name are able to exchange messages.
 </p>
 <p>
 A tap on the location item on the right shows a map with all known positions of the persons. The map is cached automatically for offline usage, which means: once you visited a place on the map, it will remain available even without internet connection.

@@ -3,18 +3,21 @@
 (defvar *settings* (list :region :eu-868
                          :modem-preset :long-fast))
 
-(defvar *my-channel-name* "cl-app") ; max 12 bytes
-(defvar *my-channel*      nil)
-(defvar *channels*        nil)
-(defvar *my-node-info*    nil)
-(defvar *node-infos*      nil)
-(defvar *receiver*        nil)
-(defvar *config-lora*     nil)
-(defvar *ble-names*       nil)
-(defvar *print-json*      t)
+(defvar *channel-name* nil)
+(defvar *my-channel*   nil)
+(defvar *channels*     nil)
+(defvar *my-node-info* nil)
+(defvar *node-infos*   nil)
+(defvar *receiver*     nil)
+(defvar *config-lora*  nil)
+(defvar *ble-names*    nil)
+(defvar *print-json*   t)
 
 (defun ini ()
-  (setf *receiver* (app:setting :latest-receiver)))
+  (setf *receiver*     (app:setting :latest-receiver)
+        *channel-name* (or (app:setting :channel-name)
+                           "cl-app"))
+  (q> |text| ui:*channel-name* *channel-name*))
 
 ;;; header
 
@@ -213,9 +216,9 @@
                         (if (x:starts-with ":e" text) ; 'echo'
                             (progn
                               (setf echo-text (subseq text #.(length ":e")))
-                              (qsingle-shot 1000 (lambda () (send-message (x:cc "<b>echo:</b>" echo-text)))))
+                              (qsingle-shot 1000 (lambda () (send-message (x:cc "<b>:e</b>" echo-text)))))
                             (progn
-                              (when (x:starts-with "<b>echo:</b>" text)
+                              (when (x:starts-with "<b>:e</b>" text)
                                 (setf text (msg:echo-message text (me:from packet) (me:rx-snr packet) (me:rx-rssi packet))))
                               (msg:add-message
                                (list :receiver (my-name)
@@ -291,7 +294,7 @@
                (setf *config-complete* t)
                (q> |playing| ui:*busy* nil)
                (qlog "config-complete id: ~A" *config-id*)
-               (unless (string= *my-channel-name*
+               (unless (string= *channel-name*
                                 (me:name (me:settings *my-channel*)))
                  (qlater 'config-device))))))
     (setf *received* nil)))
@@ -347,7 +350,7 @@
   ;; channel settings for direct messages
   (set-channel (me:make-channel
                 :settings (me:make-channel-settings
-                           :name *my-channel-name*
+                           :name *channel-name*
                            :psk (to-bytes (list 1))) ; encrypted with fixed (known) key
                 :role :primary))
   (change-lora-config))
@@ -396,6 +399,25 @@
   (msg:receiver-changed)
   (group:receiver-changed)
   (values))
+
+(defun edit-channel-name () ; see QML
+  (if *config-complete*
+      (app:input-dialog
+       (tr "Channel name:") 'channel-name-changed
+       :title (tr "Name")
+       :text *channel-name*
+       :max-length #.(float 12))
+      (app:message-dialog (tr "Radio not ready yet."))))
+
+(defun channel-name-changed (ok)
+  (when ok
+    (let ((name (q< |text| ui:*dialog-line-edit*)))
+      (when (and (not (x:empty-string name))
+                 (string/= name *channel-name*))
+        (setf *channel-name* name)
+        (q> |text| ui:*channel-name* *channel-name*)
+        (app:change-setting :channel-name name)
+        (config-device)))))
 
 (defun keywords (name)
   (pr:enum-keywords (ecase name

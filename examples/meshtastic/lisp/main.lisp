@@ -123,10 +123,17 @@
 (defun message-dialog (text)
   (qjs |message| ui:*dialogs* text))
 
-(defun confirm-dialog (title text callback &key from to value)
+(defun confirm-dialog (text callback)
   (qjs |confirm| ui:*dialogs*
-       title text (x:callback-name callback)
-       from to value)) ; for (optional) SpinBox
+       text (x:callback-name callback)))
+
+(defun input-dialog (label callback &key (title "")
+                     text (max-length #.(float 32767))
+                     from to value)
+  (qjs |input| ui:*dialogs*
+       title label (x:callback-name callback)
+       text max-length ; string (line edit)
+       from to value)) ; integer (spin box)
 
 ;;; backup/restore all app data
 

@@ -6,9 +6,6 @@ Dialog {
   standardButtons: Dialog.Ok | Dialog.Cancel
 
   property alias text: message.text
-  property alias from: spinBox.from
-  property alias to: spinBox.to
-  property alias value: spinBox.value
   property string callback
 
   Column {
@@ -19,14 +16,6 @@ Dialog {
       id: message
       width: parent.width
       wrapMode: Text.Wrap
-      visible: (text !== "")
-    }
-
-    SpinBox {
-      id: spinBox
-      objectName: "dialog_spin_box"
-      anchors.horizontalCenter: parent.horizontalCenter
-      visible: !!value
     }
   }
 

@@ -23,7 +23,7 @@ Item {
     loader.item.open()
   }
 
-  function confirm(title, text, callback, from, to, value) {
+  function confirm(text, callback) {
     loader.active = false // force reload
     if (rootItem.mobile) {
       loader.source = "ConfirmMobile.qml"
@@ -31,9 +31,25 @@ Item {
       loader.source = "Confirm.qml"
     }
     loader.active = true
-    loader.item.title = title
     loader.item.text = text
     loader.item.callback = callback
+    rootItem.showKeyboard(false)
+    loader.item.open()
+  }
+
+  function input(title, label, callback, text, maxLength, from, to, value) {
+    loader.active = false // force reload
+    if (rootItem.mobile) {
+      loader.source = "InputMobile.qml"
+    } else {
+      loader.source = "Input.qml"
+    }
+    loader.active = true
+    loader.item.title = title
+    loader.item.label = label
+    loader.item.callback = callback
+    loader.item.text = text
+    loader.item.maxLength = maxLength
     loader.item.from = from
     loader.item.to = to
     loader.item.value = value

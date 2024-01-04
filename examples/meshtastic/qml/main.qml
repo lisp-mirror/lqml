@@ -23,20 +23,32 @@ Item {
 
   Menu {
     id: menu
+    objectName: "menu"
+
+    function show() { popup(0, headerHeight) }
 
     Ext.MenuItem {
+      objectName: "help"
       text: qsTr("Help")
       onTriggered: help.active ? help.item.enabled = !help.item.enabled : help.active = true
     }
 
     Ext.MenuItem {
+      text: qsTr("Channel name...")
+      onTriggered: Lisp.call("lora:edit-channel-name")
+      enabled: (view.currentIndex === 0)
+    }
+
+    Ext.MenuItem {
       text: qsTr("Message font size...")
       onTriggered: Lisp.call("msg:font-size-dialog")
+      enabled: (view.currentIndex === 1)
     }
 
     Ext.MenuItem {
       text: qsTr("Update group/nodes")
       onTriggered: Lisp.call("lora:get-node-config")
+      enabled: (view.currentIndex === 0)
     }
 
     Ext.MenuItem {
@@ -60,7 +72,7 @@ Item {
 
     MouseArea {
       anchors.fill: parent
-      onClicked: menu.popup(0, headerHeight)
+      onClicked: menu.show()
     }
   }
 

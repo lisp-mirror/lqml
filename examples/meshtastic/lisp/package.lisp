@@ -8,6 +8,7 @@
    #:icon-press-and-hold
    #:in-data-path
    #:ini
+   #:input-dialog
    #:load-settings
    #:message-dialog
    #:make-backup
@@ -30,6 +31,7 @@
    #:+broadcast-id+
    #:*broadcast-name*
    #:*channel*
+   #:*channel-name*
    #:*channels*
    #:*config-complete*
    #:*config-lora*
@@ -48,6 +50,7 @@
    #:change-region
    #:change-modem-preset
    #:channel-to-url
+   #:edit-channel-name
    #:get-node-config
    #:ini
    #:keywords
