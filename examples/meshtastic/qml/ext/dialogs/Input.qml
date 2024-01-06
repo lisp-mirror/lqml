@@ -13,6 +13,8 @@ Dialog {
   property alias value: spinBox.value
   property string callback
 
+  function focus() { edit.forceActiveFocus() }
+
   Column {
     width: parent.width
     spacing: 5

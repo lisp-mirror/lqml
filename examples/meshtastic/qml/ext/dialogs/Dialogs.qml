@@ -53,7 +53,9 @@ Item {
     loader.item.from = from
     loader.item.to = to
     loader.item.value = value
-    rootItem.showKeyboard(false)
+    var keyboard = (text !== "")
+    rootItem.showKeyboard(keyboard)
     loader.item.open()
+    if (keyboard) loader.item.focus()
   }
 }

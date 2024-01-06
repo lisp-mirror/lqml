@@ -6,6 +6,7 @@
 # hack to not include Qt Widgets on mobile (not used)
 rm -f android-build/libs/arm64-v8a/libQt5Widgets_arm64-v8a.so
 mv ../qml/ext/dialogs/Confirm.qml ../qml/ext/dialogs/.Confirm.qml
+mv ../qml/ext/dialogs/Input.qml   ../qml/ext/dialogs/.Input.qml
 mv ../qml/ext/dialogs/Message.qml ../qml/ext/dialogs/.Message.qml
 
 ~/Qt/5.15.2/android/bin/androiddeployqt \
@@ -16,4 +17,5 @@ mv ../qml/ext/dialogs/Message.qml ../qml/ext/dialogs/.Message.qml
 
 # restore
 mv ../qml/ext/dialogs/.Confirm.qml ../qml/ext/dialogs/Confirm.qml
+mv ../qml/ext/dialogs/.Input.qml   ../qml/ext/dialogs/Input.qml
 mv ../qml/ext/dialogs/.Message.qml ../qml/ext/dialogs/Message.qml

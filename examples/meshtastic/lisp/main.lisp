@@ -128,7 +128,7 @@
        text (x:callback-name callback)))
 
 (defun input-dialog (label callback &key (title "")
-                     text (max-length #.(float 32767))
+                     (text "") (max-length #.(float 32767))
                      from to value)
   (qjs |input| ui:*dialogs*
        title label (x:callback-name callback)
