@@ -2,10 +2,11 @@
 Info
 ----
 
-Please note that this is WIP/experimental.
+An APK (android) can be found here:
+[meshtastic.apk](https://www.dropbox.com/scl/fi/bch0bay4ztk1a1j77nwqf/meshtastic.apk?rlkey=lkjbrz41760u54qaexkd1xz68&dl=0)
 
-The app can either send direct messages between the radios, or broadcast
-messages (received by all radios).
+This simple app can either send direct messages between the radios, or
+broadcast messages (received by all radios).
 
 It's basically meant to be used in an emergency situation, where internet is
 not available, in order to communicate with short text messages. This kind of
