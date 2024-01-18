@@ -40,15 +40,21 @@ Item {
     }
 
     Ext.MenuItem {
+      text: qsTr("Update group/nodes")
+      onTriggered: Lisp.call("lora:get-node-config")
+      enabled: (view.currentIndex === 0)
+    }
+
+    Ext.MenuItem {
       text: qsTr("Message font size...")
       onTriggered: Lisp.call("msg:font-size-dialog")
       enabled: (view.currentIndex === 1)
     }
 
     Ext.MenuItem {
-      text: qsTr("Update group/nodes")
-      onTriggered: Lisp.call("lora:get-node-config")
-      enabled: (view.currentIndex === 0)
+      text: qsTr("Device filter...")
+      onTriggered: Lisp.call("lora:edit-device-filter")
+      enabled: (view.currentIndex === 2)
     }
 
     Ext.MenuItem {

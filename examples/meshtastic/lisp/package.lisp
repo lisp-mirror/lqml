@@ -51,6 +51,7 @@
    #:change-modem-preset
    #:channel-to-url
    #:edit-channel-name
+   #:edit-device-filter
    #:get-node-config
    #:ini
    #:keywords

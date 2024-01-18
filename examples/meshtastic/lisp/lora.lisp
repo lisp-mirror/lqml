@@ -419,6 +419,18 @@
         (app:change-setting :channel-name name)
         (config-device)))))
 
+(defun edit-device-filter () ; see QML
+  (app:input-dialog
+   (tr "Device filter:") 'device-filter-changed
+   :title (tr "Filter")
+   :text (or (app:setting :device-filter) "meshtastic")))
+
+(defun device-filter-changed (ok)
+  (when ok
+    (let ((name (q< |text| ui:*dialog-line-edit*)))
+      (qt:set-device-filter qt:*cpp* name)
+      (app:change-setting :device-filter name))))
+
 (defun keywords (name)
   (pr:enum-keywords (ecase name
                       (:modem-preset

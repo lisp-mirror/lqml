@@ -48,6 +48,7 @@ QVariant QT::startDeviceDiscovery(const QVariant& vName) {
 
 QVariant QT::setDeviceFilter(const QVariant& vName) {
   ble->nameFilter = vName.toString();
+  return vName;
 }
 
 QVariant QT::shortNames() {
