@@ -26,7 +26,7 @@ BLE_ME::BLE_ME() : BLE(uuid_service) {
 }
 
 bool BLE_ME::deviceFilter(const QBluetoothDeviceInfo& info) {
-  return info.name().contains("meshtastic", Qt::CaseInsensitive) &&
+  return info.name().contains(nameFilter, Qt::CaseInsensitive) &&
          (info.coreConfigurations() & QBluetoothDeviceInfo::LowEnergyCoreConfiguration);
 }
 

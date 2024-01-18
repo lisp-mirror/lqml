@@ -10,17 +10,21 @@ where we don't need all the special features, just basic communication.
 You can send both direct and broadcast messages to any device which is within
 the range of your mesh network.
 
-Starting this app will automatically do a basic setup of your radio, so no
-additional setup is needed.
+Starting this app will automatically ensure a basic setup of your radio, with
+the default primary channel settings of the official app, so you can
+communicate with users of the official apps. The radio may reboot after first
+app startup.
 
 
 Initial setup
 -------------
 
-Every person which you want to communicate with will need to start the app once
-for the initial (automatic) setup. The radio device will then reboot, and is
-ready for communication with all the persons who also use this app (and which
-radios can be reached through the mesh network).
+After the initial (automatic) setup, the app is ready for communication with
+all the persons who either use this app, or the official meshtastic apps with
+the default primary channel settings.
+
+If you want to communicate with users using the official apps, make sure your
+channel name is set to "LongFast" (see main menu / 'Channel name...').
 
 
 3 main views

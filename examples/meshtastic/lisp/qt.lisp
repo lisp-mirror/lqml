@@ -12,6 +12,7 @@
    #:local-ip
    #:start-device-discovery
    #:read*
+   #:set-device-filter
    #:short-names
    #:sql-query
    #:write*))

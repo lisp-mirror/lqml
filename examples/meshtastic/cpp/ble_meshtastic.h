@@ -20,6 +20,7 @@ public:
   QLowEnergyCharacteristic fromNum;
   QLowEnergyCharacteristic toRadio;
 
+  QString nameFilter = QStringLiteral("meshtastic");
   QLowEnergyDescriptor notifications;
 
   bool deviceFilter(const QBluetoothDeviceInfo&) override;

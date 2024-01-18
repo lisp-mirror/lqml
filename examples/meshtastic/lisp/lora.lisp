@@ -16,7 +16,7 @@
 (defun ini ()
   (setf *receiver*     (app:setting :latest-receiver)
         *channel-name* (or (app:setting :channel-name)
-                           "cl-app"))
+                           "LongFast"))
   (q> |text| ui:*channel-name* *channel-name*))
 
 ;;; header
