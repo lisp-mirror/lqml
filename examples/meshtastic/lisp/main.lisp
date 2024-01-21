@@ -116,7 +116,7 @@
 (defun toast (message &optional (seconds 3))
   "Shows a temporary message/notification. If the passed time is 0 seconds, the
   message will be shown until the user taps on the message."
-  (qjs |message| ui:*toast* message seconds))
+  (qjs |message| ui:*toast* message (float seconds)))
 
 ;;; dialogs
 

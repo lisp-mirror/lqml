@@ -59,7 +59,7 @@ The macOS version must be compiled first, moved to `/Applications/` and started
 from Finder (not the console), otherwise BLE permissions will not work (if run
 from console, the app will show a BLE exception and consume 100% CPU).
 
-The iOS version also runs on older devices, like the iPod Touch, as long as
+The iOS version also runs on older devices, like the 'iPod touch', as long as
 they are 64 bit and run at least iOS 12.
 
 
