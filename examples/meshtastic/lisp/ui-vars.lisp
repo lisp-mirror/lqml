@@ -34,6 +34,7 @@
    #:*recent-emojis*
    #:*region*
    #:*remove-marker*
+   #:*share-location*
    #:*toast*
    #:*unread-messages*))
 
@@ -70,6 +71,7 @@
 (defparameter *recent-emojis*     "recent_emojis")
 (defparameter *region*            "region")
 (defparameter *remove-marker*     "remove_marker")
+(defparameter *share-location*    "share_location")
 (defparameter *toast*             "toast")
 (defparameter *unread-messages*   "unread_messages")
 

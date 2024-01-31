@@ -7,10 +7,14 @@
   "Position of map center for manual position selection (no GPS).")
 
 (defun ini ()
+  (x:when-it (app:setting :share-location)
+    (q> |checked| ui:*share-location* t))
   #+android       (qt:ini-positioning qt:*cpp*)
   #+(or ios sfos) (q> |active| ui:*position-source* t)
   (x:if-it (app:setting :selected-position)
-           (setf *my-position* x:it)
+           (progn
+             (setf *my-position* x:it)
+             (send-to-radio))
            #+(or android ios sfos) (update-my-position)))
 
 (defun latest-gps-position ()
@@ -21,11 +25,17 @@
       (setf (third pos) (parse-integer time))) ; see QML
     pos))
 
+(defun set-share-location (share)
+  (app:change-setting :share-location share)
+  (when share
+    (send-to-radio)))
+
 #+(or android ios sfos)
 (defun update-my-position (&optional (sec 60)) ; try for 1 min
   "If no manual position is set, update position from GPS of mobile device."
   ;; see also Timer in 'qml/ext/Radios.qml'
-  (unless (app:setting :selected-position)
+  (when (and (app:setting :share-location)
+             (not (app:setting :selected-position)))
     (destructuring-bind (lat lon time)
         (latest-gps-position)
       (if (zerop lat)
@@ -37,9 +47,10 @@
             (send-to-radio))))))
 
 (defun send-to-radio ()
-  (if lora:*config-complete*
-      (lora:send-position *my-position*)
-      (qsingle-shot 1000 'send-to-radio)))
+  (when (app:setting :share-location)
+    (if lora:*config-complete*
+        (lora:send-position *my-position*)
+        (qsingle-shot (* 15 1000) 'send-to-radio))))
 
 (defun position* (node)
   (when node

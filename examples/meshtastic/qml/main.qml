@@ -21,7 +21,7 @@ Item {
 
   Ext.MainView { id: view }
 
-  Menu {
+  Ext.Menu {
     id: menu
     objectName: "menu"
 
@@ -50,6 +50,17 @@ Item {
       onTriggered: Lisp.call("msg:font-size-dialog")
       enabled: (view.currentIndex === 1)
     }
+
+    MenuSeparator {}
+
+    Ext.MenuItem {
+      objectName: "share_location"
+      text: qsTr("Share location")
+      checkable: true
+      onTriggered: Lisp.call("loc:set-share-location", checked)
+    }
+
+    MenuSeparator {}
 
     Ext.MenuItem {
       text: qsTr("Device filter...")
