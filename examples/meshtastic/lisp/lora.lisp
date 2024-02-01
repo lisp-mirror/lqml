@@ -194,7 +194,7 @@
                                    :alt (me:altitude pos)
                                    :time (me:time pos))))))
 
-(let (echo-text)
+(let (echo-text echo-receiver)
   (defun process-received ()
     "Walks *RECEIVED* FROM-RADIOs and saves relevant data."
     (setf *received* (nreverse *received*))
@@ -215,8 +215,11 @@
                         (setf msg:*message-id* (max mid msg:*message-id*))
                         (if (x:starts-with ":e" text) ; 'echo'
                             (progn
-                              (setf echo-text (subseq text #.(length ":e")))
-                              (qsingle-shot 1000 (lambda () (send-message (x:cc "<b>:e</b>" echo-text)))))
+                              (setf echo-text     (subseq text #.(length ":e"))
+                                    echo-receiver (me:from packet))
+                              (qsingle-shot 1000 (lambda ()
+                                                   (let ((*receiver* echo-receiver))
+                                                     (send-message (x:cc "<b>:e</b>" echo-text))))))
                             (progn
                               (when (x:starts-with "<b>:e</b>" text)
                                 (setf text (msg:echo-message text (me:from packet) (me:rx-snr packet) (me:rx-rssi packet))))
