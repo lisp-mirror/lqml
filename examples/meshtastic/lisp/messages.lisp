@@ -31,8 +31,9 @@
         (qjs |addMessage| ui:*messages* message)
         (let* ((sender (getf message :sender))
                (unread (1+ (or (app:setting sender :unread-messages) 0))))
-          (app:change-setting sender unread :sub-key :unread-messages)
-          (group:set-unread sender unread)))
+          (unless (x:starts-with "<b>:e" (getf message :text)) ; 'echo' message
+            (app:change-setting sender unread :sub-key :unread-messages)
+            (group:set-unread sender unread))))
     (unless loading
       (q! |positionViewAtEnd| ui:*message-view*))))
 
