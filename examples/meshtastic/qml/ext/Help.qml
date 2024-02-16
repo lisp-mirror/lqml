@@ -45,7 +45,10 @@ Rectangle {
 If you use more than 1 radio, switch here to the radio you want to use.
 </p>
 <p>
-In the rare case your radio is not found, you may restart device discovery by a press-and-hold on the radio icon. If it still isn't found, you may try to unpair the radio from any device you paired it previously, and repeat the press-and-hold on the radio icon.
+In the rare case your radio is not found, you may restart device discovery by a press-and-hold on the radio icon.
+</p>
+<p>
+<i>N.B: If you previously used a radio with the official app, you'll need to set the radio to 'None (disabled)' in the official app first, otherwise it will not show up in this app.</i>
 </p>
 <h3>
 <img src='../img/group.png' width=60 height=60>
