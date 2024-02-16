@@ -1,0 +1,13 @@
+diff --git a/QtBluetoothLE.java.orig b/QtBluetoothLE.java
+--- a/QtBluetoothLE.java.orig
++++ b/QtBluetoothLE.java
+@@ -215,7 +215,8 @@ public class QtBluetoothLE {
+         if (isEnabled) {
+             Log.d(TAG, "New BTLE scanning API");
+             ScanSettings.Builder settingsBuilder = new ScanSettings.Builder();
+-            settingsBuilder = settingsBuilder.setScanMode(ScanSettings.SCAN_MODE_BALANCED);
++            //settingsBuilder = settingsBuilder.setScanMode(ScanSettings.SCAN_MODE_BALANCED);
++            settingsBuilder = settingsBuilder.setScanMode(ScanSettings.SCAN_MODE_LOW_LATENCY); // hack for 'meshtastic'
+             ScanSettings settings = settingsBuilder.build();
+ 
+             List<ScanFilter> filterList = new ArrayList<ScanFilter>(2);
