@@ -62,7 +62,7 @@ Choose 'Broadcast' (on top) to send a message to every person in the group.
 You can set a name to every radio/person listed here, which defaults to 'Anonym': a press-and-hold on the name will enter edit mode.
 </p>
 <p>
-In the main menu you can change your channel name (which defaults to 'cl-app'). Only radios which share the same channel name are able to exchange messages.
+In the main menu you can change your channel name (which defaults to 'LongFast'). Only radios which share the same channel name are able to exchange messages.
 </p>
 <p>
 A tap on the location item on the right shows a map with all known positions of the persons. The map is cached automatically for offline usage, which means: once you visited a place on the map, it will remain available even without internet connection.
