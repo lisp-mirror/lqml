@@ -47,9 +47,7 @@ If you use more than 1 radio, switch here to the radio you want to use.
 <p>
 In the rare case your radio is not found, you may restart device discovery by a press-and-hold on the radio icon.
 </p>
-<p>
-<i>N.B: If you previously used a radio with the official app, you'll need to set the radio to 'None (disabled)' in the official app first, otherwise it will not show up in this app.</i>
-</p>
+%1
 <h3>
 <img src='../img/group.png' width=60 height=60>
 <br>Group
@@ -125,7 +123,10 @@ Eventual backups are saved in above path under <code>backups/</code>. On the des
 </p>
 <p>
 To autmatically restore data from a backup on the desktop, put the backup files directly in above path (that is, under <code>.../cl-meshtastic/</code>) and restart the app. The data will be restored and the (obsolete) backup files will be deleted.
-</p>"
+</p>".arg((Qt.platform.os === "android")
+          ? "<p><i>N.B: If you previously used a radio with the official app, you'll need to set the radio to 'None (disabled)' in the official app first, otherwise it will not show up in this app.</i></p>"
+          : "")
+
     }
   }
 
