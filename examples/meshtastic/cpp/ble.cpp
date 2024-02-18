@@ -10,7 +10,7 @@
 
 BLE::BLE(const QBluetoothUuid& uuid) : mainServiceUuid(uuid) {
   discoveryAgent = new QBluetoothDeviceDiscoveryAgent();
-  discoveryAgent->setLowEnergyDiscoveryTimeout(5000);
+  discoveryAgent->setLowEnergyDiscoveryTimeout(1000); // assumes 'ScanSettings.SCAN_MODE_LOW_LATENCY', see '../hacks/'
 
   connect(discoveryAgent, &QBluetoothDeviceDiscoveryAgent::deviceDiscovered,
           this, &BLE::addDevice);
@@ -46,11 +46,13 @@ void BLE::deviceScanFinished() {
   }
   if (devices.isEmpty()) {
     qDebug() << "no BLE devices found";
+    discoveryAgent->setLowEnergyDiscoveryTimeout(3000);
+    QTimer::singleShot(0, this, &BLE::startDeviceDiscovery);
   } else {
     qDebug() << "device scan done";
+    discoveryAgent->setLowEnergyDiscoveryTimeout(1000); // reset to default
+    QTimer::singleShot(0, this, &BLE::scanServices);
   }
-
-  QTimer::singleShot(0, this, &BLE::scanServices);
 }
 
 void BLE::scanServices() {

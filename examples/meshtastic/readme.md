@@ -13,6 +13,12 @@ not available, in order to communicate with short text messages. This kind of
 mesh network is limited to about 70 nodes/radios/users to remain reliable.
 
 
+TODO
+----
+
+* add background BLE/notification for both android and iOS
+
+
 
 Technical notes
 ---------------

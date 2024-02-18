@@ -44,9 +44,6 @@ Rectangle {
 <p>
 If you use more than 1 radio, switch here to the radio you want to use.
 </p>
-<p>
-In the rare case your radio is not found, you may restart device discovery by a press-and-hold on the radio icon.
-</p>
 %1
 <h3>
 <img src='../img/group.png' width=60 height=60>

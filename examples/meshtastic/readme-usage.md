@@ -89,10 +89,6 @@ Initially, the list will contain gray items, so you can choose another radio
 if you experience that the connection didn't work, in case the selected radio
 is currently not available.
 
-In the rare case your radio is not found, you may restart device discovery by a
-press-and-hold on the radio icon. If it still isn't found, you may try to
-unpair the radio from any device you paired it previously.
-
 
 Unread messages
 ---------------
