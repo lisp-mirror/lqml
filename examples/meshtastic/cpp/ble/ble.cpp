@@ -19,7 +19,10 @@ BLE::BLE(const QBluetoothUuid& uuid) : mainServiceUuid(uuid) {
   connect(discoveryAgent, &QBluetoothDeviceDiscoveryAgent::finished, this, &BLE::deviceScanFinished);
 }
 
-void BLE::startDeviceDiscovery() {
+void BLE::startDeviceDiscovery(const QString& name) {
+  if (!name.isNull()) {
+    initialDeviceName = name;
+  }
   connected = false;
   scanned = false;
   currentDevice = QBluetoothDeviceInfo();
@@ -47,7 +50,7 @@ void BLE::deviceScanFinished() {
   if (devices.isEmpty()) {
     qDebug() << "no BLE devices found";
     discoveryAgent->setLowEnergyDiscoveryTimeout(3000);
-    QTimer::singleShot(0, this, &BLE::startDeviceDiscovery);
+    QTimer::singleShot(0, this, [&]() { startDeviceDiscovery(); });
   } else {
     qDebug() << "device scan done";
     discoveryAgent->setLowEnergyDiscoveryTimeout(1000); // reset to default

@@ -2,10 +2,9 @@
 #include <QMetaEnum>
 #include <QTimer>
 
-#ifdef PLUGIN
-  #include <ecl_fun_plugin.h>
-#else
-  #include <ecl_fun.h>
+#ifdef Q_OS_ANDROID
+  #include "../android_service/qtandroidservice_ro.h"
+  #include <QAndroidService>
 #endif
 
 // service
@@ -16,17 +15,17 @@ const UID BLE_ME::uuid_toRadio   = UID(STR("{f75c76d2-129e-4dad-a1dd-7866124401e
 const UID BLE_ME::uuid_fromRadio = UID(STR("{2c55e69e-4993-11ed-b878-0242ac120002}"));
 const UID BLE_ME::uuid_fromNum   = UID(STR("{ed9da18c-a800-4f66-a670-aa7547e34453}"));
 
-BLE_ME::BLE_ME() : BLE(uuid_service) {
+#ifdef Q_OS_ANDROID
+BLE_ME::BLE_ME(QtAndroidService* service) : BLE(uuid_service), emitter(service) {
+#else
+BLE_ME::BLE_ME() : BLE(uuid_service), emitter(this) {
+#endif
   connect(this, &BLE::mainServiceReady, this, &BLE_ME::ini);
   connect(this, &BLE::deviceDisconnecting, this, &BLE_ME::disconnecting);
-
-#ifdef PLUGIN
-  ini_lisp();
-#endif
 }
 
 bool BLE_ME::deviceFilter(const QBluetoothDeviceInfo& info) {
-  return info.name().contains(nameFilter, Qt::CaseInsensitive) &&
+  return info.name().contains(filter, Qt::CaseInsensitive) &&
          (info.coreConfigurations() & QBluetoothDeviceInfo::LowEnergyCoreConfiguration);
 }
 
@@ -92,23 +91,27 @@ void BLE_ME::searchCharacteristics() {
   }
 
   if (toRadio.isValid() && fromRadio.isValid() && fromNum.isValid()) {
-    ecl_fun("lora:set-ready", currentDevice.name().right(4));
+    QStringList names;
+    for (auto device : qAsConst(devices)) {
+      names << device.name().right(4);
+    }
+    emitter->setReady(true, currentDevice.name().right(4), names);
   }
 }
 
 void BLE_ME::characteristicChanged(const QLowEnergyCharacteristic&,
                                    const QByteArray& data) {
   if (!data.isEmpty()) {
-    ecl_fun("lora:received-from-radio", data, "notified");
+    emitter->receivedFromRadio(data, "notified");
   }
 }
 
 void BLE_ME::characteristicRead(const QLowEnergyCharacteristic&,
                                 const QByteArray& data) {
   if (data.isEmpty()) {
-    ecl_fun("lora:receiving-done");
+    emitter->receivingDone();
   } else {
-    ecl_fun("lora:received-from-radio", data);
+    emitter->receivedFromRadio(data, QString());
     QTimer::singleShot(0, this, &BLE_ME::read);
   }
 }
@@ -151,7 +154,7 @@ void BLE_ME::disconnecting() {
     // disable notifications
     mainService->writeDescriptor(notifications, QByteArray::fromHex("0000"));
   }
-  ecl_fun("lora:set-ready", "-", false);
+  emitter->setReady(false, QString(), QStringList());
   delete mainService; mainService = nullptr;
 }
 

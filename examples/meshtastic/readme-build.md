@@ -2,8 +2,8 @@
 Special requirements
 --------------------
 
-This example requires both latest ECL from development branch (as of May 2023)
-plus the hack described in [hacks](hacks/).
+This example requires both ECL 23.9.9 plus the hack described in
+[hacks](hacks/).
 
 See also notes in [my-cl-protobufs.asd](my-cl-protobufs.asd).
 
@@ -61,6 +61,15 @@ $ make
 
 Build android APK
 -----------------
+
+* build background service:
+```
+$ cd cpp/android_service
+$ qmake-android
+$ make
+$ cd ../..
+```
+* build apk:
 ```
 $ cd build-android
 

@@ -57,7 +57,7 @@ win32 {
 }
 
 android {
-  QT          += androidextras
+  QT          += androidextras remoteobjects
   DEFINES     += INI_ASDF
   DEFINES     -= DESKTOP_APP
   INCLUDEPATH = $$ECL/include
@@ -69,6 +69,8 @@ android {
   LIBS        += -L../../../platforms/android/lib
 
   SOURCES += cpp/android.cpp
+
+  REPC_REPLICA += cpp/android_service/qtandroidservice.rep
 
   ANDROID_MIN_SDK_VERSION    = 21
   ANDROID_TARGET_SDK_VERSION = 33
@@ -86,9 +88,11 @@ android {
   ANDROID_EXTRA_LIBS += $$SSL_PATH/libcrypto_1_1.so $$SSL_PATH/libssl_1_1.so
 
   32bit {
-    ANDROID_ABIS = "armeabi-v7a"
+    ANDROID_ABIS       = "armeabi-v7a"
+    ANDROID_EXTRA_LIBS += libservice_armeabi-v7a.so
   } else {
-    ANDROID_ABIS = "arm64-v8a"
+    ANDROID_ABIS       = "arm64-v8a"
+    ANDROID_EXTRA_LIBS += libservice_arm64-v8a.so
   }
 }
 
@@ -131,15 +135,21 @@ INCLUDEPATH += ../../../src/cpp
 
 HEADERS += \
   ../../src/cpp/main.h \
-  cpp/ble.h \
-  cpp/ble_meshtastic.h \
   cpp/qt.h
 
 SOURCES += \
   ../../src/cpp/main.cpp \
-  cpp/ble.cpp \
-  cpp/ble_meshtastic.cpp \
   cpp/qt.cpp
+
+!android {
+  HEADERS += \
+    cpp/ble/ble.h \
+    cpp/ble/ble_meshtastic.h
+
+  SOURCES += \
+    cpp/ble/ble.cpp \
+    cpp/ble/ble_meshtastic.cpp
+}
 
 RESOURCES += $$files(qml/*)
 RESOURCES += $$files(i18n/*.qm)

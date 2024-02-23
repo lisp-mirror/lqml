@@ -1,15 +1,23 @@
 #include "qt.h"
-#include "ble_meshtastic.h"
-#include <ecl_fun.h>
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QNetworkInterface>
 #include <QHostAddress>
 #include <QtDebug>
 
+#ifdef PLUGIN
+  #include <ecl_fun_plugin.h>
+#else
+  #include <ecl_fun.h>
+#endif
+
 #ifdef Q_OS_ANDROID
+  #include "rep_qtandroidservice_replica.h"
   #include <QtAndroid>
+  #include <QAndroidIntent>
   #include <QAndroidJniEnvironment>
+#else
+  #include "ble/ble_meshtastic.h"
 #endif
 
 QT_BEGIN_NAMESPACE
@@ -22,41 +30,89 @@ QObject* ini() {
   return qt;
 }
 
+#ifdef Q_OS_ANDROID
+static void startService() {
+  QAndroidIntent serviceIntent(QtAndroid::androidActivity().object(),
+                               "org/cl/meshtastic/QtAndroidService");
+  QAndroidJniObject result = QtAndroid::androidActivity().callObjectMethod(
+    "startService",
+    "(Landroid/content/Intent;)Landroid/content/ComponentName;",
+    serviceIntent.handle().object());
+}
+#endif
+
 QT::QT() : QObject() {
-  // BLE
+#ifdef Q_OS_ANDROID
+  // android service using remote object
+  startService();
+
+  QRemoteObjectNode* repNode = new QRemoteObjectNode;
+  repNode->connectToNode(QUrl(QStringLiteral("local:replica")));
+  QSharedPointer<QtAndroidServiceReplica> rep(repNode->acquire<QtAndroidServiceReplica>());
+  bool res = rep->waitForSource();
+  Q_ASSERT(res);
+
+  ble = rep;
+#else
   ble = new BLE_ME;
-  ble->connect(ble, &BLE::deviceDiscovered,
-               [](const QString& fullName) {
-                 ecl_fun("radios:device-discovered", fullName.right(4));
-               });
-  ble->connect(ble, &BLE::bleError,
-               []() {
-                 ecl_fun("radios:reset-default-radio");
-               });
+#endif
+
+#ifdef Q_OS_ANDROID
+  QObject::connect(ble.data(), &QtAndroidServiceReplica::deviceDiscovered,
+#else
+  QObject::connect(ble, &BLE::deviceDiscovered,
+#endif
+  [](const QString& fullName) {
+    ecl_fun("radios:device-discovered", fullName.right(4));
+  });
+
+#ifdef Q_OS_ANDROID
+  QObject::connect(ble.data(), &QtAndroidServiceReplica::bleError,
+#else
+  QObject::connect(ble, &BLE::bleError,
+#endif
+  []() {
+    ecl_fun("radios:reset-default-radio");
+  });
+
+#ifdef Q_OS_ANDROID
+  QObject::connect(ble.data(), &QtAndroidServiceReplica::setReady,
+#else
+  QObject::connect(ble, &BLE_ME::setReady,
+#endif
+  [](bool ready, const QString& current, const QStringList& names) {
+    ecl_fun("lora:set-ready", ready, current, names);
+  });
+
+#ifdef Q_OS_ANDROID
+  QObject::connect(ble.data(), &QtAndroidServiceReplica::receivedFromRadio,
+#else
+  QObject::connect(ble, &BLE_ME::receivedFromRadio,
+#endif
+  [](const QByteArray& data, const QString& notified) {
+    ecl_fun("lora:received-from-radio", data, notified);
+  });
+
+#ifdef Q_OS_ANDROID
+  QObject::connect(ble.data(), &QtAndroidServiceReplica::receivingDone,
+#else
+  QObject::connect(ble, &BLE_ME::receivingDone,
+#endif
+  []() {
+    ecl_fun("lora:receiving-done");
+  });
 }
 
-// BLE_ME
+// BLE
 
 QVariant QT::startDeviceDiscovery(const QVariant& vName) {
-  auto name = vName.toString();
-  if (!name.isNull()) {
-    ble->initialDeviceName = name;
-  }
-  ble->startDeviceDiscovery();
+  ble->startDeviceDiscovery(vName.toString());
   return vName;
 }
 
 QVariant QT::setDeviceFilter(const QVariant& vName) {
-  ble->nameFilter = vName.toString();
+  ble->setDeviceFilter(vName.toString());
   return vName;
-}
-
-QVariant QT::shortNames() {
-  QVariantList names;
-  for (auto device : qAsConst(ble->devices)) {
-    names << device.name().right(4);
-  }
-  return names;
 }
 
 QVariant QT::read2() {

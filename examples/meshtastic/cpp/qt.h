@@ -9,7 +9,11 @@
 #define LIB_EXPORT
 #endif
 
-class BLE_ME;
+#ifdef Q_OS_ANDROID
+  class QtAndroidServiceReplica;
+#else
+  class BLE_ME;
+#endif
 
 QT_BEGIN_NAMESPACE
 
@@ -19,10 +23,9 @@ class QT : public QObject {
   Q_OBJECT
 
 public:
-  // BLE_ME
+  // BLE
   Q_INVOKABLE QVariant startDeviceDiscovery(const QVariant&);
   Q_INVOKABLE QVariant setDeviceFilter(const QVariant&);
-  Q_INVOKABLE QVariant shortNames();
   Q_INVOKABLE QVariant read2();
   Q_INVOKABLE QVariant write2(const QVariant&);
 
@@ -43,8 +46,12 @@ public:
 
   QT();
 
-  BLE_ME* ble;
   QSqlDatabase db;
+#ifdef Q_OS_ANDROID
+  QSharedPointer<QtAndroidServiceReplica> ble;
+#else
+  BLE_ME* ble;
+#endif
 };
 
 QT_END_NAMESPACE

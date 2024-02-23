@@ -1,4 +1,4 @@
-QT          += bluetooth sql network
+QT          += sql network bluetooth
 TEMPLATE    = lib
 CONFIG      += c++17 plugin release no_keywords
 DEFINES     += PLUGIN
@@ -10,13 +10,13 @@ OBJECTS_DIR = ./tmp/
 MOC_DIR     = ./tmp/
 
 HEADERS += \
-  ble.h \
-  ble_meshtastic.h \
+  ble/ble.h \
+  ble/ble_meshtastic.h \
   qt.h
 
 SOURCES += \
-  ble.cpp \
-  ble_meshtastic.cpp \
+  ble/ble.cpp \
+  ble/ble_meshtastic.cpp \
   qt.cpp
 
 linux {

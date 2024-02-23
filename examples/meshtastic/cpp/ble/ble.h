@@ -39,7 +39,7 @@ Q_SIGNALS:
   void bleError();
 
 public Q_SLOTS:
-  void startDeviceDiscovery();
+  void startDeviceDiscovery(const QString& = QString());
 
   /*** </INTERFACE> *********************************************************/
 

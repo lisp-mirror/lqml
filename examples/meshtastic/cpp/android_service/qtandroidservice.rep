@@ -1,0 +1,11 @@
+class QtAndroidService {
+  SLOT(void startDeviceDiscovery(const QString&));
+  SLOT(void setDeviceFilter(const QString&));
+  SLOT(void read());
+  SLOT(void write(const QByteArray&));
+  SIGNAL(deviceDiscovered(const QString&));
+  SIGNAL(bleError());
+  SIGNAL(setReady(bool, const QString&, const QStringList&));
+  SIGNAL(receivedFromRadio(const QByteArray&, const QString&));
+  SIGNAL(receivingDone());
+}
