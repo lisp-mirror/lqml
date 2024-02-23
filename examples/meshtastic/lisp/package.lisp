@@ -138,8 +138,8 @@
    #:position*
    #:position-count
    #:remove-marker
-   #:set-share-location
    #:set-position
+   #:share-my-location
    #:tile-path
    #:tile-provider-path
    #:update-my-position))

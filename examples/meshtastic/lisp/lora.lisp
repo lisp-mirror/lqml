@@ -69,9 +69,10 @@
      (me:make-to-radio :want-config-id *config-id*))
     (q> |playing| ui:*busy* t)))
 
-(defun set-ready (name &optional (ready t)) ; see Qt
+(defun set-ready (ready name ble-names) ; see Qt
   (setf *ready* ready)
   (when ready
+    (setf *ble-names* ble-names)
     (app:toast (x:cc (tr "radio") ": " name) 2)
     (qlater 'get-node-config))
   (values))
@@ -198,8 +199,6 @@
   (defun process-received ()
     "Walks *RECEIVED* FROM-RADIOs and saves relevant data."
     (setf *received* (nreverse *received*))
-    (unless *ble-names*
-      (setf *ble-names* (qt:short-names qt:*cpp*)))
     (dolist (struct *received*)
       (cond ((me:from-radio.has-packet struct)
              (let* ((packet (me:from-radio.packet struct))

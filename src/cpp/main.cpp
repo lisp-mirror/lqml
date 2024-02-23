@@ -177,7 +177,7 @@ int main(int argc, char* argv[]) {
 #endif
 
 #ifdef BACKGROUND_INI_LISP
-  LQML::eval("(qml::background-ini)", true); // see 'ini.liso'
+  LQML::eval("(qml::background-ini)", true); // see 'ini.lisp'
 #endif
 
 #ifdef NO_QT_RESTART

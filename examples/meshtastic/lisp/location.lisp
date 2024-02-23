@@ -12,9 +12,7 @@
   #+android       (qt:ini-positioning qt:*cpp*)
   #+(or ios sfos) (q> |active| ui:*position-source* t)
   (x:if-it (app:setting :selected-position)
-           (progn
-             (setf *my-position* x:it)
-             (send-to-radio))
+           (setf *my-position* x:it)
            #+(or android ios sfos) (update-my-position)))
 
 (defun latest-gps-position ()
@@ -25,8 +23,11 @@
       (setf (third pos) (parse-integer time))) ; see QML
     pos))
 
-(defun set-share-location (share)
-  (app:change-setting :share-location share)
+(defun share-my-location () ; see QML
+  (app:confirm-dialog (tr "Share my location now?") 'do-share-my-location)
+  (values))
+
+(defun do-share-my-location (share)
   (when share
     (send-to-radio)))
 
@@ -43,8 +44,7 @@
             (qsingle-shot 1000 (lambda () (update-my-position (1- sec)))))
           (let ((pos (list :lat lat :lon lon :time time)))
             (setf *my-position* pos)
-            (qlog "position-updated: ~A" pos)
-            (send-to-radio))))))
+            (qlog "position-updated: ~A" pos))))))
 
 (defun send-to-radio ()
   (when (app:setting :share-location)
@@ -72,13 +72,11 @@
     (app:change-setting :selected-position *my-position*)
     (qlog "position-updated: ~A" pos))
   (q> |visible| ui:*remove-marker* t)
-  (send-to-radio)
   (values))
 
 (defun remove-marker () ; see QML
   (setf *my-position* nil)
   (app:change-setting :selected-position nil)
-  (send-to-radio)
   (values))
 
 ;;; distance

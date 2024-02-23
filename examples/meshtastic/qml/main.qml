@@ -55,9 +55,8 @@ Item {
 
     Ext.MenuItem {
       objectName: "share_location"
-      text: qsTr("Share location")
-      checkable: true
-      onTriggered: Lisp.call("loc:set-share-location", checked)
+      text: qsTr("Share my location...")
+      onTriggered: Lisp.call("loc:share-my-location")
     }
 
     MenuSeparator {}
