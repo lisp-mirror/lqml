@@ -19,6 +19,21 @@ public:
   BLE_ME();
 #endif
 
+  /*** <INTERFACE> ****************************************/
+
+public Q_SLOTS:
+  void setDeviceFilter(const QString& s) { filter = s; }
+  void read();
+  void write(const QByteArray&);
+
+Q_SIGNALS:
+  void setReady(bool, const QString&, const QStringList&);
+  void receivedFromRadio(const QByteArray&, const QString&);
+  void receivingDone();
+
+  /*** </INTERFACE> ***************************************/
+
+public:
   static const UID uuid_service;
   static const UID uuid_fromRadio;
   static const UID uuid_fromNum;
@@ -48,18 +63,4 @@ private Q_SLOTS:
   void characteristicWritten(const QLowEnergyCharacteristic&, const QByteArray&);
   void serviceError(QLowEnergyService::ServiceError);
   void disconnecting();
-
-  /*** <INTERFACE> **********************************************************/
-
-public Q_SLOTS:
-  void setDeviceFilter(const QString& s) { filter = s; }
-  void read();
-  void write(const QByteArray&);
-
-Q_SIGNALS:
-  void setReady(bool, const QString& = QString(), const QStringList& = QStringList());
-  void receivedFromRadio(const QByteArray&, const QString& = QString());
-  void receivingDone();
-
-  /*** </INTERFACE> *********************************************************/
 };

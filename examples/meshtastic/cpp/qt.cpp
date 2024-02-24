@@ -81,7 +81,11 @@ QT::QT() : QObject() {
   QObject::connect(ble, &BLE_ME::setReady,
 #endif
   [](bool ready, const QString& current, const QStringList& names) {
-    ecl_fun("lora:set-ready", ready, current, names);
+    QVariantList vNames; // Lisp doesn't know 'QStringList'
+    for (auto name : names) {
+      vNames << name;
+    }
+    ecl_fun("lora:set-ready", ready, current, vNames);
   });
 
 #ifdef Q_OS_ANDROID
@@ -177,25 +181,29 @@ QVariant QT::iniDb(const QVariant& name) {
 
 QVariant QT::sqlQuery(const QVariant& vQuery, const QVariant& vValues, const QVariant& vRows) {
   QVariantList results;
-  QSqlQuery query(db);
+  QSqlQuery sqlQuery(db);
   if (db.open()) {
-    query.prepare(vQuery.toString());
+    QString query = vQuery.toString();
+    sqlQuery.prepare(vQuery.toString());
     const QVariantList values = vValues.value<QVariantList>();
     for (auto value : values) {
-      query.addBindValue(value);
+      sqlQuery.addBindValue(value);
     }
-    if (query.exec()) {
+    if (sqlQuery.exec()) {
       auto rows = vRows.toInt();
-      while (query.next()) {
+      while (sqlQuery.next()) {
         if (rows > 1) {
           QVariantList list;
           for (auto r = 0; r < rows; r++) {
-            list << query.value(r);
+            list << sqlQuery.value(r);
           }
           results << QVariant(list);
         } else {
-          results << query.value(0);
+          results << sqlQuery.value(0);
         }
+      }
+      if (!rows && query.startsWith("insert", Qt::CaseInsensitive)) {
+        results << sqlQuery.lastInsertId();
       }
       db.close();
       return results;
@@ -203,8 +211,8 @@ QVariant QT::sqlQuery(const QVariant& vQuery, const QVariant& vValues, const QVa
     db.close();
   }
   QString text;
-  if (query.lastError().isValid()) {
-    text = query.lastError().text();
+  if (sqlQuery.lastError().isValid()) {
+    text = sqlQuery.lastError().text();
   } else {
     text = db.lastError().text();
   }

@@ -10,7 +10,6 @@ int main(int argc, char* argv[]) {
   srcNode.enableRemoting(&qtAndroidService);
 
   BLE_ME ble(&qtAndroidService);
-  qtAndroidService.ble = &ble;
 
   return app.exec();
 }

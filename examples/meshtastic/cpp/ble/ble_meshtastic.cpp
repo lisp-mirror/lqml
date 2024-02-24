@@ -17,6 +17,7 @@ const UID BLE_ME::uuid_fromNum   = UID(STR("{ed9da18c-a800-4f66-a670-aa7547e3445
 
 #ifdef Q_OS_ANDROID
 BLE_ME::BLE_ME(QtAndroidService* service) : BLE(uuid_service), emitter(service) {
+  service->ble = this;
 #else
 BLE_ME::BLE_ME() : BLE(uuid_service), emitter(this) {
 #endif
