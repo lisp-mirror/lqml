@@ -1,13 +1,18 @@
 (in-package :msg)
 
-(defvar *message-id* 0)
-(defvar *states*     '(:not-received :sending :received))
+(defvar *states*      '(:not-received :sending :received))
+(defvar *message-id*  0)
+(defvar *message-ids* nil "associate (temporary) QML :mid to (unique) DB 'mid'")
 
 (defun ini ()
-  (q> |fontSize| ui:*message-view* (or (app:setting :message-font-size) 18)))
+  (q> |fontSize| ui:*message-view*
+      (or (app:setting :message-font-size) 18)))
 
-(defun message-id ()
+(defun new-message-id ()
   (mod (incf *message-id*) #.(expt 2 32)))
+
+(defun db-mid (mid)
+  (cdr (assoc mid *message-ids*)))
 
 (defun show-message-p (message)
   (let ((user (app:setting :latest-receiver)))
@@ -24,9 +29,10 @@
       (x:when-it* (app:setting (getf message :sender) :custom-name)
         (setf (getf message :sender-name) x:it*)))
     (unless loading
-      (db:save-message (getf message :mid)            ; mid
-                       (parse-integer x:it :radix 16) ; uid
-                       (prin1-to-string message)))
+      (let ((db-mid (db:save-message (parse-integer x:it :radix 16) ; uid
+                                     (prin1-to-string message))))
+        (push (cons (getf message :mid) db-mid)
+              *message-ids*)))
     (if (or loading (show-message-p message))
         (qjs |addMessage| ui:*messages* message)
         (let* ((sender (getf message :sender))
@@ -38,12 +44,13 @@
       (q! |positionViewAtEnd| ui:*message-view*))))
 
 (defun change-state (state mid)
-  (let ((i-state (position state *states*))
-        (message (db:load-message mid)))
+  (let* ((i-state (position state *states*))
+         (db-mid (db-mid mid))
+         (message (db:load-message db-mid)))
     (when message
       (setf message (read-from-string message))
       (setf (getf message :ack-state) i-state)
-      (db:update-message mid (prin1-to-string message))
+      (db:update-message db-mid (prin1-to-string message))
       (qjs |changeState| ui:*messages*
            i-state mid))))
 

@@ -10,7 +10,6 @@
   (radios:ini)
   (db:ini)
   (loc:ini)
-  (setf msg:*message-id* (db:max-message-id))
   (if (setting :latest-receiver)
       (msg:show-messages)
       (qlater (lambda () (q> |currentIndex| ui:*main-view* 0)))) ; 'Group'

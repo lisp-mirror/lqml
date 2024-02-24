@@ -84,7 +84,6 @@
    #:ini
    #:load-message
    #:load-messages
-   #:max-message-id
    #:save-message
    #:update-message))
 
@@ -103,8 +102,8 @@
    #:font-size-changed
    #:font-size-dialog
    #:ini
-   #:message-id
    #:message-press-and-hold
+   #:new-message-id
    #:receiver-changed
    #:show-date
    #:show-messages

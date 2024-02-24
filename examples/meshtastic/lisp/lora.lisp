@@ -69,12 +69,12 @@
      (me:make-to-radio :want-config-id *config-id*))
     (q> |playing| ui:*busy* t)))
 
-(defun set-ready (ready name ble-names) ; see Qt
+(defun set-ready (&optional ready name ble-names) ; see Qt
   (setf *ready* ready)
   (when ready
     (setf *ble-names* ble-names)
     (app:toast (x:cc (tr "radio") ": " name) 2)
-    (qlater 'get-node-config))
+    (get-node-config))
   (values))
 
 (defun add-line-breaks (text)
@@ -112,7 +112,7 @@
           (t
            (msg:check-utf8-length (q< |text| ui:*edit*))
            (unless (q< |tooLong| ui:*edit*)
-             (msg:message-id)
+             (msg:new-message-id)
              (when (stringp *receiver*)
                (setf *receiver* (name-to-node *receiver*)))
              (send-to-radio
@@ -304,7 +304,7 @@
 (defun send-admin (admin-message)
   (send-to-radio
    (to-radio :to (me:num *my-node-info*)
-             :id (msg:message-id)
+             :id (msg:new-message-id)
              :hop-limit 3
              :want-ack t
              :priority :reliable
