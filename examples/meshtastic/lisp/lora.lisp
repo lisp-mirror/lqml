@@ -169,6 +169,13 @@
   (process-received)
   (values))
 
+(defun process-saved-packets (packets) ; see Qt
+  "Called when app changes from background to foreground (mobile only)."
+  (dolist (packet packets)
+    (received-from-radio packet))
+  (receiving-done)
+  (values))
+
 (defun node-to-name (num)
   (if (= +broadcast-id+ num)
       *broadcast-name*

@@ -1,6 +1,8 @@
 #include "ble_meshtastic.h"
 #include <QMetaEnum>
-#include <QTimer>
+#include <QStandardPaths>
+#include <QFile>
+#include <QDataStream>
 
 #ifdef Q_OS_ANDROID
   #include "../android_service/qtandroidservice_ro.h"
@@ -96,30 +98,42 @@ void BLE_ME::searchCharacteristics() {
     for (auto device : qAsConst(devices)) {
       names << device.name().right(4);
     }
-    emitter->setReady(true, currentDevice.name().right(4), names);
+    if (!backgroundMode) {
+      emitter->setReady(true, currentDevice.name().right(4), names);
+    }
   }
 }
 
 void BLE_ME::characteristicChanged(const QLowEnergyCharacteristic&,
                                    const QByteArray& data) {
   if (!data.isEmpty()) {
-    emitter->receivedFromRadio(data, "notified");
+    if (backgroundMode) {
+      read();
+    } else {
+      emitter->receivedFromRadio(data, "notified");
+    }
   }
 }
 
 void BLE_ME::characteristicRead(const QLowEnergyCharacteristic&,
                                 const QByteArray& data) {
   if (data.isEmpty()) {
-    emitter->receivingDone();
+    if (!backgroundMode) {
+      emitter->receivingDone();
+    }
   } else {
-    emitter->receivedFromRadio(data, QString());
-    QTimer::singleShot(0, this, &BLE_ME::read);
+    if (backgroundMode) {
+      saveBytes(data);
+    } else {
+      emitter->receivedFromRadio(data, QString());
+    }
+    read();
   }
 }
 
 void BLE_ME::characteristicWritten(const QLowEnergyCharacteristic&,
                                    const QByteArray&) {
-  QTimer::singleShot(0, this, &BLE_ME::read);
+  read();
 }
 
 void BLE_ME::serviceError(QLowEnergyService::ServiceError error) {
@@ -155,7 +169,51 @@ void BLE_ME::disconnecting() {
     // disable notifications
     mainService->writeDescriptor(notifications, QByteArray::fromHex("0000"));
   }
-  emitter->setReady(false, QString(), QStringList());
+  if (!backgroundMode) {
+    emitter->setReady(false, QString(), QStringList());
+  }
   delete mainService; mainService = nullptr;
 }
 
+// background mode
+
+void BLE_ME::setBackgroundMode(bool background) {
+#if (defined Q_OS_ANDROID) || (defined Q_OS_IOS)
+  backgroundMode = background;
+  qDebug() << "background mode:" << backgroundMode;
+  if (!backgroundMode) {
+    sendSavedBytes();
+  }
+#endif
+}
+
+static QString packetsFile() {
+  return QStandardPaths::writableLocation(QStandardPaths::AppLocalDataLocation) + "/packets.bin";
+}
+
+void BLE_ME::saveBytes(const QByteArray& packet) {
+  QFile file(packetsFile());
+  if (file.open(QIODevice::WriteOnly | QIODevice::Append)) {
+    QDataStream ds(&file);
+    ds << packet;
+    file.close();
+  }
+}
+
+void BLE_ME::sendSavedBytes() {
+  QVariantList packets;
+  QFile file(packetsFile());
+  if (file.open(QIODevice::ReadOnly)) {
+    QDataStream ds(&file);
+    while (!ds.atEnd()) {
+      QByteArray packet;
+      ds >> packet;
+      packets.append(packet);
+    }
+    file.close();
+    if (!packets.isEmpty()) {
+      emitter->sendSavedPackets(QVariant(packets));
+      QFile::remove(packetsFile());
+    }
+  }
+}

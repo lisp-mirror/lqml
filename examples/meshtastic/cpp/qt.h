@@ -28,6 +28,7 @@ public:
   Q_INVOKABLE QVariant setDeviceFilter(const QVariant&);
   Q_INVOKABLE QVariant read2();
   Q_INVOKABLE QVariant write2(const QVariant&);
+  Q_INVOKABLE QVariant setBackgroundMode(const QVariant&);
 
   // GPS
   Q_INVOKABLE QVariant iniPositioning();

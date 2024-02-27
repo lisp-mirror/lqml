@@ -10,4 +10,5 @@ public slots:
   void setDeviceFilter(const QString& a1)      override { ble->setDeviceFilter(a1); }
   void read()                                  override { ble->read(); }
   void write(const QByteArray& a1)             override { ble->write(a1); }
+  void setBackgroundMode(bool a1)              override { ble->setBackgroundMode(a1); }
 };

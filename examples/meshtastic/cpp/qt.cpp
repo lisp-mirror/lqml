@@ -3,6 +3,7 @@
 #include <QSqlError>
 #include <QNetworkInterface>
 #include <QHostAddress>
+#include <QGuiApplication>
 #include <QtDebug>
 
 #ifdef PLUGIN
@@ -105,6 +106,27 @@ QT::QT() : QObject() {
   []() {
     ecl_fun("lora:receiving-done");
   });
+
+#ifdef Q_OS_ANDROID
+  QObject::connect(ble.data(), &QtAndroidServiceReplica::sendSavedPackets,
+#else
+  QObject::connect(ble, &BLE_ME::sendSavedPackets,
+#endif
+  [](const QVariant& packets) {
+    ecl_fun("lora:process-saved-packets", packets);
+  });
+
+#if (defined Q_OS_ANDROID) || (defined Q_OS_IOS)
+  // background mode
+  QObject::connect(qGuiApp, &QGuiApplication::applicationStateChanged,
+                   [&](Qt::ApplicationState state) {
+                     if (state == Qt::ApplicationInactive) {
+                       ble->setBackgroundMode(true);
+                     } else if (state == Qt::ApplicationActive) {
+                       ble->setBackgroundMode(false);
+                     }
+                   });
+#endif
 }
 
 // BLE
@@ -127,6 +149,11 @@ QVariant QT::read2() {
 QVariant QT::write2(const QVariant& bytes) {
   ble->write(bytes.toByteArray());
   return QVariant();
+}
+
+QVariant QT::setBackgroundMode(const QVariant& vBackground) {
+  // for testing
+  ble->setBackgroundMode(vBackground.toBool());
 }
 
 // GPS

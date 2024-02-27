@@ -3,9 +3,11 @@ class QtAndroidService {
   SLOT(void setDeviceFilter(const QString&));
   SLOT(void read());
   SLOT(void write(const QByteArray&));
+  SLOT(void setBackgroundMode(bool));
   SIGNAL(deviceDiscovered(const QString&));
   SIGNAL(bleError());
   SIGNAL(setReady(bool, const QString&, const QStringList&));
   SIGNAL(receivedFromRadio(const QByteArray&, const QString&));
   SIGNAL(receivingDone());
+  SIGNAL(sendSavedPackets(const QVariant&));
 }

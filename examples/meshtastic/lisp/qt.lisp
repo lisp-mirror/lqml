@@ -12,6 +12,7 @@
    #:local-ip
    #:start-device-discovery
    #:read*
+   #:set-background-mode ; for testing
    #:set-device-filter
    #:sql-query
    #:write*))

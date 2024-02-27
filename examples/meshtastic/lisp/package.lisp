@@ -57,6 +57,7 @@
    #:keywords
    #:my-name
    #:my-num
+   #:process-saved-packets
    #:send-position
    #:start-device-discovery
    #:read-radio

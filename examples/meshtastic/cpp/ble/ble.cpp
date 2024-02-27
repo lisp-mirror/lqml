@@ -5,7 +5,6 @@
 #include <QBluetoothServiceDiscoveryAgent>
 #include <QList>
 #include <QMetaEnum>
-#include <QTimer>
 #include <QDebug>
 
 BLE::BLE(const QBluetoothUuid& uuid) : mainServiceUuid(uuid) {
@@ -50,11 +49,11 @@ void BLE::deviceScanFinished() {
   if (devices.isEmpty()) {
     qDebug() << "no BLE devices found";
     discoveryAgent->setLowEnergyDiscoveryTimeout(3000);
-    QTimer::singleShot(0, this, [&]() { startDeviceDiscovery(); });
+    startDeviceDiscovery();
   } else {
     qDebug() << "device scan done";
     discoveryAgent->setLowEnergyDiscoveryTimeout(1000); // reset to default
-    QTimer::singleShot(0, this, &BLE::scanServices);
+    scanServices();
   }
 }
 
@@ -152,7 +151,7 @@ void BLE::deviceConnected() {
 
 void BLE::retryScan() {
   if (connected && !scanned) {
-    QTimer::singleShot(0, this, &BLE::scanServices);
+    scanServices();
   }
 }
 
@@ -184,4 +183,3 @@ void BLE::deviceScanError(QBluetoothDeviceDiscoveryAgent::Error error) {
     qDebug() << "error: " + QLatin1String(qme.valueToKey(error));
   }
 }
-
