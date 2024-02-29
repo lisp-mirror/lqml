@@ -49,7 +49,7 @@
               :element-type '(unsigned-byte 8)
               :initial-contents list))
 
-(defun start-device-discovery (&optional (name ""))
+(defun start-device-discovery (&optional (name (or (app:setting :device) "")))
   (setf *schedule-clear* t)
   (setf *ble-names* nil)
   (unless radios:*found*
@@ -341,7 +341,7 @@
   (qsleep 5)
   (q> |playing| ui:*busy* t)
   (qsleep 20)
-  (start-device-discovery (app:setting :device)))
+  (start-device-discovery))
 
 (defun change-region (region) ; see QML
   (app:change-setting :region (app:kw region))

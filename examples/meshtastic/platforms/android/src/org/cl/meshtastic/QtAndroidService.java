@@ -12,8 +12,7 @@ import org.qtproject.qt5.android.bindings.QtService;
 public class QtAndroidService extends QtService {
 
     @Override
-    public void onCreate()
-    {
+    public void onCreate() {
         super.onCreate();
 
         Notification.Builder builder = null;

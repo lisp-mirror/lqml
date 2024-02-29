@@ -24,7 +24,7 @@
     (ensure-permissions :bluetooth-scan :bluetooth-connect)) ; android >= 12
   #+(or android ios)
   (qlater (lambda () (qt:keep-screen-on qt:*cpp*)))
-  (lora:start-device-discovery (or (setting :device) "")))
+  (lora:start-device-discovery))
 
 (defun in-data-path (&optional (file "") (prefix "data/"))
   #+mobile
@@ -44,7 +44,7 @@
 (defun icon-press-and-hold (name) ; see QML
   (cond ((string= ui:*radio-icon* name)
          ;; force update of: device discovery
-         (lora:start-device-discovery (or (setting :device) "")))
+         (lora:start-device-discovery))
         ((string= ui:*group-icon* name)
          ;; force update of: node configuration
          (lora:get-node-config)))

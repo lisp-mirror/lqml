@@ -141,6 +141,7 @@ QVariant QT::write2(const QVariant& bytes) {
 QVariant QT::setBackgroundMode(const QVariant& vBackground) {
   // for testing
   ble->setBackgroundMode(vBackground.toBool());
+  return QVariant();
 }
 
 // GPS
