@@ -85,8 +85,8 @@ void BLE_ME::searchCharacteristics() {
           // enable notifications
           notifications = ch.descriptor(QBluetoothUuid::ClientCharacteristicConfiguration);
           if (notifications.isValid()) {
-            qDebug() << "enabling notifications...";
             mainService->writeDescriptor(notifications, QByteArray::fromHex("0100"));
+            qDebug() << "notifications enabled";
           }
         }
       }
@@ -202,7 +202,8 @@ void BLE_ME::saveBytes(const QByteArray& packet) {
 
 void BLE_ME::sendSavedBytes() {
   QVariantList packets;
-  QFile file(packetsFile());
+  QString fileName(packetsFile());
+  QFile file(fileName);
   if (file.open(QIODevice::ReadOnly)) {
     QDataStream ds(&file);
     while (!ds.atEnd()) {
@@ -213,7 +214,7 @@ void BLE_ME::sendSavedBytes() {
     file.close();
     if (!packets.isEmpty()) {
       emitter->sendSavedPackets(QVariant(packets));
-      QFile::remove(packetsFile());
+      QFile::remove(fileName);
     }
   }
 }

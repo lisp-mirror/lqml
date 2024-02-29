@@ -13,14 +13,14 @@
 class BLE: public QObject {
   Q_OBJECT
 
+  /*** <INTERFACE> **********************************************************/
+
 public:
   BLE(const QBluetoothUuid& = QBluetoothUuid()); // pass 'mainServiceUuid'
 
-  /*** <INTERFACE> **********************************************************/
-
   // main service and its UUID
   QLowEnergyService* mainService = nullptr;
-  QBluetoothUuid mainServiceUuid; // see constructor
+  QBluetoothUuid mainServiceUuid;                // (see above)
 
   // current device
   QBluetoothDeviceInfo currentDevice; // if not defined, first one discovered

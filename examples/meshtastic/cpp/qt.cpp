@@ -31,22 +31,9 @@ QObject* ini() {
   return qt;
 }
 
-#ifdef Q_OS_ANDROID
-static void startService() {
-  QAndroidIntent serviceIntent(QtAndroid::androidActivity().object(),
-                               "org/cl/meshtastic/QtAndroidService");
-  QAndroidJniObject result = QtAndroid::androidActivity().callObjectMethod(
-    "startService",
-    "(Landroid/content/Intent;)Landroid/content/ComponentName;",
-    serviceIntent.handle().object());
-}
-#endif
-
 QT::QT() : QObject() {
 #ifdef Q_OS_ANDROID
-  // android service using remote object
-  startService();
-
+  // remote object for android service
   QRemoteObjectNode* repNode = new QRemoteObjectNode;
   repNode->connectToNode(QUrl(QStringLiteral("local:replica")));
   QSharedPointer<QtAndroidServiceReplica> rep(repNode->acquire<QtAndroidServiceReplica>());
