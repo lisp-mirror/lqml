@@ -13,10 +13,12 @@ not available, in order to communicate with short text messages. This kind of
 mesh network is limited to about 70 nodes/radios/users to remain reliable.
 
 
-TODO
-----
+Change log
+----------
 
-* add background BLE/notification for both android and iOS
+* 2024-03-01: background mode for both android and iOS; radio packets sent to
+  app while in background are saved in a file and processed when app is brought
+  back to foreground
 
 
 

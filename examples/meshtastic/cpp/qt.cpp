@@ -15,7 +15,6 @@
 #ifdef Q_OS_ANDROID
   #include "rep_qtandroidservice_replica.h"
   #include <QtAndroid>
-  #include <QAndroidIntent>
   #include <QAndroidJniEnvironment>
 #else
   #include "ble/ble_meshtastic.h"
