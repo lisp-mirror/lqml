@@ -16,7 +16,6 @@ public class QtAndroidService extends QtService {
         super.onCreate();
 
         Notification.Builder builder = null;
-        NotificationManager manager = (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             NotificationChannel channel =
@@ -24,6 +23,8 @@ public class QtAndroidService extends QtService {
                                         "Mesh SMS",
                                         NotificationManager.IMPORTANCE_LOW);
             channel.setShowBadge(false);
+            NotificationManager manager =
+                (NotificationManager)getSystemService(Context.NOTIFICATION_SERVICE);
             manager.createNotificationChannel(channel);
             builder = new Notification.Builder(this, "channel01");
         } else {

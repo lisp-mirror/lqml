@@ -18,7 +18,7 @@
 
 
     <supports-screens android:largeScreens="true" android:normalScreens="true" android:anyDensity="true" android:smallScreens="true"/>
-    <application android:hardwareAccelerated="true" android:name=".Application" android:label="Mesh SMS" android:extractNativeLibs="true" android:icon="@drawable/icon">
+    <application android:hardwareAccelerated="true" android:name=".QtServiceApplication" android:label="Mesh SMS" android:extractNativeLibs="true" android:icon="@drawable/icon">
         <activity android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|layoutDirection|locale|fontScale|keyboard|keyboardHidden|navigation|mcc|mnc|density" android:name="org.qtproject.qt5.android.bindings.QtActivity" android:label="Mesh SMS" android:screenOrientation="unspecified" android:launchMode="singleTop" android:exported="true" android:theme="@style/splashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -80,7 +80,7 @@
             <meta-data android:name="android.app.splash_screen_drawable" android:resource="@drawable/splashscreen"/>
         </activity>
 
-        <service android:process=":qt_service" android:name=".QtAndroidService" android:exported="false">
+        <service android:process=":qt_service" android:name=".QtAndroidService" android:exported="false" android:stopWithTask="true">
 
             <meta-data android:name="android.app.lib_name" android:value="service"/>
             <meta-data android:name="android.app.qt_sources_resource_id" android:resource="@array/qt_sources"/>
