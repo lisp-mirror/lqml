@@ -135,16 +135,15 @@
 
 (defun read-radio ()
   "Triggers a read on the radio. Will call RECEIVED-FROM-RADIO on success."
-  (qrun* (qt:read* qt:*cpp*)))
+  (qt:read* qt:*cpp*))
 
 (defun send-to-radio (to-radio)
   "Sends passed TO-RADIO, preceded by a header."
   (when *print-json*
     (pr:print-json to-radio))
   (let ((bytes (pr:serialize-to-bytes to-radio)))
-    (qrun*
-     (qt:write* qt:*cpp* (header (length bytes)))
-     (qt:write* qt:*cpp* bytes))))
+    (qt:write* qt:*cpp* (header (length bytes)))
+    (qt:write* qt:*cpp* bytes)))
 
 (defun received-from-radio (bytes &optional notified) ; see Qt
   (if notified

@@ -12,7 +12,8 @@
   (loc:ini)
   (if (setting :latest-receiver)
       (msg:show-messages)
-      (qlater (lambda () (q> |currentIndex| ui:*main-view* 0)))) ; 'Group'
+      (qlater (lambda () (q> |currentIndex| ui:*main-view*
+                             (if (setting :device) 0 2))))) ; 'Group'/'Radios'
   (x:when-it (setting :recent-emojis)
     (setf *recent-emojis* (mapcar 'qfrom-utf8 x:it))
     (q> |model| ui:*recent-emojis* *recent-emojis*))
@@ -35,7 +36,7 @@
 (defun view-index-changed (index) ; see QML
   (when (and (= 1 index)
              (not (app:setting :latest-receiver)))
-    (q> |currentIndex| ui:*main-view* 0))
+    (q> |currentIndex| ui:*main-view* 0)) ; 'Group'
   (q> |visible| ui:*location* (= 0 index))
   (q> |visible| ui:*find*     (= 1 index))
   (q> |interactive| ui:*main-view* (/= 1 index)) ; swipe single message, not view
