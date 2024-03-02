@@ -191,7 +191,12 @@ void BLE_ME::setBackgroundMode(bool background) {
 }
 
 static QString packetsFile() {
-  return QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/../meshtastic-packets.bin";
+  // choose already existing directory
+  QStandardPaths::StandardLocation location = QStandardPaths::AppDataLocation;
+#ifdef Q_OS_IOS
+  location = QStandardPaths::DocumentsLocation;
+#endif
+  return QStandardPaths::writableLocation(location) + QStringLiteral("/meshtastic-packets.bin");
 }
 
 void BLE_ME::saveBytes(const QByteArray& packet) {
