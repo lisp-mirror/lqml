@@ -51,6 +51,11 @@
          (lora:get-node-config)))
   (values))
 
+(defun on-background-mode () ; see Qt
+  ;; for showing number of unread messages
+  (change-setting :latest-receiver nil)
+  (values))
+
 ;;; settings
 
 (let (file)

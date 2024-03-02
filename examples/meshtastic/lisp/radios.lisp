@@ -4,7 +4,7 @@
 
 (defun ini ()
   (q> |model| ui:*region*
-      (cons "-" (rest (mapcar 'symbol-name (lora:keywords :region-code)))))
+      (mapcar 'symbol-name (lora:keywords :region-code)))
   (x:when-it (app:setting :region)
     (q> |currentIndex| ui:*region*
         (q! |indexOfValue| ui:*region*

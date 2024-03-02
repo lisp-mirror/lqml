@@ -108,6 +108,7 @@ QT::QT() : QObject() {
                    [&](Qt::ApplicationState state) {
                      if (state == Qt::ApplicationInactive) {
                        ble->setBackgroundMode(true);
+                       ecl_fun("app:on-background-mode");
                      } else if (state == Qt::ApplicationActive) {
                        ble->setBackgroundMode(false);
                      }

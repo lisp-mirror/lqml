@@ -173,6 +173,9 @@
   (dolist (packet packets)
     (received-from-radio packet))
   (receiving-done)
+  ;; this will show eventual red circles with numbers of unread messages
+  (q> |currentIndex| ui:*group-view* -1)
+  (q> |currentIndex| ui:*main-view* 0) ; 'Group'
   (values))
 
 (defun node-to-name (num)

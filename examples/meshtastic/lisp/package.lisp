@@ -13,6 +13,7 @@
    #:message-dialog
    #:make-backup
    #:my-ip
+   #:on-background-mode
    #:on-config-complete
    #:restore-eventual-backup
    #:save-settings
