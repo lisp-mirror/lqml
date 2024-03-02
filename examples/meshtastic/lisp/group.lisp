@@ -25,7 +25,8 @@
 
 (defun clear ()
   (setf lora:*schedule-clear* nil)
-  (q! |clear| ui:*group*))
+  (q! |clear| ui:*group*)
+  (q> |currentIndex| ui:*group-view* -1))
 
 (defun radio-names ()
   (qjs |radioNames| ui:*group*))

@@ -12,14 +12,15 @@
   (x:when-it (app:setting :device-filter)
     (qt:set-device-filter qt:*cpp* x:it)))
 
-(defun device-discovered (name)
+(defun device-discovered (name) ; see Qt
   "Show discovered (cached) device, which may not be reachable / turned on."
   (unless *found*
     (add-radio
      (list :name name
            :hw-model "Meshtastic" ; we don't know yet
            :current (equal name (app:setting :device))
-           :ini t))))
+           :ini t)))
+  (values))
 
 (defun add-radio (radio)
   "Adds passed RADIO (a PLIST) to QML item model.
@@ -32,7 +33,7 @@
   (q! |clear| ui:*radios*))
 
 (defun change-radio (name) ; see QML
-  (app:change-setting :device name)
+  (app:update-current-device name)
   (qlater (lambda () (lora:start-device-discovery name)))
   (values))
 

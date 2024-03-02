@@ -91,6 +91,11 @@
                value)))
   (save-settings))
 
+(defun update-current-device (name)
+  (app:change-setting :device name)
+  (when (equal name (setting :latest-receiver))
+    (app:change-setting :latest-receiver nil)))
+
 (defun my-ip ()
   (let ((ip (qrun* (qt:local-ip qt:*cpp*)))) ; 'qrun*' for return value
     (or ip "127.0.0.1")))

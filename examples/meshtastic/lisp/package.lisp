@@ -20,6 +20,7 @@
    #:toast
    #:kw
    #:unzip
+   #:update-current-device
    #:view-index-changed
    #:zip))
 

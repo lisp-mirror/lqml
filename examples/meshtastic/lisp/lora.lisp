@@ -284,7 +284,7 @@
                           :battery-level (float (if metrics (me:battery-level metrics) 0))
                           :current current))
                    (when current
-                     (app:change-setting :device name))))))
+                     (app:update-current-device name))))))
             ;; channel
             ((me:from-radio.has-channel struct)
              (let ((channel (me:channel struct)))
