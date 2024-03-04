@@ -1,5 +1,7 @@
 (in-package :app)
 
+(defvar *background-mode* nil)
+
 (defun ini ()
   (qt:ini)
   (restore-eventual-backup)
@@ -25,7 +27,11 @@
     (ensure-permissions :bluetooth-scan :bluetooth-connect)) ; android >= 12
   #+(or android ios)
   (qlater (lambda () (qt:keep-screen-on qt:*cpp*)))
-  (lora:start-device-discovery))
+  (lora:start-device-discovery)
+  (unless (setting :region)
+    (toast (tr "please choose your region" 2))
+    (qsleep 4)
+    (radios:choose-region)))
 
 (defun in-data-path (&optional (file "") (prefix "data/"))
   #+mobile
@@ -51,9 +57,8 @@
          (lora:get-node-config)))
   (values))
 
-(defun on-background-mode () ; see Qt
-  ;; for showing number of unread messages
-  (change-setting :latest-receiver nil)
+(defun background-mode-changed (mode) ; see Qt
+  (setf *background-mode* mode)
   (values))
 
 ;;; settings

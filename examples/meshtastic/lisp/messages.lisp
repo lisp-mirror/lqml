@@ -19,8 +19,10 @@
 
 (defun show-message-p (message)
   (let ((user (app:setting :latest-receiver)))
-    (and user (or (string= user (getf message :receiver))
-                  (string= user (getf message :sender))))))
+    (and (not app:*background-mode*)
+         user
+         (or (string= user (getf message :receiver))
+             (string= user (getf message :sender))))))
 
 (defun add-message (message &optional loading)
   "Adds passed MESSAGE (a PLIST) to the QML item model and saves it to the DB.
@@ -32,8 +34,7 @@
       (x:when-it* (app:setting (getf message :sender) :custom-name)
         (setf (getf message :sender-name) x:it*)))
     (unless loading
-      (let ((db-mid (db:save-message (parse-integer x:it :radix 16) ; uid
-                                     (prin1-to-string message))))
+      (let ((db-mid (db:save-message x:it (prin1-to-string message))))
         (add-message-id (cons (getf message :mid)
                               db-mid))))
     (if (or loading (show-message-p message))
@@ -60,7 +61,7 @@
 (defun show-messages ()
   (x:when-it (app:setting :latest-receiver)
     (q! |clear| ui:*messages*)
-    (dolist (message (db:load-messages (parse-integer x:it :radix 16)))
+    (dolist (message (db:load-messages x:it))
       (add-message (read-from-string message) t))
     (dotimes (n 2) ; Qt bug
       (q! |positionViewAtEnd| ui:*message-view*))))

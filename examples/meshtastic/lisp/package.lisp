@@ -1,8 +1,10 @@
 (defpackage :app
   (:use :cl :qml)
   (:export
+   #:*background-mode*
    #:*backup-data-file*
    #:*backup-map-file*
+   #:background-mode-changed
    #:change-setting
    #:confirm-dialog
    #:icon-press-and-hold
@@ -13,7 +15,6 @@
    #:message-dialog
    #:make-backup
    #:my-ip
-   #:on-background-mode
    #:on-config-complete
    #:restore-eventual-backup
    #:save-settings
@@ -77,7 +78,8 @@
    #:ini
    #:name-edited
    #:receiver-changed
-   #:set-unread))
+   #:set-unread
+   #:unread-messages-p))
 
 (defpackage :db
   (:use :cl :qml)
@@ -118,6 +120,7 @@
    #:*found*
    #:add-radio
    #:change-radio
+   #:choose-region
    #:clear
    #:device-discovered
    #:ini

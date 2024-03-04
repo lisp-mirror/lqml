@@ -1,7 +1,6 @@
 (in-package :lora)
 
-(defvar *settings* (list :region :eu-868
-                         :modem-preset :long-fast))
+(defvar *settings* (list :modem-preset :long-fast))
 
 (defvar *channel-name* nil)
 (defvar *my-channel*   nil)
@@ -170,12 +169,15 @@
 
 (defun process-saved-packets (packets) ; see Qt
   "Called when app changes from background to foreground (mobile only)."
-  (dolist (packet packets)
-    (received-from-radio packet))
-  (receiving-done)
+  (let ((app:*background-mode* t))
+    (dolist (packet packets)
+      (received-from-radio packet))
+    (receiving-done))
   ;; this will show eventual red circles with numbers of unread messages
-  (q> |currentIndex| ui:*group-view* -1)
-  (q> |currentIndex| ui:*main-view* 0) ; 'Group'
+  (when (group:unread-messages-p)
+    (app:change-setting :latest-receiver nil)
+    (q> |currentIndex| ui:*group-view* -1)
+    (q> |currentIndex| ui:*main-view* 0)) ; 'Group'
   (values))
 
 (defun node-to-name (num)
@@ -305,8 +307,9 @@
                (setf *config-complete* t)
                (q> |playing| ui:*busy* nil)
                (qlog "config-complete id: ~A" *config-id*)
-               (unless (string= *channel-name*
-                                (me:name (me:settings *my-channel*)))
+               (when (and *my-channel*
+                          (string/= *channel-name*
+                                    (me:name (me:settings *my-channel*))))
                  (qlater 'config-device))))))
     (setf *received* nil)))
 
@@ -345,9 +348,12 @@
   (qsleep 20)
   (start-device-discovery))
 
-(defun change-region (region) ; see QML
-  (app:change-setting :region (app:kw region))
-  (qlater 'change-lora-config)
+(defun change-region (&optional (region "")) ; see QML
+  (cond ((x:empty-string region)
+         (qlater 'radios:choose-region))
+        ((string/= region (app:setting :region))
+         (app:change-setting :region (app:kw region))
+         (qlater 'change-lora-config)))
   (values))
 
 (defun change-modem-preset (modem-preset) ; see QML

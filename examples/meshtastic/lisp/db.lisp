@@ -11,7 +11,7 @@
   (setf *file* (app:in-data-path "db"))
   (ensure-directories-exist *file*)
   (qt:ini-db qt:*cpp* (namestring *file*))
-  (query "create table if not exists messages (mid integer primary key autoincrement, uid integer, message text)"))
+  (query "create table if not exists messages (mid integer primary key autoincrement, uid text, message text)"))
 
 (defun save-message (uid message)
   "Inserts MESSAGE and returns the new MID."

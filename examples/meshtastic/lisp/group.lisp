@@ -42,18 +42,22 @@
 (defun set-unread (name n)
   (unless (string= lora:*broadcast-name* name)
     (qjs |setUnread| ui:*group*
-         name (float n)) ; see 'qml:hex'
+         name (float n)) ; 'float': see 'qml:hex'
     (when (plusp n)
       (set-unread-state t))))
+
+(defun unread-messages-p ()
+  (dolist (name (radio-names))
+    (x:when-it (app:setting name :unread-messages)
+      (unless (zerop x:it)
+        (return-from unread-messages-p t))))
+  nil)
 
 (defun receiver-changed ()
   (let ((curr-name (app:setting :latest-receiver)))
     (unless (string= lora:*broadcast-name* curr-name)
       (app:change-setting curr-name 0 :sub-key :unread-messages)
       (set-unread curr-name 0)
-      (dolist (name (radio-names))
-        (x:when-it (app:setting name :unread-messages)
-          (unless (zerop x:it)
-            (return-from receiver-changed))))
-      (set-unread-state nil))))
+      (unless (unread-messages-p)
+        (set-unread-state nil)))))
 

@@ -98,6 +98,9 @@ A double click on a message will switch to <b>Group</b>.
 <p>
 For a trivial signal test you can use the special text message <b>:e</b> (for 'echo'), which will send back the text you sent, adding signal <b>SNR</b>/<b>RSSI</b>, position and distance. This is convenient to test signal strength from different places, and have it logged in your messages.
 </p>
+<p>
+Please note that this requires the receiver to run this app in foreground mode.
+</p>
 <h4>Save / Restore app data</h4>
 <p>
 A local web-server is included on mobile for saving and restoring all of: message database, app settings, eventually cached map tiles (for offline usage). Just use special text message <b>:w</b> (for 'web-server') and <b>:ws</b> (for 'stop web-server') after you're done.
