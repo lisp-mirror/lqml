@@ -313,44 +313,52 @@
                  (qlater 'config-device))))))
     (setf *received* nil)))
 
+(defun radio-ready-p ()
+  (or (and *config-complete*
+           *my-node-info*)
+      (app:toast (tr "radio not ready yet") 2)))
+
 (defun send-admin (admin-message)
-  (send-to-radio
-   (to-radio :to (me:num *my-node-info*)
-             :id (msg:new-message-id)
-             :hop-limit 3
-             :want-ack t
-             :priority :reliable
-             :decoded (me:make-data
-                       :portnum :admin-app
-                       :payload (pr:serialize-to-bytes admin-message)
-                       :want-response t))))
+  (when (radio-ready-p)
+    (send-to-radio
+     (to-radio :to (me:num *my-node-info*)
+               :id (msg:new-message-id)
+               :hop-limit 3
+               :want-ack t
+               :priority :reliable
+               :decoded (me:make-data
+                         :portnum :admin-app
+                         :payload (pr:serialize-to-bytes admin-message)
+                         :want-response t)))
+    t))
 
 (defun set-channel (channel)
   (send-admin (me:make-admin-message
                :set-channel (setf *my-channel* channel))))
 
 (defun change-lora-config ()
-  (send-admin 
-   (me:make-admin-message
-    :set-config (me:make-config
-                 :lora (me:make-config.lo-ra-config
-                        :use-preset t
-                        :modem-preset (app:setting :modem-preset)
-                        :region (app:setting :region)
-                        :hop-limit 3
-                        :tx-enabled t
-                        :tx-power 27
-                        :sx126x-rx-boosted-gain t))))
-  ;; device will reboot after changing lora config
-  (app:toast (tr "waiting for reboot..."))
-  (qsleep 5)
-  (q> |playing| ui:*busy* t)
-  (qsleep 20)
-  (start-device-discovery))
+  (when (send-admin
+         (me:make-admin-message
+          :set-config (me:make-config
+                       :lora (me:make-config.lo-ra-config
+                              :use-preset t
+                              :modem-preset (app:setting :modem-preset)
+                              :region (app:setting :region)
+                              :hop-limit 3
+                              :tx-enabled t
+                              :tx-power 27
+                              :sx126x-rx-boosted-gain t))))
+    ;; device will reboot after changing lora config
+    (app:toast (tr "waiting for reboot..."))
+    (qsleep 5)
+    (q> |playing| ui:*busy* t)
+    (qsleep 20)
+    (start-device-discovery)))
 
 (defun change-region (&optional (region "")) ; see QML
-  (cond ((x:empty-string region)
-         (qlater 'radios:choose-region))
+  (cond ((or (x:empty-string region)
+             (not (radio-ready-p)))
+         (qsingle-shot 3500 'radios:choose-region))
         ((string/= region (app:setting :region))
          (app:change-setting :region (app:kw region))
          (qlater 'change-lora-config)))
@@ -418,13 +426,12 @@
   (values))
 
 (defun edit-channel-name () ; see QML
-  (if *config-complete*
-      (app:input-dialog
-       (tr "Channel name:") 'channel-name-changed
-       :title (tr "Name")
-       :text *channel-name*
-       :max-length #.(float 12))
-      (app:message-dialog (tr "Radio not ready yet."))))
+  (when (radio-ready-p)
+    (app:input-dialog
+     (tr "Channel name:") 'channel-name-changed
+     :title (tr "Name")
+     :text *channel-name*
+     :max-length #.(float 12))))
 
 (defun channel-name-changed (ok)
   (when ok

@@ -29,8 +29,6 @@
   (qlater (lambda () (qt:keep-screen-on qt:*cpp*)))
   (lora:start-device-discovery)
   (unless (setting :region)
-    (toast (tr "please choose your region" 2))
-    (qsleep 4)
     (radios:choose-region)))
 
 (defun in-data-path (&optional (file "") (prefix "data/"))
