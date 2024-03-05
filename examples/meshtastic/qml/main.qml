@@ -2,7 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Window 2.15
 import QtPositioning 5.15
-import "ext/" as Ext
+import "ext/common/" as Com
 import "ext/dialogs/" as Dlg
 
 Item {
@@ -19,33 +19,33 @@ Item {
     show ? Qt.inputMethod.show() : Qt.inputMethod.hide()
   }
 
-  Ext.MainView { id: view }
+  Com.MainView { id: view }
 
-  Ext.Menu {
+  Com.Menu {
     id: menu
     objectName: "menu"
 
     function show() { popup(0, headerHeight) }
 
-    Ext.MenuItem {
+    Com.MenuItem {
       objectName: "help"
       text: qsTr("Help")
       onTriggered: help.active ? help.item.enabled = !help.item.enabled : help.active = true
     }
 
-    Ext.MenuItem {
+    Com.MenuItem {
       text: qsTr("Channel name...")
       onTriggered: Lisp.call("lora:edit-channel-name")
       enabled: (view.currentIndex === 0)
     }
 
-    Ext.MenuItem {
+    Com.MenuItem {
       text: qsTr("Update group/nodes")
       onTriggered: Lisp.call("lora:get-node-config")
       enabled: (view.currentIndex === 0)
     }
 
-    Ext.MenuItem {
+    Com.MenuItem {
       text: qsTr("Message font size...")
       onTriggered: Lisp.call("msg:font-size-dialog")
       enabled: (view.currentIndex === 1)
@@ -53,7 +53,7 @@ Item {
 
     MenuSeparator {}
 
-    Ext.MenuItem {
+    Com.MenuItem {
       objectName: "share_location"
       text: qsTr("Share my location...")
       onTriggered: Lisp.call("loc:share-my-location")
@@ -61,18 +61,18 @@ Item {
 
     MenuSeparator {}
 
-    Ext.MenuItem {
+    Com.MenuItem {
       text: qsTr("Device filter...")
       onTriggered: Lisp.call("lora:edit-device-filter")
       enabled: (view.currentIndex === 2)
     }
 
-    Ext.MenuItem {
+    Com.MenuItem {
       text: qsTr("Export DB (Lisp)")
       onTriggered: Lisp.call("db:export-to-list")
     }
 
-    Ext.MenuItem {
+    Com.MenuItem {
       text: qsTr("Make backup")
       onTriggered: Lisp.call("app:make-backup")
       enabled: !mobile
@@ -119,7 +119,7 @@ Item {
     }
   }
 
-  Ext.Hourglass { // animation while loading app
+  Com.Hourglass { // animation while loading app
     id: hourglass
   }
 
@@ -164,7 +164,7 @@ Item {
     }
   }
 
-  Ext.Toast {}
+  Com.Toast {}
 
   Dlg.Dialogs {}
 
@@ -173,7 +173,7 @@ Item {
     y: headerHeight
     width: parent.width
     height: parent.height - headerHeight
-    source: "ext/Help.qml"
+    source: "ext/common/Help.qml"
     active: false
   }
 

@@ -24,7 +24,7 @@ Item {
         id: hand
         objectName: "add_manual_marker"
         anchors.top: parent.top
-        icon.source: "../img/hand.png"
+        icon.source: "../../img/hand.png"
         visible: false
 
         onClicked: {
@@ -43,7 +43,7 @@ Item {
       Ext.MapButton {
         objectName: "remove_marker"
         anchors.top: hand.bottom
-        icon.source: "../img/remove-marker.png"
+        icon.source: "../../img/remove-marker.png"
 
         onClicked: {
           markers.itemAt(0).visible = false

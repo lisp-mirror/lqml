@@ -16,7 +16,7 @@ Repeater {
       id: image
       width: 25
       height: width
-      source: "../img/marker.png"
+      source: "../../img/marker.png"
 
       Rectangle {
         x: -(width - image.width) / 2

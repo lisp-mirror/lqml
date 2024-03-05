@@ -38,7 +38,7 @@ Rectangle {
       textFormat: Text.RichText
       text: "
 <h3>
-<img src='../img/radio.png' width=60 height=60>
+<img src='../../img/radio.png' width=60 height=60>
 <br>Radios
 </h3>
 <p>
@@ -46,7 +46,7 @@ If you use more than 1 radio, switch here to the radio you want to use.
 </p>
 %1
 <h3>
-<img src='../img/group.png' width=60 height=60>
+<img src='../../img/group.png' width=60 height=60>
 <br>Group
 </h3>
 <p>
@@ -68,7 +68,7 @@ A tap on the location item on the right shows a map with all known positions of 
 To set your location manually, see 'hand' button (top right). This will override any eventually received GPS location.
 </p>
 <h3>
-<img src='../img/message.png' width=60 height=60>
+<img src='../../img/message.png' width=60 height=60>
 <br>Messages
 </h3>
 <p>

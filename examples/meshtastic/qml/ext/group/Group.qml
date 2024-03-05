@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
-import "." as Ext
+import "." as Grp
+import "../common/" as Com
 
 Rectangle {
   id: rect
@@ -11,7 +12,7 @@ Rectangle {
     padding: 9
     spacing: 9
 
-    Ext.ComboBox {
+    Com.ComboBox {
       id: modem
       objectName: "modem"
       width: 160
@@ -156,7 +157,7 @@ Rectangle {
           anchors.centerIn: parent
           width: 20
           height: width
-          source: "../img/broadcast.png"
+          source: "../../img/broadcast.png"
           visible: (index === 0)
         }
 
@@ -239,7 +240,7 @@ Rectangle {
         width: 22
         height: width
         radius: width / 2
-        color: "#ff5f57"
+        color: "#ff4040"
         visible: (model.unread > 0)
 
         Text {
@@ -256,7 +257,7 @@ Rectangle {
     }
   }
 
-  Ext.Map {
+  Grp.Map {
     objectName: "map_view"
     anchors.fill: rect
     visible: false

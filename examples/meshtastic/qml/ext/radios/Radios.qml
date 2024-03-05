@@ -1,6 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
-import "." as Ext
+import "." as Rad
+import "../common/" as Com
 
 Rectangle {
   id: rect
@@ -11,7 +12,7 @@ Rectangle {
     padding: 9
     spacing: 9
 
-    Ext.ComboBox {
+    Com.ComboBox {
       id: region
       objectName: "region"
       width: 110
@@ -104,7 +105,7 @@ Rectangle {
         text: model.hwModel
       }
 
-      Ext.BatteryLevel {
+      Rad.BatteryLevel {
         anchors.right: parent.right
         anchors.rightMargin: 14
         level: model.batteryLevel

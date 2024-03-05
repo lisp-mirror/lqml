@@ -1,6 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
-import "." as Ext
+import "." as Msg
 
 Rectangle {
   id: main
@@ -53,7 +53,7 @@ Rectangle {
               width: view.fontSize / 2 - 1
               height: width
               playing: false
-              source: "../img/semaphore.gif"
+              source: "../../img/semaphore.gif"
               currentFrame: model.ackState ? parseInt(model.ackState.substr(2), 16) : 0 // see 'qml:hex'
               visible: model.me
             }
@@ -127,7 +127,7 @@ Rectangle {
           anchors.centerIn: parent
           width: 12
           height: width
-          source: "../img/delete.png"
+          source: "../../img/delete.png"
         }
 
         MouseArea {
@@ -256,7 +256,7 @@ Rectangle {
         anchors.rightMargin: 7
         width: edit.font.pixelSize + 1
         height: width
-        source: "../img/emoji.png"
+        source: "../../img/emoji.png"
         opacity: 0.55
         visible: edit.focus && (Qt.platform.os !== "android") && (Qt.platform.os !== "ios")
 
@@ -274,7 +274,7 @@ Rectangle {
       anchors.margins: 3
       width: 38
       height: width
-      source: "../img/send.png"
+      source: "../../img/send.png"
       visible: edit.focus && !edit.tooLong
 
       MouseArea {
@@ -295,7 +295,7 @@ Rectangle {
       width: 38
       height: width
       opacity: 0.7
-      source: "../img/broadcast.png"
+      source: "../../img/broadcast.png"
       visible: send.visible && animation.running
 
       SequentialAnimation {
@@ -320,7 +320,7 @@ Rectangle {
     }
   }
 
-  Ext.Emojis {
+  Msg.Emojis {
     id: emojis
     anchors.bottom: rectEdit.top
     anchors.bottomMargin: -1

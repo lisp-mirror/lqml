@@ -1,6 +1,9 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import "." as Ext
+import "../group/" as Grp
+import "../messages/" as Msg
+import "../radios/" as Rad
 
 Item {
   anchors.fill: parent
@@ -20,7 +23,7 @@ Item {
 
       Ext.MainIcon {
         objectName: "group_icon"
-        source: "../img/group.png"
+        source: "../../img/group.png"
 
         Rectangle {
           objectName: "unread_messages"
@@ -30,19 +33,19 @@ Item {
           anchors.top: parent.top
           anchors.margins: 7
           radius: width / 2
-          color: "#ff5f57"
+          color: "#ff4040"
           visible: false
         }
       }
 
       Ext.MainIcon {
         objectName: "message_icon"
-        source: "../img/message.png"
+        source: "../../img/message.png"
       }
 
       Ext.MainIcon {
         objectName: "radio_icon"
-        source: "../img/radio.png"
+        source: "../../img/radio.png"
       }
     }
   }
@@ -56,9 +59,9 @@ Item {
     currentIndex: 1
     interactive: false
 
-    Ext.Group { id: group }
-    Ext.Messages {}
-    Ext.Radios {}
+    Grp.Group { id: group }
+    Msg.Messages {}
+    Rad.Radios {}
 
     onCurrentIndexChanged: Lisp.call("app:view-index-changed", currentIndex)
   }
