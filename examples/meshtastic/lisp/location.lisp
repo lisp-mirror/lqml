@@ -34,7 +34,6 @@
 #+(or android ios sfos)
 (defun update-my-position (&optional (sec 60)) ; try for 1 min
   "If no manual position is set, update position from GPS of mobile device."
-  ;; see also Timer in 'qml/ext/Radios.qml'
   (when (and (app:setting :share-location)
              (not (app:setting :selected-position)))
     (destructuring-bind (lat lon time)

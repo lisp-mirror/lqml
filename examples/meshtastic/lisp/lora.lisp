@@ -57,7 +57,7 @@
   (q> |playing| ui:*busy* t))
 
 (defun get-node-config ()
-  ;; see also Timer in 'qml/ext/Group.qml'
+  ;; see also Timer in 'qml/ext/group/Group.qml'
   (when *ready*
     (setf *schedule-clear* t)
     (setf *config-complete* nil
