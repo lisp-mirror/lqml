@@ -124,7 +124,7 @@ Eventual backups are saved in above path under <code>backups/</code>. On the des
 <p>
 To autmatically restore data from a backup on the desktop, put the backup files directly in above path (that is, under <code>.../cl-meshtastic/</code>) and restart the app. The data will be restored and the (obsolete) backup files will be deleted.
 </p>".arg((Qt.platform.os === "android")
-          ? "<p><i>N.B: If you previously used a radio with the official app, you'll need to set the radio to 'None (disabled)' in the official app first, otherwise it will not show up in this app.</i></p>"
+          ? "<p>On some older devices it may be necessary to first unpair your radio, then press-and-hold on the radio icon, in order to restart device discovery.</p><p><i>N.B: If you previously used a radio with the official app, you'll need to set the radio to 'None (disabled)' in the official app first, otherwise it will not show up in this app.</i></p>"
           : "")
 
     }

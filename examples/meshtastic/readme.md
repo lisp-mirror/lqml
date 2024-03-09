@@ -64,9 +64,8 @@ Tested
 
 Tested on Linux, macOS, Windows 10+, android, iOS, SailfishOS.
 
-The macOS version must be compiled first, moved to `/Applications/` and started
-from Finder (not the console), otherwise BLE permissions will not work (if run
-from console, the app will show a BLE exception and consume 100% CPU).
+The macOS version currently crashes when built with Qt5, so a (future proof)
+port to Qt6 of this example is underway.
 
 The iOS version also runs on older devices, like the 'iPod touch', as long as
 they are 64 bit and run at least iOS 12.
@@ -89,9 +88,9 @@ On Windows it didn't work for me if not paired previously.
 
 It may occur that your radio device is sometimes not found; some suggestions:
 
+* try to disable the radio in any other app that used it previously
 * try to unpair your radio from current device
-* try to turn bluetooth off and on again
-* try to reboot your radio
+* press-and-hold on the radio icon to restart device discovery
 
 A generic bluetooth app like **nRF Connect** may help in order to see if the
 devices themselves work and are able to connect.

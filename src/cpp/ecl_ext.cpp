@@ -322,7 +322,11 @@ cl_object qload_rc(cl_object l_file) {
   QFile file(toQString(l_file).prepend(":/"));
   if (file.open(QIODevice::ReadOnly)) {
     QTextStream ts(&file);
+#if QT_VERSION < 0x060000
     ts.setCodec("UTF-8");
+#else
+    ts.setEncoding(QStringConverter::Utf8);
+#endif
     QString text = ts.readAll();
     file.close();
     if (!text.isEmpty()) {

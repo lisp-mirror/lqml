@@ -48,6 +48,7 @@ win32: LIBS += -L../../../platforms/windows/lib
 
 macx {
   QMAKE_INFO_PLIST = platforms/macos/Info.plist
+  ICON             = platforms/macos/Icon.icns
 }
 
 win32 {
