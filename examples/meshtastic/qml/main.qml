@@ -126,7 +126,7 @@ Item {
   AnimatedImage {
     objectName: "busy"
     anchors.centerIn: parent
-    width: 42
+    width: 34
     height: width
     z: 10
     source: "img/busy.gif"

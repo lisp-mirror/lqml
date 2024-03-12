@@ -64,9 +64,7 @@ void BLE::scanServices() {
     return;
   }
   if (!currentDevice.isValid()) {
-    if (initialDeviceName.isEmpty()) {
-      currentDevice = devices.at(0);
-    } else {
+    if (!initialDeviceName.isEmpty()) {
       for (auto device : qAsConst(devices)) {
         if (device.name().contains(initialDeviceName, Qt::CaseInsensitive)) {
           currentDevice = device;
@@ -74,6 +72,10 @@ void BLE::scanServices() {
         }
       }
     }
+  }
+  if (!currentDevice.isValid()) {
+    // fallback
+    currentDevice = devices.at(0);
   }
   services.clear();
   qDebug() << "connecting to device...";
