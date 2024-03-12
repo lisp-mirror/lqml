@@ -124,7 +124,7 @@
    #:clear
    #:device-discovered
    #:ini
-   #:reset-default-radio))
+   #:reset))
 
 (defpackage :location
   (:nicknames :loc)

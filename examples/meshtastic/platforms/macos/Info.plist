@@ -24,5 +24,7 @@
 	<true/>
 	<key>NSBluetoothAlwaysUsageDescription</key>
 	<string>For communicating with meshtastic radio devices.</string>
+	<key>NSBluetoothPeripheralUsageDescription</key>
+	<string>For communicating with meshtastic radio devices.</string>
 </dict>
 </plist>

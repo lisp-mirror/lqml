@@ -59,7 +59,7 @@ QT::QT() : QObject() {
   QObject::connect(ble, &BLE::bleError,
 #endif
   []() {
-    ecl_fun("radios:reset-default-radio");
+    ecl_fun("radios:reset");
   });
 
 #ifdef Q_OS_ANDROID
@@ -81,7 +81,7 @@ QT::QT() : QObject() {
   QObject::connect(ble, &BLE_ME::receivedFromRadio,
 #endif
   [](const QByteArray& data, const QString& notified) {
-    ecl_fun("lora:received-from-radio", data, notified);
+    ecl_fun("lora:received-from-radio", data, notified.isEmpty() ? QVariant() : notified);
   });
 
 #ifdef Q_OS_ANDROID

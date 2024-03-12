@@ -44,8 +44,12 @@ void BLE_ME::ini() {
           this, &BLE_ME::characteristicRead);
   connect(mainService, &QLowEnergyService::characteristicWritten,
           this, &BLE_ME::characteristicWritten);
+#if QT_VERSION < 0x060000
   connect(mainService, QOverload<QLowEnergyService::ServiceError>::of(&QLowEnergyService::error),
           this, &BLE_ME::serviceError);
+#else
+  connect(mainService, &QLowEnergyService::errorOccurred, this, &BLE_ME::serviceError);
+#endif
 
   connect(mainService, &QLowEnergyService::descriptorWritten,
           [](const QLowEnergyDescriptor&, const QByteArray& value) {
@@ -86,7 +90,11 @@ void BLE_ME::searchCharacteristics() {
           qDebug() << "...found 'fromNum'";                      // fromNum
 
           // enable notifications
+#if QT_VERSION < 0x060000
           notifications = ch.descriptor(QBluetoothUuid::ClientCharacteristicConfiguration);
+#else
+          notifications = ch.descriptor(QBluetoothUuid::DescriptorType::ClientCharacteristicConfiguration);
+#endif
           if (notifications.isValid()) {
             mainService->writeDescriptor(notifications, QByteArray::fromHex("0100"));
             qDebug() << "notifications enabled";
@@ -123,6 +131,12 @@ void BLE_ME::characteristicRead(const QLowEnergyCharacteristic&,
   if (data.isEmpty()) {
     if (!backgroundMode) {
       emitter->receivingDone();
+      static bool startup = true;
+      if (startup) {
+        sendSavedBytes(); // for eventual, saved but not sent packets
+      } else {
+        startup = false;
+      }
     }
   } else {
     if (backgroundMode) {

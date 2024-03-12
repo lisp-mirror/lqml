@@ -13,8 +13,12 @@ BLE::BLE(const QBluetoothUuid& uuid) : mainServiceUuid(uuid) {
 
   connect(discoveryAgent, &QBluetoothDeviceDiscoveryAgent::deviceDiscovered,
           this, &BLE::addDevice);
+#if QT_VERSION < 0x060000
   connect(discoveryAgent, QOverload<QBluetoothDeviceDiscoveryAgent::Error>::of(&QBluetoothDeviceDiscoveryAgent::error),
           this, &BLE::deviceScanError);
+#else
+  connect(discoveryAgent, &QBluetoothDeviceDiscoveryAgent::errorOccurred, this, &BLE::deviceScanError);
+#endif
   connect(discoveryAgent, &QBluetoothDeviceDiscoveryAgent::finished, this, &BLE::deviceScanFinished);
 }
 
@@ -83,8 +87,12 @@ void BLE::scanServices() {
     controller = QLowEnergyController::createCentral(currentDevice);
     connect(controller, &QLowEnergyController::connected,
             this, &BLE::deviceConnected);
+#if QT_VERSION < 0x060000
     connect(controller, QOverload<QLowEnergyController::Error>::of(&QLowEnergyController::error),
             this, &BLE::errorReceived);
+#else
+    connect(controller, &QLowEnergyController::errorOccurred, this, &BLE::errorReceived);
+#endif
     connect(controller, &QLowEnergyController::disconnected,
             this, &BLE::deviceDisconnected);
     connect(controller, &QLowEnergyController::serviceDiscovered,

@@ -41,7 +41,6 @@
   (qlater (lambda () (lora:start-device-discovery name)))
   (values))
 
-(defun reset-default-radio ()
-  (app:change-setting :device nil)
+(defun reset ()
   (lora:start-device-discovery))
 
