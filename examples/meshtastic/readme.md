@@ -66,7 +66,7 @@ Tested on Linux, macOS, Windows 10+, android, iOS, SailfishOS.
 
 The macOS version must be built with Qt6 (Qt5 has a buggy BLE implementation),
 and compiled first (see `build/`). So, you'll need to rebuild lqml using Qt6,
-and rename the `qml6/` directory of this app to `qml/`.
+and replace `qml/` with `../meshtastic-qt6/qml/`.
 
 The iOS version also runs on older devices, like the 'iPod touch', as long as
 they are 64 bit and run at least iOS 12.
