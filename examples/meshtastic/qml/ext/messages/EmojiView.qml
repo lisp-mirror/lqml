@@ -32,8 +32,10 @@ ScrollView {
       anchors.fill: parent
       cursorShape: Qt.PointingHandCursor
 
-      onClicked: Lisp.call("app:emoji-clicked",
-                           grid.itemAtIndex(grid.indexAt(mouse.x, mouse.y + grid.contentY)).text)
+      onClicked: (mouse) => {
+        Lisp.call("app:emoji-clicked",
+                  grid.itemAtIndex(grid.indexAt(mouse.x, mouse.y + grid.contentY)).text)
+      }
     }
   }
 }

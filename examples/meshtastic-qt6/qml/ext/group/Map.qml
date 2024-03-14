@@ -19,7 +19,7 @@ Item {
       zoomLevel: 14
 
       property bool manualLocation: false
-      property var myMarker
+      property var myMarker: null
 
       Ext.MapButton {
         id: hand
@@ -56,7 +56,7 @@ Item {
       SequentialAnimation {
         id: markerAnimation
         loops: Animation.Infinite
-        running: manualLocation && !!myMarker
+        running: manualLocation && (myMarker !== null)
 
         OpacityAnimator { target: myMarker; from: 1.0; to: 0.2; duration: 500; easing.type: Easing.InOutSine }
         OpacityAnimator { target: myMarker; from: 0.2; to: 1.0; duration: 500; easing.type: Easing.InOutSine }
@@ -64,12 +64,15 @@ Item {
 
       MouseArea {
         anchors.fill: parent
-        onClicked: {
-          manualLocation = false
-          var coord = map.toCoordinate(Qt.point(mouse.x, mouse.y))
-          myMarker.coordinate = coord
-          myMarker.opacity = 1
-          Lisp.call("loc:position-selected", coord.latitude, coord.longitude)
+
+        onClicked: (mouse) => {
+          if (manualLocation) {
+            manualLocation = false
+            var coord = map.toCoordinate(Qt.point(mouse.x, mouse.y))
+            myMarker.coordinate = coord
+            myMarker.opacity = 1
+            Lisp.call("loc:position-selected", coord.latitude, coord.longitude)
+          }
         }
       }
 

@@ -75,6 +75,7 @@
 
 (defun remove-marker () ; see QML
   (setf *my-position* nil)
+  (remf *positions* (lora:my-num))
   (app:change-setting :selected-position nil)
   (values))
 

@@ -11,4 +11,5 @@ RoundButton {
   height: width
   radius: width / 2
   palette.button: "#555"
+  focusPolicy: Qt.NoFocus
 }
