@@ -12,14 +12,14 @@
 class BLE_ME : public BLE {
   Q_OBJECT
 
+  /*** <INTERFACE> ****************************************/
+
 public:
 #ifdef Q_OS_ANDROID
   BLE_ME(QtAndroidService*);
 #else
   BLE_ME();
 #endif
-
-  /*** <INTERFACE> ****************************************/
 
 public Q_SLOTS:
   void setDeviceFilter(const QString& s) { filter = s; }
