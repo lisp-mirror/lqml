@@ -61,6 +61,7 @@
    #:my-name
    #:my-num
    #:process-saved-packets
+   #:radio-ready-p
    #:send-position
    #:start-device-discovery
    #:read-radio

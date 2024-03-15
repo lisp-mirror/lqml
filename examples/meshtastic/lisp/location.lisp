@@ -135,23 +135,24 @@
                         *default-position*))))
 
 (defun show-map-clicked () ; see QML
-  (let ((show (not (q< |visible| ui:*map-view*))))
-    (when show
-      (activate-map)
-      (x:when-it (lora:my-num)
-        (qjs |updatePositions| ui:*map*
-             x:it
-             (lora:my-name)
-             (find-quick-item ui:*group*))
-        (q> |visible| ui:*add-manual-marker* t)))
-    (q> |visible| ui:*map-view* show)
-    ;; move map (not page) when swiping to left
-    (q> |interactive| ui:*main-view* (not show))
-    (if show
-        (q> |visible| ui:*remove-marker*
-            (app:setting :selected-position))
-        (q> |active| ui:*map-loader* nil)))
-  (values))
+  (when (lora:radio-ready-p)
+    (let ((show (not (q< |visible| ui:*map-view*))))
+      (when show
+        (activate-map)
+        (x:when-it (lora:my-num)
+          (qjs |updatePositions| ui:*map*
+               x:it
+               (lora:my-name)
+               (find-quick-item ui:*group*))
+          (q> |visible| ui:*add-manual-marker* t)))
+      (q> |visible| ui:*map-view* show)
+      ;; move map (not page) when swiping to left
+      (q> |interactive| ui:*main-view* (not show))
+      (if show
+          (q> |visible| ui:*remove-marker*
+              (app:setting :selected-position))
+          (q> |active| ui:*map-loader* nil)))
+  (values)))
 
 (defun add-manual-marker () ; see QML
   (setf *my-position* (or (center-position)
