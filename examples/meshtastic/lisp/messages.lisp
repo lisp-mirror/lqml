@@ -11,11 +11,11 @@
   (mod (incf *message-id*) #.(expt 2 32)))
 
 (let (message-ids)
-  ;; associate (temporary) QML :mid to (unique) DB 'mid'
+  ;; associate (temporary) mesh message id to (unique) DB 'mid'
   (defun add-message-id (ids)
     (push ids message-ids))
-  (defun db-mid (mid)
-    (cdr (assoc mid message-ids))))
+  (defun db-mid (id)
+    (cdr (assoc id message-ids))))
 
 (defun show-message-p (message)
   (let ((user (app:setting :latest-receiver)))
@@ -34,9 +34,11 @@
       (x:when-it* (app:setting (getf message :sender) :custom-name)
         (setf (getf message :sender-name) x:it*)))
     (unless loading
-      (let ((db-mid (db:save-message x:it (prin1-to-string message))))
-        (add-message-id (cons (getf message :mid)
-                              db-mid))))
+      (let ((id (getf message :mid)))
+        (remf message :mid)
+        (let ((db-mid (db:save-message x:it (prin1-to-string message))))
+          (add-message-id (cons id db-mid))
+          (setf (getf message :mid) db-mid))))
     (if (or loading (show-message-p message))
         (qjs |addMessage| ui:*messages* message)
         (let* ((sender (getf message :sender))
@@ -47,22 +49,25 @@
     (unless loading
       (q! |positionViewAtEnd| ui:*message-view*))))
 
-(defun change-state (state mid)
+(defun change-state (state id)
   (let* ((i-state (position state *states*))
-         (db-mid (db-mid mid))
+         (db-mid (db-mid id))
          (message (db:load-message db-mid)))
     (when message
       (setf message (read-from-string message))
       (setf (getf message :ack-state) i-state)
       (db:update-message db-mid (prin1-to-string message))
       (qjs |changeState| ui:*messages*
-           i-state mid))))
+           i-state db-mid))))
 
 (defun show-messages ()
   (x:when-it (app:setting :latest-receiver)
     (q! |clear| ui:*messages*)
-    (dolist (message (db:load-messages x:it))
-      (add-message (read-from-string message) t))
+    (dolist (row (db:load-messages x:it))
+      (destructuring-bind (mid message) row
+        (setf message (read-from-string message)
+              (getf message :mid) mid)
+        (add-message message t)))
     (dotimes (n 2) ; Qt bug
       (q! |positionViewAtEnd| ui:*message-view*))))
 

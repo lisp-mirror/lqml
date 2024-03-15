@@ -27,7 +27,7 @@
          message mid))
 
 (defun load-messages (uid)
-  (query "select message from messages where uid = ? order by mid"
+  (query "select mid, message from messages where uid = ? order by mid"
          uid))
 
 (defun delete-message (mid) ; see QML
