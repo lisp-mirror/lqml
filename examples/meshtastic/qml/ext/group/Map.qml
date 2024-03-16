@@ -105,11 +105,15 @@ Item {
           }
         }
 
+        // node markers
+
         Ext.Markers {
           id: markers
           objectName: "markers"
         }
       }
+
+      // manual marker buttons
 
       Ext.MapButton {
         id: hand
