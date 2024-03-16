@@ -37,19 +37,19 @@ Item {
     Com.MenuItem {
       text: qsTr("Channel name...")
       onTriggered: Lisp.call("lora:edit-channel-name")
-      enabled: (view.currentIndex === 0)
+      enabled: (view.pageIndex === 0)
     }
 
     Com.MenuItem {
       text: qsTr("Update group/nodes")
       onTriggered: Lisp.call("lora:get-node-config")
-      enabled: (view.currentIndex === 0)
+      enabled: (view.pageIndex === 0)
     }
 
     Com.MenuItem {
       text: qsTr("Message font size...")
       onTriggered: Lisp.call("msg:font-size-dialog")
-      enabled: (view.currentIndex === 1)
+      enabled: (view.pageIndex === 1)
     }
 
     MenuSeparator {}
@@ -65,7 +65,7 @@ Item {
     Com.MenuItem {
       text: qsTr("Device filter...")
       onTriggered: Lisp.call("lora:edit-device-filter")
-      enabled: (view.currentIndex === 2)
+      enabled: (view.pageIndex === 2)
     }
 
     Com.MenuItem {
@@ -127,7 +127,7 @@ Item {
   AnimatedImage {
     objectName: "busy"
     anchors.centerIn: parent
-    width: 42
+    width: 34
     height: width
     z: 10
     source: "img/busy.gif"

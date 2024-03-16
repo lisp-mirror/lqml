@@ -9,7 +9,7 @@ import "../radios/" as Rad
 Item {
   anchors.fill: parent
 
-  property alias currentIndex: swipeView.currentIndex
+  property alias pageIndex: swipeView.currentIndex
 
   Rectangle {
     id: header

@@ -77,6 +77,10 @@
   (setf *my-position* nil)
   (remf *positions* (lora:my-num))
   (app:change-setting :selected-position nil)
+  ;; update map
+  (qlater-sequence
+   (show-map-clicked)  ; remove
+   (show-map-clicked)) ; load
   (values))
 
 ;;; distance
