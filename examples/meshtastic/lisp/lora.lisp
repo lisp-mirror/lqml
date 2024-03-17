@@ -188,9 +188,11 @@
           (return (me:short-name (me:user info)))))))
 
 (defun name-to-node (name)
-  (dolist (info *node-infos*)
-    (when (string= name (me:short-name (me:user info)))
-      (return (me:num info)))))
+  (if (string= *broadcast-name* name)
+      +broadcast-id+
+      (dolist (info *node-infos*)
+        (when (string= name (me:short-name (me:user info)))
+          (return (me:num info))))))
 
 (defun timestamp-to-hour (&optional (secs (get-universal-time)))
   (multiple-value-bind (_ m h)

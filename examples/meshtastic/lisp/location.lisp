@@ -1,19 +1,18 @@
 (in-package :loc)
 
-(defvar *positions*   nil)
-(defvar *my-position* nil)
+(defvar *positions*       nil)
+(defvar *manual-position* nil)
+(defvar *gps-position*    nil)
 
 (defparameter *default-position* (list :lat 41.89193 :lon 12.51133 :time 0) ; Rome
   "Position of map center for manual position selection (no GPS).")
 
 (defun ini ()
-  (x:when-it (app:setting :share-location)
-    (q> |checked| ui:*share-location* t))
   #+android       (qt:ini-positioning qt:*cpp*)
   #+(or ios sfos) (q> |active| ui:*position-source* t)
-  (x:if-it (app:setting :selected-position)
-           (setf *my-position* x:it)
-           #+(or android ios sfos) (update-my-position)))
+  (x:when-it (app:setting :selected-position)
+    (setf *manual-position* x:it))
+  #+(or android ios sfos) (update-my-position))
 
 (defun latest-gps-position ()
   (let* ((pos #+android (qrun* (qt:last-position qt:*cpp*)) ; 'qrun*': return value
@@ -24,6 +23,7 @@
     pos))
 
 (defun share-my-location () ; see QML
+  "Share GPS position (ad hoc only)."
   (app:confirm-dialog (tr "Share my location now?") 'do-share-my-location)
   (values))
 
@@ -33,29 +33,29 @@
 
 #+(or android ios sfos)
 (defun update-my-position (&optional (sec 60)) ; try for 1 min
-  "If no manual position is set, update position from GPS of mobile device."
-  (when (and (app:setting :share-location)
-             (not (app:setting :selected-position)))
-    (destructuring-bind (lat lon time)
-        (latest-gps-position)
-      (if (zerop lat)
-          (unless (zerop sec)
-            (qsingle-shot 1000 (lambda () (update-my-position (1- sec)))))
-          (let ((pos (list :lat lat :lon lon :time time)))
-            (setf *my-position* pos)
-            (qlog "position-updated: ~A" pos))))))
+  "Store current position internally, without sharing it, so we have a base for
+  eventual manual position setting."
+  (destructuring-bind (lat lon time)
+      (latest-gps-position)
+    (if (zerop lat)
+        (unless (zerop sec)
+          (qsingle-shot 1000 (lambda () (update-my-position (1- sec)))))
+        (let ((pos (list :lat lat :lon lon :time time)))
+          (setf *gps-position* pos)
+          (qlog "position-updated: ~A" pos)))))
 
 (defun send-to-radio ()
   (when (app:setting :share-location)
     (if lora:*config-complete*
-        (lora:send-position *my-position*)
+        (lora:send-position (or *manual-position* *gps-position*))
         (qsingle-shot (* 15 1000) 'send-to-radio))))
 
 (defun position* (node)
   (when node
     (x:when-it (or (getf *positions* node)
                    (and (= node (lora:my-num))
-                        *my-position*))
+                        (or *manual-position*
+                            *gps-position*)))
       (list (getf x:it :lat)
             (getf x:it :lon)))))
 
@@ -67,14 +67,14 @@
 
 (defun position-selected (lat lon) ; see QML
   (let ((pos (list :lat lat :lon lon :time 0)))
-    (setf *my-position* pos)
-    (app:change-setting :selected-position *my-position*)
+    (setf *manual-position* pos)
+    (app:change-setting :selected-position *manual-position*)
     (qlog "position-updated: ~A" pos))
   (q> |visible| ui:*remove-marker* t)
   (values))
 
 (defun remove-marker () ; see QML
-  (setf *my-position* nil)
+  (setf *manual-position* nil)
   (remf *positions* (lora:my-num))
   (app:change-setting :selected-position nil)
   ;; update map
@@ -134,7 +134,8 @@
 (defun activate-map ()
   (unless (q< |active| ui:*map-loader*)
     (q> |active| ui:*map-loader* t)
-    (set-map-center (or *my-position*
+    (set-map-center (or *manual-position*
+                        *gps-position*
                         (center-position)
                         *default-position*))))
 
@@ -159,8 +160,8 @@
   (values)))
 
 (defun add-manual-marker () ; see QML
-  (setf *my-position* (or (center-position)
-                          *default-position*))
+  (setf *manual-position* (or (center-position)
+                                *default-position*))
   ;; update map
   (qlater-sequence
    (show-map-clicked) ; remove
@@ -169,7 +170,8 @@
   (values))
 
 (defun position-count () ; see QML
-  (set-position (lora:my-num) *my-position*)
+  (set-position (lora:my-num)
+                (or *manual-position* *gps-position*))
   (/ (length *positions*) 2)) ; property list
 
 ;;; save/restore tiles

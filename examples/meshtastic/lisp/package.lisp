@@ -131,8 +131,6 @@
   (:nicknames :loc)
   (:use :cl :qml)
   (:export
-   #:*default-position*
-   #:*my-position*
    #:*positions*
    #:activate-map
    #:add-manual-marker
