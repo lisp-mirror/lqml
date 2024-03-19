@@ -62,6 +62,7 @@
    #:my-num
    #:process-saved-packets
    #:radio-ready-p
+   #:reset-node-db
    #:send-position
    #:start-device-discovery
    #:read-radio

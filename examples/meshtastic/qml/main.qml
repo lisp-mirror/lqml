@@ -34,14 +34,14 @@ Item {
     }
 
     Com.MenuItem {
-      text: qsTr("Channel name...")
-      onTriggered: Lisp.call("lora:edit-channel-name")
+      text: qsTr("Update group/nodes")
+      onTriggered: Lisp.call("lora:get-node-config")
       enabled: (view.pageIndex === 0)
     }
 
     Com.MenuItem {
-      text: qsTr("Update group/nodes")
-      onTriggered: Lisp.call("lora:get-node-config")
+      text: qsTr("Channel name...")
+      onTriggered: Lisp.call("lora:edit-channel-name")
       enabled: (view.pageIndex === 0)
     }
 
@@ -62,10 +62,18 @@ Item {
     MenuSeparator {}
 
     Com.MenuItem {
+      text: qsTr("Reset node DB")
+      onTriggered: Lisp.call("lora:reset-node-db")
+      enabled: (view.pageIndex === 0)
+    }
+
+    Com.MenuItem {
       text: qsTr("Device filter...")
       onTriggered: Lisp.call("lora:edit-device-filter")
       enabled: (view.pageIndex === 2)
     }
+
+    MenuSeparator {}
 
     Com.MenuItem {
       text: qsTr("Export DB (Lisp)")

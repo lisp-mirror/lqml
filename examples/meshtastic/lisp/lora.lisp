@@ -38,6 +38,7 @@
 (defvar *config-complete* nil)
 (defvar *notify-id*       nil)
 (defvar *ready*           nil)
+(defvar *allow-discovery* t)
 (defvar *reading*         nil)
 (defvar *received*        nil)
 (defvar *received-faulty* nil)
@@ -49,12 +50,13 @@
               :initial-contents list))
 
 (defun start-device-discovery (&optional (name (or (app:setting :device) "")))
-  (setf *schedule-clear* t)
-  (setf *ble-names* nil)
-  (unless radios:*found*
-    (radios:clear))
-  (qt:start-device-discovery qt:*cpp* name)
-  (q> |playing| ui:*busy* t))
+  (when *allow-discovery*
+    (setf *schedule-clear* t)
+    (setf *ble-names* nil)
+    (unless radios:*found*
+      (radios:clear))
+    (qt:start-device-discovery qt:*cpp* name)
+    (q> |playing| ui:*busy* t)))
 
 (defun get-node-config ()
   ;; see also Timer in 'qml/ext/group/Group.qml'
@@ -323,7 +325,7 @@
 (defun send-admin (admin-message)
   (when (radio-ready-p)
     (send-to-radio
-     (to-radio :to (me:num *my-node-info*)
+     (to-radio :to (my-num)
                :id (msg:new-message-id)
                :hop-limit 3
                :want-ack t
@@ -338,6 +340,12 @@
   (send-admin (me:make-admin-message
                :set-channel (setf *my-channel* channel))))
 
+(defun reset-node-db ()
+  "Show only nodes currently in use."
+  (when (send-admin (me:make-admin-message
+                     :nodedb-reset (my-num)))
+    (wait-for-reboot)))
+
 (defun change-lora-config ()
   (when (send-admin
          (me:make-admin-message
@@ -350,12 +358,16 @@
                               :tx-enabled t
                               :tx-power 0 ; max legal power
                               :sx126x-rx-boosted-gain t))))
-    ;; device will reboot after changing lora config
+    (wait-for-reboot)))
+
+(defun wait-for-reboot (&optional (seconds 20))
+  "Changing config will reboot device."
+  (let ((*allow-discovery* nil))
     (app:toast (tr "waiting for reboot..."))
     (qsleep 5)
     (q> |playing| ui:*busy* t)
-    (qsleep 20)
-    (start-device-discovery)))
+    (qsleep seconds))
+  (start-device-discovery))
 
 (defun change-region (&optional (region "")) ; see QML
   (cond ((or (x:empty-string region)
@@ -371,15 +383,16 @@
   (qlater 'change-lora-config)
   (values))
 
-(defun config-device ()
-  "Will be called once for every new device, in order to be able to
-  communicate on the same channel."
-  ;; channel settings for direct messages
+(defun set-primary-channel ()
+  "Default primary channel settings for public communication."
   (set-channel (me:make-channel
                 :settings (me:make-channel-settings
                            :name *channel-name*
                            :psk (to-bytes (list 1))) ; encrypted with fixed (known) key
-                :role :primary))
+                :role :primary)))
+
+(defun config-device ()
+  (set-primary-channel)
   (change-lora-config))
 
 (defun send-position (pos &optional (to (my-num)))
@@ -433,7 +446,8 @@
      (tr "Channel name:") 'channel-name-changed
      :title (tr "Name")
      :text *channel-name*
-     :max-length #.(float 12))))
+     :max-length #.(float 12)))
+  (values))
 
 (defun channel-name-changed (ok)
   (when ok
@@ -443,19 +457,22 @@
         (setf *channel-name* name)
         (q> |text| ui:*channel-name* *channel-name*)
         (app:change-setting :channel-name name)
-        (config-device)))))
+        (qlater 'set-primary-channel))))
+  (values))
 
 (defun edit-device-filter () ; see QML
   (app:input-dialog
    (tr "Device filter:") 'device-filter-changed
    :title (tr "Filter")
-   :text (or (app:setting :device-filter) "meshtastic")))
+   :text (or (app:setting :device-filter) "meshtastic"))
+  (values))
 
 (defun device-filter-changed (ok)
   (when ok
     (let ((name (q< |text| ui:*dialog-line-edit*)))
       (qt:set-device-filter qt:*cpp* name)
-      (app:change-setting :device-filter name))))
+      (app:change-setting :device-filter name)))
+  (values))
 
 (defun keywords (name)
   (pr:enum-keywords (ecase name

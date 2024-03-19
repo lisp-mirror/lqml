@@ -150,7 +150,7 @@ Rectangle {
     // hack to define all model key _types_
     ListElement {
       receiver: ""; sender: ""; senderName: ""; timestamp: ""; hour: "";
-      text: ""; text2: ""; mid: ""; ackState: ""; me: true; hidden: false
+      text: ""; text2: ""; mid: ""; ackState: ""; me: true; hidden: true
     }
 
     function addMessage(message) { append(message) }
