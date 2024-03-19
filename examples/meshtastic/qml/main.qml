@@ -62,20 +62,6 @@ Item {
     MenuSeparator {}
 
     Com.MenuItem {
-      text: qsTr("Reset node DB")
-      onTriggered: Lisp.call("lora:reset-node-db")
-      enabled: (view.pageIndex === 0)
-    }
-
-    Com.MenuItem {
-      text: qsTr("Device filter...")
-      onTriggered: Lisp.call("lora:edit-device-filter")
-      enabled: (view.pageIndex === 2)
-    }
-
-    MenuSeparator {}
-
-    Com.MenuItem {
       text: qsTr("Export DB (Lisp)")
       onTriggered: Lisp.call("db:export-to-list")
     }

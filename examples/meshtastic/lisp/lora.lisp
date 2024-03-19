@@ -55,7 +55,7 @@
     (setf *ble-names* nil)
     (unless radios:*found*
       (radios:clear))
-    (qt:start-device-discovery qt:*cpp* name)
+    (qrun* (qt:start-device-discovery qt:*cpp* name))
     (q> |playing| ui:*busy* t)))
 
 (defun get-node-config ()
@@ -136,15 +136,16 @@
 
 (defun read-radio ()
   "Triggers a read on the radio. Will call RECEIVED-FROM-RADIO on success."
-  (qt:read* qt:*cpp*))
+  (qrun* (qt:read* qt:*cpp*)))
 
 (defun send-to-radio (to-radio)
   "Sends passed TO-RADIO, preceded by a header."
   (when *print-json*
     (pr:print-json to-radio))
   (let ((bytes (pr:serialize-to-bytes to-radio)))
-    (qt:write* qt:*cpp* (header (length bytes)))
-    (qt:write* qt:*cpp* bytes)))
+    (qrun*
+     (qt:write* qt:*cpp* (header (length bytes)))
+     (qt:write* qt:*cpp* bytes))))
 
 (defun received-from-radio (bytes &optional notified) ; see Qt
   (if notified
@@ -341,7 +342,6 @@
                :set-channel (setf *my-channel* channel))))
 
 (defun reset-node-db ()
-  "Show only nodes currently in use."
   (when (send-admin (me:make-admin-message
                      :nodedb-reset (my-num)))
     (wait-for-reboot)))
@@ -460,7 +460,7 @@
         (qlater 'set-primary-channel))))
   (values))
 
-(defun edit-device-filter () ; see QML
+(defun edit-device-filter ()
   (app:input-dialog
    (tr "Device filter:") 'device-filter-changed
    :title (tr "Filter")
@@ -470,7 +470,7 @@
 (defun device-filter-changed (ok)
   (when ok
     (let ((name (q< |text| ui:*dialog-line-edit*)))
-      (qt:set-device-filter qt:*cpp* name)
+      (qrun* (qt:set-device-filter qt:*cpp* name))
       (app:change-setting :device-filter name)))
   (values))
 
