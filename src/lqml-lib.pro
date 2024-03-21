@@ -33,10 +33,16 @@ android {
   } else {
     ECL = $$(ECL_ANDROID)
   }
-  QT           += androidextras
   INCLUDEPATH  = $$ECL/include
   LIBS         = -L$$ECL/lib -lecl
   DESTDIR      = ../../platforms/android/lib
+
+  equals(QT_MAJOR_VERSION, 6) {
+    QT += core-private
+  }
+  lessThan(QT_MAJOR_VERSION, 6) {
+    QT += androidextras
+  }
 
   32bit {
     ANDROID_ABIS = "armeabi-v7a"

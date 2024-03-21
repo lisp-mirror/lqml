@@ -58,7 +58,7 @@ win32 {
 }
 
 android {
-  QT          += androidextras remoteobjects
+  QT          += remoteobjects
   DEFINES     += INI_ASDF
   DEFINES     -= DESKTOP_APP
   INCLUDEPATH = $$ECL/include
@@ -68,6 +68,13 @@ android {
   LIBS        += -L$$ECL/lib/$$ECL_VERSION
   LIBS        += -lasdf -lecl-help -ldeflate -lecl-cdb -lecl-curl -lql-minitar -lsockets
   LIBS        += -L../../../platforms/android/lib
+
+  equals(QT_MAJOR_VERSION, 6) {
+    QT += core-private
+  }
+  lessThan(QT_MAJOR_VERSION, 6) {
+    QT += androidextras
+  }
 
   SOURCES += cpp/android.cpp
 
@@ -82,9 +89,9 @@ android {
   # https://github.com/KDAB/android_openssl/tree/master/latest
   # required for downloading map tiles, please note naming convention for Qt:
   32bit {
-    SSL_PATH = ../../../platforms/android/lib32
+    SSL_PATH = $$PWD/../../platforms/android/lib32
   } else {
-    SSL_PATH = ../../../platforms/android/lib
+    SSL_PATH = $$PWD/../../platforms/android/lib
   }
   ANDROID_EXTRA_LIBS += $$SSL_PATH/libcrypto_1_1.so $$SSL_PATH/libssl_1_1.so
 
@@ -126,9 +133,21 @@ ios {
 }
 
 32bit {
-  LIBS += -llqml32 -llisp32
+  equals(QT_MAJOR_VERSION, 6) {
+    LIBS += -llqml32_armeabi-v7a
+  }
+  lessThan(QT_MAJOR_VERSION, 6) {
+    LIBS += -llqml32
+  }
+  LIBS += -llisp32
 } else {
-  LIBS += -llqml -llisp
+  equals(QT_MAJOR_VERSION, 6) {
+    LIBS += -llqml_arm64-v8a
+  }
+  lessThan(QT_MAJOR_VERSION, 6) {
+    LIBS += -llqml
+  }
+  LIBS += -llisp
 }
 
 LIBS        += -Ltmp -lapp

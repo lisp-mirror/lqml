@@ -1,9 +1,18 @@
-QT += core androidextras bluetooth remoteobjects
+QT += core bluetooth remoteobjects
 TEMPLATE = lib
-CONFIG += dll
+CONFIG += c++17 dll
 INCLUDEPATH += $$PWD
 TARGET = service
 DESTDIR = ../../build-android
+OBJECTS_DIR = ./tmp
+MOC_DIR     = ./tmp
+
+equals(QT_MAJOR_VERSION, 6) {
+  QT += core-private
+}
+lessThan(QT_MAJOR_VERSION, 6) {
+  QT += androidextras
+}
 
 HEADERS += \
   ../ble/ble.h \

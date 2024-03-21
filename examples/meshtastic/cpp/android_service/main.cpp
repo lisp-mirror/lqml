@@ -1,6 +1,11 @@
 #include "qtandroidservice_ro.h"
 #include "../ble/ble_meshtastic.h"
-#include <QAndroidService>
+
+#if (QT_VERSION < 0x060000)
+  #include <QAndroidService>
+#else
+  #include <QtCore/private/qandroidextras_p.h>
+#endif
 
 int main(int argc, char* argv[]) {
   QAndroidService app(argc, argv);

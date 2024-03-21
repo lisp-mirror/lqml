@@ -17,7 +17,11 @@
 #include <QtQuick/QQuickView>
 
 #ifdef Q_OS_ANDROID
-  #include <QtAndroid>
+  #if (QT_VERSION < 0x060000)
+    #include <QAndroidService>
+  #else
+    #include <QtCore/private/qandroidextras_p.h>
+  #endif
 #endif
 
 QT_BEGIN_NAMESPACE
@@ -746,6 +750,9 @@ cl_object ensure_permissions2(cl_object l_permissions) {
   cl_object l_granted = ECL_NIL;
   QList<StringInt> deniedSI;
   QStringList denied;
+
+#if QT_VERSION < 0x060000
+  // for Qt5
   for (StringInt p : qAsConst(permissions)) {
     if (QtAndroid::checkPermission(p.first) == QtAndroid::PermissionResult::Granted) {
       l_granted = CONS(cl_nth(ecl_make_fixnum(p.second), l_permissions),
@@ -768,6 +775,33 @@ cl_object ensure_permissions2(cl_object l_permissions) {
     });
     loop.exec(QEventLoop::ExcludeUserInputEvents);
   }
+#else
+  // for Qt6
+  for (StringInt p : qAsConst(permissions)) {
+    if (QtAndroidPrivate::checkPermission(p.first).result() == QtAndroidPrivate::Authorized) {
+      l_granted = CONS(cl_nth(ecl_make_fixnum(p.second), l_permissions),
+                       l_granted);
+    } else {
+      deniedSI << p;
+      denied << p.first;
+    }
+  }
+  if (!denied.isEmpty()) {
+    QStringList granted;
+    for (auto permission : qAsConst(denied)) {
+      if (QtAndroidPrivate::requestPermission(permission).result() == QtAndroidPrivate::Authorized) {
+        granted << permission;
+      }
+    }
+    for (StringInt p : qAsConst(deniedSI)) {
+      if (granted.contains(p.first)) {
+        l_granted = CONS(cl_nth(ecl_make_fixnum(p.second), l_permissions),
+                         l_granted);
+      }
+    }
+  }
+#endif
+
   l_ret = cl_nreverse(l_granted);
 #endif
   ecl_return1(ecl_process_env(), l_ret);

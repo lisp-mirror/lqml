@@ -93,7 +93,12 @@ void BLE::scanServices() {
     connect(controller, QOverload<QLowEnergyController::Error>::of(&QLowEnergyController::error),
             this, &BLE::errorReceived);
 #else
-    connect(controller, &QLowEnergyController::errorOccurred, this, &BLE::errorReceived);
+    connect(controller, &QLowEnergyController::errorOccurred,
+            this, &BLE::errorReceived);
+    connect(controller, &QLowEnergyController::mtuChanged,
+            [](int mtu) {
+              qDebug() << "MTU changed to:" << mtu;
+            });
 #endif
     connect(controller, &QLowEnergyController::disconnected,
             this, &BLE::deviceDisconnected);
@@ -130,6 +135,9 @@ void BLE::serviceScanDone() {
   scanned = true;
   Q_EMIT mainServiceReady();
   qDebug() << "service scan done";
+#if QT_VERSION >= 0x060000
+  qDebug() << "MTU:" << controller->mtu();
+#endif
 }
 
 void BLE::connectToService(const QString& uuid) {

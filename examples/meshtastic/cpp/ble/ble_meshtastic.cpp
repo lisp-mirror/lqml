@@ -6,7 +6,9 @@
 
 #ifdef Q_OS_ANDROID
   #include "../android_service/qtandroidservice_ro.h"
-  #include <QAndroidService>
+  #if (QT_VERSION < 0x060000)
+    #include <QAndroidService>
+  #endif
 #endif
 
 // service
