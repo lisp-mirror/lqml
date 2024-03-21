@@ -1,6 +1,7 @@
 #include "qt.h"
 
 #if (QT_VERSION < 0x060000)
+  #include <QtAndroid>
   #include <QAndroidService>
   #include <QAndroidJniEnvironment>
 #else
