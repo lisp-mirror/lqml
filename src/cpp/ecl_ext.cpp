@@ -18,7 +18,7 @@
 
 #ifdef Q_OS_ANDROID
   #if (QT_VERSION < 0x060000)
-    #include <QAndroidService>
+    #include <QtAndroid>
   #else
     #include <QtCore/private/qandroidextras_p.h>
   #endif

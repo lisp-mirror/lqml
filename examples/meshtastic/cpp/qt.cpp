@@ -16,7 +16,6 @@
   #include "rep_qtandroidservice_replica.h"
   #if (QT_VERSION < 0x060000)
     #include <QtAndroid>
-    #include <QAndroidService>
     #include <QAndroidJniEnvironment>
   #else
     #include <QtCore/private/qandroidextras_p.h>
