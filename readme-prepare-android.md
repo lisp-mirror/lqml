@@ -8,6 +8,8 @@ A good description of what you'll need can be found here:
 You don't need Android Studio, so search for **command line tools** on the SDK
 download page.
 
+The NDK version that will work with both ECL and Qt5.15.2 is `21.3`.
+
 
 
 Define environment variables and aliases
