@@ -305,17 +305,24 @@
             ((me:from-radio.has-config struct)
              (let ((config (me:config struct)))
                (when (me:config.has-lora config)
-                 (setf *config-lora* (me:lora config)))))
+                 (setf *config-lora* (me:lora config))
+                 (let ((region (me:region *config-lora*)))
+                   (when (and region
+                              (not (eql region (radios:saved-region))))
+                     (app:change-setting :region region)
+                     (radios:set-region))))))
             ;; config-complete-id
             ((me:from-radio.has-config-complete-id struct)
              (when (= *config-id* (me:config-complete-id struct))
                (setf *config-complete* t)
                (q> |playing| ui:*busy* nil)
                (qlog "config-complete id: ~A" *config-id*)
-               (when (and *my-channel*
-                          (string/= *channel-name*
-                                    (me:name (me:settings *my-channel*))))
-                 (qlater 'config-device))))))
+               (if (radios:saved-region)
+                   (when (and *my-channel*
+                              (string/= *channel-name*
+                                        (me:name (me:settings *my-channel*))))
+                     (qlater 'config-device))
+                   (radios:choose-region))))))
     (setf *received* nil)))
 
 (defun radio-ready-p ()

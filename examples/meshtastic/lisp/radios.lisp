@@ -5,12 +5,20 @@
 (defun ini ()
   (q> |model| ui:*region*
       (cons "-" (mapcar 'symbol-name (rest (lora:keywords :region-code)))))
-  (x:when-it (app:setting :region)
-    (q> |currentIndex| ui:*region*
-        (q! |indexOfValue| ui:*region*
-            (symbol-name x:it))))
+  (set-region)
   (x:when-it (app:setting :device-filter)
     (qt:set-device-filter qt:*cpp* x:it)))
+
+(defun saved-region ()
+  (let ((region (app:setting :region)))
+    (unless (find region '(nil :unset))
+      region)))
+
+(defun set-region ()
+  (x:when-it (saved-region)
+    (q> |currentIndex| ui:*region*
+        (q! |indexOfValue| ui:*region*
+            (symbol-name x:it)))))
 
 (defun choose-region ()
   (q> |currentIndex| ui:*main-view* 2) ; 'Radios'

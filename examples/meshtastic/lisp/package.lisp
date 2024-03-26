@@ -126,7 +126,9 @@
    #:clear
    #:device-discovered
    #:ini
-   #:reset))
+   #:reset
+   #:saved-region
+   #:set-region))
 
 (defpackage :location
   (:nicknames :loc)

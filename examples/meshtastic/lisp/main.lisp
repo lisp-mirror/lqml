@@ -23,13 +23,12 @@
   (q> |visible| ui:*message-view* t)
   #+android
   (progn
-    (ensure-permissions :access-fine-location) ; for sharing location
-    (ensure-permissions :bluetooth-scan :bluetooth-connect)) ; android >= 12
+    (ensure-permissions :access-fine-location)
+    (ensure-permissions :bluetooth-scan
+                        :bluetooth-connect))
   #+(or android ios)
   (qlater (lambda () (qt:keep-screen-on qt:*cpp*)))
-  (lora:start-device-discovery)
-  (unless (setting :region)
-    (radios:choose-region)))
+  (lora:start-device-discovery))
 
 (defun in-data-path (&optional (file "") (prefix "data/"))
   #+mobile
