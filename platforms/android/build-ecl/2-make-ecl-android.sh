@@ -1,5 +1,5 @@
 # use the previously built host ECL to build the android version
-# requires NDK >= 19
+# tested with NDK 21
 # you need to define ANDROID_NDK_TOOLCHAIN
 
 export AR=$ANDROID_NDK_TOOLCHAIN/bin/aarch64-linux-android-ar

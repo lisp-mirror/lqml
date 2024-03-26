@@ -1,5 +1,5 @@
 # use the previously built host ECL to build the android version
-# requires NDK >= 19
+# tested with NDK 21
 # you need to define ANDROID_NDK_TOOLCHAIN
 
 export CC=$ANDROID_NDK_TOOLCHAIN/bin/armv7a-linux-androideabi21-clang

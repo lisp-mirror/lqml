@@ -1,4 +1,4 @@
-;;; please use NDK versions >= 19 (with prebuilt standalone toolchain)
+;;; for Qt5.15 & NDK 21
 
 (in-package :cl-user)
 
