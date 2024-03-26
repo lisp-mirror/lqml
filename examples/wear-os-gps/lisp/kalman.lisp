@@ -35,7 +35,7 @@
 (defun filter (lat lon accuracy speed)
   (when (and lat lon accuracy speed)
     (setf accuracy (max 1 accuracy))
-    (let ((timestamp (get-internal-real-time)))
+    (let ((timestamp (/ (get-internal-real-time) 1000.0)))
       (if *variance*
           (let ((time-inc (- timestamp *timestamp*)))
             (incf *variance* (/ (* time-inc (expt speed 2)) 1000))

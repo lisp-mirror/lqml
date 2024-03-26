@@ -241,7 +241,7 @@
         (setf start (get-internal-real-time))
         (qsingle-shot 100 'force-repaint))
       (when (> (- (get-internal-real-time) start)
-               300)
+               (* 300 1000))
         (setf start nil)))))
 
 (defun force-repaint ()

@@ -8,7 +8,7 @@
     "After *DISTANCE-SAMPLES* samples, calculate average speed and update on
     every new distance sample."
     (push (cons (distance)
-                (get-internal-real-time))
+                (/ (get-internal-real-time) 1000.0))
           samples)
     (when (> (length samples) *distance-samples*)
       (setf samples (butlast samples))
