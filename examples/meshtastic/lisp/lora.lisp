@@ -276,25 +276,26 @@
                (when *schedule-clear*
                  (radios:clear)
                  (group:clear))
-               (let ((name (me:short-name (me:user info)))
-                     (current (= (me:num info)
-                                 (me:num *my-node-info*)))
-                     (metrics (me:device-metrics info)))
-                 (unless current
-                   (group:add-person
-                    (list :radio-name name
-                          :custom-name (or (app:setting name :custom-name) "")
-                          :node-num (me:num info)
-                          :current (equal name (app:setting :latest-receiver)))))
-                 (when (find name *ble-names* :test 'string=)
-                   (setf radios:*found* t)
-                   (radios:add-radio
-                    (list :name name
-                          :hw-model (symbol-name (me:hw-model (me:user info)))
-                          :battery-level (float (if metrics (me:battery-level metrics) 0))
-                          :current current))
-                   (when current
-                     (app:update-current-device name))))))
+               (x:when-it (me:user info)
+                 (let ((name (me:short-name x:it))
+                       (current (= (me:num info)
+                                   (me:num *my-node-info*)))
+                       (metrics (me:device-metrics info)))
+                   (unless current
+                     (group:add-person
+                      (list :radio-name name
+                            :custom-name (or (app:setting name :custom-name) "")
+                            :node-num (me:num info)
+                            :current (equal name (app:setting :latest-receiver)))))
+                   (when (find name *ble-names* :test 'string=)
+                     (setf radios:*found* t)
+                     (radios:add-radio
+                      (list :name name
+                            :hw-model (symbol-name (me:hw-model x:it))
+                            :battery-level (float (if metrics (me:battery-level metrics) 0))
+                            :current current))
+                     (when current
+                       (app:update-current-device name)))))))
             ;; channel
             ((me:from-radio.has-channel struct)
              (let ((channel (me:channel struct)))
@@ -307,8 +308,7 @@
                (when (me:config.has-lora config)
                  (setf *config-lora* (me:lora config))
                  (let ((region (me:region *config-lora*)))
-                   (when (and region
-                              (not (eql region (radios:saved-region))))
+                   (unless (find region (list :unset (radios:saved-region)))
                      (app:change-setting :region region)
                      (radios:set-region))))))
             ;; config-complete-id
@@ -421,24 +421,6 @@
                                         :time (getf pos :time))
                                        (me:make-position))) ; unset
                          :want-response t)))))
-
-(defun channel-to-url (&optional channel)
-  (let ((base64 (base64:usb8-array-to-base64-string
-                 (pr:serialize-to-bytes (or channel *my-channel*)))))
-    ;; remove padding, substitute characters as by definition
-    (x:cc "https:/meshtastic.org/e/#"
-          (string-right-trim "=" (substitute #\- #\+ (substitute #\_ #\/ base64))))))
-
-(defun url-to-channel (url &optional (set t))
-  (let ((base64 (subseq url (+ 2 (search "/#" url)))))
-    ;; re-add padding
-    (setf base64 (x:cc base64
-                       (make-string (mod (length base64) 4) :initial-element #\=)))
-    (let ((channel (pr:deserialize-from-bytes
-                    (base64:base64-string-to-usb8-array base64))))
-      (if set
-          (set-channel channel)
-          channel))))
 
 (defun change-receiver (receiver) ; see QML
   (setf *receiver* receiver)
