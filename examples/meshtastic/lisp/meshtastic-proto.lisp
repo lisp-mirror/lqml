@@ -1,6 +1,8 @@
-;;; loading protobuf Lisp source files is much faster (especially on mobile)
-;;; compared to compiled files, and doesn't seem to impact performance at
-;;; runtime (in this use case)
+;;; Note (ECL only)
+;;;
+;;; Loading protobuf Lisp source files is much faster (especially on mobile)
+;;; compared to C compiled files, and doesn't seem to impact performance at
+;;; runtime (in this use case).
 
 (in-package :qml-user)
 

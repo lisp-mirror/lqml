@@ -13,16 +13,6 @@ not available, in order to communicate with short text messages. This kind of
 mesh network is limited to about 70 nodes/radios/users to remain reliable.
 
 
-Change log
-----------
-
-* 2024-03-04: background mode for both android and iOS (now tested); radio
-  packets (like text messages) sent to app while in background are saved in a
-  file and processed when app is brought back to foreground; on new messages,
-  a red circle on the user name indicates the number of unread messages
-
-
-
 Technical notes
 ---------------
 
@@ -32,7 +22,7 @@ version.
 The app uses both **BLE** (bluetooth low energy) and the **protobufs**
 serialization library version 3.
 
-For BLE you need to build the plugin in `cpp/` first (written in Qt5).
+For BLE you need to build the plugin in `cpp/` first (written in Qt5/Qt6).
 
 The cl-protobufs library is included here because the official version doesn't
 work without the C++ plugin installed (which we don't need here). So I made

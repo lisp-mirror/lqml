@@ -15,7 +15,7 @@ Dialog {
   property alias value: spinBox.value
   property string callback
 
-  function focus() { edit.forceActiveFocus() }
+  function setFocus() { edit.forceActiveFocus() }
 
   Column {
     width: parent.width

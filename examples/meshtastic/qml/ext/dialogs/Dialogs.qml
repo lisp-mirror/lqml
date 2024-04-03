@@ -56,6 +56,6 @@ Item {
     var keyboard = (text !== "")
     rootItem.showKeyboard(keyboard)
     loader.item.open()
-    if (keyboard) loader.item.focus()
+    if (keyboard) loader.item.setFocus()
   }
 }
