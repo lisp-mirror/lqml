@@ -361,9 +361,10 @@
                               :use-preset t
                               :modem-preset (app:setting :modem-preset)
                               :region (app:setting :region)
+                              :channel-num 0 ; default for region
                               :hop-limit 3
                               :tx-enabled t
-                              :tx-power 0 ; max legal power
+                              :tx-power 0    ; max legal power
                               :sx126x-rx-boosted-gain t))))
     (wait-for-reboot)))
 
@@ -441,8 +442,9 @@
 (defun channel-name-changed (ok)
   (when ok
     (let ((name (q< |text| ui:*dialog-line-edit*)))
-      (when (and (not (x:empty-string name))
-                 (string/= name *channel-name*))
+      (when (x:empty-string name)
+        (setf name "LongFast"))
+      (when (string/= name *channel-name*)
         (setf *channel-name* name)
         (q> |text| ui:*channel-name* *channel-name*)
         (app:change-setting :channel-name name)
