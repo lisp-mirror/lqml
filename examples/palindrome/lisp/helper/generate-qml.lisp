@@ -31,5 +31,5 @@
                            (* 31 (second xy))))
                     *chars* (first *move-to-positions*))))))
 
-(qquit)
+(qlater 'qquit)
 

@@ -10,7 +10,8 @@
 (defvar *receiver*     nil)
 (defvar *config-lora*  nil)
 (defvar *ble-names*    nil)
-(defvar *print-json*   t)
+(defvar *print-json*   #+mobile nil
+                       #-mobile t)
 
 (defun ini ()
   (setf *receiver*     (app:setting :latest-receiver)
@@ -20,14 +21,10 @@
 
 ;;; header
 
-(defun lsb (size)
-  (ldb (byte 8 0) size))
-
-(defun msb (size)
-  (ldb (byte 8 8) size))
-
 (defun header (size)
-  (vector #x94 #xc3 (msb size) (lsb size)))
+  (flet ((b8 (x)
+           (ldb (byte 8 x) size)))
+    (vector #x94 #xc3 (b8 8) (b8 0))))
 
 ;;; ini/send/receive
 
@@ -348,10 +345,12 @@
   (send-admin (me:make-admin-message
                :set-channel (setf *my-channel* channel))))
 
-(defun reset-node-db ()
-  (when (send-admin (me:make-admin-message
-                     :nodedb-reset (my-num)))
-    (wait-for-reboot)))
+(defun reset-node-db () ; see QML
+  (qlater (lambda ()
+            (when (send-admin (funcall 'me:make-admin-message
+                                       :nodedb-reset (my-num))) ; see note *)
+              (wait-for-reboot))))
+  (values))
 
 (defun change-lora-config ()
   (when (send-admin
@@ -361,10 +360,9 @@
                               :use-preset t
                               :modem-preset (app:setting :modem-preset)
                               :region (app:setting :region)
-                              :channel-num 0 ; default for region
                               :hop-limit 3
                               :tx-enabled t
-                              :tx-power 0    ; max legal power
+                              :tx-power 0 ; max legal power
                               :sx126x-rx-boosted-gain t))))
     (wait-for-reboot)))
 
@@ -451,7 +449,7 @@
         (qlater 'set-primary-channel))))
   (values))
 
-(defun edit-device-filter ()
+(defun edit-device-filter () ; see QML
   (app:input-dialog
    (tr "Device filter:") 'device-filter-changed
    :title (tr "Filter")
@@ -472,3 +470,7 @@
                       (:region-code
                        'me:config.lo-ra-config.region-code))))
 
+;;; notes
+;;;
+;;; *) FUNCALL needed in C compiled code: for some reason, this would give
+;;;    a protobuf type mismatch error without it

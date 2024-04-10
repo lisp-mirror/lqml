@@ -62,7 +62,13 @@ Item {
     MenuSeparator {}
 
     Com.MenuItem {
-      text: qsTr("Export DB (Lisp)")
+      text: qsTr("Reset node DB")
+      onTriggered: Lisp.call("lora:reset-node-db")
+      enabled: (view.pageIndex === 0)
+    }
+
+    Com.MenuItem {
+      text: qsTr("Export message DB (Lisp)")
       onTriggered: Lisp.call("db:export-to-list")
     }
 
