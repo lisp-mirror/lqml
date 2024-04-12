@@ -38,6 +38,7 @@
    #:*channels*
    #:*config-complete*
    #:*config-lora*
+   #:*mode*
    #:*my-node-info*
    #:*node-infos*
    #:*print-json*

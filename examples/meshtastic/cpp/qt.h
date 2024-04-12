@@ -13,6 +13,7 @@
   class QtAndroidServiceReplica;
 #else
   class BLE_ME;
+  class USB_ME;
 #endif
 
 QT_BEGIN_NAMESPACE
@@ -26,9 +27,12 @@ public:
   // BLE
   Q_INVOKABLE QVariant startDeviceDiscovery(const QVariant&);
   Q_INVOKABLE QVariant setDeviceFilter(const QVariant&);
-  Q_INVOKABLE QVariant read2();
-  Q_INVOKABLE QVariant write2(const QVariant&);
+  Q_INVOKABLE QVariant readBle();
+  Q_INVOKABLE QVariant writeBle(const QVariant&);
   Q_INVOKABLE QVariant setBackgroundMode(const QVariant&);
+
+  // USB
+  Q_INVOKABLE QVariant writeUsb(const QVariant&);
 
   // GPS
   Q_INVOKABLE QVariant iniPositioning();
@@ -51,7 +55,8 @@ public:
 #ifdef Q_OS_ANDROID
   QSharedPointer<QtAndroidServiceReplica> ble;
 #else
-  BLE_ME* ble;
+  BLE_ME* ble = nullptr;
+  USB_ME* usb = nullptr;
 #endif
 };
 

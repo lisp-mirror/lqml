@@ -22,6 +22,7 @@
   #endif
 #else
   #include "ble/ble_meshtastic.h"
+  #include "usb/usb_meshtastic.h"
 #endif
 
 QT_BEGIN_NAMESPACE
@@ -47,6 +48,7 @@ QT::QT() : QObject() {
 #else
   ble = new BLE_ME;
 #endif
+  usb = new USB_ME;
 
 #ifdef Q_OS_ANDROID
   QObject::connect(ble.data(), &QtAndroidServiceReplica::deviceDiscovered,
@@ -76,7 +78,12 @@ QT::QT() : QObject() {
     for (auto name : names) {
       vNames << name;
     }
-    ecl_fun("lora:set-ready", ready, current, vNames);
+    ecl_fun("lora:set-ready-ble", ready, current, vNames);
+  });
+
+  QObject::connect(usb, &USB_ME::setReady,
+  [](const QString& port) {
+    ecl_fun("lora:set-ready-usb", port);
   });
 
 #ifdef Q_OS_ANDROID
@@ -88,11 +95,21 @@ QT::QT() : QObject() {
     ecl_fun("lora:received-from-radio", data, notified.isEmpty() ? QVariant() : notified);
   });
 
+  QObject::connect(usb, &USB_ME::receivedFromRadio,
+  [](const QByteArray& data) {
+    ecl_fun("lora:received-from-radio", data);
+  });
+
 #ifdef Q_OS_ANDROID
   QObject::connect(ble.data(), &QtAndroidServiceReplica::receivingDone,
 #else
   QObject::connect(ble, &BLE_ME::receivingDone,
 #endif
+  []() {
+    ecl_fun("lora:receiving-done");
+  });
+
+  QObject::connect(usb, &USB_ME::receivingDone,
   []() {
     ecl_fun("lora:receiving-done");
   });
@@ -138,19 +155,26 @@ QVariant QT::setDeviceFilter(const QVariant& vName) {
   return vName;
 }
 
-QVariant QT::read2() {
+QVariant QT::readBle() {
   ble->read();
   return QVariant();
 }
 
-QVariant QT::write2(const QVariant& bytes) {
-  ble->write(bytes.toByteArray());
+QVariant QT::writeBle(const QVariant& vBytes) {
+  ble->write(vBytes.toByteArray());
   return QVariant();
 }
 
 QVariant QT::setBackgroundMode(const QVariant& vBackground) {
   // for testing
   ble->setBackgroundMode(vBackground.toBool());
+  return QVariant();
+}
+
+// USB
+
+QVariant QT::writeUsb(const QVariant& vBytes) {
+  usb->write2(vBytes.toByteArray());
   return QVariant();
 }
 

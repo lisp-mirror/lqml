@@ -66,6 +66,18 @@ they are 64 bit and run at least iOS 12.
 How to use cl-meshtastic
 ------------------------
 
+If you have your radio connected via USB to your PC, it will first try a direct
+USB connection (both much faster and more reliable).
+
+For this to work, you need to run the following (using the Python CLI):
+```
+meshtastic \
+--set serial.enabled true \
+--set serial.mode PROTO
+```
+
+The next best option is BLE (Bluetooth Low Energy).
+
 Your radio needs to be turned on and bluetooth needs to be enabled before you
 start the app.
 
@@ -81,6 +93,7 @@ It may occur that your radio device is sometimes not found; some suggestions:
 
 * try to disable the radio in any other app that used it previously
 * try to unpair your radio from current device
+* reboot your radio (turn off/on)
 * press-and-hold on the radio icon to restart device discovery
 
 A generic bluetooth app like **nRF Connect** may help in order to see if the

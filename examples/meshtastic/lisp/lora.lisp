@@ -31,6 +31,7 @@
 (defconstant  +broadcast-id+   #xffffffff)
 (defparameter *broadcast-name* "ffff")
 
+(defvar *mode*            :ble) ; :ble :usb
 (defvar *config-id*       0)
 (defvar *config-complete* nil)
 (defvar *notify-id*       nil)
@@ -55,7 +56,7 @@
     (qrun* (qt:start-device-discovery qt:*cpp* name))
     (q> |playing| ui:*busy* t)))
 
-(defun get-node-config ()
+(defun get-node-config (&optional (want t))
   ;; see also Timer in 'qml/ext/group/Group.qml'
   (when *ready*
     (setf *schedule-clear* t)
@@ -63,16 +64,24 @@
           *channels*        nil
           *node-infos*      nil)
     (incf *config-id*)
-    (send-to-radio
-     (me:make-to-radio :want-config-id *config-id*))
+    (when want
+      (send-to-radio
+       (me:make-to-radio :want-config-id *config-id*)))
     (q> |playing| ui:*busy* t)))
 
-(defun set-ready (&optional ready name ble-names) ; see Qt
+(defun set-ready-ble (&optional ready name ble-names) ; see Qt
   (setf *ready* ready)
   (when ready
     (setf *ble-names* ble-names)
     (app:toast (x:cc (tr "radio") ": " name) 2)
     (get-node-config))
+  (values))
+
+(defun set-ready-usb (port) ; see Qt
+  (setf *ready* t
+        *mode*  :usb)
+  (app:toast (x:cc (tr "radio") ": " port) 2)
+  (get-node-config nil)
   (values))
 
 (defun add-line-breaks (text)
@@ -133,16 +142,20 @@
 
 (defun read-radio ()
   "Triggers a read on the radio. Will call RECEIVED-FROM-RADIO on success."
-  (qrun* (qt:read* qt:*cpp*)))
+  (qrun* (qt:read-ble qt:*cpp*)))
 
 (defun send-to-radio (to-radio)
   "Sends passed TO-RADIO, preceded by a header."
   (when *print-json*
     (pr:print-json to-radio))
-  (let ((bytes (pr:serialize-to-bytes to-radio)))
-    (qrun*
-     (qt:write* qt:*cpp* (header (length bytes)))
-     (qt:write* qt:*cpp* bytes))))
+  (let* ((bytes (pr:serialize-to-bytes to-radio))
+         (header (header (length bytes))))
+    (case *mode*
+      (:ble (qrun*
+             (qt:write-ble qt:*cpp* header)
+             (qt:write-ble qt:*cpp* bytes)))
+      (:usb (qrun*
+             (qt:write-usb qt:*cpp* (concatenate 'vector header bytes)))))))
 
 (defun received-from-radio (bytes &optional notified) ; see Qt
   (if notified
@@ -284,7 +297,9 @@
                             :custom-name (or (app:setting name :custom-name) "")
                             :node-num (me:num info)
                             :current (equal name (app:setting :latest-receiver)))))
-                   (when (find name *ble-names* :test 'string=)
+                   (when (or (and (eql *mode* :usb)
+                                  current)
+                             (find name *ble-names* :test 'string=))
                      (setf radios:*found* t)
                      (radios:add-radio
                       (list :name name

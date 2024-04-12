@@ -1,4 +1,4 @@
-QT          += sql network bluetooth
+QT          += sql network bluetooth serialport
 TEMPLATE    = lib
 CONFIG      += c++17 plugin release no_keywords
 DEFINES     += PLUGIN
@@ -12,11 +12,13 @@ MOC_DIR     = ./tmp/
 HEADERS += \
   ble/ble.h \
   ble/ble_meshtastic.h \
+  usb/usb_meshtastic.h \
   qt.h
 
 SOURCES += \
   ble/ble.cpp \
   ble/ble_meshtastic.cpp \
+  usb/usb_meshtastic.cpp \
   qt.cpp
 
 linux {

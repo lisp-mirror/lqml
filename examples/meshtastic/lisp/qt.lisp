@@ -11,11 +11,12 @@
    #:last-position
    #:local-ip
    #:start-device-discovery
-   #:read*
+   #:read-ble
    #:set-background-mode ; for testing
    #:set-device-filter
    #:sql-query
-   #:write*))
+   #:write-ble
+   #:write-usb))
 
 (in-package :qt)
 

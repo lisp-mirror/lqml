@@ -28,7 +28,9 @@
                         :bluetooth-connect))
   #+(or android ios)
   (qlater (lambda () (qt:keep-screen-on qt:*cpp*)))
-  (lora:start-device-discovery))
+  (qsingle-shot 1000 (lambda ()
+                       (unless (eql lora:*mode* :usb)
+                         (lora:start-device-discovery)))))
 
 (defun in-data-path (&optional (file "") (prefix "data/"))
   #+mobile
