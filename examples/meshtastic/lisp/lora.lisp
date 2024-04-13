@@ -80,7 +80,7 @@
 (defun set-ready-usb (port) ; see Qt
   (setf *ready* t
         *mode*  :usb)
-  (app:toast (x:cc (tr "radio") ": " port) 2)
+  (app:toast (x:cc "USB: " port) 2)
   (get-node-config nil)
   (values))
 

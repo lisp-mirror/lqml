@@ -19,7 +19,7 @@ public:
 public Q_SLOTS:
   void wantConfigId();
   void write2(const QByteArray&);
-  void read();
+  void read2();
 
 Q_SIGNALS:
   void setReady(const QString&);

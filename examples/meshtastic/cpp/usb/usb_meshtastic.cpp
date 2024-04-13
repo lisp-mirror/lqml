@@ -5,19 +5,24 @@
 
 USB_ME::USB_ME() {
   const auto infos = QSerialPortInfo::availablePorts();
-  const QStringList boards = { "RAK" }; // TODO: currently RAK only
+  const QStringList boards = { "RAK", "UART" }; // TODO
   for (const QSerialPortInfo& info : infos) {
     QString name(info.description() + " " + info.manufacturer());
-    qDebug() << "USB:" << info.portName() << name;
-    for (auto board : boards) {
-      if (name.contains(board, Qt::CaseInsensitive)) {
-        setPortName(info.portName());
-        goto done;
+    QString port(info.portName());
+    qDebug() << "USB:" << port << name;
+    if (port.startsWith("tty") &&
+        (port.contains("ACM", Qt::CaseInsensitive) ||  // Linux
+         port.contains("USB", Qt::CaseInsensitive))) { // macOS
+      for (auto board : boards) {
+        if (name.contains(board, Qt::CaseInsensitive)) {
+          setPortName(info.portName());
+          goto done;
+        }
       }
     } 
   }
 done:
-  connect(this, &QSerialPort::readyRead, this, &USB_ME::read);
+  connect(this, &QSerialPort::readyRead, this, &USB_ME::read2);
   connect(this, &QSerialPort::errorOccurred,
           [](QSerialPort::SerialPortError error) {
             if (error != QSerialPort::NoError) {
@@ -54,10 +59,11 @@ void USB_ME::write2(const QByteArray& data) {
   }
 }
 
-void USB_ME::read() {
-  const char header[] = { '\x94', '\xc3' };
+void USB_ME::read2() {
   static QTimer* timer = nullptr;
-  QByteArray data(readAll());
+  const char header[] = { '\x94', '\xc3' };
+  const int MAX = 0xffff;
+  QByteArray data(read(MAX));
   if (data.startsWith(header)) { // skip evtl. debug log
     if (state == Open) {
       Q_EMIT setReady(portName());
