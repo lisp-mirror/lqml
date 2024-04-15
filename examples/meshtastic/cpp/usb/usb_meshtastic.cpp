@@ -63,16 +63,15 @@ void USB_ME::write2(const QByteArray& data) {
 }
 
 void USB_ME::read2() {
-  const char header[] = { '\x94', '\xc3' };
+  const QByteArray HEADER = QByteArray::fromHex("94c3");
   QByteArray data(readAll());
-  qGuiApp->processEvents(); // macOS needs this for some reason
 
-  if (data.startsWith(header)) { // skip evtl. debug log
+  if (data.startsWith(HEADER)) { // skip evtl. debug log
     // split on every new header
     const int LEN = 4;
     int end = 0;
     int start = LEN;
-    while ((end = data.indexOf(header, start)) != -1) {
+    while ((end = data.indexOf(HEADER, start)) != -1) {
       Q_EMIT receivedFromRadio(data.mid(start, end - start));
       start = end + LEN;
     }
