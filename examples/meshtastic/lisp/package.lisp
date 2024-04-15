@@ -38,7 +38,6 @@
    #:*channels*
    #:*config-complete*
    #:*config-lora*
-   #:*mode*
    #:*my-node-info*
    #:*node-infos*
    #:*print-json*
@@ -121,6 +120,7 @@
   (:use :cl :qml)
   (:export
    #:*found*
+   #:*connection*
    #:add-radio
    #:change-radio
    #:choose-region

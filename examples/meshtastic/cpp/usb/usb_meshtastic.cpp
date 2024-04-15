@@ -1,27 +1,10 @@
 #include "usb_meshtastic.h"
 #include <QSerialPortInfo>
 #include <QTimer>
+#include <QGuiApplication>
 #include <QtDebug>
 
 USB_ME::USB_ME() {
-  const auto infos = QSerialPortInfo::availablePorts();
-  const QStringList boards = { "RAK", "UART" }; // TODO
-  for (const QSerialPortInfo& info : infos) {
-    QString name(info.description() + " " + info.manufacturer());
-    QString port(info.portName());
-    qDebug() << "USB:" << port << name;
-    if (port.startsWith("tty") &&
-        (port.contains("ACM", Qt::CaseInsensitive) ||  // Linux
-         port.contains("USB", Qt::CaseInsensitive))) { // macOS
-      for (auto board : boards) {
-        if (name.contains(board, Qt::CaseInsensitive)) {
-          setPortName(info.portName());
-          goto done;
-        }
-      }
-    } 
-  }
-done:
   connect(this, &QSerialPort::readyRead, this, &USB_ME::read2);
   connect(this, &QSerialPort::errorOccurred,
           [](QSerialPort::SerialPortError error) {
@@ -29,30 +12,50 @@ done:
               qDebug() << "USB error:" << error;
             }
           });
+}
+
+void USB_ME::connectToRadio() {
+  if (isOpen()) {
+    Q_EMIT setReady(portName());
+    qDebug() << "USB already open;" << portName();
+    return;
+  }
+
+  const auto infos = QSerialPortInfo::availablePorts();
+  const QStringList supported = { "RAK" }; // TODO: currently RAK only
+  for (const QSerialPortInfo& info : infos) {
+    QString name(info.description() + " " + info.manufacturer());
+    QString port(info.portName());
+    if (port.startsWith("tty") &&
+        (port.contains("ACM", Qt::CaseInsensitive) ||  // Linux
+         port.contains("USB", Qt::CaseInsensitive))) { // macOS
+      for (auto s : supported) {
+        if (name.contains(s, Qt::CaseInsensitive)) {
+          setPortName(info.portName());
+          qDebug() << "USB:" << port << name;
+          goto done;
+        }
+      }
+    } 
+  }
+  done:
 
   if (!open(QIODevice::ReadWrite)) {
     qDebug() << "USB: unable to open port" << portName();
   } else {
+    ready = true;
+    Q_EMIT setReady(portName());
     qDebug() << "USB open";
-    state = Open;
-    QTimer::singleShot(0, this, &USB_ME::wantConfigId);
   }
 }
 
-void USB_ME::wantConfigId() {
-  if (state != Closed) {
-    // 4 bytes header + protobuf 'wantConfigId'
-    const char want_config_id[] = { '\x94', '\xc3', '\x00', '\x02',
-                                    '\x18', '\x01' };
-    write(want_config_id, sizeof(want_config_id));
-    qDebug() << "USB wantConfigId()";
-  } else {
-    qDebug() << "USB not ready: wantConfigId()";
-  }
+void USB_ME::disconnect() {
+  close();
+  qDebug() << "USB closed";
 }
 
 void USB_ME::write2(const QByteArray& data) {
-  if (state == Ready) {
+  if (ready) {
     write(data.constData(), data.size());
   } else {
     qDebug() << "USB not ready: write()";
@@ -60,17 +63,11 @@ void USB_ME::write2(const QByteArray& data) {
 }
 
 void USB_ME::read2() {
-  static QTimer* timer = nullptr;
   const char header[] = { '\x94', '\xc3' };
-  const int MAX = 0xffff;
-  QByteArray data(read(MAX));
-  if (data.startsWith(header)) { // skip evtl. debug log
-    if (state == Open) {
-      Q_EMIT setReady(portName());
-      qDebug() << "USB ready";
-    }
-    state = Ready;
+  QByteArray data(readAll());
+  qGuiApp->processEvents(); // macOS needs this for some reason
 
+  if (data.startsWith(header)) { // skip evtl. debug log
     // split on every new header
     const int LEN = 4;
     int end = 0;
@@ -81,6 +78,7 @@ void USB_ME::read2() {
     }
     Q_EMIT receivedFromRadio(data.mid(start));
 
+    static QTimer* timer = nullptr;
     if (!timer) {
       timer = new QTimer;
       timer->setSingleShot(true);

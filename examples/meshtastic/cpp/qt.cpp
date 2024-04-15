@@ -146,8 +146,20 @@ QT::QT() : QObject() {
 // BLE
 
 QVariant QT::startDeviceDiscovery(const QVariant& vName) {
-  ble->startDeviceDiscovery(vName.toString());
+  QByteArray connection(ecl_fun("radios:connection").toString().toLatin1());
+  if (connection == "BLE") {
+    usb->disconnect();
+    ble->startDeviceDiscovery(vName.toString());
+  } else if (connection == "USB") {
+    ble->disconnect();
+    usb->connectToRadio();
+  }
   return vName;
+}
+
+QVariant QT::stopDeviceDiscovery() {
+  ble->stopDeviceDiscovery();
+  return QVariant();
 }
 
 QVariant QT::setDeviceFilter(const QVariant& vName) {

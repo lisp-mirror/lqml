@@ -35,6 +35,10 @@ void BLE::startDeviceDiscovery(const QString& name) {
   discoveryAgent->start(QBluetoothDeviceDiscoveryAgent::LowEnergyMethod);
 }
 
+void BLE::stopDeviceDiscovery() {
+  discoveryAgent->stop();
+}
+
 void BLE::addDevice(const QBluetoothDeviceInfo& device) {
   if (deviceFilter(device)) {
     QString name(device.name());
@@ -176,7 +180,7 @@ void BLE::errorReceived(QLowEnergyController::Error) {
   Q_EMIT bleError();
 }
 
-void BLE::disconnectFromDevice() {
+void BLE::disconnect() {
   if (controller->state() != QLowEnergyController::UnconnectedState) {
     controller->disconnectFromDevice();
   } else {

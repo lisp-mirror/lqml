@@ -1,13 +1,28 @@
 (in-package :radios)
 
-(defvar *found* nil)
+(defvar *connection* nil)
+(defvar *found*      nil)
 
 (defun ini ()
+  (setf *connection* (or (app:setting :connection)
+                         :ble))
+  (q> |checked| (symbol-name *connection*) t)
   (q> |model| ui:*region*
       (cons "-" (mapcar 'symbol-name (rest (lora:keywords :region-code)))))
   (set-region)
   (x:when-it (app:setting :device-filter)
     (qt:set-device-filter qt:*cpp* x:it)))
+
+(defun connection () ; see Qt
+  (symbol-name *connection*))
+
+(defun connection-changed (name)
+  (when (eql *connection* :ble)
+    (qt:stop-device-discovery qt:*cpp*))
+  (let ((con (app:kw name)))
+    (setf *connection* con)
+    (app:change-setting :connection con))
+  (lora:start-device-discovery))
 
 (defun saved-region ()
   (let ((region (app:setting :region)))
@@ -50,5 +65,6 @@
   (values))
 
 (defun reset ()
-  (lora:start-device-discovery))
+  (when (eql *connection* :ble)
+    (lora:start-device-discovery)))
 

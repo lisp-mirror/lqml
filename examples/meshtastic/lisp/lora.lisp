@@ -14,9 +14,9 @@
                        #-mobile t)
 
 (defun ini ()
-  (setf *receiver*     (app:setting :latest-receiver)
-        *channel-name* (or (app:setting :channel-name)
-                           "LongFast"))
+  (setf *channel-name* (or (app:setting :channel-name)
+                           "LongFast")
+        *receiver*     (app:setting :latest-receiver))
   (q> |text| ui:*channel-name* *channel-name*))
 
 ;;; header
@@ -31,7 +31,6 @@
 (defconstant  +broadcast-id+   #xffffffff)
 (defparameter *broadcast-name* "ffff")
 
-(defvar *mode*            :ble) ; :ble :usb
 (defvar *config-id*       0)
 (defvar *config-complete* nil)
 (defvar *notify-id*       nil)
@@ -49,14 +48,15 @@
 
 (defun start-device-discovery (&optional (name (or (app:setting :device) "")))
   (when *allow-discovery*
-    (setf *schedule-clear* t)
-    (setf *ble-names* nil)
+    (setf *ready*          nil
+          *ble-names*      nil
+          *schedule-clear* t)
     (unless radios:*found*
       (radios:clear))
     (qrun* (qt:start-device-discovery qt:*cpp* name))
     (q> |playing| ui:*busy* t)))
 
-(defun get-node-config (&optional (want t))
+(defun get-node-config ()
   ;; see also Timer in 'qml/ext/group/Group.qml'
   (when *ready*
     (setf *schedule-clear* t)
@@ -64,9 +64,8 @@
           *channels*        nil
           *node-infos*      nil)
     (incf *config-id*)
-    (when want
-      (send-to-radio
-       (me:make-to-radio :want-config-id *config-id*)))
+    (send-to-radio
+     (me:make-to-radio :want-config-id *config-id*))
     (q> |playing| ui:*busy* t)))
 
 (defun set-ready-ble (&optional ready name ble-names) ; see Qt
@@ -78,10 +77,9 @@
   (values))
 
 (defun set-ready-usb (port) ; see Qt
-  (setf *ready* t
-        *mode*  :usb)
+  (setf *ready* t)
   (app:toast (x:cc "USB: " port) 2)
-  (get-node-config nil)
+  (get-node-config)
   (values))
 
 (defun add-line-breaks (text)
@@ -150,7 +148,7 @@
     (pr:print-json to-radio))
   (let* ((bytes (pr:serialize-to-bytes to-radio))
          (header (header (length bytes))))
-    (case *mode*
+    (case radios:*connection*
       (:ble (qrun*
              (qt:write-ble qt:*cpp* header)
              (qt:write-ble qt:*cpp* bytes)))
@@ -297,7 +295,7 @@
                             :custom-name (or (app:setting name :custom-name) "")
                             :node-num (me:num info)
                             :current (equal name (app:setting :latest-receiver)))))
-                   (when (or (and (eql *mode* :usb)
+                   (when (or (and (eql radios:*connection* :usb)
                                   current)
                              (find name *ble-names* :test 'string=))
                      (setf radios:*found* t)

@@ -8,16 +8,11 @@ class USB_ME : public QSerialPort {
 public:
   USB_ME();
 
-  enum State {
-    Closed,
-    Open,
-    Ready
-  };
-
-  State state = Closed;
+  bool ready = false;
 
 public Q_SLOTS:
-  void wantConfigId();
+  void connectToRadio();
+  void disconnect();
   void write2(const QByteArray&);
   void read2();
 

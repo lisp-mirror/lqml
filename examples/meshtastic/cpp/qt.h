@@ -26,6 +26,7 @@ class QT : public QObject {
 public:
   // BLE
   Q_INVOKABLE QVariant startDeviceDiscovery(const QVariant&);
+  Q_INVOKABLE QVariant stopDeviceDiscovery();
   Q_INVOKABLE QVariant setDeviceFilter(const QVariant&);
   Q_INVOKABLE QVariant readBle();
   Q_INVOKABLE QVariant writeBle(const QVariant&);

@@ -11,6 +11,7 @@
    #:last-position
    #:local-ip
    #:start-device-discovery
+   #:stop-device-discovery
    #:read-ble
    #:set-background-mode ; for testing
    #:set-device-filter

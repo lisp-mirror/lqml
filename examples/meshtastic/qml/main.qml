@@ -61,6 +61,29 @@ Item {
 
     MenuSeparator {}
 
+    Com.Menu {
+      id: connection
+      title: qsTr("Connection")
+      enabled: (view.pageIndex === 2)
+
+      function changed(name) { Lisp.call("radios:connection-changed", name) }
+
+      Com.MenuItem {
+        objectName: "BLE"
+        text: "BLE"
+        autoExclusive: true
+        checked: true
+        onTriggered: connection.changed(objectName)
+      }
+      Com.MenuItem {
+        objectName: "USB"
+        text: "USB"
+        autoExclusive: true
+        checkable: true
+        onTriggered: connection.changed(objectName)
+      }
+    }
+
     Com.MenuItem {
       text: qsTr("Reset node DB")
       onTriggered: Lisp.call("lora:reset-node-db")
