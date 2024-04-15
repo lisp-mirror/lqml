@@ -66,15 +66,12 @@ they are 64 bit and run at least iOS 12.
 How to use cl-meshtastic
 ------------------------
 
-If you have your radio connected via USB to your PC, it will first try a direct
-USB connection (both much faster and more reliable).
+If you have your radio connected via USB to your PC, you can choose 'USB' as
+connection type from the main menu (see 'Radios' icon). This currently only
+works on Linux and macOS, and only with RAK devices (which don't need any
+driver, just permission to e.g. `/dev/ttyACM0` on Linux).
 
-For this to work, you need to run the following (using the Python CLI):
-```
-meshtastic \
---set serial.enabled true \
---set serial.mode PROTO
-```
+Android is currently WIP.
 
 The next best option is BLE (Bluetooth Low Energy).
 
