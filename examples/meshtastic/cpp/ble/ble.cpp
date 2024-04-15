@@ -181,6 +181,10 @@ void BLE::errorReceived(QLowEnergyController::Error) {
 }
 
 void BLE::disconnect() {
+  if (controller == nullptr) {
+    return;
+  }
+
   if (controller->state() != QLowEnergyController::UnconnectedState) {
     controller->disconnectFromDevice();
   } else {
