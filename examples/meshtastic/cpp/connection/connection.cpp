@@ -14,10 +14,11 @@
 
 #ifdef Q_OS_ANDROID
 Connection::Connection(QtAndroidService* service) {
+  service->con = this;
   // forward signal
   connect(this, &Connection::sendSavedPackets, service, &QtAndroidService::sendSavedPackets);
-  ble = new BLE_ME(service, service->con);
-  usb = new USB_ME(service, service->con);
+  ble = new BLE_ME(service, this);
+  usb = new USB_ME(service, this);
 }
 #else
 Connection::Connection() {

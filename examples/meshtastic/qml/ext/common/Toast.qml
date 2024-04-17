@@ -25,7 +25,7 @@ Rectangle {
   Text {
     id: msg
     font.pixelSize: 16
-    font.weight: Font.DemiBold
+    font.bold: true
     anchors.centerIn: parent
     color: "white"
     wrapMode: Text.WordWrap

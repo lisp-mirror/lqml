@@ -32,5 +32,7 @@ int main(int argc, char* argv[]) {
   QtAndroidService qtAndroidService;
   srcNode.enableRemoting(&qtAndroidService);
 
+  Connection con(&qtAndroidService);
+
   return app.exec();
 }

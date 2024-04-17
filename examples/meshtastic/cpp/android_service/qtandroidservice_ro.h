@@ -3,8 +3,7 @@
 
 class QtAndroidService : public QtAndroidServiceSource {
 public:
-  QtAndroidService() { con = new Connection(this); }
-  Connection* con;
+  Connection* con = nullptr;
 
 public slots:
   void setConnectionType(const QVariant& a1)    override { con->setConnectionType(a1); }

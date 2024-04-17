@@ -108,7 +108,7 @@ void BLE_ME::searchCharacteristics() {
     if (!con->backgroundMode) {
       QVariantList vNames;
       for (auto name : qAsConst(names)) { vNames << name; }
-      emitter->setReady(QVariant(QVariantList() << true << currentDevice.name().right(4) << vNames));
+      emitter->setReady(QVariant(QVariantList() << true << currentDevice.name().right(4) << QVariant(vNames)));
     }
   }
 }
@@ -185,7 +185,7 @@ void BLE_ME::disconnecting() {
     mainService->writeDescriptor(notifications, QByteArray::fromHex("0000"));
   }
   if (!con->backgroundMode) {
-    emitter->setReady(QVariant(QVariantList()));
+    emitter->setReady(QVariant(QVariantList() << false));
   }
   delete mainService; mainService = nullptr;
 }

@@ -6,7 +6,6 @@ class QtAndroidService {
   SLOT(void read2());
   SLOT(void write2(const QVariant&));
   SLOT(void setBackgroundMode(bool));
-
   SIGNAL(deviceDiscovered(const QVariant&));
   SIGNAL(bleError());
   SIGNAL(setReady(const QVariant&));

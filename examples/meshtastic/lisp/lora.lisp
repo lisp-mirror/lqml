@@ -71,7 +71,7 @@
 (defun set-ready (args) ; see Qt
   (case radios:*connection*
     (:ble
-     (destructuring-bind (ready name ble-names)
+     (destructuring-bind (ready &optional name ble-names)
          args
        (setf *ready* ready)
        (when ready
@@ -188,7 +188,7 @@
   "Called when app changes from background to foreground (mobile only)."
   (let ((app:*background-mode* t))
     (dolist (packet packets)
-      (received-from-radio packet))
+      (received-from-radio (list packet)))
     (receiving-done))
   ;; this will show eventual red circles with numbers of unread messages
   (when (group:unread-messages-p)
