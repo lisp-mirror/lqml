@@ -1,10 +1,19 @@
 #include "usb_meshtastic.h"
+#include "../connection.h"
 #include <QSerialPortInfo>
 #include <QTimer>
 #include <QGuiApplication>
 #include <QtDebug>
 
-USB_ME::USB_ME() {
+#ifdef Q_OS_ANDROID
+  #include "../../android_service/qtandroidservice_ro.h"
+#endif
+
+#ifdef Q_OS_ANDROID
+USB_ME::USB_ME(QtAndroidService* service, Connection* _con) : emitter(service), con(_con) {
+#else
+USB_ME::USB_ME(Connection* _con) : emitter(_con), con(_con) {
+#endif
   connect(this, &QSerialPort::readyRead, this, &USB_ME::read2);
   connect(this, &QSerialPort::errorOccurred,
           [](QSerialPort::SerialPortError error) {
@@ -16,14 +25,16 @@ USB_ME::USB_ME() {
 
 void USB_ME::connectToRadio() {
   if (isOpen()) {
-    Q_EMIT setReady(portName());
+    if (!con->backgroundMode) {
+      emitter->setReady(QVariant(QVariantList() << portName()));
+    }
     qDebug() << "USB already open;" << portName();
     return;
   }
 
   const auto infos = QSerialPortInfo::availablePorts();
   const QStringList supported = { "RAK" }; // TODO: currently RAK only
-  for (const QSerialPortInfo& info : infos) {
+  for (auto info : infos) {
     QString name(info.description() + " " + info.manufacturer());
     QString port(info.portName());
     if (port.startsWith("tty") &&
@@ -38,13 +49,15 @@ void USB_ME::connectToRadio() {
       }
     } 
   }
-  done:
 
+done:
   if (!open(QIODevice::ReadWrite)) {
     qDebug() << "USB: unable to open port" << portName();
   } else {
     ready = true;
-    Q_EMIT setReady(portName());
+    if (!con->backgroundMode) {
+      emitter->setReady(QVariant(QVariantList() << portName()));
+    }
     qDebug() << "USB open";
   }
 }
@@ -72,18 +85,38 @@ void USB_ME::read2() {
     int end = 0;
     int start = LEN;
     while ((end = data.indexOf(HEADER, start)) != -1) {
-      Q_EMIT receivedFromRadio(data.mid(start, end - start));
+      received(data.mid(start, end - start));
       start = end + LEN;
     }
-    Q_EMIT receivedFromRadio(data.mid(start));
+    received(data.mid(start));
 
     static QTimer* timer = nullptr;
-    if (!timer) {
+    if (timer == nullptr) {
       timer = new QTimer;
       timer->setSingleShot(true);
-      connect(timer, &QTimer::timeout, this, &USB_ME::receivingDone);
+      connect(timer, &QTimer::timeout, this, &USB_ME::done);
     }
     timer->start(1000); // assume receiving done after pause of 1 sec
+  }
+}
+
+void USB_ME::received(const QByteArray& data) {
+  if (con->backgroundMode) {
+    con->saveBytes(data);
+  } else {
+    emitter->receivedFromRadio(QVariant(QVariantList() << data));
+  }
+}
+
+void USB_ME::done() {
+  if (!con->backgroundMode) {
+    emitter->receivingDone();
+    static bool startup = true;
+    if (startup) {
+      con->sendSavedBytes(); // for eventual, saved but not sent packets
+    } else {
+      startup = false;
+    }
   }
 }
 

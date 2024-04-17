@@ -1,14 +1,9 @@
 #include "ble_meshtastic.h"
+#include "../connection.h"
 #include <QMetaEnum>
-#include <QStandardPaths>
-#include <QFile>
-#include <QDataStream>
 
 #ifdef Q_OS_ANDROID
-  #include "../android_service/qtandroidservice_ro.h"
-  #if (QT_VERSION < 0x060000)
-    #include <QAndroidService>
-  #endif
+  #include "../../android_service/qtandroidservice_ro.h"
 #endif
 
 // service
@@ -20,13 +15,12 @@ const UID BLE_ME::uuid_fromRadio = UID(STR("{2c55e69e-4993-11ed-b878-0242ac12000
 const UID BLE_ME::uuid_fromNum   = UID(STR("{ed9da18c-a800-4f66-a670-aa7547e34453}"));
 
 #ifdef Q_OS_ANDROID
-BLE_ME::BLE_ME(QtAndroidService* service) : BLE(uuid_service), emitter(service) {
-  service->ble = this;
+BLE_ME::BLE_ME(QtAndroidService* service, Connection* _con) : BLE(uuid_service), emitter(service), con(_con) {
   // forward signals defined in class BLE
-  connect(this, &BLE::deviceDiscovered, emitter, &QtAndroidService::deviceDiscovered);
-  connect(this, &BLE::bleError,         emitter, &QtAndroidService::bleError);
+  connect(this, &BLE::deviceDiscovered, service, &QtAndroidService::deviceDiscovered);
+  connect(this, &BLE::bleError,         service, &QtAndroidService::bleError);
 #else
-BLE_ME::BLE_ME() : BLE(uuid_service), emitter(this) {
+BLE_ME::BLE_ME(Connection* _con) : BLE(uuid_service), emitter(_con), con(_con) {
 #endif
   connect(this, &BLE::mainServiceReady, this, &BLE_ME::ini);
   connect(this, &BLE::deviceDisconnecting, this, &BLE_ME::disconnecting);
@@ -111,8 +105,10 @@ void BLE_ME::searchCharacteristics() {
     for (auto device : qAsConst(devices)) {
       names << device.name().right(4);
     }
-    if (!backgroundMode) {
-      emitter->setReady(true, currentDevice.name().right(4), names);
+    if (!con->backgroundMode) {
+      QVariantList vNames;
+      for (auto name : qAsConst(names)) { vNames << name; }
+      emitter->setReady(QVariant(QVariantList() << true << currentDevice.name().right(4) << vNames));
     }
   }
 }
@@ -120,10 +116,10 @@ void BLE_ME::searchCharacteristics() {
 void BLE_ME::characteristicChanged(const QLowEnergyCharacteristic&,
                                    const QByteArray& data) {
   if (!data.isEmpty()) {
-    if (backgroundMode) {
+    if (con->backgroundMode) {
       read();
     } else {
-      emitter->receivedFromRadio(data, "notified");
+      emitter->receivedFromRadio(QVariant(QVariantList() << data << QString("notified")));
     }
   }
 }
@@ -131,20 +127,20 @@ void BLE_ME::characteristicChanged(const QLowEnergyCharacteristic&,
 void BLE_ME::characteristicRead(const QLowEnergyCharacteristic&,
                                 const QByteArray& data) {
   if (data.isEmpty()) {
-    if (!backgroundMode) {
+    if (!con->backgroundMode) {
       emitter->receivingDone();
       static bool startup = true;
       if (startup) {
-        sendSavedBytes(); // for eventual, saved but not sent packets
+        con->sendSavedBytes(); // for eventual, saved but not sent packets
       } else {
         startup = false;
       }
     }
   } else {
-    if (backgroundMode) {
-      saveBytes(data);
+    if (con->backgroundMode) {
+      con->saveBytes(data);
     } else {
-      emitter->receivedFromRadio(data, QString());
+      emitter->receivedFromRadio(QVariant(QVariantList() << data));
     }
     read();
   }
@@ -188,57 +184,9 @@ void BLE_ME::disconnecting() {
     // disable notifications
     mainService->writeDescriptor(notifications, QByteArray::fromHex("0000"));
   }
-  if (!backgroundMode) {
-    emitter->setReady(false, QString(), QStringList());
+  if (!con->backgroundMode) {
+    emitter->setReady(QVariant(QVariantList()));
   }
   delete mainService; mainService = nullptr;
 }
 
-// background mode
-
-void BLE_ME::setBackgroundMode(bool background) {
-#if (defined Q_OS_ANDROID) || (defined Q_OS_IOS)
-  backgroundMode = background;
-  qDebug() << "background mode:" << backgroundMode;
-  if (!backgroundMode) {
-    sendSavedBytes();
-  }
-#endif
-}
-
-static QString packetsFile() {
-  // choose already existing directory
-  QStandardPaths::StandardLocation location = QStandardPaths::AppDataLocation;
-#ifdef Q_OS_IOS
-  location = QStandardPaths::DocumentsLocation;
-#endif
-  return QStandardPaths::writableLocation(location) + QStringLiteral("/meshtastic-packets.bin");
-}
-
-void BLE_ME::saveBytes(const QByteArray& packet) {
-  QFile file(packetsFile());
-  if (file.open(QIODevice::WriteOnly | QIODevice::Append)) {
-    QDataStream ds(&file);
-    ds << packet;
-    file.close();
-  }
-}
-
-void BLE_ME::sendSavedBytes() {
-  QVariantList packets;
-  QString fileName(packetsFile());
-  QFile file(fileName);
-  if (file.open(QIODevice::ReadOnly)) {
-    QDataStream ds(&file);
-    while (!ds.atEnd()) {
-      QByteArray packet;
-      ds >> packet;
-      packets.append(packet);
-    }
-    file.close();
-    if (!packets.isEmpty()) {
-      emitter->sendSavedPackets(QVariant(packets));
-      QFile::remove(fileName);
-    }
-  }
-}

@@ -66,14 +66,12 @@ they are 64 bit and run at least iOS 12.
 How to use cl-meshtastic
 ------------------------
 
-If you have your radio connected via USB to your PC, you can choose 'USB' as
-connection type from the main menu (see 'Radios' icon). This currently only
-works on Linux and macOS, and only with RAK devices (which don't need any
-driver, just permission to e.g. `/dev/ttyACM0` on Linux).
+If you have your radio connected to your PC via USB, you can choose 'USB' as
+connection type from the main menu (see 'Radios' icon). This only works on
+Linux and macOS (Windows not tested), and only with RAK devices (which don't
+need any driver, just permission to e.g. `/dev/ttyACM0` on Linux).
 
-Android is currently WIP.
-
-The next best option is BLE (Bluetooth Low Energy).
+For mobile there is BLE (Bluetooth Low Energy).
 
 Your radio needs to be turned on and bluetooth needs to be enabled before you
 start the app.

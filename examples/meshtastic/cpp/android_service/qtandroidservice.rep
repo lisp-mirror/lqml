@@ -1,13 +1,16 @@
 class QtAndroidService {
-  SLOT(void startDeviceDiscovery(const QString&));
-  SLOT(void setDeviceFilter(const QString&));
-  SLOT(void read());
-  SLOT(void write(const QByteArray&));
+  SLOT(void setConnectionType(const QVariant&));
+  SLOT(void startDeviceDiscovery(const QVariant&));
+  SLOT(void stopDeviceDiscovery());
+  SLOT(void setDeviceFilter(const QVariant&));
+  SLOT(void read2());
+  SLOT(void write2(const QVariant&));
   SLOT(void setBackgroundMode(bool));
-  SIGNAL(deviceDiscovered(const QString&));
+
+  SIGNAL(deviceDiscovered(const QVariant&));
   SIGNAL(bleError());
-  SIGNAL(setReady(bool, const QString&, const QStringList&));
-  SIGNAL(receivedFromRadio(const QByteArray&, const QString&));
+  SIGNAL(setReady(const QVariant&));
+  SIGNAL(receivedFromRadio(const QVariant&));
   SIGNAL(receivingDone());
   SIGNAL(sendSavedPackets(const QVariant&));
 }

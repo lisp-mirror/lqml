@@ -6,8 +6,9 @@
 #define STR QStringLiteral
 
 #ifdef Q_OS_ANDROID
-  class QtAndroidService;
+class QtAndroidService;
 #endif
+class Connection;
 
 class BLE_ME : public BLE {
   Q_OBJECT
@@ -16,16 +17,15 @@ class BLE_ME : public BLE {
 
 public:
 #ifdef Q_OS_ANDROID
-  BLE_ME(QtAndroidService*);
+  BLE_ME(QtAndroidService*, Connection*);
 #else
-  BLE_ME();
+  BLE_ME(Connection*);
 #endif
 
 public Q_SLOTS:
   void setDeviceFilter(const QString& s) { filter = s; }
   void read();
   void write(const QByteArray&);
-  void setBackgroundMode(bool);
 
 Q_SIGNALS:
   void setReady(bool, const QString&, const QStringList&);
@@ -48,9 +48,9 @@ public:
 #ifdef Q_OS_ANDROID
   QtAndroidService* emitter = nullptr;
 #else
-  BLE_ME* emitter = nullptr;
+  Connection* emitter = nullptr;
 #endif
-  bool backgroundMode = false;
+  Connection* con = nullptr;
   QString filter = "meshtastic";
   QLowEnergyDescriptor notifications;
 
@@ -66,8 +66,4 @@ private Q_SLOTS:
   void characteristicWritten(const QLowEnergyCharacteristic&, const QByteArray&);
   void serviceError(QLowEnergyService::ServiceError);
   void disconnecting();
-
-private:
-  void saveBytes(const QByteArray&);
-  void sendSavedBytes();
 };

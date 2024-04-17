@@ -6,6 +6,7 @@
 (defun ini ()
   (setf *connection* (or (app:setting :connection)
                          :ble))
+  (set-connection-type)
   (q> |checked| (symbol-name *connection*) t)
   (q> |model| ui:*region*
       (cons "-" (mapcar 'symbol-name (rest (lora:keywords :region-code)))))
@@ -13,16 +14,17 @@
   (x:when-it (app:setting :device-filter)
     (qt:set-device-filter qt:*cpp* x:it)))
 
-(defun connection () ; see Qt
-  (symbol-name *connection*))
-
 (defun connection-changed (name)
   (when (eql *connection* :ble)
     (qt:stop-device-discovery qt:*cpp*))
   (let ((con (app:kw name)))
     (setf *connection* con)
     (app:change-setting :connection con))
+  (set-connection-type)
   (lora:start-device-discovery))
+
+(defun set-connection-type ()
+  (qt:set-connection-type qt:*cpp* (symbol-name *connection*)))
 
 (defun saved-region ()
   (let ((region (app:setting :region)))

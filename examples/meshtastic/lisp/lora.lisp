@@ -68,18 +68,22 @@
      (me:make-to-radio :want-config-id *config-id*))
     (q> |playing| ui:*busy* t)))
 
-(defun set-ready-ble (&optional ready name ble-names) ; see Qt
-  (setf *ready* ready)
-  (when ready
-    (setf *ble-names* ble-names)
-    (app:toast (x:cc (tr "radio") ": " name) 2)
-    (get-node-config))
-  (values))
-
-(defun set-ready-usb (port) ; see Qt
-  (setf *ready* t)
-  (app:toast (x:cc "USB: " port) 2)
-  (get-node-config)
+(defun set-ready (args) ; see Qt
+  (case radios:*connection*
+    (:ble
+     (destructuring-bind (ready name ble-names)
+         args
+       (setf *ready* ready)
+       (when ready
+         (setf *ble-names* ble-names)
+         (app:toast (x:cc (tr "radio") ": " name) 2)
+         (get-node-config))))
+    (:usb
+     (destructuring-bind (port)
+         args
+       (setf *ready* t)
+       (app:toast (x:cc "USB: " port) 2)
+       (get-node-config))))
   (values))
 
 (defun add-line-breaks (text)
@@ -140,7 +144,7 @@
 
 (defun read-radio ()
   "Triggers a read on the radio. Will call RECEIVED-FROM-RADIO on success."
-  (qrun* (qt:read-ble qt:*cpp*)))
+  (qrun* (qt:read* qt:*cpp*)))
 
 (defun send-to-radio (to-radio)
   "Sends passed TO-RADIO, preceded by a header."
@@ -150,27 +154,29 @@
          (header (header (length bytes))))
     (case radios:*connection*
       (:ble (qrun*
-             (qt:write-ble qt:*cpp* header)
-             (qt:write-ble qt:*cpp* bytes)))
+             (qt:write* qt:*cpp* header)
+             (qt:write* qt:*cpp* bytes)))
       (:usb (qrun*
-             (qt:write-usb qt:*cpp* (concatenate 'vector header bytes)))))))
+             (qt:write* qt:*cpp* (concatenate 'vector header bytes)))))))
 
-(defun received-from-radio (bytes &optional notified) ; see Qt
-  (if notified
-      (progn
-        (setf *notify-id* bytes)
-        (read-radio))
-      (multiple-value-bind (from-radio error)
-          (ignore-errors (pr:deserialize-from-bytes 'me:from-radio bytes))
-        (setf *reading* t)
-        (if from-radio
-            (progn
-              (when *print-json*
-                (pr:print-json from-radio))
-              (push from-radio *received*))
-            (progn
-              (qlog "received faulty bytes: ~A" error)
-              (push bytes *received-faulty*)))))
+(defun received-from-radio (args) ; see Qt
+  (destructuring-bind (bytes &optional notified)
+      args
+    (if notified
+        (progn
+          (setf *notify-id* bytes)
+          (read-radio))
+        (multiple-value-bind (from-radio error)
+            (ignore-errors (pr:deserialize-from-bytes 'me:from-radio bytes))
+          (setf *reading* t)
+          (if from-radio
+              (progn
+                (when *print-json*
+                  (pr:print-json from-radio))
+                (push from-radio *received*))
+              (progn
+                (qlog "received faulty bytes: ~A" error)
+                (push bytes *received-faulty*))))))
   (values))
 
 (defun receiving-done () ; see Qt

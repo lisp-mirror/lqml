@@ -21,8 +21,7 @@
     #include <QtCore/private/qandroidextras_p.h>
   #endif
 #else
-  #include "ble/ble_meshtastic.h"
-  #include "usb/usb_meshtastic.h"
+  #include "connection/connection.h"
 #endif
 
 QT_BEGIN_NAMESPACE
@@ -35,92 +34,72 @@ QObject* ini() {
   return qt;
 }
 
+// connection
+
 QT::QT() : QObject() {
 #ifdef Q_OS_ANDROID
   // remote object for android service
   QRemoteObjectNode* repNode = new QRemoteObjectNode;
   repNode->connectToNode(QUrl(QStringLiteral("local:replica")));
-  QSharedPointer<QtAndroidServiceReplica> rep(repNode->acquire<QtAndroidServiceReplica>());
-  bool res = rep->waitForSource();
+  con = repNode->acquire<QtAndroidServiceReplica>();
+  bool res = con->waitForSource();
   Q_ASSERT(res);
-
-  ble = rep;
 #else
-  ble = new BLE_ME;
+  con = new Connection;
 #endif
-  usb = new USB_ME;
 
 #ifdef Q_OS_ANDROID
-  QObject::connect(ble.data(), &QtAndroidServiceReplica::deviceDiscovered,
+  QObject::connect(con, &QtAndroidServiceReplica::deviceDiscovered,
 #else
-  QObject::connect(ble, &BLE::deviceDiscovered,
+  QObject::connect(con, &Connection::deviceDiscovered,
 #endif
-  [](const QString& fullName) {
-    ecl_fun("radios:device-discovered", fullName.right(4));
+  [](const QVariant& vFullName) {
+    ecl_fun("radios:device-discovered", vFullName.toString().right(4));
   });
 
 #ifdef Q_OS_ANDROID
-  QObject::connect(ble.data(), &QtAndroidServiceReplica::bleError,
+  QObject::connect(con, &QtAndroidServiceReplica::bleError,
 #else
-  QObject::connect(ble, &BLE::bleError,
+  QObject::connect(con, &Connection::bleError,
 #endif
   []() {
     ecl_fun("radios:reset");
   });
 
 #ifdef Q_OS_ANDROID
-  QObject::connect(ble.data(), &QtAndroidServiceReplica::setReady,
+  QObject::connect(con, &QtAndroidServiceReplica::setReady,
 #else
-  QObject::connect(ble, &BLE_ME::setReady,
+  QObject::connect(con, &Connection::setReady,
 #endif
-  [](bool ready, const QString& current, const QStringList& names) {
-    QVariantList vNames; // Lisp doesn't know 'QStringList'
-    for (auto name : names) {
-      vNames << name;
-    }
-    ecl_fun("lora:set-ready-ble", ready, current, vNames);
-  });
-
-  QObject::connect(usb, &USB_ME::setReady,
-  [](const QString& port) {
-    ecl_fun("lora:set-ready-usb", port);
+  [](const QVariant& vArg) {
+    ecl_fun("lora:set-ready", vArg);
   });
 
 #ifdef Q_OS_ANDROID
-  QObject::connect(ble.data(), &QtAndroidServiceReplica::receivedFromRadio,
+  QObject::connect(con, &QtAndroidServiceReplica::receivedFromRadio,
 #else
-  QObject::connect(ble, &BLE_ME::receivedFromRadio,
+  QObject::connect(con, &Connection::receivedFromRadio,
 #endif
-  [](const QByteArray& data, const QString& notified) {
-    ecl_fun("lora:received-from-radio", data, notified.isEmpty() ? QVariant() : notified);
-  });
-
-  QObject::connect(usb, &USB_ME::receivedFromRadio,
-  [](const QByteArray& data) {
-    ecl_fun("lora:received-from-radio", data);
+  [](const QVariant& vArg) {
+    ecl_fun("lora:received-from-radio", vArg);
   });
 
 #ifdef Q_OS_ANDROID
-  QObject::connect(ble.data(), &QtAndroidServiceReplica::receivingDone,
+  QObject::connect(con, &QtAndroidServiceReplica::receivingDone,
 #else
-  QObject::connect(ble, &BLE_ME::receivingDone,
+  QObject::connect(con, &Connection::receivingDone,
 #endif
   []() {
     ecl_fun("lora:receiving-done");
   });
 
-  QObject::connect(usb, &USB_ME::receivingDone,
-  []() {
-    ecl_fun("lora:receiving-done");
-  });
-
 #ifdef Q_OS_ANDROID
-  QObject::connect(ble.data(), &QtAndroidServiceReplica::sendSavedPackets,
+  QObject::connect(con, &QtAndroidServiceReplica::sendSavedPackets,
 #else
-  QObject::connect(ble, &BLE_ME::sendSavedPackets,
+  QObject::connect(con, &Connection::sendSavedPackets,
 #endif
-  [](const QVariant& packets) {
-    ecl_fun("lora:process-saved-packets", packets);
+  [](const QVariant& vPackets) {
+    ecl_fun("lora:process-saved-packets", vPackets);
   });
 
 #if (defined Q_OS_ANDROID) || (defined Q_OS_IOS)
@@ -128,14 +107,14 @@ QT::QT() : QObject() {
   QObject::connect(qGuiApp, &QGuiApplication::applicationStateChanged,
                    [&](Qt::ApplicationState state) {
                      if (state == Qt::ApplicationInactive) {
-                       ble->setBackgroundMode(true);
+                       con->setBackgroundMode(true);
                        ecl_fun("app:background-mode-changed", true);
                      } else if (state == Qt::ApplicationActive) {
                        static bool startup = true;
                        if (startup) {
                          startup = false;
                        } else {
-                         ble->setBackgroundMode(false);
+                         con->setBackgroundMode(false);
                          ecl_fun("app:background-mode-changed", false);
                        }
                      }
@@ -143,50 +122,33 @@ QT::QT() : QObject() {
 #endif
 }
 
-// BLE
+QVariant QT::setConnectionType(const QVariant& vType) {
+  con->setConnectionType(vType);
+  return QVariant();
+}
 
 QVariant QT::startDeviceDiscovery(const QVariant& vName) {
-  QByteArray connection(ecl_fun("radios:connection").toString().toLatin1());
-  if (connection == "BLE") {
-    usb->disconnect();
-    ble->startDeviceDiscovery(vName.toString());
-  } else if (connection == "USB") {
-    ble->disconnect();
-    usb->connectToRadio();
-  }
-  return vName;
+  con->startDeviceDiscovery(vName);
+  return QVariant();
 }
 
 QVariant QT::stopDeviceDiscovery() {
-  ble->stopDeviceDiscovery();
+  con->stopDeviceDiscovery();
   return QVariant();
 }
 
 QVariant QT::setDeviceFilter(const QVariant& vName) {
-  ble->setDeviceFilter(vName.toString());
-  return vName;
-}
-
-QVariant QT::readBle() {
-  ble->read();
+  con->setDeviceFilter(vName);
   return QVariant();
 }
 
-QVariant QT::writeBle(const QVariant& vBytes) {
-  ble->write(vBytes.toByteArray());
+QVariant QT::read2() {
+  con->read2();
   return QVariant();
 }
 
-QVariant QT::setBackgroundMode(const QVariant& vBackground) {
-  // for testing
-  ble->setBackgroundMode(vBackground.toBool());
-  return QVariant();
-}
-
-// USB
-
-QVariant QT::writeUsb(const QVariant& vBytes) {
-  usb->write2(vBytes.toByteArray());
+QVariant QT::write2(const QVariant& vBytes) {
+  con->write2(vBytes);
   return QVariant();
 }
 
@@ -312,7 +274,7 @@ QVariant QT::dataPath(const QVariant& prefix) {
 }
 
 QVariant QT::localIp() {
-  // Returns the local IP string. Private networks may use:
+  // returns the local IP string; private networks may use:
   // 10.*.*.*
   // 172.16.*.*
   // 192.168.*.*

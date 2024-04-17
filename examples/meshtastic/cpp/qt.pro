@@ -10,15 +10,17 @@ OBJECTS_DIR = ./tmp/
 MOC_DIR     = ./tmp/
 
 HEADERS += \
-  ble/ble.h \
-  ble/ble_meshtastic.h \
-  usb/usb_meshtastic.h \
+  connection/connection.h \
+  connection/ble/ble.h \
+  connection/ble/ble_meshtastic.h \
+  connection/usb/usb_meshtastic.h \
   qt.h
 
 SOURCES += \
-  ble/ble.cpp \
-  ble/ble_meshtastic.cpp \
-  usb/usb_meshtastic.cpp \
+  connection/connection.cpp \
+  connection/ble/ble.cpp \
+  connection/ble/ble_meshtastic.cpp \
+  connection/usb/usb_meshtastic.cpp \
   qt.cpp
 
 linux {

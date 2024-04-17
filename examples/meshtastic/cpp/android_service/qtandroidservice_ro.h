@@ -1,14 +1,17 @@
 #include "rep_qtandroidservice_source.h"
-#include "../ble/ble_meshtastic.h"
+#include "../connection/connection.h"
 
 class QtAndroidService : public QtAndroidServiceSource {
 public:
-  BLE_ME* ble = nullptr;
+  QtAndroidService() { con = new Connection(this); }
+  Connection* con;
 
 public slots:
-  void startDeviceDiscovery(const QString& a1) override { ble->startDeviceDiscovery(a1); }
-  void setDeviceFilter(const QString& a1)      override { ble->setDeviceFilter(a1); }
-  void read()                                  override { ble->read(); }
-  void write(const QByteArray& a1)             override { ble->write(a1); }
-  void setBackgroundMode(bool a1)              override { ble->setBackgroundMode(a1); }
+  void setConnectionType(const QVariant& a1)    override { con->setConnectionType(a1); }
+  void startDeviceDiscovery(const QVariant& a1) override { con->startDeviceDiscovery(a1); }
+  void stopDeviceDiscovery()                    override { con->stopDeviceDiscovery(); }
+  void setDeviceFilter(const QVariant& a1)      override { con->setDeviceFilter(a1); }
+  void read2()                                  override { con->read2(); }
+  void write2(const QVariant& a1)               override { con->write2(a1); }
+  void setBackgroundMode(bool a1)               override { con->setBackgroundMode(a1); }
 };
