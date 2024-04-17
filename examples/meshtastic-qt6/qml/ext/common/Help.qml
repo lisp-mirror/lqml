@@ -48,6 +48,9 @@ If you use more than 1 radio, switch here to the radio you want to use.
 <p>
 To manually restart device discovery, press-and-hold on the radio icon.
 </p>
+<p>
+If your radio is not found, it may help to turn it off/on again.
+</p>
 %1
 <h3>
 <img src='../../img/group.png' width=60 height=60>

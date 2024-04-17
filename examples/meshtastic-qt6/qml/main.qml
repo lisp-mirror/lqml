@@ -35,14 +35,14 @@ Item {
     }
 
     Com.MenuItem {
-      text: qsTr("Channel name...")
-      onTriggered: Lisp.call("lora:edit-channel-name")
+      text: qsTr("Update group/nodes")
+      onTriggered: Lisp.call("lora:get-node-config")
       enabled: (view.pageIndex === 0)
     }
 
     Com.MenuItem {
-      text: qsTr("Update group/nodes")
-      onTriggered: Lisp.call("lora:get-node-config")
+      text: qsTr("Channel name...")
+      onTriggered: Lisp.call("lora:edit-channel-name")
       enabled: (view.pageIndex === 0)
     }
 
@@ -62,14 +62,38 @@ Item {
 
     MenuSeparator {}
 
-    Com.MenuItem {
-      text: qsTr("Device filter...")
-      onTriggered: Lisp.call("lora:edit-device-filter")
+    Com.Menu {
+      id: connection
+      title: qsTr("Connection")
       enabled: (view.pageIndex === 2)
+
+      function changed(name) { Lisp.call("radios:connection-changed", name) }
+
+      Com.MenuItem {
+        objectName: "BLE"
+        text: "BLE"
+        autoExclusive: true
+        checked: true
+        onTriggered: connection.changed(objectName)
+      }
+      Com.MenuItem {
+        objectName: "USB"
+        text: "USB"
+        autoExclusive: true
+        checkable: true
+        enabled: (Qt.platform.os !== "android") && (Qt.platform.os !== "ios")
+        onTriggered: connection.changed(objectName)
+      }
     }
 
     Com.MenuItem {
-      text: qsTr("Export DB (Lisp)")
+      text: qsTr("Reset node DB")
+      onTriggered: Lisp.call("lora:reset-node-db")
+      enabled: (view.pageIndex === 0)
+    }
+
+    Com.MenuItem {
+      text: qsTr("Export message DB (Lisp)")
       onTriggered: Lisp.call("db:export-to-list")
     }
 
