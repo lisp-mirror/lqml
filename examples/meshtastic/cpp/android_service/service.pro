@@ -1,4 +1,4 @@
-QT += core bluetooth serialport remoteobjects
+QT += core bluetooth remoteobjects
 TEMPLATE = lib
 CONFIG += c++17 dll
 INCLUDEPATH += $$PWD
@@ -17,15 +17,13 @@ lessThan(QT_MAJOR_VERSION, 6) {
 HEADERS += \
   ../connection/connection.h \
   ../connection/ble/ble.h \
-  ../connection/ble/ble_meshtastic.h \
-  ../connection/usb/usb_meshtastic.h \
+  ../connection/ble/ble_me.h \
   qtandroidservice_ro.h
 
 SOURCES += \
   ../connection/connection.cpp \
   ../connection/ble/ble.cpp \
-  ../connection/ble/ble_meshtastic.cpp \
-  ../connection/usb/usb_meshtastic.cpp \
+  ../connection/ble/ble_me.cpp \
   main.cpp
 
 REPC_SOURCE += qtandroidservice.rep

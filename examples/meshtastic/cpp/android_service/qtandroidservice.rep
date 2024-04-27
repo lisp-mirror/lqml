@@ -2,6 +2,7 @@ class QtAndroidService {
   SLOT(void setConnectionType(const QVariant&));
   SLOT(void startDeviceDiscovery(const QVariant&));
   SLOT(void stopDeviceDiscovery());
+  SLOT(void disconnect());
   SLOT(void setDeviceFilter(const QVariant&));
   SLOT(void read2());
   SLOT(void write2(const QVariant&));

@@ -3,6 +3,7 @@
   (:export
    #:*cpp*
    #:data-path
+   #:disconnect
    #:ini
    #:ini-db
    #:ini-positioning

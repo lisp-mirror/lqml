@@ -12,15 +12,15 @@ MOC_DIR     = ./tmp/
 HEADERS += \
   connection/connection.h \
   connection/ble/ble.h \
-  connection/ble/ble_meshtastic.h \
-  connection/usb/usb_meshtastic.h \
+  connection/ble/ble_me.h \
+  connection/usb/usb_me.h \
   qt.h
 
 SOURCES += \
   connection/connection.cpp \
   connection/ble/ble.cpp \
-  connection/ble/ble_meshtastic.cpp \
-  connection/usb/usb_meshtastic.cpp \
+  connection/ble/ble_me.cpp \
+  connection/usb/usb_me.cpp \
   qt.cpp
 
 linux {

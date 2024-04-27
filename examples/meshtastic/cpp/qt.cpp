@@ -132,6 +132,11 @@ QVariant QT::stopDeviceDiscovery() {
   return QVariant();
 }
 
+QVariant QT::disconnect() {
+  con->disconnect();
+  return QVariant();
+}
+
 QVariant QT::setDeviceFilter(const QVariant& vName) {
   con->setDeviceFilter(vName);
   return QVariant();

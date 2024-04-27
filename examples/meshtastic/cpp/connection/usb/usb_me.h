@@ -2,9 +2,6 @@
 
 #include <QSerialPort>
 
-#ifdef Q_OS_ANDROID
-class QtAndroidService;
-#endif
 class Connection;
 
 class USB_ME : public QSerialPort {
@@ -13,11 +10,7 @@ class USB_ME : public QSerialPort {
   /*** <INTERFACE> ****************************************/
 
 public:
-#ifdef Q_OS_ANDROID
-  USB_ME(QtAndroidService*, Connection*);
-#else
   USB_ME(Connection*);
-#endif
 
 public Q_SLOTS:
   void connectToRadio();
@@ -33,11 +26,6 @@ Q_SIGNALS:
   /*** </INTERFACE> ***************************************/
 
 public:
-#ifdef Q_OS_ANDROID
-  QtAndroidService* emitter = nullptr;
-#else
-  Connection* emitter = nullptr;
-#endif
   Connection* con = nullptr;
   bool ready = false;
 

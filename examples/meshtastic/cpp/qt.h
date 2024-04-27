@@ -27,6 +27,7 @@ public:
   Q_INVOKABLE QVariant setConnectionType(const QVariant&);
   Q_INVOKABLE QVariant startDeviceDiscovery(const QVariant&);
   Q_INVOKABLE QVariant stopDeviceDiscovery();
+  Q_INVOKABLE QVariant disconnect();
   Q_INVOKABLE QVariant setDeviceFilter(const QVariant&);
   Q_INVOKABLE QVariant read2();
   Q_INVOKABLE QVariant write2(const QVariant&);

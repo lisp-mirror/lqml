@@ -29,6 +29,7 @@ public:
   void setConnectionType(const QVariant&);
   void startDeviceDiscovery(const QVariant&);
   void stopDeviceDiscovery();
+  void disconnect();
   void setDeviceFilter(const QVariant&);
   void read2();
   void write2(const QVariant&);

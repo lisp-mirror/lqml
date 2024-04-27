@@ -1,6 +1,5 @@
 #include "connection.h"
-#include "ble/ble_meshtastic.h"
-#include "usb/usb_meshtastic.h"
+#include "ble/ble_me.h"
 #include <QStandardPaths>
 #include <QFile>
 #include <QDataStream>
@@ -10,6 +9,8 @@
   #if (QT_VERSION < 0x060000)
     #include <QAndroidService>
   #endif
+#else
+  #include "usb/usb_me.h"
 #endif
 
 #ifdef Q_OS_ANDROID
@@ -18,7 +19,6 @@ Connection::Connection(QtAndroidService* service) {
   // forward signal
   connect(this, &Connection::sendSavedPackets, service, &QtAndroidService::sendSavedPackets);
   ble = new BLE_ME(service, this);
-  usb = new USB_ME(service, this);
 }
 #else
 Connection::Connection() {
@@ -39,18 +39,31 @@ void Connection::setConnectionType(const QVariant& vType) {
 void Connection::startDeviceDiscovery(const QVariant& vName) {
   switch (type) {
     case BLE:
+#ifndef Q_OS_ANDROID
       usb->disconnect();
+#endif
       ble->startDeviceDiscovery(vName.toString());
       break;
     case USB:
       ble->disconnect();
+#ifndef Q_OS_ANDROID
       usb->connectToRadio();
+#endif
       break;
   }
 }
 
 void Connection::stopDeviceDiscovery() {
   ble->stopDeviceDiscovery();
+}
+
+void Connection::disconnect() {
+  switch (type) {
+#ifndef Q_OS_ANDROID
+    case USB: usb->disconnect(); break;
+#endif
+    case BLE: ble->disconnect(); break;
+  }
 }
 
 void Connection::setDeviceFilter(const QVariant& vName) {
@@ -68,7 +81,9 @@ void Connection::write2(const QVariant& vBytes) {
       ble->write(bytes);
       break;
     case USB:
+#ifndef Q_OS_ANDROID
       usb->write2(bytes);
+#endif
       break;
   }
 }

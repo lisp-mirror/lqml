@@ -69,21 +69,20 @@
     (q> |playing| ui:*busy* t)))
 
 (defun set-ready (args) ; see Qt
-  (case radios:*connection*
+  (ecase radios:*connection*
     (:ble
      (destructuring-bind (ready &optional name ble-names)
          args
        (setf *ready* ready)
        (when ready
          (setf *ble-names* ble-names)
-         (app:toast (x:cc (tr "radio") ": " name) 2)
-         (get-node-config))))
+         (app:toast (x:cc (tr "radio") ": " name) 2))))
     (:usb
      (destructuring-bind (port)
          args
        (setf *ready* t)
-       (app:toast (x:cc "USB: " port) 2)
-       (get-node-config))))
+       (app:toast "USB" 2))))
+  (get-node-config)
   (values))
 
 (defun add-line-breaks (text)
@@ -202,7 +201,9 @@
       *broadcast-name*
       (dolist (info *node-infos*)
         (when (= num (me:num info))
-          (return (me:short-name (me:user info)))))))
+          (return (x:if-it (me:user info)
+                           (me:short-name x:it)
+                           "????"))))))
 
 (defun name-to-node (name)
   (if (string= *broadcast-name* name)
@@ -323,10 +324,14 @@
              (let ((config (me:config struct)))
                (when (me:config.has-lora config)
                  (setf *config-lora* (me:lora config))
-                 (let ((region (me:region *config-lora*)))
-                   (unless (find region (list :unset (radios:saved-region)))
-                     (app:change-setting :region region)
-                     (radios:set-region))))))
+                 (let ((region (me:region *config-lora*))
+                       (saved-region (radios:saved-region)))
+                   (if (eql :unset region)
+                       (when saved-region
+                         (qlater 'change-lora-config))
+                       (unless (eql region saved-region)
+                         (app:change-setting :region region)
+                         (radios:set-region)))))))
             ;; config-complete-id
             ((me:from-radio.has-config-complete-id struct)
              (when (= *config-id* (me:config-complete-id struct))
@@ -368,7 +373,7 @@
   (qlater (lambda ()
             (when (send-admin (funcall 'me:make-admin-message
                                        :nodedb-reset (my-num))) ; see note *)
-              (wait-for-reboot))))
+              (qlater 'wait-for-reboot))))
   (values))
 
 (defun change-lora-config ()
@@ -383,12 +388,14 @@
                               :tx-enabled t
                               :tx-power 0 ; max legal power
                               :sx126x-rx-boosted-gain t))))
-    (wait-for-reboot)))
+    (qlater 'wait-for-reboot)))
 
 (defun wait-for-reboot (&optional (seconds 20))
   "Changing config will reboot device."
+  (qt:disconnect qt:*cpp*)
   (let ((*allow-discovery* nil))
     (app:toast (tr "waiting for reboot..."))
+    (qlog "reboot...")
     (qsleep 5)
     (q> |playing| ui:*busy* t)
     (qsleep seconds))
@@ -398,7 +405,7 @@
   (cond ((or (x:empty-string region)
              (not (radio-ready-p)))
          (qsingle-shot 3500 'radios:choose-region))
-        ((string/= region (app:setting :region))
+        ((string/= region (radios:saved-region))
          (app:change-setting :region (app:kw region))
          (qlater 'change-lora-config)))
   (values))

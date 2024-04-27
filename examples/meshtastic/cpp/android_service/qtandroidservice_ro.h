@@ -9,6 +9,7 @@ public slots:
   void setConnectionType(const QVariant& a1)    override { con->setConnectionType(a1); }
   void startDeviceDiscovery(const QVariant& a1) override { con->startDeviceDiscovery(a1); }
   void stopDeviceDiscovery()                    override { con->stopDeviceDiscovery(); }
+  void disconnect()                             override { con->disconnect(); }
   void setDeviceFilter(const QVariant& a1)      override { con->setDeviceFilter(a1); }
   void read2()                                  override { con->read2(); }
   void write2(const QVariant& a1)               override { con->write2(a1); }
