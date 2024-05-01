@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QSerialPort>
+#include <QTimer>
 
 class Connection;
 
@@ -26,8 +27,10 @@ Q_SIGNALS:
   /*** </INTERFACE> ***************************************/
 
 public:
-  Connection* con = nullptr;
   bool ready = false;
+  Connection* con = nullptr;
+  QTimer timer;
+  QByteArrayList packets;
 
   void received(const QByteArray&);
 

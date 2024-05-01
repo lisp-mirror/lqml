@@ -51,7 +51,7 @@ public:
   Connection* emitter = nullptr;
 #endif
   Connection* con = nullptr;
-  QString filter = "meshtastic";
+  QString filter;
   QLowEnergyDescriptor notifications;
 
   bool deviceFilter(const QBluetoothDeviceInfo&) override;
