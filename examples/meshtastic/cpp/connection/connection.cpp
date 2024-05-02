@@ -1,5 +1,6 @@
 #include "connection.h"
 #include "ble/ble_me.h"
+#include "wifi/wifi_me.h"
 #include <QStandardPaths>
 #include <QFile>
 #include <QDataStream>
@@ -19,36 +20,43 @@ Connection::Connection(QtAndroidService* service) {
   // forward signal
   connect(this, &Connection::sendSavedPackets, service, &QtAndroidService::sendSavedPackets);
   ble = new BLE_ME(service, this);
+  wifi = new WiFi_ME(service, this);
 }
 #else
 Connection::Connection() {
   ble = new BLE_ME(this);
   usb = new USB_ME(this);
+  wifi = new WiFi_ME(this);
 }
 #endif
 
-void Connection::setConnectionType(const QVariant& vType) {
-  QByteArray t = vType.toByteArray();
-  if (t == "USB") {
-    type = USB;
-  } else {
-    type = BLE;
-  }
+void Connection::setConnectionType(const QVariant& var) {
+  type = Type(BLE + (QList<QByteArray>() << "BLE" << "USB" << "WIFI")
+                    .indexOf(var.toByteArray()));
 }
 
-void Connection::startDeviceDiscovery(const QVariant& vName) {
+void Connection::startDeviceDiscovery(const QVariant& var) {
   switch (type) {
     case BLE:
 #ifndef Q_OS_ANDROID
       usb->disconnect();
 #endif
-      ble->startDeviceDiscovery(vName.toString());
+      wifi->disconnect();
+      ble->startDeviceDiscovery(var.toString());
       break;
     case USB:
       ble->disconnect();
+      wifi->disconnect();
 #ifndef Q_OS_ANDROID
       usb->connectToRadio();
 #endif
+      break;
+    case WiFi:
+      ble->disconnect();
+#ifndef Q_OS_ANDROID
+      usb->disconnect();
+#endif
+      wifi->connectToRadio(var.toString());
       break;
   }
 }
@@ -59,10 +67,11 @@ void Connection::stopDeviceDiscovery() {
 
 void Connection::disconnect() {
   switch (type) {
+    case BLE: ble->disconnect(); break;
 #ifndef Q_OS_ANDROID
     case USB: usb->disconnect(); break;
 #endif
-    case BLE: ble->disconnect(); break;
+    case WiFi: wifi->disconnect(); break;
   }
 }
 
@@ -84,6 +93,9 @@ void Connection::write2(const QVariant& vBytes) {
 #ifndef Q_OS_ANDROID
       usb->write2(bytes);
 #endif
+      break;
+    case WiFi:
+      wifi->write2(bytes);
       break;
   }
 }

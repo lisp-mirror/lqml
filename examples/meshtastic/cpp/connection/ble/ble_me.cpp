@@ -128,13 +128,13 @@ void BLE_ME::characteristicRead(const QLowEnergyCharacteristic&,
                                 const QByteArray& data) {
   if (data.isEmpty()) {
     if (!con->backgroundMode) {
-      emitter->receivingDone();
       static bool startup = true;
       if (startup) {
         con->sendSavedBytes(); // for eventual, saved but not sent packets
       } else {
         startup = false;
       }
+      emitter->receivingDone();
     }
   } else {
     if (con->backgroundMode) {

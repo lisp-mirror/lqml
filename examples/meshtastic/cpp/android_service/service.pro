@@ -18,12 +18,14 @@ HEADERS += \
   ../connection/connection.h \
   ../connection/ble/ble.h \
   ../connection/ble/ble_me.h \
+  ../connection/wifi/wifi_me.h \
   qtandroidservice_ro.h
 
 SOURCES += \
   ../connection/connection.cpp \
   ../connection/ble/ble.cpp \
   ../connection/ble/ble_me.cpp \
+  ../connection/wifi/wifi_me.cpp \
   main.cpp
 
 REPC_SOURCE += qtandroidservice.rep

@@ -14,6 +14,7 @@ HEADERS += \
   connection/ble/ble.h \
   connection/ble/ble_me.h \
   connection/usb/usb_me.h \
+  connection/wifi/wifi_me.h \
   qt.h
 
 SOURCES += \
@@ -21,6 +22,7 @@ SOURCES += \
   connection/ble/ble.cpp \
   connection/ble/ble_me.cpp \
   connection/usb/usb_me.cpp \
+  connection/wifi/wifi_me.cpp \
   qt.cpp
 
 linux {

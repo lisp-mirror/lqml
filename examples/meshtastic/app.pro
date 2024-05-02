@@ -166,13 +166,15 @@ SOURCES += \
     cpp/connection/connection.h \
     cpp/connection/ble/ble.h \
     cpp/connection/ble/ble_me.h \
-    cpp/connection/usb/usb_me.h
+    cpp/connection/usb/usb_me.h \
+    cpp/connection/wifi/wifi_me.h
 
   SOURCES += \
     cpp/connection/connection.cpp \
     cpp/connection/ble/ble.cpp \
     cpp/connection/ble/ble_me.cpp \
-    cpp/connection/usb/usb_me.cpp
+    cpp/connection/usb/usb_me.cpp \
+    cpp/connection/wifi/wifi_me.cpp
 }
 
 RESOURCES += $$files(qml/*)

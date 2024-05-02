@@ -5,7 +5,11 @@
 
 class BLE_ME;
 class USB_ME;
-class QtAndroidService;
+class WiFi_ME;
+
+#ifdef Q_OS_ANDROID
+  class QtAndroidService;
+#endif
 
 class Connection : public QObject {
   Q_OBJECT
@@ -18,12 +22,13 @@ public:
 #endif
 
   enum Type {
-    BLE, USB
+    BLE, USB, WiFi
   };
 
   Type type = BLE;
   BLE_ME* ble = nullptr;
   USB_ME* usb = nullptr;
+  WiFi_ME* wifi = nullptr;
   bool backgroundMode = false;
 
   void setConnectionType(const QVariant&);

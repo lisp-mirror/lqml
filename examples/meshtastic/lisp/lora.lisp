@@ -53,7 +53,10 @@
           *schedule-clear* t)
     (unless radios:*found*
       (radios:clear))
-    (qrun* (qt:start-device-discovery qt:*cpp* name))
+    (qrun* (qt:start-device-discovery qt:*cpp*
+           (if (eql :wifi radios:*connection*)
+               (app:setting :wifi-ip)
+               name)))
     (q> |playing| ui:*busy* t)))
 
 (defun get-node-config ()
@@ -81,7 +84,12 @@
      (destructuring-bind (port)
          args
        (setf *ready* t)
-       (app:toast "USB" 2))))
+       (app:toast "USB" 2)))
+    (:wifi
+     (destructuring-bind (ip)
+         args
+       (setf *ready* t)
+       (app:toast (x:cc "WiFi: " ip) 2))))
   (get-node-config)
   (values))
 
@@ -152,11 +160,13 @@
   (let* ((bytes (pr:serialize-to-bytes to-radio))
          (header (header (length bytes))))
     (case radios:*connection*
-      (:ble (qrun*
-             (qt:write* qt:*cpp* header)
-             (qt:write* qt:*cpp* bytes)))
-      (:usb (qrun*
-             (qt:write* qt:*cpp* (concatenate 'vector header bytes)))))))
+      (:ble
+       (qrun*
+        (qt:write* qt:*cpp* header)
+        (qt:write* qt:*cpp* bytes)))
+      ((:usb :wifi)
+       (qrun*
+        (qt:write* qt:*cpp* (concatenate 'vector header bytes)))))))
 
 (defun received-from-radio (args) ; see Qt
   (destructuring-bind (bytes &optional notified)
@@ -302,7 +312,7 @@
                             :custom-name (or (app:setting name :custom-name) "")
                             :node-num (me:num info)
                             :current (equal name (app:setting :latest-receiver)))))
-                   (when (or (and (eql radios:*connection* :usb)
+                   (when (or (and (find radios:*connection* '(:usb :wifi))
                                   current)
                              (find name *ble-names* :test 'string=))
                      (setf radios:*found* t)

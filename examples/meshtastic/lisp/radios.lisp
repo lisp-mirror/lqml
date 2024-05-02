@@ -1,6 +1,6 @@
 (in-package :radios)
 
-(defvar *connection* nil)
+(defvar *connection* nil) ; :ble :usb :wifi
 (defvar *found*      nil)
 
 (defun ini ()

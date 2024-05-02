@@ -69,7 +69,7 @@ void USB_ME::disconnect() {
 
 void USB_ME::write2(const QByteArray& data) {
   if (ready) {
-    write(data.constData(), data.size());
+    write(data);
   } else {
     qDebug() << "USB not ready: write()";
   }

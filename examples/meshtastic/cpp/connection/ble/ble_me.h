@@ -31,7 +31,6 @@ Q_SIGNALS:
   void setReady(bool, const QString&, const QStringList&);
   void receivedFromRadio(const QByteArray&, const QString&);
   void receivingDone();
-  void sendSavedPackets(const QVariant&);
 
   /*** </INTERFACE> ***************************************/
 
