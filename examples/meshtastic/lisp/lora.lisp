@@ -47,17 +47,19 @@
               :initial-contents list))
 
 (defun start-device-discovery (&optional (name (or (app:setting :device) "")))
-  (when *allow-discovery*
-    (setf *ready*          nil
-          *ble-names*      nil
-          *schedule-clear* t)
-    (unless radios:*found*
-      (radios:clear))
-    (qrun* (qt:start-device-discovery qt:*cpp*
-           (if (eql :wifi radios:*connection*)
-               (app:setting :wifi-ip)
-               name)))
-    (q> |playing| ui:*busy* t)))
+  (let ((wifi (eql :wifi radios:*connection*)))
+    (when wifi
+      (unless (radios:ensure-wifi-connection t)
+        (return-from start-device-discovery)))
+    (when *allow-discovery*
+      (setf *ready*          nil
+            *ble-names*      nil
+            *schedule-clear* t)
+      (unless radios:*found*
+        (radios:clear))
+      (qrun* (qt:start-device-discovery qt:*cpp*
+             (if wifi (radios:wifi-ip) name)))
+      (q> |playing| ui:*busy* t))))
 
 (defun get-node-config ()
   ;; see also Timer in 'qml/ext/group/Group.qml'

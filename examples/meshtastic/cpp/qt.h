@@ -2,6 +2,7 @@
 
 #include <QtCore>
 #include <QSqlDatabase>
+#include <QTcpSocket>
 
 #ifdef Q_CC_MSVC
 #define LIB_EXPORT __declspec(dllexport)
@@ -31,6 +32,7 @@ public:
   Q_INVOKABLE QVariant setDeviceFilter(const QVariant&);
   Q_INVOKABLE QVariant read2();
   Q_INVOKABLE QVariant write2(const QVariant&);
+  Q_INVOKABLE QVariant wifiConnectable(const QVariant&);
 
   // GPS
   Q_INVOKABLE QVariant iniPositioning();
@@ -50,6 +52,7 @@ public:
   QT();
 
   QSqlDatabase db;
+  QTcpSocket tcp;
 #ifdef Q_OS_ANDROID
   QtAndroidServiceReplica* con = nullptr;
 #else

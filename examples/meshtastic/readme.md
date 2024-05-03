@@ -66,12 +66,10 @@ they are 64 bit and run at least iOS 12.
 How to use cl-meshtastic
 ------------------------
 
-If you have your radio connected to your PC via USB, you can choose 'USB' as
-connection type from the main menu (see 'Radios' icon). This only works on
-Linux and macOS (Windows not tested), and only with RAK devices (which don't
-need any driver, just permission to e.g. `/dev/ttyACM0` on Linux).
+## Bluetooth
 
-For mobile there is BLE (Bluetooth Low Energy).
+The most universal connection type is BLE (Bluetooth Low Energy), which should
+work everywhere.
 
 Your radio needs to be turned on and bluetooth needs to be enabled before you
 start the app.
@@ -93,6 +91,31 @@ It may occur that your radio device is sometimes not found; some suggestions:
 
 A generic bluetooth app like **nRF Connect** may help in order to see if the
 devices themselves work and are able to connect.
+
+
+## USB
+
+If you have your radio connected to your PC via USB, you can also choose 'USB'
+as connection type from the main menu (see 'Radios' icon). This only works on
+Linux and macOS (Windows not tested). RAK devices won't need any additional
+driver, just permission to e.g. `/dev/ttyACM0` (Linux). Other radios (ESP32
+based) require addtional serial drivers to be installed, see official
+Meshtastic website.
+
+## WiFi
+
+If you have a radio with intgrated WiFi (like LILYGO T-BEAM, HELTEC V3), you
+can setup your WiFi connection using the Python CLI:
+```
+meshtastic \
+--set network.wifi_enabled true \
+--set network.wifi_ssid "<name>" \
+--set network.wifi_psk "<password>"
+```
+You should now be able to see the IP of your WiFi connected radio on it's
+small display (use the user button to switch to the WiFi page). After entering
+the IP in the appropriate setting of this app, you should be able to choose
+'WiFi' as connection type after switching to 'Radios'.
 
 See also [readme-usage](readme-usage.md).
 

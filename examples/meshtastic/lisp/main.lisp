@@ -140,12 +140,12 @@
        text (x:callback-name callback)))
 
 (defun input-dialog (label callback &key (title "")
-                     (text "") (max-length #.(float 32767))
+                     (text "") (max-length #.(float 32767)) (input-mask "")
                      from to value)
   (qjs |input| ui:*dialogs*
        title label (x:callback-name callback)
-       text max-length ; string (line edit)
-       from to value)) ; integer (spin box)
+       text max-length input-mask ; string (line edit)
+       from to value))            ; integer (spin box)
 
 ;;; backup/restore all app data
 

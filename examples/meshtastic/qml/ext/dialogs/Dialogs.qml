@@ -37,7 +37,7 @@ Item {
     loader.item.open()
   }
 
-  function input(title, label, callback, text, maxLength, from, to, value) {
+  function input(title, label, callback, text, maxLength, inputMask, from, to, value) {
     loader.active = false // force reload
     if (rootItem.mobile) {
       loader.source = "InputMobile.qml"
@@ -50,6 +50,7 @@ Item {
     loader.item.callback = callback
     loader.item.text = text
     loader.item.maxLength = maxLength
+    loader.item.inputMask = inputMask
     loader.item.from = from
     loader.item.to = to
     loader.item.value = value

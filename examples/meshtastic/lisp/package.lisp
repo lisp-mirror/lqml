@@ -126,10 +126,13 @@
    #:choose-region
    #:clear
    #:device-discovered
+   #:ensure-wifi-connection
    #:ini
    #:reset
    #:saved-region
-   #:set-region))
+   #:set-region
+   #:wifi-connectable
+   #:wifi-ip))
 
 (defpackage :location
   (:nicknames :loc)

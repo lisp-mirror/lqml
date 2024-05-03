@@ -17,6 +17,7 @@
    #:set-connection-type
    #:set-device-filter
    #:sql-query
+   #:wifi-connectable
    #:write*))
 
 (in-package :qt)

@@ -152,6 +152,17 @@ QVariant QT::write2(const QVariant& vBytes) {
   return QVariant();
 }
 
+QVariant QT::wifiConnectable(const QVariant& vIP) {
+  if (tcp.state() == QTcpSocket::ConnectedState) {
+    return true;
+  }
+  tcp.connectToHost(vIP.toString(), 4403);
+  if (tcp.waitForConnected(1000)) {
+    return true;
+  }
+  return QVariant();
+}
+
 // GPS
 
 #ifdef Q_OS_ANDROID

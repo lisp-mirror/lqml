@@ -23,7 +23,9 @@ WiFi_ME::WiFi_ME(Connection* _con) : emitter(_con), con(_con) {
 }
 
 void WiFi_ME::connectToRadio(const QString& ip) {
-  connectToHost(ip, 4403);
+  if (state() != ConnectedState) {
+    connectToHost(ip, 4403);
+  }
 }
 
 void WiFi_ME::stateChanged(SocketState state) {
@@ -34,7 +36,9 @@ void WiFi_ME::stateChanged(SocketState state) {
 }
 
 void WiFi_ME::disconnect() {
-  disconnectFromHost();
+  if (state() == ConnectedState) {
+    disconnectFromHost();
+  }
 }
 
 void WiFi_ME::write2(const QByteArray& data) {

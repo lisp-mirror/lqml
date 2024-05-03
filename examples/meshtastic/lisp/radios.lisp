@@ -26,6 +26,36 @@
 (defun set-connection-type ()
   (qt:set-connection-type qt:*cpp* (symbol-name *connection*)))
 
+(defun wifi-ip ()
+  (or (app:setting :wifi-ip) ""))
+
+(defun wifi-connectable ()
+  (qrun* (qt:wifi-connectable qt:*cpp* (wifi-ip))))
+
+(let (start-discovery)
+  (defun ensure-wifi-connection (&optional start)
+    (setf start-discovery start)
+    (or (wifi-connectable)
+        (progn
+          (app:input-dialog
+           (tr "Radio WiFi IP:") 'wifi-ip-changed
+           :title (tr "IP")
+           :text (wifi-ip)
+           :input-mask "000.000.000.000")
+          nil)))
+  (defun wifi-ip-changed* (ok)
+    (when ok
+      (app:change-setting :wifi-ip (q< |text| ui:*dialog-line-edit*))
+      (if (and (wifi-connectable)
+               start-discovery)
+          (progn
+            (setf start-discovery nil)
+            (qlater 'lora:start-device-discovery))
+          (qlater (lambda () (ensure-wifi-connection start-discovery)))))))
+
+(defun wifi-ip-changed (ok)
+  (qlater (lambda () (wifi-ip-changed* ok))))
+
 (defun saved-region ()
   (let ((region (app:setting :region)))
     (unless (find region '(nil :unset))
