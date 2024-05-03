@@ -45,7 +45,7 @@ void WiFi_ME::write2(const QByteArray& data) {
   if (state() == ConnectedState) {
     write(data);
   } else {
-    qDebug() << "not ready to write";
+    qDebug() << "WiFi not ready: write()";
   }
 }
 

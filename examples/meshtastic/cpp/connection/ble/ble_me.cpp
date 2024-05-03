@@ -164,7 +164,7 @@ void BLE_ME::read() {
     // will call 'characteristicRead()' on success
     mainService->readCharacteristic(fromRadio);
   } else {
-    qDebug() << "not ready to read";
+    qDebug() << "BLE not ready: read()";
   }
 }
 
@@ -173,7 +173,7 @@ void BLE_ME::write(const QByteArray& data) {
     // will call 'characteristicWritten()' on success
     mainService->writeCharacteristic(toRadio, data);
   } else {
-    qDebug() << "not ready to write";
+    qDebug() << "BLE not ready: write()";
   }
 }
 
