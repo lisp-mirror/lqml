@@ -1,17 +1,22 @@
 #include "connection.h"
 #include "ble/ble_me.h"
-#include "wifi/wifi_me.h"
 #include <QStandardPaths>
 #include <QFile>
 #include <QDataStream>
+
+#ifndef NO_USB
+  #include "usb/usb_me.h"
+#endif
+
+#ifndef NO_WIFI
+  #include "wifi/wifi_me.h"
+#endif
 
 #ifdef Q_OS_ANDROID
   #include "../android_service/qtandroidservice_ro.h"
   #if (QT_VERSION < 0x060000)
     #include <QAndroidService>
   #endif
-#else
-  #include "usb/usb_me.h"
 #endif
 
 #ifdef Q_OS_ANDROID
@@ -25,8 +30,12 @@ Connection::Connection(QtAndroidService* service) {
 #else
 Connection::Connection() {
   ble = new BLE_ME(this);
+#ifndef NO_USB
   usb = new USB_ME(this);
+#endif
+#ifndef NO_WIFI
   wifi = new WiFi_ME(this);
+#endif
 }
 #endif
 
@@ -38,25 +47,31 @@ void Connection::setConnectionType(const QVariant& var) {
 void Connection::startDeviceDiscovery(const QVariant& var) {
   switch (type) {
     case BLE:
-#ifndef Q_OS_ANDROID
+#ifndef NO_USB
       usb->disconnect();
 #endif
+#ifndef NO_WIFI
       wifi->disconnect();
+#endif
       ble->startDeviceDiscovery(var.toString());
       break;
     case USB:
       ble->disconnect();
+#ifndef NO_WIFI
       wifi->disconnect();
-#ifndef Q_OS_ANDROID
+#endif
+#ifndef NO_USB
       usb->connectToRadio();
 #endif
       break;
     case WiFi:
       ble->disconnect();
-#ifndef Q_OS_ANDROID
+#ifndef NO_USB
       usb->disconnect();
 #endif
+#ifndef NO_WIFI
       wifi->connectToRadio(var.toString());
+#endif
       break;
   }
 }
@@ -68,10 +83,12 @@ void Connection::stopDeviceDiscovery() {
 void Connection::disconnect() {
   switch (type) {
     case BLE: ble->disconnect(); break;
-#ifndef Q_OS_ANDROID
+#ifndef NO_USB
     case USB: usb->disconnect(); break;
 #endif
+#ifndef NO_WIFI
     case WiFi: wifi->disconnect(); break;
+#endif
   }
 }
 
@@ -86,17 +103,13 @@ void Connection::read2() {
 void Connection::write2(const QVariant& vBytes) {
   QByteArray bytes = vBytes.toByteArray();
   switch (type) {
-    case BLE:
-      ble->write(bytes);
-      break;
-    case USB:
-#ifndef Q_OS_ANDROID
-      usb->write2(bytes);
+    case BLE: ble->write(bytes); break;
+#ifndef NO_USB
+    case USB: usb->write2(bytes); break;
 #endif
-      break;
-    case WiFi:
-      wifi->write2(bytes);
-      break;
+#ifndef NO_WIFI
+    case WiFi: wifi->write2(bytes); break;
+#endif
   }
 }
 

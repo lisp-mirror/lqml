@@ -106,12 +106,16 @@ QT::QT() : QObject() {
   // background mode
   QObject::connect(qGuiApp, &QGuiApplication::applicationStateChanged,
                    [&](Qt::ApplicationState state) {
+                     static bool ok = false; // for startup
                      if (state == Qt::ApplicationInactive) {
+                       ok = true;
                        con->setBackgroundMode(true);
                        ecl_fun("app:background-mode-changed", true);
                      } else if (state == Qt::ApplicationActive) {
-                       con->setBackgroundMode(false);
-                       ecl_fun("app:background-mode-changed", false);
+                       if (ok) {
+                         con->setBackgroundMode(false);
+                         ecl_fun("app:background-mode-changed", false);
+                       }
                      }
                    });
 #endif

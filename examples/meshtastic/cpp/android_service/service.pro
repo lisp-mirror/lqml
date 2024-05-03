@@ -1,9 +1,10 @@
-QT += core bluetooth remoteobjects
-TEMPLATE = lib
-CONFIG += c++17 dll
+QT          += core bluetooth network remoteobjects
+TEMPLATE    = lib
+CONFIG      += c++17 dll
+DEFINES     += NO_USB
 INCLUDEPATH += $$PWD
-TARGET = service
-DESTDIR = ../../build-android
+TARGET      = service
+DESTDIR     = ../../build-android
 OBJECTS_DIR = ./tmp
 MOC_DIR     = ./tmp
 

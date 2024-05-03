@@ -88,6 +88,7 @@ Item {
         text: "WiFi"
         autoExclusive: true
         checkable: true
+        enabled: (Qt.platform.os !== "ios")
         onTriggered: connection.changed(objectName)
       }
     }
