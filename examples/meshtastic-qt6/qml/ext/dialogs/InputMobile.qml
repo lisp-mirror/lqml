@@ -10,6 +10,7 @@ Dialog {
 
   property alias label: label.text
   property alias text: edit.text
+  property alias inputMask: edit.inputMask
   property alias maxLength: edit.maximumLength
   property alias from: spinBox.from
   property alias to: spinBox.to

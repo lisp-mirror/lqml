@@ -42,6 +42,7 @@ Rectangle {
 <img src='../../img/radio.png' width=60 height=60>
 <br>Radios
 </h3>
+<h4>BLE</h4>
 <p>
 If you use more than 1 radio, switch here to the radio you want to use.
 </p>
@@ -52,6 +53,21 @@ To manually restart device discovery, press-and-hold on the radio icon.
 If your radio is not found, it may help to turn it off/on again.
 </p>
 %1
+<h4>USB</h4>
+Desktop only. You may need to install serial drivers first, and you need to use a data USB cable.
+<h4>WiFi</h4>
+<p>
+Use the Python CLI to setup your connection like this:
+</p>
+<pre>
+meshtastic &#92;
+--set network.wifi_enabled true &#92;
+--set network.wifi_ssid \"&lt;name&gt;\" &#92;
+--set network.wifi_psk \"&lt;password&gt;\"
+</pre>
+<p>
+The app will ask for your radio IP, which can be found on its screen as soon as it is connected to WiFi.
+</p>
 <h3>
 <img src='../../img/group.png' width=60 height=60>
 <br>Group

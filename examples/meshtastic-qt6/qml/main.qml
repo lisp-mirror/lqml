@@ -84,6 +84,13 @@ Item {
         enabled: (Qt.platform.os !== "android") && (Qt.platform.os !== "ios")
         onTriggered: connection.changed(objectName)
       }
+      Com.MenuItem {
+        objectName: "WIFI"
+        text: "WiFi"
+        autoExclusive: true
+        checkable: true
+        onTriggered: connection.changed(objectName)
+      }
     }
 
     Com.MenuItem {
