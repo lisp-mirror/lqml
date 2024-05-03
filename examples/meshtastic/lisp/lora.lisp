@@ -311,7 +311,7 @@
                    (unless current
                      (group:add-person
                       (list :radio-name name
-                            :custom-name (or (app:setting name :custom-name) "")
+                            :custom-name (or (app:setting name :custom-name) "~")
                             :node-num (me:num info)
                             :current (equal name (app:setting :latest-receiver)))))
                    (when (or (and (find radios:*connection* '(:usb :wifi))

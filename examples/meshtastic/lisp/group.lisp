@@ -32,7 +32,7 @@
   (qjs |radioNames| ui:*group*))
 
 (defun name-edited (radio name) ; see QML
-  (app:change-setting radio (if (string= (tr "Anonym") name) "" name)
+  (app:change-setting radio name
                       :sub-key :custom-name)
   (values))
 
