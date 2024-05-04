@@ -45,7 +45,9 @@
           nil)))
   (defun wifi-ip-changed* (ok)
     (when ok
-      (app:change-setting :wifi-ip (q< |text| ui:*dialog-line-edit*))
+      (app:change-setting
+       :wifi-ip
+       (substitute #\. #\, (q< |text| ui:*dialog-line-edit*))) ; SUBSTITUTE for iOS
       (if (and (wifi-connectable)
                start-discovery)
           (progn
