@@ -108,7 +108,9 @@ void BLE_ME::searchCharacteristics() {
     if (!con->backgroundMode) {
       QVariantList vNames;
       for (auto name : qAsConst(names)) { vNames << name; }
-      emitter->setReady(QVariant(QVariantList() << true << currentDevice.name().right(4) << QVariant(vNames)));
+      emitter->setReady(QVariant(QVariantList() << true
+                                                << currentDevice.name().right(4)
+                                                << QVariant(vNames)));
     }
   }
 }
@@ -119,7 +121,8 @@ void BLE_ME::characteristicChanged(const QLowEnergyCharacteristic&,
     if (con->backgroundMode) {
       read();
     } else {
-      emitter->receivedFromRadio(QVariant(QVariantList() << data << QString("notified")));
+      emitter->receivedFromRadio(QVariant(QVariantList() << data
+                                                         << QString("notified")));
     }
   }
 }

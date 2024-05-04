@@ -10,11 +10,13 @@ Dialog {
 
   property alias label: label.text
   property alias text: edit.text
+  property alias placeholderText: edit.placeholderText
   property alias inputMask: edit.inputMask
   property alias maxLength: edit.maximumLength
   property alias from: spinBox.from
   property alias to: spinBox.to
   property alias value: spinBox.value
+  property bool numbersOnly
   property string callback
 
   function setFocus() { edit.forceActiveFocus() }
@@ -36,6 +38,7 @@ Dialog {
       objectName: "dialog_line_edit"
       width: parent.width
       visible: !spinBox.visible
+      inputMethodHints: numbersOnly ? Qt.ImhFormattedNumbersOnly : Qt.ImhNone
     }
 
     SpinBox {

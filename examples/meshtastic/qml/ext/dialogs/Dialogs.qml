@@ -37,7 +37,9 @@ Item {
     loader.item.open()
   }
 
-  function input(title, label, callback, text, maxLength, inputMask, from, to, value) {
+  function input(label, callback, text, placeholderText,
+                 maxLength, inputMask, numbersOnly,
+                 from, to, value) {
     loader.active = false // force reload
     if (rootItem.mobile) {
       loader.source = "InputMobile.qml"
@@ -45,18 +47,19 @@ Item {
       loader.source = "Input.qml"
     }
     loader.active = true
-    loader.item.title = title
     loader.item.label = label
     loader.item.callback = callback
     loader.item.text = text
+    loader.item.placeholderText = placeholderText
     loader.item.maxLength = maxLength
     loader.item.inputMask = inputMask
+    loader.item.numbersOnly = numbersOnly
     loader.item.from = from
     loader.item.to = to
     loader.item.value = value
-    var keyboard = (text !== "")
-    rootItem.showKeyboard(keyboard)
+    var keyboard = (text !== "") || (placeholderText !== "")
     loader.item.open()
     if (keyboard) loader.item.setFocus()
+    Qt.callLater(rootItem.showKeyboard, keyboard)
   }
 }

@@ -56,6 +56,10 @@
 
 (defun background-mode-changed (mode) ; see Qt
   (setf *background-mode* mode)
+  ;; needed for iOS which disconnects in background mode
+  (when (and (not *background-mode*)
+             (eql :wifi radios:*connection*))
+    (lora:start-device-discovery))
   (values))
 
 ;;; settings
@@ -139,13 +143,15 @@
   (qjs |confirm| ui:*dialogs*
        text (x:callback-name callback)))
 
-(defun input-dialog (label callback &key (title "")
-                     (text "") (max-length #.(float 32767)) (input-mask "")
-                     from to value)
+(defun input-dialog (label callback
+                     &key (text "") (placeholder-text "")
+                          (max-length #.(float 32767)) (input-mask "") numbers-only
+                          from to value)
   (qjs |input| ui:*dialogs*
-       title label (x:callback-name callback)
-       text max-length input-mask ; string (line edit)
-       from to value))            ; integer (spin box)
+       label (x:callback-name callback)
+       text placeholder-text              ; string (line edit)
+       max-length input-mask numbers-only
+       from to value))                    ; integer (spin box)
 
 ;;; backup/restore all app data
 

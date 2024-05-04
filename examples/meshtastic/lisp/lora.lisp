@@ -470,7 +470,6 @@
   (when (radio-ready-p)
     (app:input-dialog
      (tr "Channel name:") 'channel-name-changed
-     :title (tr "Name")
      :text *channel-name*
      :max-length #.(float 12)))
   (values))
@@ -487,10 +486,9 @@
         (qlater 'set-primary-channel))))
   (values))
 
-(defun edit-device-filter () ; see QML
+(defun edit-device-filter () ; see QML (currently not used)
   (app:input-dialog
    (tr "Device filter:") 'device-filter-changed
-   :title (tr "Filter")
    :text (or (app:setting :device-filter) "meshtastic"))
   (values))
 

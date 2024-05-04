@@ -87,6 +87,7 @@ Item {
       Com.MenuItem {
         objectName: "WIFI"
         text: "WiFi"
+        palette.windowText: (Qt.platform.os === "ios") ? "crimson" : palette.windowText
         autoExclusive: true
         checkable: true
         onTriggered: connection.changed(objectName)

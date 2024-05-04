@@ -39,9 +39,9 @@
         (progn
           (app:input-dialog
            (tr "Radio WiFi IP:") 'wifi-ip-changed
-           :title (tr "IP")
            :text (wifi-ip)
-           :input-mask "000.000.000.000")
+           :placeholder-text "IP"
+           :numbers-only t)
           nil)))
   (defun wifi-ip-changed* (ok)
     (when ok

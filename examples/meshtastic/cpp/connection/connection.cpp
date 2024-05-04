@@ -1,15 +1,12 @@
 #include "connection.h"
 #include "ble/ble_me.h"
+#include "wifi/wifi_me.h"
 #include <QStandardPaths>
 #include <QFile>
 #include <QDataStream>
 
 #ifndef NO_USB
   #include "usb/usb_me.h"
-#endif
-
-#ifndef NO_WIFI
-  #include "wifi/wifi_me.h"
 #endif
 
 #ifdef Q_OS_ANDROID
@@ -30,11 +27,9 @@ Connection::Connection(QtAndroidService* service) {
 #else
 Connection::Connection() {
   ble = new BLE_ME(this);
+  wifi = new WiFi_ME(this);
 #ifndef NO_USB
   usb = new USB_ME(this);
-#endif
-#ifndef NO_WIFI
-  wifi = new WiFi_ME(this);
 #endif
 }
 #endif
@@ -50,17 +45,13 @@ void Connection::startDeviceDiscovery(const QVariant& var) {
 #ifndef NO_USB
       usb->disconnect();
 #endif
-#ifndef NO_WIFI
       wifi->disconnect();
-#endif
       ble->startDeviceDiscovery(var.toString());
       break;
     case USB:
-      ble->disconnect();
-#ifndef NO_WIFI
-      wifi->disconnect();
-#endif
 #ifndef NO_USB
+      ble->disconnect();
+      wifi->disconnect();
       usb->connectToRadio();
 #endif
       break;
@@ -69,9 +60,7 @@ void Connection::startDeviceDiscovery(const QVariant& var) {
 #ifndef NO_USB
       usb->disconnect();
 #endif
-#ifndef NO_WIFI
       wifi->connectToRadio(var.toString());
-#endif
       break;
   }
 }
@@ -82,13 +71,17 @@ void Connection::stopDeviceDiscovery() {
 
 void Connection::disconnect() {
   switch (type) {
-    case BLE: ble->disconnect(); break;
+    case BLE:
+      ble->disconnect();
+      break;
+    case USB:
 #ifndef NO_USB
-    case USB: usb->disconnect(); break;
+      usb->disconnect();
 #endif
-#ifndef NO_WIFI
-    case WiFi: wifi->disconnect(); break;
-#endif
+      break;
+    case WiFi:
+      wifi->disconnect();
+      break;
   }
 }
 
@@ -103,13 +96,17 @@ void Connection::read2() {
 void Connection::write2(const QVariant& vBytes) {
   QByteArray bytes = vBytes.toByteArray();
   switch (type) {
-    case BLE: ble->write(bytes); break;
+    case BLE:
+      ble->write(bytes);
+      break;
+    case USB:
 #ifndef NO_USB
-    case USB: usb->write2(bytes); break;
+      usb->write2(bytes);
 #endif
-#ifndef NO_WIFI
-    case WiFi: wifi->write2(bytes); break;
-#endif
+      break;
+    case WiFi:
+      wifi->write2(bytes);
+      break;
   }
 }
 

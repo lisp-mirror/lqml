@@ -161,7 +161,6 @@
 (defun font-size-dialog ()
   (app:input-dialog
    (tr "Message font size:") 'font-size-changed
-   :title (tr "Size")
    :from 10.0
    :to   48.0
    :value (float (or (app:setting :message-font-size)

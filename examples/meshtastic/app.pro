@@ -106,7 +106,7 @@ android {
 
 ios {
   QT          -= serialport
-  DEFINES     += INI_ASDF NO_USB NO_WIFI
+  DEFINES     += INI_ASDF NO_USB
   DEFINES     -= DESKTOP_APP
   INCLUDEPATH = $$(ECL_IOS)/include
   ECL_VERSION = $$lower($$system($ECL_IOS/../ecl-ios-host/bin/ecl -v))
@@ -180,11 +180,9 @@ SOURCES += \
 
 ios {
   HEADERS -= \
-    cpp/connection/usb/usb_me.h \
-    cpp/connection/wifi/wifi_me.h
+    cpp/connection/usb/usb_me.h
   SOURCES -= \
-    cpp/connection/usb/usb_me.cpp \
-    cpp/connection/wifi/wifi_me.cpp
+    cpp/connection/usb/usb_me.cpp
 }
 
 RESOURCES += $$files(qml/*)

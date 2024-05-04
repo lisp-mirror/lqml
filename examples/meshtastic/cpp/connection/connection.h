@@ -4,12 +4,10 @@
 #include <QVariant>
 
 class BLE_ME;
+class WiFi_ME;
 
 #ifndef NO_USB
   class USB_ME;
-#endif
-#ifndef NO_WIFI
-  class WiFi_ME;
 #endif
 
 #ifdef Q_OS_ANDROID
@@ -32,11 +30,9 @@ public:
 
   Type type = BLE;
   BLE_ME* ble = nullptr;
+  WiFi_ME* wifi = nullptr;
 #ifndef NO_USB
   USB_ME* usb = nullptr;
-#endif
-#ifndef NO_WIFI
-  WiFi_ME* wifi = nullptr;
 #endif
   bool backgroundMode = false;
 

@@ -53,7 +53,20 @@ If your radio is not found, it may help to turn it off/on again.
 </p>
 %1
 %2
+<h4>WiFi</h4>
 %3
+<p>
+Use the Python CLI to setup your connection like this:
+</p>
+<pre>
+meshtastic &#92;
+--set network.wifi_enabled true &#92;
+--set network.wifi_ssid \"&lt;name&gt;\" &#92;
+--set network.wifi_psk \"&lt;password&gt;\"
+</pre>
+<p>
+The app will ask for your radio IP, which can be found on its screen as soon as it is connected to WiFi.
+</p>
 <h3>
 <img src='../../img/group.png' width=60 height=60>
 <br>Group
@@ -141,20 +154,8 @@ To autmatically restore data from a backup on the desktop, put the backup files 
 You may need to install serial drivers first, and you need to use a data USB cable.
 </p>"
           : "")
-     .arg((Qt.platform.os !== "ios")
-          ? "<h4>WiFi</h4>
-<p>
-Use the Python CLI to setup your connection like this:
-</p>
-<pre>
-meshtastic &#92;
---set network.wifi_enabled true &#92;
---set network.wifi_ssid \"&lt;name&gt;\" &#92;
---set network.wifi_psk \"&lt;password&gt;\"
-</pre>
-<p>
-The app will ask for your radio IP, which can be found on its screen as soon as it is connected to WiFi.
-</p>"
+     .arg((Qt.platform.os === "ios")
+          ? "<p><i><font color=crimson><b>Warning:</b></font> WiFi will disconnect in background mode, and only re-connect when app is brought back to foreground (iOS only).</i></p>"
           : "")
     }
   }
