@@ -131,7 +131,7 @@ Item {
     width: headerHeight
     height: width
     anchors.right: parent.right
-    visible: false
+    visible: (view.pageIndex === 0)
 
     MouseArea {
       anchors.fill: parent
@@ -145,6 +145,7 @@ Item {
     width: headerHeight
     height: width
     anchors.right: parent.right
+    visible: (view.pageIndex === 1)
 
     MouseArea {
       anchors.fill: parent

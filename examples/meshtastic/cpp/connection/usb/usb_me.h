@@ -8,8 +8,6 @@ class Connection;
 class USB_ME : public QSerialPort {
   Q_OBJECT
 
-  /*** <INTERFACE> ****************************************/
-
 public:
   USB_ME(Connection*);
 
@@ -18,13 +16,6 @@ public Q_SLOTS:
   void disconnect();
   void read2();
   void write2(const QByteArray&);
-
-Q_SIGNALS:
-  void setReady(const QString&);
-  void receivedFromRadio(const QByteArray&);
-  void receivingDone();
-
-  /*** </INTERFACE> ***************************************/
 
 public:
   bool ready = false;

@@ -39,9 +39,8 @@
 (defun view-index-changed (index) ; see QML
   (when (and (= 1 index)
              (not (app:setting :latest-receiver)))
+    (toast (tr "please select a receiver first"))
     (q> |currentIndex| ui:*main-view* 0)) ; 'Group'
-  (q> |visible| ui:*location* (= 0 index))
-  (q> |visible| ui:*find*     (= 1 index))
   (q> |interactive| ui:*main-view* (/= 1 index)) ; swipe single message, not view
   (values))
 

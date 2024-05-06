@@ -2,7 +2,6 @@
 #include "../connection.h"
 #include <QSerialPortInfo>
 #include <QTimer>
-#include <QGuiApplication>
 #include <QtDebug>
 
 USB_ME::USB_ME(Connection* _con) : con(_con) {

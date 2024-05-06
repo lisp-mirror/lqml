@@ -119,6 +119,8 @@ void Connection::setBackgroundMode(bool background) {
   if (!backgroundMode) {
     sendSavedBytes();
   }
+#else
+  Q_UNUSED(background)
 #endif
 }
 

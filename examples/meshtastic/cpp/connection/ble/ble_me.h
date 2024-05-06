@@ -13,8 +13,6 @@ class Connection;
 class BLE_ME : public BLE {
   Q_OBJECT
 
-  /*** <INTERFACE> ****************************************/
-
 public:
 #ifdef Q_OS_ANDROID
   BLE_ME(QtAndroidService*, Connection*);
@@ -26,13 +24,6 @@ public Q_SLOTS:
   void setDeviceFilter(const QString& s) { filter = s; }
   void read();
   void write(const QByteArray&);
-
-Q_SIGNALS:
-  void setReady(bool, const QString&, const QStringList&);
-  void receivedFromRadio(const QByteArray&, const QString&);
-  void receivingDone();
-
-  /*** </INTERFACE> ***************************************/
 
 public:
   static const UID uuid_service;
