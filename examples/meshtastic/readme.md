@@ -113,9 +113,8 @@ meshtastic \
 --set network.wifi_psk "<password>"
 ```
 You should now be able to see the IP of your WiFi connected radio on it's
-small display (use the user button to switch to the WiFi page). After entering
-the IP in the appropriate setting of this app, you should be able to choose
-'WiFi' as connection type after switching to 'Radios'.
+small display (use the user button to switch to the WiFi page). The app will
+ask for the IP if not entered yet, or if it has changed.
 
 See also [readme-usage](readme-usage.md).
 

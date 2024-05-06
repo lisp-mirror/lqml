@@ -24,7 +24,7 @@ void USB_ME::connectToRadio() {
     if (!con->backgroundMode) {
       con->setReady(QVariant(QVariantList() << portName()));
     }
-    qDebug() << "USB already open;" << portName();
+    qDebug() << "USB already open:" << portName();
     return;
   }
 

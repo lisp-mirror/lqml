@@ -188,7 +188,7 @@
 ;;; check app version (mobile)
 
 #+mobile
-(defconstant +version+ 1)
+(defconstant +version+ 2)
 
 #+mobile
 (let ((.version (merge-pathnames ".version")))

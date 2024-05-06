@@ -102,6 +102,7 @@ Item {
     Com.MenuItem {
       text: qsTr("Export message DB (Lisp)")
       onTriggered: Lisp.call("db:export-to-list")
+      enabled: (view.pageIndex === 1)
     }
 
     Com.MenuItem {

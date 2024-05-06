@@ -81,16 +81,16 @@ Item {
         text: "USB"
         autoExclusive: true
         checkable: true
-        enabled: (Qt.platform.os !== "android") && (Qt.platform.os !== "ios")
         onTriggered: connection.changed(objectName)
+        Component.onCompleted: if (mobile) { height = 0 }
       }
       Com.MenuItem {
         objectName: "WIFI"
         text: "WiFi"
-        palette.windowText: (Qt.platform.os === "ios") ? "crimson" : palette.windowText
         autoExclusive: true
         checkable: true
         onTriggered: connection.changed(objectName)
+        Component.onCompleted: if (Qt.platform.os === "ios") { palette.windowText = "crimson" }
       }
     }
 
@@ -103,6 +103,7 @@ Item {
     Com.MenuItem {
       text: qsTr("Export message DB (Lisp)")
       onTriggered: Lisp.call("db:export-to-list")
+      enabled: (view.pageIndex === 1)
     }
 
     Com.MenuItem {
