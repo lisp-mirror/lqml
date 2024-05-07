@@ -29,7 +29,10 @@
    #:set-format
    #:set-pattern
    #:text
-   #:text-document))
+   #:text-document
+   ;; ulisp (e.g. Arduino)
+   #+linux #:connect-usb
+   #+linux #:send-to-ulisp))
 
 (in-package :qt)
 

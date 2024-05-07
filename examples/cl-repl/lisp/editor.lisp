@@ -655,14 +655,17 @@
 (defvar *ex-cmd* nil)
 
 (defun feed-top-level (text)
-  (when eval:*eval-thread*
-    (if (mp:process-active-p eval:*eval-thread*)
-        (progn
-          (print-eval-output :trace ";; killing old eval process")
-          (eval* ":k"))
-        (setf eval:*eval-thread* nil)))
-  (unless eval:*eval-thread*
-    (eval:feed-top-level text)))
+  (if #+linux *ulisp-mode*         #-linux nil
+      #+linux (send-to-ulisp text) #-linux nil
+      (progn
+        (when eval:*eval-thread*
+          (if (mp:process-active-p eval:*eval-thread*)
+              (progn
+                (print-eval-output :trace ";; killing old eval process")
+                (eval* ":k"))
+              (setf eval:*eval-thread* nil)))
+        (unless eval:*eval-thread*
+          (eval:feed-top-level text)))))
 
 (defun eval* (text)
   (if (find #\Newline text)

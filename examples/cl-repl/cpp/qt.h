@@ -28,6 +28,10 @@ QT_BEGIN_NAMESPACE
 
 extern "C" { LIB_EXPORT QObject* ini(); }
 
+#ifdef Q_OS_LINUX
+  class USB;
+#endif
+
 class SyntaxHighlighter : public QSyntaxHighlighter {
   Q_OBJECT
   friend class QT;
@@ -104,7 +108,15 @@ public:
   Q_INVOKABLE QVariant textDocument          (const QVariant&);
 
   // etc
-  Q_INVOKABLE QVariant localIp               ();
+  Q_INVOKABLE QVariant localIp();
+
+  // USB
+#ifdef Q_OS_LINUX
+  Q_INVOKABLE QVariant connectUsb  ();
+  Q_INVOKABLE QVariant sendToUlisp (const QVariant&);
+
+  USB* usb = nullptr;
+#endif
 };
 
 QT_END_NAMESPACE

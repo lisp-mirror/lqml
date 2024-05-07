@@ -6,6 +6,10 @@
 #include <QNetworkInterface>
 #include <QHostAddress>
 
+#ifdef Q_OS_LINUX
+  #include "usb/usb.h"
+#endif
+
 #ifdef PLUGIN
   #include <ecl_fun_plugin.h>
 #else
@@ -334,5 +338,30 @@ QVariant QT::localIp() {
   }
   return QVariant();
 }
+
+// USB
+
+#ifdef Q_OS_LINUX
+QVariant QT::connectUsb() {
+  if (usb == nullptr) {
+    usb = new USB();
+    if (usb->connect2()) {
+      connect(usb, &USB::receivingDone,
+              [](const QByteArray& data) {
+                ecl_fun("ed:received-from-ulisp", QString::fromUtf8(data));
+              });
+      return true;
+    }
+  }
+  return QVariant();
+}
+
+QVariant QT::sendToUlisp(const QVariant &vData) {
+  if (usb != nullptr) {
+    usb->write2(vData.toByteArray());
+  }
+  return QVariant();
+}
+#endif
 
 QT_END_NAMESPACE

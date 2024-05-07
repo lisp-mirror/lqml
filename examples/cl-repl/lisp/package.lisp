@@ -2,6 +2,7 @@
   (:nicknames :ed)
   (:use :cl :qml)
   (:export
+   ;; editor
    #:*file*
    #:*plain-text-search*
    #:append-output
@@ -14,5 +15,9 @@
    #:reload-qml
    #:save-changes
    #:set-font
-   #:start))
+   #:start
+   ;; uLisp mode (e.g. Arduino)
+   #+linux #:*ulisp-mode*
+   #+linux #:send-to-ulisp
+   #+linux #:received-from-ulisp))
 

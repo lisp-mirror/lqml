@@ -20,6 +20,12 @@
 (defun option (name)
   (find name (ext:command-args) :test 'search))
 
+;;; use app to send code to e.g. Arduino uLisp connected to USB
+
+#+linux
+(when (option "-ulisp")
+  (setf ed:*ulisp-mode* t))
+
 ;;; trivial auto reload of all QML files after saving any change
 
 (when (option "-auto")

@@ -13,7 +13,10 @@ HEADERS += qt.h
 SOURCES += qt.cpp
 
 linux {
-  LIBS += -L../../../platforms/linux/lib
+  QT      += serialport
+  HEADERS += usb/usb.h
+  SOURCES += usb/usb.cpp
+  LIBS    += -L../../../platforms/linux/lib
 }
 
 macx {
