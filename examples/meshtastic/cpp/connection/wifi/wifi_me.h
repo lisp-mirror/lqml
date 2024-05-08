@@ -11,8 +11,6 @@ class Connection;
 class WiFi_ME : public QTcpSocket {
   Q_OBJECT
 
-  /*** <INTERFACE> ****************************************/
-
 public:
 #ifdef Q_OS_ANDROID
   WiFi_ME(QtAndroidService*, Connection*);
@@ -25,13 +23,6 @@ public Q_SLOTS:
   void disconnect();
   void read2();
   void write2(const QByteArray&);
-
-Q_SIGNALS:
-  void setReady(const QString&);
-  void receivedFromRadio(const QByteArray&, const QString&);
-  void receivingDone();
-
-  /*** </INTERFACE> ***************************************/
 
 public:
 #ifdef Q_OS_ANDROID
