@@ -655,8 +655,8 @@
 (defvar *ex-cmd* nil)
 
 (defun feed-top-level (text)
-  (if #+linux *ulisp-mode*         #-linux nil
-      #+linux (send-to-ulisp text) #-linux nil
+  (if #+unix *ulisp-mode*         #-unix nil
+      #+unix (send-to-ulisp text) #-unix nil
       (progn
         (when eval:*eval-thread*
           (if (mp:process-active-p eval:*eval-thread*)

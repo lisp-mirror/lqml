@@ -31,8 +31,8 @@
    #:text
    #:text-document
    ;; ulisp (e.g. Arduino)
-   #+linux #:connect-usb
-   #+linux #:send-to-ulisp))
+   #+unix #:connect-usb
+   #+unix #:send-to-ulisp))
 
 (in-package :qt)
 

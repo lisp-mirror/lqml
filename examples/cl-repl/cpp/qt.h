@@ -28,7 +28,7 @@ QT_BEGIN_NAMESPACE
 
 extern "C" { LIB_EXPORT QObject* ini(); }
 
-#ifdef Q_OS_LINUX
+#ifdef Q_OS_UNIX
   class USB;
 #endif
 
@@ -111,7 +111,7 @@ public:
   Q_INVOKABLE QVariant localIp();
 
   // USB
-#ifdef Q_OS_LINUX
+#ifdef Q_OS_UNIX
   Q_INVOKABLE QVariant connectUsb  ();
   Q_INVOKABLE QVariant sendToUlisp (const QVariant&);
 

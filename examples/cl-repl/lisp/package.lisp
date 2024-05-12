@@ -17,7 +17,7 @@
    #:set-font
    #:start
    ;; uLisp mode (e.g. Arduino)
-   #+linux #:*ulisp-mode*
-   #+linux #:send-to-ulisp
-   #+linux #:received-from-ulisp))
+   #+unix #:*ulisp-mode*
+   #+unix #:send-to-ulisp
+   #+unix #:received-from-ulisp))
 

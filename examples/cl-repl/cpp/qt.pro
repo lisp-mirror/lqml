@@ -12,10 +12,13 @@ MOC_DIR     = ./tmp/
 HEADERS += qt.h
 SOURCES += qt.cpp
 
-linux {
+unix {
   QT      += serialport
   HEADERS += usb/usb.h
   SOURCES += usb/usb.cpp
+}
+
+linux {
   LIBS    += -L../../../platforms/linux/lib
 }
 

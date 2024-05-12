@@ -6,7 +6,7 @@
 #include <QNetworkInterface>
 #include <QHostAddress>
 
-#ifdef Q_OS_LINUX
+#ifdef Q_OS_UNIX
   #include "usb/usb.h"
 #endif
 
@@ -341,7 +341,7 @@ QVariant QT::localIp() {
 
 // USB
 
-#ifdef Q_OS_LINUX
+#ifdef Q_OS_UNIX
 QVariant QT::connectUsb() {
   if (usb == nullptr) {
     usb = new USB();
