@@ -21,7 +21,7 @@ USB_ME::USB_ME(Connection* _con) : con(_con) {
 void USB_ME::connectToRadio() {
   if (isOpen()) {
     if (!con->backgroundMode) {
-      con->setReady(QVariant(QVariantList() << portName()));
+      con->setReady(QVariant(QVariantList() << true));
     }
     qDebug() << "USB already open:" << portName();
     return;
@@ -55,7 +55,7 @@ done:
   } else {
     ready = true;
     if (!con->backgroundMode) {
-      con->setReady(QVariant(QVariantList() << portName()));
+      con->setReady(QVariant(QVariantList() << true));
     }
     qDebug() << "USB open";
   }

@@ -6,7 +6,11 @@
 #include <QDataStream>
 
 #ifndef NO_USB
-  #include "usb/usb_me.h"
+  #ifdef Q_OS_ANDROID
+    #include "usb/usb_me.android.h"
+  #else
+    #include "usb/usb_me.h"
+  #endif
 #endif
 
 #ifdef Q_OS_ANDROID
@@ -22,15 +26,16 @@ Connection::Connection(QtAndroidService* service) {
   // forward signal
   connect(this, &Connection::sendSavedPackets, service, &QtAndroidService::sendSavedPackets);
   ble = new BLE_ME(service, this);
+  usb = new USB_ME(service, this);
   wifi = new WiFi_ME(service, this);
 }
 #else
 Connection::Connection() {
   ble = new BLE_ME(this);
-  wifi = new WiFi_ME(this);
 #ifndef NO_USB
   usb = new USB_ME(this);
 #endif
+  wifi = new WiFi_ME(this);
 }
 #endif
 

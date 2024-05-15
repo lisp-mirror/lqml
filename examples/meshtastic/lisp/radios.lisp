@@ -75,12 +75,18 @@
 
 (defun device-discovered (name) ; see Qt
   "Show discovered (cached) device, which may not be reachable / turned on."
-  (unless *found*
-    (add-radio
-     (list :name name
-           :hw-model "Meshtastic" ; we don't know yet
-           :current (equal name (app:setting :device))
-           :ini t)))
+  (let ((usb (string= "USB" name)))
+    (case *connection*
+      (:ble
+       (unless (or *found* usb)
+         (add-radio
+          (list :name name
+                :hw-model "Meshtastic" ; we don't know yet
+                :current (equal name (app:setting :device))
+                :ini t))))
+      (:usb
+       (when usb
+         (qsingle-shot 3000 'lora:start-device-discovery))))) ; delay for boot
   (values))
 
 (defun add-radio (radio)

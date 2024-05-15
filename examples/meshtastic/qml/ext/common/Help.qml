@@ -148,10 +148,10 @@ To autmatically restore data from a backup on the desktop, put the backup files 
 </p>".arg((Qt.platform.os === "android")
           ? "<p>On some devices it may be necessary to first unpair your radio, then press-and-hold on the radio icon (to restart device discovery).</p><p><i>N.B: If you previously used a radio with the official app, you'll need to disable the radio in the official app first, otherwise it will not show up in this app.</i></p>"
           : "")
-     .arg(((Qt.platform.os !== "android") && (Qt.platform.os !== "ios"))
+     .arg((Qt.platform.os !== "ios")
           ? "<h4>USB</h4>
 <p>
-You may need to install serial drivers first, and you need to use a data USB cable.
+You may need to install serial drivers first (except on android), and you need to use a data USB cable.
 </p>"
           : "")
      .arg((Qt.platform.os === "ios")

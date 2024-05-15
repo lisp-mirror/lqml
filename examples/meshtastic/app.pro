@@ -59,7 +59,7 @@ win32 {
 
 android {
   QT          += remoteobjects
-  DEFINES     += INI_ASDF NO_USB
+  DEFINES     += INI_ASDF
   DEFINES     -= DESKTOP_APP
   INCLUDEPATH = $$ECL/include
   ECL_VERSION = $$lower($$system($$ECL/../ecl-android-host/bin/ecl -v))

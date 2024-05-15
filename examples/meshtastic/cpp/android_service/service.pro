@@ -1,7 +1,6 @@
 QT          += core bluetooth network remoteobjects
 TEMPLATE    = lib
 CONFIG      += c++17 dll
-DEFINES     += NO_USB
 INCLUDEPATH += $$PWD
 TARGET      = service
 DESTDIR     = ../../build-android
@@ -19,6 +18,7 @@ HEADERS += \
   ../connection/connection.h \
   ../connection/ble/ble.h \
   ../connection/ble/ble_me.h \
+  ../connection/usb/usb_me.android.h \
   ../connection/wifi/wifi_me.h \
   qtandroidservice_ro.h
 
@@ -26,6 +26,7 @@ SOURCES += \
   ../connection/connection.cpp \
   ../connection/ble/ble.cpp \
   ../connection/ble/ble_me.cpp \
+  ../connection/usb/usb_me.android.cpp \
   ../connection/wifi/wifi_me.cpp \
   main.cpp
 

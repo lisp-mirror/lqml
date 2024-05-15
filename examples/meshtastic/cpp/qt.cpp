@@ -13,6 +13,7 @@
 #endif
 
 #ifdef Q_OS_ANDROID
+  QT* QT::_this = nullptr;
   #include "rep_qtandroidservice_replica.h"
   #if (QT_VERSION < 0x060000)
     #include <QtAndroid>
@@ -38,6 +39,9 @@ QObject* ini() {
 
 QT::QT() : QObject() {
 #ifdef Q_OS_ANDROID
+  _this = this;
+  iniJni();
+
   // remote object for android service
   QRemoteObjectNode* repNode = new QRemoteObjectNode;
   repNode->connectToNode(QUrl(QStringLiteral("local:replica")));
@@ -53,8 +57,8 @@ QT::QT() : QObject() {
 #else
   QObject::connect(con, &Connection::deviceDiscovered,
 #endif
-  [](const QVariant& vFullName) {
-    ecl_fun("radios:device-discovered", vFullName.toString().right(4));
+  [](const QVariant& vName) {
+    ecl_fun("radios:device-discovered", vName.toString().right(4)); // short name
   });
 
 #ifdef Q_OS_ANDROID
@@ -165,68 +169,6 @@ QVariant QT::wifiConnectable(const QVariant& vIP) {
     return true;
   }
   return QVariant();
-}
-
-// GPS
-
-#ifdef Q_OS_ANDROID
-static void clearEventualExceptions() {
-#if (QT_VERSION < 0x060000)
-  QAndroidJniEnvironment env;
-#else
-  QJniEnvironment env;
-#endif
-  if (env->ExceptionCheck()) {
-    env->ExceptionClear();
-  }
-}
-
-static qlonglong getLongField(const char* name) {
-#if (QT_VERSION < 0x060000)
-  QAndroidJniObject activity = QtAndroid::androidActivity();
-#else
-  QJniObject activity = QtAndroidPrivate::activity();
-#endif
-  return static_cast<qlonglong>(activity.getField<jlong>(name));
-}
-
-static double getDoubleField(const char* name) {
-#if (QT_VERSION < 0x060000)
-  QAndroidJniObject activity = QtAndroid::androidActivity();
-#else
-  QJniObject activity = QtAndroidPrivate::activity();
-#endif
-  return static_cast<double>(activity.getField<jdouble>(name));
-}
-#endif
-
-QVariant QT::iniPositioning() {
-#ifdef Q_OS_ANDROID
-  #if (QT_VERSION < 0x060000)
-  QtAndroid::runOnAndroidThread([] {
-    QAndroidJniObject activity = QtAndroid::androidActivity();
-    activity.callMethod<void>("iniLocation", "()V");
-    clearEventualExceptions();
-  });
-  #else
-  QNativeInterface::QAndroidApplication::runOnAndroidMainThread([&] {
-    QJniObject activity = QtAndroidPrivate::activity();
-    activity.callMethod<void>("iniLocation", "()V");
-    clearEventualExceptions();
-  });
-  #endif
-#endif
-  return QVariant();
-}
-
-QVariant QT::lastPosition() {
-  QVariantList pos;
-#ifdef Q_OS_ANDROID
-  pos << getDoubleField("_position_lat_")
-      << getDoubleField("_position_lon_")
-      << getLongField("_position_time_");
-#endif
-  return pos;
 }
 
 // SQLite

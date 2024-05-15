@@ -16,19 +16,21 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE"/>
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.USB_PERMISSION"/>
+    <uses-permission android:name="android.permission.USB_HOST"/>
     <supports-screens
         android:anyDensity="true"
         android:largeScreens="true"
         android:normalScreens="true"
         android:smallScreens="true"/>
     <application
-        android:name=".QtServiceApplication"
+        android:name=".MeServiceApplication"
         android:label="Mesh SMS"
         android:hardwareAccelerated="true"
         android:extractNativeLibs="true"
         android:icon="@drawable/icon">
         <activity
-            android:name="org.qtproject.qt5.android.bindings.QtActivity"
+            android:name=".MeActivity"
             android:label="Mesh SMS"
             android:configChanges="orientation|uiMode|screenLayout|screenSize|smallestScreenSize|layoutDirection|locale|fontScale|keyboard|keyboardHidden|navigation|mcc|mnc|density"
             android:screenOrientation="unspecified"
@@ -39,6 +41,10 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
+            </intent-filter>
+            <meta-data android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" android:resource="@xml/device_filter" />
             <meta-data android:name="android.app.lib_name" android:value="app"/>
             <meta-data android:name="android.app.qt_sources_resource_id" android:resource="@array/qt_sources"/>
             <meta-data android:name="android.app.repository" android:value="default"/>
@@ -62,7 +68,7 @@
 
         <service
             android:process=":qt_service"
-            android:name=".QtAndroidService"
+            android:name=".MeAndroidService"
             android:stopWithTask="true"
             android:exported="false">
             <meta-data android:name="android.app.lib_name" android:value="service"/>

@@ -81,18 +81,21 @@
        (setf *ready* ready)
        (when ready
          (setf *ble-names* ble-names)
-         (app:toast (x:cc (tr "radio") ": " name) 2))))
+         (app:toast (x:cc (tr "radio") ": " name) 2)
+         (get-node-config))))
     (:usb
-     (destructuring-bind (port)
+     (destructuring-bind (ready)
          args
-       (setf *ready* t)
-       (app:toast "USB" 2)))
+       (setf *ready* ready)
+       (when ready
+         (app:toast "USB" 2)
+         (get-node-config))))
     (:wifi
      (destructuring-bind (ip)
          args
        (setf *ready* t)
-       (app:toast (x:cc "WiFi: " ip) 2))))
-  (get-node-config)
+       (app:toast (x:cc "WiFi: " ip) 2))
+       (get-node-config)))
   (values))
 
 (defun add-line-breaks (text)

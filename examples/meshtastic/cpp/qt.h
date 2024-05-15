@@ -35,8 +35,10 @@ public:
   Q_INVOKABLE QVariant wifiConnectable(const QVariant&);
 
   // GPS
+#ifdef Q_OS_ANDROID
   Q_INVOKABLE QVariant iniPositioning();
   Q_INVOKABLE QVariant lastPosition();
+#endif
 
   // SQLite
   Q_INVOKABLE QVariant iniDb(const QVariant&);
@@ -50,6 +52,11 @@ public:
 #endif
 
   QT();
+#ifdef Q_OS_ANDROID
+  static QT* _this;
+  void iniJni();
+  Q_INVOKABLE void usbDeviceAttached();
+#endif
 
   QSqlDatabase db;
   QTcpSocket tcp;

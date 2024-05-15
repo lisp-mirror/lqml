@@ -96,11 +96,15 @@ devices themselves work and are able to connect.
 ## USB
 
 If you have your radio connected to your PC via USB, you can also choose 'USB'
-as connection type from the main menu (see 'Radios' icon). This only works on
-Linux and macOS (Windows not tested). RAK devices won't need any additional
-driver, just permission to e.g. `/dev/ttyACM0` (Linux). Other radios (ESP32
-based) require addtional serial drivers to be installed, see official
+as connection type from the main menu (see 'Radios' icon). This works on Linux,
+macOS, (Windows not tested yet) and android. RAK devices won't need any
+additional driver, just permission to e.g. `/dev/ttyACM0` (Linux). Other radios
+(ESP32 based) require addtional serial drivers to be installed, see official
 Meshtastic website.
+
+Notes for android: tested with RAK and T-Beam. The app will launch as soon as a
+radio is attached to USB. You need to confirm a dialog, which will also grant
+USB permission.
 
 ## WiFi
 
