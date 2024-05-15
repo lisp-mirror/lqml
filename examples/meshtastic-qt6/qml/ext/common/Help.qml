@@ -53,9 +53,9 @@ To manually restart device discovery, press-and-hold on the radio icon.
 If your radio is not found, it may help to turn it off/on again.
 </p>
 %1
-<h4>USB</h4>
-Desktop only. You may need to install serial drivers first, and you need to use a data USB cable.
+%2
 <h4>WiFi</h4>
+%3
 <p>
 Use the Python CLI to setup your connection like this:
 </p>
@@ -147,9 +147,17 @@ Eventual backups are saved in above path under <code>backups/</code>. On the des
 <p>
 To autmatically restore data from a backup on the desktop, put the backup files directly in above path (that is, under <code>.../cl-meshtastic/</code>) and restart the app. The data will be restored and the (obsolete) backup files will be deleted.
 </p>".arg((Qt.platform.os === "android")
-          ? "<p>On some devices it may be necessary to first unpair your radio, then press-and-hold on the radio icon (to restart device discovery).</p><p><i>N.B: If you previously used a radio with the official app, you'll need to set the radio to 'None (disabled)' in the official app first, otherwise it will not show up in this app.</i></p>"
+          ? "<p>On some devices it may be necessary to first unpair your radio, then press-and-hold on the radio icon (to restart device discovery).</p><p><i>N.B: If you previously used a radio with the official app, you'll need to disable the radio in the official app first, otherwise it will not show up in this app.</i></p>"
           : "")
-
+     .arg((Qt.platform.os !== "ios")
+          ? "<h4>USB</h4>
+<p>
+You may need to install serial drivers first (except on android), and you need to use a data USB cable.
+</p>"
+          : "")
+     .arg((Qt.platform.os === "ios")
+          ? "<p><i><font color=crimson><b>Warning:</b></font> WiFi will disconnect in background mode, and only re-connect when app is brought back to foreground (iOS only).</i></p>"
+          : "")
     }
   }
 
