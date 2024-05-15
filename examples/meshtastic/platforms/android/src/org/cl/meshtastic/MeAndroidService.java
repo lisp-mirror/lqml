@@ -72,7 +72,7 @@ public class MeAndroidService extends QtService
         }
 
         void write(byte[] data) {
-            if(serialPort != null) {
+            if (serialPort != null) {
                 try {
                     serialPort.write(data, 1000);
                 } catch (Exception e) {
