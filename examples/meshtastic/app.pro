@@ -59,6 +59,7 @@ win32 {
 
 android {
   QT          += remoteobjects
+  QT          -= serialport
   DEFINES     += INI_ASDF
   DEFINES     -= DESKTOP_APP
   INCLUDEPATH = $$ECL/include

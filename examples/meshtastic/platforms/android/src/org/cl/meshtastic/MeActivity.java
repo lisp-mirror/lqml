@@ -2,11 +2,10 @@ package org.cl.meshtastic;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
-
-import android.location.LocationManager;
 import android.location.LocationListener;
+import android.location.LocationManager;
 import android.location.LocationRequest;
+import android.util.Log;
 
 import org.qtproject.qt5.android.bindings.QtActivity;
 

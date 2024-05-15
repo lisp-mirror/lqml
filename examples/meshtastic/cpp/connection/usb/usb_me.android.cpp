@@ -56,7 +56,6 @@ USB_ME::USB_ME(QtAndroidService* service, Connection* _con) : emitter(service), 
 #endif
   jclass jcl = env->GetObjectClass(service2.object<jobject>());
   env->RegisterNatives(jcl, methods, sizeof(methods) / sizeof(methods[0]));
-  env->DeleteLocalRef(jcl);
   clearEventualExceptions();
 
   // ini
@@ -81,9 +80,9 @@ void USB_ME::disconnect() {
 void USB_ME::write2(const QByteArray& ba) {
   if (ready) {
 #if (QT_VERSION < 0x060000)
-  QAndroidJniEnvironment env;
+    QAndroidJniEnvironment env;
 #else
-  QJniEnvironment env;
+    QJniEnvironment env;
 #endif
     jbyteArray jba = env->NewByteArray(ba.size());
     env->SetByteArrayRegion(jba, 0, ba.size(), (jbyte*)ba.data());

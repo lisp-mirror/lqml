@@ -1,9 +1,9 @@
 package org.cl.meshtastic;
 
 import android.content.Context;
-import android.app.NotificationManager;
-import android.app.NotificationChannel;
 import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
 import android.os.Build;

@@ -99,6 +99,8 @@ QVariant QT::lastPosition() {
   return pos;
 }
 
+// USB
+
 static void javaUsbDeviceAttached(JNIEnv*, jobject) { // see Java
   QMetaObject::invokeMethod(QT::_this, "usbDeviceAttached");
 }
@@ -118,7 +120,6 @@ void QT::iniJni() {
 #endif
   jclass jcl = env->GetObjectClass(QtAndroid::androidActivity().object<jobject>());
   env->RegisterNatives(jcl, methods, sizeof(methods) / sizeof(methods[0]));
-  env->DeleteLocalRef(jcl);
   clearEventualExceptions();
 }
 
