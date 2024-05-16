@@ -100,7 +100,7 @@ public class MeAndroidService extends QtService
             return;
         }
 
-        UsbSerialDriver driver = availableDrivers.get(0); // CdcAcmSerialDriver
+        UsbSerialDriver driver = availableDrivers.get(0);
         UsbDeviceConnection connection = manager.openDevice(driver.getDevice());
         if (connection == null) {
             qtSetReady(false);
