@@ -28,14 +28,18 @@ void USB_ME::connectToRadio() {
   }
 
   const auto infos = QSerialPortInfo::availablePorts();
-  // tested with HELTEC V3, LILYGO T-Beam, RAK 4631
+  // tested with HELTEC v3, LILYGO T-Beam, RAK 4631
   const QStringList supported = { "RAK", "UART", "USB" };
   for (auto info : infos) {
     QString name(info.manufacturer() + " | " + info.description());
     QString port(info.portName());
+#ifdef Q_OS_UNIX
     if (port.startsWith("tty") &&
         (port.contains("ACM", Qt::CaseInsensitive) ||  // Linux
          port.contains("USB", Qt::CaseInsensitive))) { // macOS
+#else
+    if (port.startsWith("COM", Qt::CaseInsensitive)) { // Windows
+#endif
       for (auto s : supported) {
         if (name.contains(s, Qt::CaseInsensitive)) {
           setPortName(info.portName());

@@ -32,7 +32,9 @@ QVariant QT::keepScreenOn(const QVariant& on) {
       if (window.isValid()) {
         const int FLAG_KEEP_SCREEN_ON = 128;
         const char* method = on.toBool() ? "addFlags" : "clearFlags";
-        window.callMethod<void>(method, "(I)V", FLAG_KEEP_SCREEN_ON);
+        window.callMethod<void>(
+          method,
+          "(I)V", FLAG_KEEP_SCREEN_ON);
       }
     }
     clearEventualExceptions();
@@ -45,7 +47,9 @@ QVariant QT::keepScreenOn(const QVariant& on) {
       if (window.isValid()) {
         const int FLAG_KEEP_SCREEN_ON = 128;
         const char* method = on.toBool() ? "addFlags" : "clearFlags";
-        window.callMethod<void>(method, "(I)V", FLAG_KEEP_SCREEN_ON);
+        window.callMethod<void>(
+          method,
+          "(I)V", FLAG_KEEP_SCREEN_ON);
       }
     }
     clearEventualExceptions();
@@ -78,13 +82,17 @@ QVariant QT::iniPositioning() {
 #if (QT_VERSION < 0x060000)
   QtAndroid::runOnAndroidThread([] {
     QAndroidJniObject activity = QtAndroid::androidActivity();
-    activity.callMethod<void>("iniLocation", "()V");
+    activity.callMethod<void>(
+      "iniLocation",
+      "()V");
     clearEventualExceptions();
   });
 #else
   QNativeInterface::QAndroidApplication::runOnAndroidMainThread([&] {
     QJniObject activity = QtAndroidPrivate::activity();
-    activity.callMethod<void>("iniLocation", "()V");
+    activity.callMethod<void>(
+      "iniLocation",
+      "()V");
     clearEventualExceptions();
   });
 #endif

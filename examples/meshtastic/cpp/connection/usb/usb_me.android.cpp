@@ -13,6 +13,10 @@
 
 USB_ME* USB_ME::_this = nullptr;
 
+static USB_ME* instance() {
+  return USB_ME::_this;
+}
+
 static void clearEventualExceptions() {
 #if (QT_VERSION < 0x060000)
   QAndroidJniEnvironment env;
@@ -26,15 +30,19 @@ static void clearEventualExceptions() {
 
 static void javaSetReady(JNIEnv*, jobject, jboolean jb) { // see Java
   bool ready = (bool)jb;
-  USB_ME::_this->ready = ready;
-  USB_ME::_this->emitter->setReady(QVariant(QVariantList() << ready));
+  instance()->ready = ready;
+  instance()->emitter->setReady(QVariant(QVariantList() << ready));
 }
 
 static void javaOnNewData(JNIEnv* env, jobject, jbyteArray jba) { // see Java
   jbyte* jb = env->GetByteArrayElements(jba, NULL);
   jsize js = env->GetArrayLength(jba);
   QByteArray ba((char*)jb, js);
-  QMetaObject::invokeMethod(USB_ME::_this, "onNewData", Q_ARG(QByteArray, ba));
+  // run on Qt thread
+  QMetaObject::invokeMethod(
+    instance(),
+    "onNewData",
+    Q_ARG(QByteArray, ba));
   env->ReleaseByteArrayElements(jba, jb, JNI_ABORT);
   clearEventualExceptions();
 }
@@ -69,7 +77,9 @@ void USB_ME::connectToRadio() {
 #else
   QJniObject service = QtAndroidPrivate::service();
 #endif
-  service.callMethod<void>("iniUsb", "()V");
+  service.callMethod<void>(
+    "iniUsb",
+    "()V");
   clearEventualExceptions();
 }
 
@@ -91,7 +101,9 @@ void USB_ME::write2(const QByteArray& ba) {
 #else
     QJniObject service = QtAndroidPrivate::service();
 #endif
-    service.callMethod<void>("writeUsb", "([B)V", jba);
+    service.callMethod<void>(
+      "writeUsb",
+      "([B)V", jba);
     clearEventualExceptions();
   } else {
     qDebug() << "USB not ready: write()";
