@@ -109,8 +109,15 @@ QVariant QT::lastPosition() {
 
 // USB
 
+static QT* instance() {
+  return QT::_this;
+}
+
 static void javaUsbDeviceAttached(JNIEnv*, jobject) { // see Java
-  QMetaObject::invokeMethod(QT::_this, "usbDeviceAttached");
+  // run on Qt thread
+  QMetaObject::invokeMethod(
+    instance(),
+    "usbDeviceAttached");
 }
 
 void QT::usbDeviceAttached() {
