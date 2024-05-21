@@ -13,6 +13,8 @@ public class MeActivity extends QtActivity
 {
     public static native void qtUsbDeviceAttached();
 
+    // GPS
+
     // location hack: needed to not lose initial position with non moving
     // devices (on android Qt seems not to capture inital location values)
 
@@ -21,8 +23,7 @@ public class MeActivity extends QtActivity
     public double position_alt  = 0.0; 
     public long   position_time = 0;
 
-    public void iniLocation()
-    {
+    public void iniLocation() {
         LocationListener mLocationListenerGPS = new LocationListener() {
             @Override
             public void onLocationChanged(android.location.Location location) {
@@ -41,6 +42,8 @@ public class MeActivity extends QtActivity
             Log.e("[GPS]", Log.getStackTraceString(e));
         }
     }
+
+    // USB
 
     @Override
     protected void onNewIntent(Intent intent) {
