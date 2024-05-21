@@ -58,6 +58,8 @@ done:
     qDebug() << "USB: unable to open port" << portName();
   } else {
     ready = true;
+    setDataTerminalReady(true);
+    setRequestToSend(true);
     if (!con->backgroundMode) {
       con->setReady(QVariant(QVariantList() << true));
     }
