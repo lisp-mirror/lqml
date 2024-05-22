@@ -55,7 +55,7 @@ win32 {
 
 android {
   QT          += androidextras
-  DEFINES     += NO_TEXT_HANDLES
+  DEFINES     += NO_TEXT_HANDLES NO_USB
   DEFINES     -= DESKTOP_APP
   INCLUDEPATH = $$ECL/include
   ECL_VERSION = $$lower($$system($$ECL/../ecl-android-host/bin/ecl -v))
@@ -87,7 +87,7 @@ android {
 }
 
 ios {
-  DEFINES     += NO_TEXT_HANDLES DISABLE_SMART_QUOTES
+  DEFINES     += NO_TEXT_HANDLES DISABLE_SMART_QUOTES NO_USB
   DEFINES     -= DESKTOP_APP
   INCLUDEPATH = $$(ECL_IOS)/include
   ECL_VERSION = $$lower($$system($ECL_IOS/../ecl-ios-host/bin/ecl -v))

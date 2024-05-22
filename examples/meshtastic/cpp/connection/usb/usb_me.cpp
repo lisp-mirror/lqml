@@ -28,7 +28,7 @@ void USB_ME::connectToRadio() {
   }
 
   const auto infos = QSerialPortInfo::availablePorts();
-  // tested with HELTEC v3, LILYGO T-Beam, RAK 4631
+  // tested with Heltec v3, LILYGO T-Beam, RAK 4631
   const QStringList supported = { "RAK", "UART", "USB" };
   for (auto info : infos) {
     QString name(info.manufacturer() + " | " + info.description());
@@ -54,9 +54,7 @@ void USB_ME::connectToRadio() {
   }
 
 done:
-  if (!open(QIODevice::ReadWrite)) {
-    qDebug() << "USB: unable to open port" << portName();
-  } else {
+  if (open(QIODevice::ReadWrite)) {
     ready = true;
     setDataTerminalReady(true);
     setRequestToSend(true);
@@ -64,6 +62,8 @@ done:
       con->setReady(QVariant(QVariantList() << true));
     }
     qDebug() << "USB open";
+  } else {
+    qDebug() << "USB: unable to open port" << portName();
   }
 }
 
