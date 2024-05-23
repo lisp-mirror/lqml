@@ -24,8 +24,6 @@
 #define DELETE_LATER(var) \
   QTimer::singleShot(0, var, &QObject::deleteLater)
 
-QT_BEGIN_NAMESPACE
-
 extern "C" { LIB_EXPORT QObject* ini(); }
 
 #if (defined Q_OS_UNIX) && !(defined NO_USB)
@@ -119,4 +117,3 @@ public:
 #endif
 };
 
-QT_END_NAMESPACE

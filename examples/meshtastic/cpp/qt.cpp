@@ -25,8 +25,6 @@
   #include "connection/connection.h"
 #endif
 
-QT_BEGIN_NAMESPACE
-
 QObject* ini() {
   static QObject* qt = nullptr;
   if (qt == nullptr) {
@@ -255,4 +253,3 @@ QVariant QT::localIp() {
   return QVariant();
 }
 
-QT_END_NAMESPACE

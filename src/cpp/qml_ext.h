@@ -2,8 +2,6 @@
 
 #include <QtQml>
 
-QT_BEGIN_NAMESPACE
-
 class Lisp : public QObject {
   Q_OBJECT
 
@@ -34,4 +32,3 @@ public:
     const QJSValue& = QJSValue());
 };
 
-QT_END_NAMESPACE

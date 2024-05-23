@@ -16,8 +16,6 @@
 #include <QRectF>
 #include <ecl/ecl.h>
 
-QT_BEGIN_NAMESPACE
-
 #define STRING(s) ecl_make_constant_base_string(s, -1)
 
 #define STRING_COPY(s) (s ? ecl_make_simple_base_string(s, -1) : ECL_NIL)
@@ -535,4 +533,3 @@ void ini_lisp() {
   si_safe_eval(2, ecl_read_from_cstring((char*)lisp_code), ECL_NIL);
 }
 
-QT_END_NAMESPACE

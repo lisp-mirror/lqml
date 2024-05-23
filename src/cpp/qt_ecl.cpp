@@ -3,8 +3,6 @@
 #include "ecl_ext.h"
 #include <QVariant>
 
-QT_BEGIN_NAMESPACE
-
 static QHash<QByteArray, void*> lisp_functions;
 
 static cl_object lisp_apply(cl_object l_fun, cl_object l_args) {
@@ -96,6 +94,4 @@ QVariant ecl_fun(const QByteArray& pkgFun,
   error_msg(QString("ecl_fun(): %1").arg(QString(pkgFun)).toLatin1().constData(), l_args);
   return QVariant();
 }
-
-QT_END_NAMESPACE
 

@@ -5,8 +5,6 @@
 
 #include <QVariant>
 
-QT_BEGIN_NAMESPACE
-
 extern QVariant ecl_fun(
   const QByteArray&,
   const QVariant& = QVariant(),
@@ -26,4 +24,3 @@ extern QVariant ecl_fun(
   const QVariant& = QVariant(),
   const QVariant& = QVariant());
 
-QT_END_NAMESPACE

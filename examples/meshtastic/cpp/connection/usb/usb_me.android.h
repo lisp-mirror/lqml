@@ -20,11 +20,11 @@ public Q_SLOTS:
 public:
   static USB_ME* _this;
 
+  bool ready = false;
   QtAndroidService* emitter = nullptr;
   Connection* con = nullptr;
   QTimer timer;
   QByteArrayList packets;
-  bool ready = false;
 
   void received(const QByteArray&);
 

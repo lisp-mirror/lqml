@@ -2,8 +2,6 @@
 #include <QtAndroid> 
 #include <QAndroidJniEnvironment>
 
-QT_BEGIN_NAMESPACE
-
 QVariant QT::keepScreenOn(const QVariant& on) {
   QtAndroid::runOnAndroidThread([&] {
     QAndroidJniObject activity = QtAndroid::androidActivity();
@@ -23,4 +21,3 @@ QVariant QT::keepScreenOn(const QVariant& on) {
   return on;
 }
 
-QT_END_NAMESPACE

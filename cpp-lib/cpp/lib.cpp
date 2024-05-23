@@ -4,8 +4,6 @@
 #include <QMessageBox>
 #include <QtDebug>
 
-QT_BEGIN_NAMESPACE
-
 QObject* ini() {
   // any QObject inherited class will do
   static QObject* cpp = nullptr;
@@ -37,4 +35,3 @@ QVariant CPP::callLisp(const QVariant& arg) {
   return ecl_fun("cl:format", false, "~R", arg);
 }
 
-QT_END_NAMESPACE

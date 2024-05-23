@@ -8,8 +8,6 @@
 #define LIB_EXPORT
 #endif
 
-QT_BEGIN_NAMESPACE
-
 extern "C" { LIB_EXPORT QObject* ini(); }
 
 class QT : public QObject {
@@ -19,4 +17,3 @@ public:
   Q_INVOKABLE QVariant rotateImage(const QVariant&, const QVariant&);
 };
 
-QT_END_NAMESPACE

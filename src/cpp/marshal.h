@@ -6,8 +6,6 @@
 #include <QRectF>
 #include <QVariant>
 
-QT_BEGIN_NAMESPACE
-
 #define STRING(s) ecl_make_constant_base_string(s, -1)
 
 #define STRING_COPY(s) (s ? ecl_make_simple_base_string(s, -1) : ECL_NIL)
@@ -96,4 +94,3 @@ cl_object from_qobject_pointer(QObject*);
 
 QString toCamelCase(const QString&);
 
-QT_END_NAMESPACE

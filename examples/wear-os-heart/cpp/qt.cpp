@@ -6,8 +6,6 @@
 #include <QtAndroid> 
 #include <QAndroidJniEnvironment>
 
-QT_BEGIN_NAMESPACE
-
 static int getIntField(const char* name) {
   QAndroidJniObject activity = QtAndroid::androidActivity();
   return static_cast<int>(activity.getField<jint>(name));
@@ -47,4 +45,3 @@ QVariant QT::heartRateAccuracy() {
   return getIntField("_heart_rate_accuracy_");
 }
 
-QT_END_NAMESPACE

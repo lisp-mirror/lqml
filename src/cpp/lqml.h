@@ -10,8 +10,6 @@
 
 class QQuickView;
 
-QT_BEGIN_NAMESPACE
-
 #define EVAL_ERROR_VALUE -1
 
 typedef void (*lisp_ini)(cl_object);
@@ -45,6 +43,4 @@ public:
 public Q_SLOTS:
   void exitEventLoop() { eventLoop->exit(); }
 };
-
-QT_END_NAMESPACE
 

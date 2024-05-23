@@ -8,8 +8,6 @@
   #include <ecl_fun.h>
 #endif
 
-QT_BEGIN_NAMESPACE
-
 QObject* ini() {
   static QObject* qt = nullptr;
   if (qt == nullptr) {
@@ -30,4 +28,3 @@ QVariant QT::rotateImage(const QVariant& imagePath, const QVariant& angle) {
   return imagePath;
 }
 
-QT_END_NAMESPACE

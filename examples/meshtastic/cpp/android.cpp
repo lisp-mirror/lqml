@@ -8,8 +8,6 @@
   #include <QtCore/private/qandroidextras_p.h>
 #endif
 
-QT_BEGIN_NAMESPACE
-
 static void clearEventualExceptions() {
 #if (QT_VERSION < 0x060000)
   QAndroidJniEnvironment env;
@@ -138,4 +136,3 @@ void QT::iniJni() {
   clearEventualExceptions();
 }
 
-QT_END_NAMESPACE

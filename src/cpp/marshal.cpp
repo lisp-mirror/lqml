@@ -6,8 +6,6 @@
 #include <QtGui/QColor>
 #include <QtQml/QJSValue>
 
-QT_BEGIN_NAMESPACE
-
 static void warning_msg(const char* message, cl_object l_args) {
   STATIC_SYMBOL (s_error_output, "*ERROR-OUTPUT*")
   cl_format(4,
@@ -346,4 +344,3 @@ cl_object from_qobject_pointer(QObject* qobject) {
                     ecl_make_unsigned_integer(reinterpret_cast<quintptr>(qobject)));
 }
 
-QT_END_NAMESPACE

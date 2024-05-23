@@ -108,7 +108,7 @@ USB permission.
 
 ## WiFi
 
-If you have a radio with intgrated WiFi (like LILYGO T-Beam, HELTEC v3), you
+If you have a radio with intgrated WiFi (like LILYGO T-Beam, Heltec v3), you
 can setup your WiFi connection using the Python CLI:
 ```
 meshtastic \

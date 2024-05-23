@@ -24,8 +24,6 @@
   #endif
 #endif
 
-QT_BEGIN_NAMESPACE
-
 void iniCLFunctions() {
   cl_object l_qml(STRING("QML"));
   if (cl_find_package(l_qml) == ECL_NIL) {
@@ -962,4 +960,3 @@ cl_object qapropos2(cl_object l_search, cl_object l_obj, cl_object l_no_offset) 
   return ECL_NIL;
 }
 
-QT_END_NAMESPACE

@@ -23,8 +23,6 @@ Q_DECLARE_METATYPE (TextCursor*)
 Q_DECLARE_METATYPE (SyntaxHighlighter*)
 Q_DECLARE_METATYPE (QTextDocument*)
 
-QT_BEGIN_NAMESPACE
-
 QObject* ini() {
   static QObject* qt = nullptr;
   if (qt == nullptr) {
@@ -364,4 +362,3 @@ QVariant QT::sendToUlisp(const QVariant &vData) {
 }
 #endif
 
-QT_END_NAMESPACE

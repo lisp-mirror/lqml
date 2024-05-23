@@ -6,8 +6,6 @@
 #include <QList>
 #include <QVariant>
 
-QT_BEGIN_NAMESPACE
-
 #define DEFUN(name, c_name, num_args) \
   ecl_def_c_function(ecl_read_from_cstring(name), (cl_objectfn_fixed)c_name, num_args);
 
@@ -92,4 +90,3 @@ cl_object set_shutdown_p          (cl_object);
 void iniCLFunctions();
 void error_msg(const char*, cl_object);
 
-QT_END_NAMESPACE

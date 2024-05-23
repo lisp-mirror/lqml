@@ -2,8 +2,6 @@
 #include "lqml.h"
 #include "ecl_fun.h"
 
-QT_BEGIN_NAMESPACE
-
 static QVariant qmlApply(QObject* caller,
                          const QString& function,
                          const QVariantList& arguments) {
@@ -112,4 +110,3 @@ QVariant Lisp::apply(const QJSValue& caller_or_function,
   return qmlApply(caller, function, arguments);
 }
 
-QT_END_NAMESPACE

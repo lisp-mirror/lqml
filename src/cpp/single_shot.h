@@ -5,8 +5,6 @@
 #include <ecl/ecl.h>
 #include <QObject>
 
-QT_BEGIN_NAMESPACE
-
 class SingleShot : public QObject {
   Q_OBJECT
 
@@ -20,4 +18,3 @@ protected:
   void timerEvent(QTimerEvent*) override;
 };
 
-QT_END_NAMESPACE

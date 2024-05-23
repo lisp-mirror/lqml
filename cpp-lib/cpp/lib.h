@@ -8,8 +8,6 @@
 #define LIB_EXPORT
 #endif
 
-QT_BEGIN_NAMESPACE
-
 extern "C" { LIB_EXPORT QObject* ini(); }
 
 class CPP : public QObject {
@@ -23,4 +21,3 @@ public:
   Q_INVOKABLE QVariant callLisp(const QVariant&);
 };
 
-QT_END_NAMESPACE

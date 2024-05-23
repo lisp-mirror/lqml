@@ -7,8 +7,6 @@
 #include <QtGui/QGuiApplication>
 #include <QtGui/QInputMethodEvent>
 
-QT_BEGIN_NAMESPACE
-
 #define STRING(s) ecl_make_constant_base_string(s, -1)
 
 #define DEFUN(name, c_name, num_args) \
@@ -126,4 +124,3 @@ Q_SIGNALS:
 #endif
 };
 
-QT_END_NAMESPACE

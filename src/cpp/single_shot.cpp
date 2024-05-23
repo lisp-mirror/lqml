@@ -1,7 +1,5 @@
 #include "single_shot.h"
 
-QT_BEGIN_NAMESPACE
-
 SingleShot::SingleShot(int msec, void* fun)
   : function(fun) {
   id = startTimer(msec);
@@ -20,6 +18,4 @@ void SingleShot::timerEvent(QTimerEvent*) {
   CL_CATCH_ALL_END;
   deleteLater();
 }
-
-QT_END_NAMESPACE
 

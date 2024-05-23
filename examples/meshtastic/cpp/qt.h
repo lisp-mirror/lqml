@@ -16,8 +16,6 @@
   class Connection;
 #endif
 
-QT_BEGIN_NAMESPACE
-
 extern "C" { LIB_EXPORT QObject* ini(); }
 
 class QT : public QObject {
@@ -67,4 +65,3 @@ public:
 #endif
 };
 
-QT_END_NAMESPACE
