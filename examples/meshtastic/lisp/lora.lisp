@@ -385,10 +385,8 @@
                :set-channel (setf *my-channel* channel))))
 
 (defun reset-node-db () ; see QML
-  (qlater (lambda ()
-            (when (send-admin (funcall 'me:make-admin-message
-                                       :nodedb-reset (my-num))) ; see note *)
-              (qlater 'wait-for-reboot))))
+  (when (send-admin (me:make-admin-message :nodedb-reset 0))
+    (qlater 'wait-for-reboot))
   (values))
 
 (defun change-lora-config ()
@@ -509,7 +507,3 @@
                       (:region-code
                        'me:config.lo-ra-config.region-code))))
 
-;;; notes
-;;;
-;;; *) FUNCALL needed in C compiled code: for some reason, this would give
-;;;    a protobuf type mismatch error without it
