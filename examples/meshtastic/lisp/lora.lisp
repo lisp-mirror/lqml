@@ -57,8 +57,7 @@
             *schedule-clear* t)
       (unless radios:*found*
         (radios:clear))
-      (qrun* (qt:start-device-discovery qt:*cpp*
-             (if wifi (radios:wifi-ip) name)))
+      (qt:start-device-discovery qt:*cpp* (if wifi (radios:wifi-ip) name))
       (q> |playing| ui:*busy* t))))
 
 (defun get-node-config ()
@@ -385,7 +384,7 @@
                :set-channel (setf *my-channel* channel))))
 
 (defun reset-node-db () ; see QML
-  (when (send-admin (me:make-admin-message :nodedb-reset 0))
+  (when (send-admin (me:make-admin-message :nodedb-reset 1))
     (qlater 'wait-for-reboot))
   (values))
 
@@ -485,19 +484,6 @@
         (q> |text| ui:*channel-name* *channel-name*)
         (app:change-setting :channel-name name)
         (qlater 'set-primary-channel))))
-  (values))
-
-(defun edit-device-filter () ; see QML (currently not used)
-  (app:input-dialog
-   (tr "Device filter:") 'device-filter-changed
-   :text (or (app:setting :device-filter) "meshtastic"))
-  (values))
-
-(defun device-filter-changed (ok)
-  (when ok
-    (let ((name (q< |text| ui:*dialog-line-edit*)))
-      (qrun* (qt:set-device-filter qt:*cpp* name))
-      (app:change-setting :device-filter name)))
   (values))
 
 (defun keywords (name)
