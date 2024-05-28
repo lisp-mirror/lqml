@@ -174,10 +174,10 @@
 (let (queue)
   (defun send-enqueued (&rest functions) ; see Qt
     "For sequential sending to radio."
-    (when functions
-      (setf queue functions))
-    (when queue
-      (funcall (pop queue)))
+    (if functions
+        (setf queue functions)
+        (when queue
+          (funcall (pop queue))))
     (values))
   (defun reset-queue ()
     (setf queue nil)))
