@@ -14,6 +14,8 @@ USB_ME::USB_ME(Connection* _con) : con(_con) {
           });
   setBaudRate(Baud115200);
 
+  connect(this, &QIODevice::bytesWritten, [&](qint64) { con->sendingDone(); });
+
   timer.setSingleShot(true);
   connect(&timer, &QTimer::timeout, this, &USB_ME::done);
 }

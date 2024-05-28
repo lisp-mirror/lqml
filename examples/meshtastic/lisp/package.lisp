@@ -63,6 +63,7 @@
    #:process-saved-packets
    #:radio-ready-p
    #:reset-node-db
+   #:send-enqueued
    #:send-position
    #:start-device-discovery
    #:read-radio

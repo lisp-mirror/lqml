@@ -11,6 +11,7 @@ class QtAndroidService {
   SIGNAL(deviceDiscovered(const QVariant&));
   SIGNAL(bleError());
   SIGNAL(setReady(const QVariant&));
+  SIGNAL(sendingDone());
   SIGNAL(receivedFromRadio(const QVariant&));
   SIGNAL(receivingDone());
   SIGNAL(sendSavedPackets(const QVariant&));

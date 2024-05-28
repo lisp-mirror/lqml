@@ -53,6 +53,7 @@ Q_SIGNALS:
   void deviceDiscovered(const QVariant&);
   void bleError();
   void setReady(const QVariant&);
+  void sendingDone();
   void receivedFromRadio(const QVariant&);
   void receivingDone();
   void sendSavedPackets(const QVariant&);

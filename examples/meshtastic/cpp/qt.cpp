@@ -78,6 +78,15 @@ QT::QT() : QObject() {
   });
 
 #ifdef Q_OS_ANDROID
+  QObject::connect(con, &QtAndroidServiceReplica::sendingDone,
+#else
+  QObject::connect(con, &Connection::sendingDone,
+#endif
+  []() {
+    ecl_fun("lora:send-enqueued");
+  });
+
+#ifdef Q_OS_ANDROID
   QObject::connect(con, &QtAndroidServiceReplica::receivedFromRadio,
 #else
   QObject::connect(con, &Connection::receivedFromRadio,

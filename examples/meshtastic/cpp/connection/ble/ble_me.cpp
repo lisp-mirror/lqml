@@ -152,6 +152,7 @@ void BLE_ME::characteristicRead(const QLowEnergyCharacteristic&,
 void BLE_ME::characteristicWritten(const QLowEnergyCharacteristic&,
                                    const QByteArray&) {
   read();
+  emitter->sendingDone();
 }
 
 void BLE_ME::serviceError(QLowEnergyService::ServiceError error) {

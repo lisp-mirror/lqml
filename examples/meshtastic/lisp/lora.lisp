@@ -19,14 +19,7 @@
         *receiver*     (app:setting :latest-receiver))
   (q> |text| ui:*channel-name* *channel-name*))
 
-;;; header
-
-(defun header (size)
-  (flet ((b8 (x)
-           (ldb (byte 8 x) size)))
-    (vector #x94 #xc3 (b8 8) (b8 0))))
-
-;;; ini/send/receive
+;;; send/receive
 
 (defconstant  +broadcast-id+   #xffffffff)
 (defparameter *broadcast-name* "ffff")
@@ -40,6 +33,11 @@
 (defvar *received*        nil)
 (defvar *received-faulty* nil)
 (defvar *schedule-clear*  t)
+
+(defun header (size)
+  (flet ((b8 (x)
+           (ldb (byte 8 x) size)))
+    (vector #x94 #xc3 (b8 8) (b8 0))))
 
 (defun to-bytes (list)
   (make-array (length list)
@@ -57,6 +55,7 @@
             *schedule-clear* t)
       (unless radios:*found*
         (radios:clear))
+      (reset-queue)
       (qt:start-device-discovery qt:*cpp* (if wifi (radios:wifi-ip) name))
       (q> |playing| ui:*busy* t))))
 
@@ -171,6 +170,17 @@
       ((:usb :wifi)
        (qrun*
         (qt:write* qt:*cpp* (concatenate 'vector header bytes)))))))
+
+(let (queue)
+  (defun send-enqueued (&rest functions) ; see Qt
+    "For sequential sending to radio."
+    (when functions
+      (setf queue functions))
+    (when queue
+      (funcall (pop queue)))
+    (values))
+  (defun reset-queue ()
+    (setf queue nil)))
 
 (defun received-from-radio (args) ; see Qt
   (destructuring-bind (bytes &optional notified)
@@ -366,43 +376,49 @@
       (app:toast (tr "radio not ready yet") 2)))
 
 (defun send-admin (admin-message)
-  (when (radio-ready-p)
-    (send-to-radio
-     (to-radio :to (my-num)
-               :id (msg:new-message-id)
-               :hop-limit 3
-               :want-ack t
-               :priority :reliable
-               :decoded (me:make-data
-                         :portnum :admin-app
-                         :payload (pr:serialize-to-bytes admin-message)
-                         :want-response t)))
-    t))
+  (send-to-radio
+   (to-radio :to (my-num)
+             :id (msg:new-message-id)
+             :hop-limit 3
+             :want-ack t
+             :priority :reliable
+             :decoded (me:make-data
+                       :portnum :admin-app
+                       :payload (pr:serialize-to-bytes admin-message)
+                       :want-response t))))
 
 (defun set-channel (channel)
   (send-admin (me:make-admin-message
                :set-channel (setf *my-channel* channel))))
 
+(defun send-disconnect ()
+  (send-to-radio (me:make-to-radio :disconnect t)))
+
+(defun prepare-reboot ()
+  (send-enqueued 'send-disconnect 'wait-for-reboot))
+
 (defun reset-node-db () ; see QML
-  (when (send-admin (me:make-admin-message :nodedb-reset 1))
-    (qlater 'wait-for-reboot))
+  (when (radio-ready-p)
+    (prepare-reboot)
+    (send-admin (me:make-admin-message :nodedb-reset 1)))
   (values))
 
 (defun change-lora-config ()
-  (when (send-admin
-         (me:make-admin-message
-          :set-config (me:make-config
-                       :lora (me:make-config.lo-ra-config
-                              :use-preset t
-                              :modem-preset (app:setting :modem-preset)
-                              :region (app:setting :region)
-                              :hop-limit 3
-                              :tx-enabled t
-                              :tx-power 0 ; max legal power
-                              :sx126x-rx-boosted-gain t))))
-    (qlater 'wait-for-reboot)))
+  (when (radio-ready-p)
+    (prepare-reboot)
+    (send-admin
+     (me:make-admin-message
+      :set-config (me:make-config
+                   :lora (me:make-config.lo-ra-config
+                          :use-preset t
+                          :modem-preset (app:setting :modem-preset)
+                          :region (app:setting :region)
+                          :hop-limit 3
+                          :tx-enabled t
+                          :tx-power 0 ; max legal power
+                          :sx126x-rx-boosted-gain t))))))
 
-(defun wait-for-reboot (&optional (seconds 20))
+(defun wait-for-reboot (&optional (seconds 15))
   "Changing config will reboot device."
   (qt:disconnect qt:*cpp*)
   (let ((*allow-discovery* nil))
@@ -436,8 +452,9 @@
                 :role :primary)))
 
 (defun config-device ()
-  (set-primary-channel)
-  (change-lora-config))
+  (when (radio-ready-p)
+    (set-primary-channel)
+    (change-lora-config)))
 
 (defun send-position (pos &optional (to (my-num)))
   "Send GPS position to radio."

@@ -1,7 +1,7 @@
   Unicode True
   !include "MUI2.nsh"
   Name "Mesh SMS"
-  OutFile "out\Setup-Mesh-SMS-0.9.1.exe"
+  OutFile "out\Setup-Mesh-SMS-0.9.2.exe"
   InstallDir "$PROGRAMFILES\Mesh SMS"
   Var STARTMENU_FOLDER
   !define MUI_ABORTWARNING

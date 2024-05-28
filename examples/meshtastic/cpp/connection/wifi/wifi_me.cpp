@@ -17,6 +17,7 @@ WiFi_ME::WiFi_ME(Connection* _con) : emitter(_con), con(_con) {
             qDebug() << "WiFi error:" << error;
           });
   connect(this, &QTcpSocket::readyRead, this, &WiFi_ME::read2);
+  connect(this, &QIODevice::bytesWritten, [&](qint64) { emitter->sendingDone(); });
 
   timer.setSingleShot(true);
   connect(&timer, &QTimer::timeout, this, &WiFi_ME::done);
