@@ -53,6 +53,7 @@ macx {
 
 win32 {
   LIBS += -lws2_32
+  RC_ICONS = platforms/windows/icon.ico
 
   include(../../src/windows.pri)
 }
