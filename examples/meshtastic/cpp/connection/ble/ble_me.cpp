@@ -22,7 +22,7 @@ BLE_ME::BLE_ME(QtAndroidService* service, Connection* _con) : BLE(uuid_service),
 #else
 BLE_ME::BLE_ME(Connection* _con) : BLE(uuid_service), emitter(_con), con(_con) {
 #endif
-  connect(this, &BLE::mainServiceReady, this, &BLE_ME::ini);
+  connect(this, &BLE::mainServiceReady,    this, &BLE_ME::ini);
   connect(this, &BLE::deviceDisconnecting, this, &BLE_ME::disconnecting);
 }
 

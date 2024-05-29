@@ -14,6 +14,7 @@
 
 #ifdef Q_OS_ANDROID
   QT* QT::_this = nullptr;
+  #define CON QtAndroidServiceReplica
   #include "rep_qtandroidservice_replica.h"
   #if (QT_VERSION < 0x060000)
     #include <QtAndroid>
@@ -22,6 +23,7 @@
     #include <QtCore/private/qandroidextras_p.h>
   #endif
 #else
+  #define CON Connection
   #include "connection/connection.h"
 #endif
 
@@ -50,85 +52,57 @@ QT::QT() : QObject() {
   con = new Connection;
 #endif
 
-#ifdef Q_OS_ANDROID
-  QObject::connect(con, &QtAndroidServiceReplica::deviceDiscovered,
-#else
-  QObject::connect(con, &Connection::deviceDiscovered,
-#endif
-  [](const QVariant& vName) {
-    ecl_fun("radios:device-discovered", vName.toString().right(4)); // short name
-  });
+  QObject::connect(con, &CON::deviceDiscovered,
+    [](const QVariant& vName) {
+      ecl_fun("radios:device-discovered", vName.toString().right(4)); // short name
+    });
 
-#ifdef Q_OS_ANDROID
-  QObject::connect(con, &QtAndroidServiceReplica::bleError,
-#else
-  QObject::connect(con, &Connection::bleError,
-#endif
-  []() {
-    ecl_fun("radios:reset");
-  });
+  QObject::connect(con, &CON::bleError,
+    []() {
+      ecl_fun("radios:reset");
+    });
 
-#ifdef Q_OS_ANDROID
-  QObject::connect(con, &QtAndroidServiceReplica::setReady,
-#else
-  QObject::connect(con, &Connection::setReady,
-#endif
-  [](const QVariant& vArg) {
-    ecl_fun("lora:set-ready", vArg);
-  });
+  QObject::connect(con, &CON::setReady,
+    [](const QVariant& vArg) {
+      ecl_fun("lora:set-ready", vArg);
+    });
 
-#ifdef Q_OS_ANDROID
-  QObject::connect(con, &QtAndroidServiceReplica::sendingDone,
-#else
-  QObject::connect(con, &Connection::sendingDone,
-#endif
-  []() {
-    ecl_fun("lora:send-enqueued");
-  });
+  QObject::connect(con, &CON::sendingDone,
+    []() {
+      ecl_fun("lora:send-enqueued");
+    });
 
-#ifdef Q_OS_ANDROID
-  QObject::connect(con, &QtAndroidServiceReplica::receivedFromRadio,
-#else
-  QObject::connect(con, &Connection::receivedFromRadio,
-#endif
-  [](const QVariant& vArg) {
-    ecl_fun("lora:received-from-radio", vArg);
-  });
+  QObject::connect(con, &CON::receivedFromRadio,
+    [](const QVariant& vArg) {
+      ecl_fun("lora:received-from-radio", vArg);
+    });
 
-#ifdef Q_OS_ANDROID
-  QObject::connect(con, &QtAndroidServiceReplica::receivingDone,
-#else
-  QObject::connect(con, &Connection::receivingDone,
-#endif
-  []() {
-    ecl_fun("lora:receiving-done");
-  });
+  QObject::connect(con, &CON::receivingDone,
+    []() {
+      ecl_fun("lora:receiving-done");
+    });
 
-#ifdef Q_OS_ANDROID
-  QObject::connect(con, &QtAndroidServiceReplica::sendSavedPackets,
-#else
-  QObject::connect(con, &Connection::sendSavedPackets,
-#endif
-  [](const QVariant& vPackets) {
-    ecl_fun("lora:process-saved-packets", vPackets);
-  });
+  QObject::connect(con, &CON::sendSavedPackets,
+    [](const QVariant& vPackets) {
+      ecl_fun("lora:process-saved-packets", vPackets);
+    });
 
 #if (defined Q_OS_ANDROID) || (defined Q_OS_IOS)
   // background mode
   QObject::connect(qGuiApp, &QGuiApplication::applicationStateChanged,
-                   [&](Qt::ApplicationState state) {
-                     static bool ok = false; // for startup
-                     if (state == Qt::ApplicationInactive) {
-                       ok = true;
-                       con->setBackgroundMode(true);
-                       ecl_fun("app:background-mode-changed", true);
-                     } else if (state == Qt::ApplicationActive) {
-                       if (ok) {
-                         con->setBackgroundMode(false);
-                         ecl_fun("app:background-mode-changed", false);
-                       }
-                     }
-                   });
+    [&](Qt::ApplicationState state) {
+      static bool ok = false; // for startup
+      if (state == Qt::ApplicationInactive) {
+        ok = true;
+        con->setBackgroundMode(true);
+        ecl_fun("app:background-mode-changed", true);
+      } else if (state == Qt::ApplicationActive) {
+        if (ok) {
+           con->setBackgroundMode(false);
+           ecl_fun("app:background-mode-changed", false);
+        }
+      }
+    });
 #endif
 }
 
