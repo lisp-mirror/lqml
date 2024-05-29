@@ -418,16 +418,18 @@
                           :tx-power 0 ; max legal power
                           :sx126x-rx-boosted-gain t))))))
 
+
 (defun wait-for-reboot (&optional (seconds 15))
   "Changing config will reboot device."
-  (qt:disconnect qt:*cpp*)
-  (let ((*allow-discovery* nil))
-    (app:toast (tr "waiting for reboot..."))
-    (qlog "reboot...")
-    (qsleep 5)
-    (q> |playing| ui:*busy* t)
-    (qsleep seconds))
-  (start-device-discovery))
+  (qlater (lambda ()
+            (qt:disconnect qt:*cpp*)
+            (let ((*allow-discovery* nil))
+              (app:toast (tr "waiting for reboot..."))
+              (qlog "reboot...")
+              (qsleep 5)
+              (q> |playing| ui:*busy* t)
+              (qsleep seconds))
+            (start-device-discovery))))
 
 (defun change-region (&optional (region "")) ; see QML
   (cond ((or (x:empty-string region)

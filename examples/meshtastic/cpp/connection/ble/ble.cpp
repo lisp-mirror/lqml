@@ -83,13 +83,13 @@ void BLE::scanServices() {
   }
   services.clear();
   qDebug() << "connecting to device...";
-  if (controller) {
+  if (controller != nullptr) {
     Q_EMIT deviceDisconnecting();
     controller->disconnectFromDevice();
     delete controller; controller = nullptr;
   }
 
-  if (!controller) {
+  if (controller == nullptr) {
     controller = QLowEnergyController::createCentral(currentDevice);
     connect(controller, &QLowEnergyController::connected,
             this, &BLE::deviceConnected);
@@ -124,7 +124,7 @@ void BLE::setCurrentDevice(const QBluetoothDeviceInfo& device) {
 
 void BLE::addLowEnergyService(const QBluetoothUuid& serviceUuid) {
   QLowEnergyService* service = controller->createServiceObject(serviceUuid);
-  if (!service) {
+  if (service == nullptr) {
     qDebug() << "cannot create service for UUID";
     return;
   }
@@ -153,7 +153,7 @@ void BLE::connectToService(const QString& uuid) {
     }
   }
 
-  if (!service) {
+  if (service == nullptr) {
     return;
   }
 

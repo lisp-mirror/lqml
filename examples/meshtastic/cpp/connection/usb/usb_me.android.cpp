@@ -105,11 +105,10 @@ void USB_ME::write2(const QByteArray& ba) {
       "writeUsb",
       "([B)V", jba);
     clearEventualExceptions();
+    emitter->sendingDone();
   } else {
     qDebug() << "USB not ready: write()";
   }
-
-  emitter->sendingDone();
 }
 
 void USB_ME::read2() {
