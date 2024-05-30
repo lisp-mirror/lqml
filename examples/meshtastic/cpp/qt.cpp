@@ -154,10 +154,10 @@ QVariant QT::wifiConnectable(const QVariant& vIP) {
 
 // SQLite
 
-QVariant QT::iniDb(const QVariant& name) {
+QVariant QT::iniDb(const QVariant& vName) {
   db = QSqlDatabase::addDatabase("QSQLITE");
-  db.setDatabaseName(name.toString());
-  return name;
+  db.setDatabaseName(vName.toString());
+  return vName;
 }
 
 QVariant QT::sqlQuery(const QVariant& vQuery, const QVariant& vValues, const QVariant& vRows) {

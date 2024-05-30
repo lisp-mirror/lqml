@@ -136,18 +136,28 @@ ios {
 }
 
 32bit {
-  equals(QT_MAJOR_VERSION, 6) {
-    LIBS += -llqml32_armeabi-v7a
+  android {
+    equals(QT_MAJOR_VERSION, 6) {
+      LIBS += -llqml32_armeabi-v7a
+    }
+    lessThan(QT_MAJOR_VERSION, 6) {
+      LIBS += -llqml32
+    }
   }
-  lessThan(QT_MAJOR_VERSION, 6) {
+  !android {
     LIBS += -llqml32
   }
   LIBS += -llisp32
 } else {
-  equals(QT_MAJOR_VERSION, 6) {
-    LIBS += -llqml_arm64-v8a
+  android {
+    equals(QT_MAJOR_VERSION, 6) {
+      LIBS += -llqml_arm64-v8a
+    }
+    lessThan(QT_MAJOR_VERSION, 6) {
+      LIBS += -llqml
+    }
   }
-  lessThan(QT_MAJOR_VERSION, 6) {
+  !android {
     LIBS += -llqml
   }
   LIBS += -llisp

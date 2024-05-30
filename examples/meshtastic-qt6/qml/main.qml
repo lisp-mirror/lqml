@@ -73,6 +73,7 @@ Item {
         objectName: "BLE"
         text: "BLE"
         autoExclusive: true
+        checkable: true
         checked: true
         onTriggered: connection.changed(objectName)
       }
