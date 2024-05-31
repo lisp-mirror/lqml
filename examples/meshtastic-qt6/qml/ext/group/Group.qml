@@ -199,7 +199,7 @@ Rectangle {
         color: readOnly ? "white" : "#505050"
         palette.highlight: "darkcyan"
         palette.highlightedText: "white"
-        text: (model.customName === "") ? qsTr("Anonym") : model.customName
+        text: (model.customName === "~") ? "Anonym" : model.customName
         readOnly: true
 
         background: Rectangle {
@@ -222,10 +222,11 @@ Rectangle {
         onEditingFinished: {
           if (!readOnly) {
             readOnly = true
-            group.setProperty(index, "customName", text)
-            Lisp.call("group:name-edited", model.radioName, text)
-            if (text === "") text = qsTr("Anonym")
-            Qt.callLater(group.sortRenamed, text, index) // 'Qt.callLater': prevent UI thread related crash
+            var _text = (text === "") ? "~" : text
+            group.setProperty(index, "customName", _text)
+            Lisp.call("group:name-edited", model.radioName, _text)
+            Qt.callLater(group.sortRenamed, _text, index) // 'Qt.callLater': prevent UI thread related crash
+            if (_text === "~") text = "Anonym"
           }
         }
 
