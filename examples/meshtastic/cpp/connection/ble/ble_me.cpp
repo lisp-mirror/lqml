@@ -16,12 +16,13 @@ const UID BLE_ME::uuid_fromNum   = UID(STR("{ed9da18c-a800-4f66-a670-aa7547e3445
 
 #ifdef Q_OS_ANDROID
 BLE_ME::BLE_ME(QtAndroidService* service, Connection* _con) : BLE(uuid_service), emitter(service), con(_con) {
-  // forward signals defined in class BLE
-  connect(this, &BLE::deviceDiscovered, service, &QtAndroidService::deviceDiscovered);
-  connect(this, &BLE::bleError,         service, &QtAndroidService::bleError);
 #else
 BLE_ME::BLE_ME(Connection* _con) : BLE(uuid_service), emitter(_con), con(_con) {
 #endif
+  // forward signals defined in class BLE
+  connect(this, &BLE::deviceDiscovered, [&](const QString& name) { emitter->deviceDiscovered(name); });
+  connect(this, &BLE::bleError,         [&]()                    { emitter->bleError(); });
+
   connect(this, &BLE::mainServiceReady,    this, &BLE_ME::ini);
   connect(this, &BLE::deviceDisconnecting, this, &BLE_ME::disconnecting);
 }
