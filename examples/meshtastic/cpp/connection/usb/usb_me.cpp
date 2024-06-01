@@ -30,8 +30,8 @@ void USB_ME::connectToRadio() {
   }
 
   const auto infos = QSerialPortInfo::availablePorts();
-  // tested with Heltec v3, LILYGO T-Beam, RAK 4631
-  const QStringList supported = { "RAK", "UART", "USB" };
+  // tested with Heltec v3, LilyGO T-Beam/T-Deck, RAK 4631
+  const QStringList supported = { "RAK", "T-Deck", "UART", "USB" };
   for (auto info : infos) {
     QString name(info.manufacturer() + " | " + info.description());
     QString port(info.portName());
