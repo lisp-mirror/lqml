@@ -136,12 +136,14 @@ void BLE::addLowEnergyService(const QBluetoothUuid& serviceUuid) {
 }
 
 void BLE::serviceScanDone() {
-  scanned = true;
-  Q_EMIT mainServiceReady();
-  qDebug() << "service scan done";
+  if (mainService != nullptr) {
+    scanned = true;
+    Q_EMIT mainServiceReady();
+    qDebug() << "service scan done";
 #if QT_VERSION >= 0x060000
-  qDebug() << "MTU:" << controller->mtu();
+    qDebug() << "MTU:" << controller->mtu();
 #endif
+  }
 }
 
 void BLE::connectToService(const QString& uuid) {
