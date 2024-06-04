@@ -1,5 +1,9 @@
 LISP_FILES = $$files(lisp/*) app.asd make.lisp
 
+exists(/etc/sailfish-release) {
+  CONFIG += sfos
+}
+
 android {
   32bit {
     ECL = $$(ECL_ANDROID_32)
@@ -58,6 +62,12 @@ win32 {
   include(../../src/windows.pri)
 }
 
+sfos {
+  QT      -= serialport
+  CONFIG  += no_usb
+  DEFINES += NO_USB
+}
+
 android {
   QT          += remoteobjects
   QT          -= serialport
@@ -108,6 +118,7 @@ android {
 
 ios {
   QT          -= serialport
+  CONFIG      += no_usb
   DEFINES     += INI_ASDF NO_USB
   DEFINES     -= DESKTOP_APP
   INCLUDEPATH = $$(ECL_IOS)/include
@@ -179,22 +190,20 @@ SOURCES += \
     cpp/connection/connection.h \
     cpp/connection/ble/ble.h \
     cpp/connection/ble/ble_me.h \
-    cpp/connection/usb/usb_me.h \
     cpp/connection/wifi/wifi_me.h
 
   SOURCES += \
     cpp/connection/connection.cpp \
     cpp/connection/ble/ble.cpp \
     cpp/connection/ble/ble_me.cpp \
-    cpp/connection/usb/usb_me.cpp \
     cpp/connection/wifi/wifi_me.cpp
-}
 
-ios {
-  HEADERS -= \
-    cpp/connection/usb/usb_me.h
-  SOURCES -= \
-    cpp/connection/usb/usb_me.cpp
+  !no_usb {
+    HEADERS += \
+      cpp/connection/usb/usb_me.h
+    SOURCES += \
+      cpp/connection/usb/usb_me.cpp
+  }
 }
 
 RESOURCES += $$files(qml/*)
