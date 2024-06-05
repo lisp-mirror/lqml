@@ -23,7 +23,7 @@
                (:file "lisp/swank-quicklisp")
                #+mobile
                (:file "lisp/upload-download")
-               #+linux
+               #+unix
                (:file "lisp/usb-ulisp")
                (:file "lisp/main")))
 

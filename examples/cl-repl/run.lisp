@@ -22,7 +22,7 @@
 
 ;;; use app to send code to e.g. Arduino uLisp connected to USB
 
-#+linux
+#+unix
 (when (option "-ulisp")
   (setf ed:*ulisp-mode* t))
 

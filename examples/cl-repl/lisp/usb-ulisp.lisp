@@ -4,7 +4,7 @@
 
 (defvar *ulisp-mode* nil)
 
-(defparameter *newline* #.(format nil "~C~C" #\Return #\Newline))
+(defparameter *newline* #.(map 'string 'identity (list #\Return #\Newline)))
 
 (defun ini-usb ()
   (when *ulisp-mode*
