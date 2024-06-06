@@ -10,8 +10,13 @@
 (defvar *receiver*     nil)
 (defvar *config-lora*  nil)
 (defvar *ble-names*    nil)
-(defvar *print-json*   #+mobile nil
-                       #-mobile t)
+
+(defvar *print-json* #+mobile nil
+                     #-mobile t
+ "Print all sent/received protobuf packets as json to terminal.")
+
+(defvar *log-packets* t
+ "Write all raw protobuf data sent/received to a file.")
 
 (defun ini ()
   (setf *channel-name* (or (app:setting :channel-name)
@@ -162,6 +167,8 @@
     (pr:print-json to-radio))
   (let* ((bytes (pr:serialize-to-bytes to-radio))
          (header (header (length bytes))))
+    (when *log-packets*
+      (log-packet :out bytes))
     (case radios:*connection*
       (:ble
        (qrun*
@@ -196,6 +203,8 @@
               (progn
                 (when *print-json*
                   (pr:print-json from-radio))
+                (when *log-packets*
+                  (log-packet :in bytes))
                 (push from-radio *received*))
               (progn
                 (qlog "received faulty bytes: ~A" error)
@@ -333,7 +342,9 @@
                      (radios:add-radio
                       (list :name name
                             :hw-model (symbol-name (me:hw-model x:it))
-                            :battery-level (float (if metrics (me:battery-level metrics) 0))
+                            :battery-level (float (if metrics
+                                                      (max 0 (min 100 (me:battery-level metrics)))
+                                                      0))
                             :current current))
                      (when current
                        (app:update-current-device name)))))))
@@ -511,4 +522,20 @@
                        'me:config.lo-ra-config.modem-preset)
                       (:region-code
                        'me:config.lo-ra-config.region-code))))
+
+;;; log serialized protobuf packets (for ev. future analysis)
+
+(defun timestamp-bytes ()
+  (let ((ti (get-universal-time)))
+    (to-bytes (loop :for i :from 3 :downto 0
+                :collect (ldb (byte 8 (* i 8)) ti)))))
+
+(defun log-packet (direction packet)
+  (with-open-file (s (app:in-data-path "packets.bin") :direction :output
+                     :if-exists :append :if-does-not-exist :create
+                     :element-type '(unsigned-byte 8))
+    (write-sequence (header (length packet)) s)                 ; header for length
+    (write-byte (char-code (if (eql :in direction) #\> #\<)) s) ; direction (1 byte)
+    (write-sequence (timestamp-bytes) s)                        ; timestamp (4 bytes)
+    (write-sequence packet s)))                                 ; protobuf
 
