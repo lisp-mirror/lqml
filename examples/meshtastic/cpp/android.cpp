@@ -2,9 +2,11 @@
 #include <ecl_fun.h>
 
 #if (QT_VERSION < 0x060000)
+  #define JniObject QAndroidJniObject
   #include <QtAndroid>
   #include <QAndroidJniEnvironment>
 #else
+  #define JniObject QJniObject
   #include <QtCore/private/qandroidextras_p.h>
 #endif
 
@@ -19,12 +21,20 @@ static void clearEventualExceptions() {
   }
 }
 
+static JniObject androidActivity() {
+#if (QT_VERSION < 0x060000)
+  return QtAndroid::androidActivity();
+#else
+  return QtAndroidPrivate::activity();
+#endif
+}
+
 // keep screen on
 
 QVariant QT::keepScreenOn(const QVariant& on) {
 #if (QT_VERSION < 0x060000)
   QtAndroid::runOnAndroidThread([&] {
-    QAndroidJniObject activity = QtAndroid::androidActivity();
+    JniObject activity = androidActivity();
     if (activity.isValid()) {
       QAndroidJniObject window = activity.callObjectMethod("getWindow", "()Landroid/view/Window;");
       if (window.isValid()) {
@@ -39,7 +49,7 @@ QVariant QT::keepScreenOn(const QVariant& on) {
   });
 #else
   QNativeInterface::QAndroidApplication::runOnAndroidMainThread([&] {
-    QJniObject activity = QtAndroidPrivate::activity();
+    JniObject activity = androidActivity();
     if (activity.isValid()) {
       QJniObject window = activity.callObjectMethod("getWindow", "()Landroid/view/Window;");
       if (window.isValid()) {
@@ -59,36 +69,26 @@ QVariant QT::keepScreenOn(const QVariant& on) {
 // GPS
 
 static qlonglong getLongField(const char* name) {
-#if (QT_VERSION < 0x060000)
-  QAndroidJniObject activity = QtAndroid::androidActivity();
-#else
-  QJniObject activity = QtAndroidPrivate::activity();
-#endif
+  JniObject activity = androidActivity();
   return static_cast<qlonglong>(activity.getField<jlong>(name));
 }
 
 static double getDoubleField(const char* name) {
-#if (QT_VERSION < 0x060000)
-  QAndroidJniObject activity = QtAndroid::androidActivity();
-#else
-  QJniObject activity = QtAndroidPrivate::activity();
-#endif
+  JniObject activity = androidActivity();
   return static_cast<double>(activity.getField<jdouble>(name));
 }
 
 QVariant QT::iniPositioning() {
 #if (QT_VERSION < 0x060000)
   QtAndroid::runOnAndroidThread([] {
-    QAndroidJniObject activity = QtAndroid::androidActivity();
-    activity.callMethod<void>(
+    androidActivity().callMethod<void>(
       "iniLocation",
       "()V");
     clearEventualExceptions();
   });
 #else
   QNativeInterface::QAndroidApplication::runOnAndroidMainThread([&] {
-    QJniObject activity = QtAndroidPrivate::activity();
-    activity.callMethod<void>(
+    androidActivity().callMethod<void>(
       "iniLocation",
       "()V");
     clearEventualExceptions();
@@ -131,7 +131,7 @@ void QT::iniJni() {
 #else
   QJniEnvironment env;
 #endif
-  jclass jcl = env->GetObjectClass(QtAndroid::androidActivity().object<jobject>());
+  jclass jcl = env->GetObjectClass(androidActivity().object<jobject>());
   env->RegisterNatives(jcl, methods, sizeof(methods) / sizeof(methods[0]));
   clearEventualExceptions();
 }

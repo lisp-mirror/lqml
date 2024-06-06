@@ -5,9 +5,11 @@
 #include <QtDebug>
 
 #if (QT_VERSION < 0x060000)
+  #define JniObject QAndroidJniObject
   #include <QtAndroid>
   #include <QAndroidJniEnvironment>
 #else
+  #define JniObject QJniObject
   #include <QtCore/private/qandroidextras_p.h>
 #endif
 
@@ -26,6 +28,14 @@ static void clearEventualExceptions() {
   if (env->ExceptionCheck()) {
     env->ExceptionClear();
   }
+}
+
+static JniObject androidService() {
+#if (QT_VERSION < 0x060000)
+  return QtAndroid::androidService();
+#else
+  return QtAndroidPrivate::service();
+#endif
 }
 
 static void javaSetReady(JNIEnv*, jobject, jboolean jb) { // see Java
@@ -55,12 +65,11 @@ USB_ME::USB_ME(QtAndroidService* service, Connection* _con) : emitter(service), 
     { "qtSetReady",  "(Z)V",  reinterpret_cast<void*>(javaSetReady) },
     { "qtOnNewData", "([B)V", reinterpret_cast<void*>(javaOnNewData) }
   };
+  JniObject service2 = androidService();
 #if (QT_VERSION < 0x060000)
   QAndroidJniEnvironment env;
-  QAndroidJniObject service2 = QtAndroid::androidService();
 #else
   QJniEnvironment env;
-  QJniObject service2 = QtAndroidPrivate::service();
 #endif
   jclass jcl = env->GetObjectClass(service2.object<jobject>());
   env->RegisterNatives(jcl, methods, sizeof(methods) / sizeof(methods[0]));
@@ -72,11 +81,7 @@ USB_ME::USB_ME(QtAndroidService* service, Connection* _con) : emitter(service), 
 }
 
 void USB_ME::connectToRadio() {
-#if (QT_VERSION < 0x060000)
-  QAndroidJniObject service = QtAndroid::androidService();
-#else
-  QJniObject service = QtAndroidPrivate::service();
-#endif
+  JniObject service = androidService();
   service.callMethod<void>(
     "iniUsb",
     "()V");
@@ -96,11 +101,7 @@ void USB_ME::write2(const QByteArray& ba) {
 #endif
     jbyteArray jba = env->NewByteArray(ba.size());
     env->SetByteArrayRegion(jba, 0, ba.size(), (jbyte*)ba.data());
-#if (QT_VERSION < 0x060000)
-    QAndroidJniObject service = QtAndroid::androidService();
-#else
-    QJniObject service = QtAndroidPrivate::service();
-#endif
+    JniObject service = androidService();
     service.callMethod<void>(
       "writeUsb",
       "([B)V", jba);
