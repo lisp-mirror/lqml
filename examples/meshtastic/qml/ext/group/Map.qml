@@ -59,7 +59,7 @@ Item {
           if (pos) {
             var marker = markers.itemAt(n)
             marker.radioName = name
-            marker.customName = customName
+            marker.customName = (customName === "~") ? "" : customName
             marker.coordinate = coordinate(pos)
             marker.visible = true
           }
@@ -68,7 +68,7 @@ Item {
         function updatePositions(myNum, myName, group) {
           var n = 0
           showMarker(n++, myNum, myName)
-          for (var i = 0; i < group.count; i++) {
+          for (var i = 1; i < group.count; i++) {
             var data = group.get(i)
             showMarker(n++, data.nodeNum, data.radioName, data.customName)
           }

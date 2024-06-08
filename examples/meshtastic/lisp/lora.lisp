@@ -11,11 +11,12 @@
 (defvar *config-lora*  nil)
 (defvar *ble-names*    nil)
 
-(defvar *print-json* #+mobile nil
-                     #-mobile t
+(defvar *print-json*   #+mobile nil
+                       #-mobile t
  "Print all sent/received protobuf packets as json to terminal.")
 
-(defvar *log-packets* t
+(defvar *log-packets*  #+mobile nil
+                       #-mobile t
  "Write all raw protobuf data sent/received to a file.")
 
 (defun ini ()
@@ -176,7 +177,8 @@
         (qt:write* qt:*cpp* bytes)))
       ((:usb :wifi)
        (qrun*
-        (qt:write* qt:*cpp* (concatenate 'vector header bytes)))))))
+        (qt:write* qt:*cpp* (concatenate 'vector header bytes))))))
+  (loc:check-position-update))
 
 (let (queue)
   (defun send-enqueued (&rest functions) ; see Qt
@@ -379,7 +381,8 @@
                                         (me:name (me:settings *my-channel*))))
                      (qlater 'config-device))
                    (radios:choose-region))))))
-    (setf *received* nil)))
+    (setf *received* nil)
+    (loc:check-position-update)))
 
 (defun radio-ready-p ()
   (or (and *config-complete*
@@ -485,7 +488,7 @@
                                        (me:make-position
                                         :latitude-i (to-int (getf pos :lat))
                                         :longitude-i (to-int (getf pos :lon))
-                                        :time (getf pos :time))
+                                        :altitude (max 0 (min #.(expt 10 5) (floor (or (getf pos :alt) 0)))))
                                        (me:make-position))) ; unset
                          :want-response t)))))
 

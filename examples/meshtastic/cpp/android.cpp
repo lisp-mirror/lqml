@@ -101,6 +101,7 @@ QVariant QT::lastPosition() {
   QVariantList pos;
   pos << getDoubleField("position_lat")
       << getDoubleField("position_lon")
+      << getDoubleField("position_alt")
       << getLongField("position_time");
   return pos;
 }

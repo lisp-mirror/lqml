@@ -142,6 +142,7 @@
    #:*positions*
    #:activate-map
    #:add-manual-marker
+   #:check-position-update
    #:distance
    #:extract-map-bin
    #:ini

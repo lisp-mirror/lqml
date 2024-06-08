@@ -55,8 +55,9 @@ Item {
 
     Com.MenuItem {
       objectName: "share_location"
-      text: qsTr("Share my location...")
-      onTriggered: Lisp.call("loc:share-my-location")
+      text: qsTr("Share my location")
+      checkable: true
+      onTriggered: Lisp.call("loc:share-my-location", checked)
     }
 
     MenuSeparator {}
@@ -178,6 +179,7 @@ Item {
 
     property double lat: 0
     property double lon: 0
+    property double alt: 0
     property string time: "0" // no 'long' in JS
 
     onPositionChanged: {
@@ -185,6 +187,7 @@ Item {
         var coor = position.coordinate;
         lat = coor.latitude
         lon = coor.longitude
+        alt = position.altitudeValid ? coor.altitude : 0
         if (position.timestamp) {
           var stime = String(position.timestamp.getTime())
           time = stime.substring(0, stime.length - 3)
@@ -195,7 +198,7 @@ Item {
     }
 
     function lastPosition() {
-      return [lat, lon, time]
+      return [lat, lon, alt, time]
     }
   }
 

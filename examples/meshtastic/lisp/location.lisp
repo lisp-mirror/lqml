@@ -1,13 +1,17 @@
 (in-package :loc)
 
+(defvar *share-location*  nil)
 (defvar *positions*       nil)
 (defvar *manual-position* nil)
 (defvar *gps-position*    nil)
+(defvar *last-updated*    0)
 
-(defparameter *default-position* (list :lat 41.89193 :lon 12.51133 :time 0) ; Rome
+(defparameter *default-position* (list :lat 41.89193 :lon 12.51133 :alt 0 :time 0) ; Rome
   "Position of map center for manual position selection (no GPS).")
 
 (defun ini ()
+  (setf *share-location* (app:setting :share-location))
+  (q> |checked| ui:*share-location* *share-location*)
   #+android       (qt:ini-positioning qt:*cpp*)
   #+(or ios sfos) (q> |active| ui:*position-source* t)
   (x:when-it (app:setting :selected-position)
@@ -22,30 +26,37 @@
       (setf (third pos) (parse-integer time))) ; see QML
     pos))
 
-(defun share-my-location () ; see QML
+(defun share-my-location (share) ; see QML
   "Share GPS position (ad hoc only)."
-  (app:confirm-dialog (tr "Share my location now?") 'do-share-my-location)
+  (setf *share-location* share)
+  (app:change-setting :share-location share)
+  (send-to-radio)
   (values))
-
-(defun do-share-my-location (share)
-  (when share
-    (send-to-radio)))
 
 #+(or android ios sfos)
 (defun update-my-position (&optional (sec 60)) ; try for 1 min
   "Store current position internally, without sharing it, so we have a base for
   eventual manual position setting."
-  (destructuring-bind (lat lon time)
+  (destructuring-bind (lat lon alt time)
       (latest-gps-position)
     (if (zerop lat)
         (unless (zerop sec)
           (qsingle-shot 1000 (lambda () (update-my-position (1- sec)))))
-        (let ((pos (list :lat lat :lon lon :time time)))
+        (let ((pos (list :lat lat :lon lon :alt alt :time time)))
           (setf *gps-position* pos)
-          (qlog "position-updated: ~A" pos)))))
+          (qlog "position-updated: ~A" pos)
+          (send-to-radio)))))
+
+(defun check-position-update ()
+  #+(or android ios sfos)
+  (let ((now (get-universal-time))
+        (15min 900))
+    (when (> (- now *last-updated*) 15min)
+      (setf *last-updated* now)
+      (update-my-position))))
 
 (defun send-to-radio ()
-  (when (app:setting :share-location)
+  (when *share-location*
     (if lora:*config-complete*
         (lora:send-position (or *manual-position* *gps-position*))
         (qsingle-shot (* 15 1000) 'send-to-radio))))
@@ -71,6 +82,7 @@
     (app:change-setting :selected-position *manual-position*)
     (qlog "position-updated: ~A" pos))
   (q> |visible| ui:*remove-marker* t)
+  (qlater 'send-to-radio)
   (values))
 
 (defun remove-marker () ; see QML

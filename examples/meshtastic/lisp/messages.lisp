@@ -31,8 +31,9 @@
   :hidden"
   (x:when-it (getf message (if (getf message :me) :receiver :sender))
     (unless (or loading (getf message :me))
-      (x:when-it* (app:setting (getf message :sender) :custom-name)
-        (setf (getf message :sender-name) x:it*)))
+      (let ((name (app:setting (getf message :sender) :custom-name)))
+        (when (and name (string/= "~" name))
+          (setf (getf message :sender-name) name))))
     (unless loading
       (let ((id (getf message :mid)))
         (remf message :mid)
