@@ -3,9 +3,11 @@
 #include <QObject>
 #include <QVariant>
 
-class BLE_ME;
 class WiFi_ME;
 
+#ifndef NO_BLE
+  class BLE_ME;
+#endif
 #ifndef NO_USB
   class USB_ME;
 #endif
@@ -28,9 +30,13 @@ public:
     BLE, USB, WiFi
   };
 
+  WiFi_ME* wifi = nullptr;
+#ifndef NO_BLE
   Type type = BLE;
   BLE_ME* ble = nullptr;
-  WiFi_ME* wifi = nullptr;
+#else
+  Type type = USB;
+#endif
 #ifndef NO_USB
   USB_ME* usb = nullptr;
 #endif

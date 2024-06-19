@@ -4,6 +4,7 @@
    #:*cpp*
    #:data-path
    #:disconnect
+   #:has-feature
    #:ini
    #:ini-db
    #:ini-positioning

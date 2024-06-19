@@ -7,6 +7,10 @@
   (setf *connection* (or (app:setting :connection)
                          :ble))
   (set-connection-type)
+  (unless (qt:has-feature qt:*cpp* "ble")
+    (q> |height| ui:*ble* 0))
+  (unless (qt:has-feature qt:*cpp* "usb")
+    (q> |height| ui:*usb* 0))
   (q> |checked| (symbol-name *connection*) t)
   (q> |model| ui:*region*
       (cons "-" (mapcar 'symbol-name (rest (lora:keywords :region-code)))))

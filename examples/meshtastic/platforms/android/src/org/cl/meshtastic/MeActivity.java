@@ -16,7 +16,7 @@ public class MeActivity extends QtActivity
     // GPS
 
     // location hack: needed to not lose initial position with non moving
-    // devices (on android Qt seems not to capture inital location values)
+    // devices (seems necessary on android when using Qt/QML)
 
     public double position_lat  = 0.0; 
     public double position_lon  = 0.0; 

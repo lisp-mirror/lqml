@@ -31,6 +31,7 @@ public:
   Q_INVOKABLE QVariant read2();
   Q_INVOKABLE QVariant write2(const QVariant&);
   Q_INVOKABLE QVariant wifiConnectable(const QVariant&);
+  Q_INVOKABLE QVariant hasFeature(const QVariant&);
 
   // GPS
 #ifdef Q_OS_ANDROID

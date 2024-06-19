@@ -152,6 +152,17 @@ QVariant QT::wifiConnectable(const QVariant& vIP) {
   return QVariant();
 }
 
+QVariant QT::hasFeature(const QVariant& vName) {
+  auto name = vName.toString().toLower();
+#ifndef NO_BLE
+  if (name == "ble") return true;
+#endif
+#ifndef NO_USB
+  if (name == "usb") return true;
+#endif
+  return QVariant();
+}
+
 // SQLite
 
 QVariant QT::iniDb(const QVariant& vName) {

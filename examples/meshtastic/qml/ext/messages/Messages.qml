@@ -258,7 +258,8 @@ Rectangle {
         height: width
         source: "../../img/emoji.png"
         opacity: 0.55
-        visible: edit.focus && (Qt.platform.os !== "android") && (Qt.platform.os !== "ios")
+        // on android/iOS/Windows native emojis work out of the box
+        visible: edit.focus && ((Qt.platform.os === "linux") || (Qt.platform.os === "osx"))
 
         MouseArea {
           anchors.fill: parent

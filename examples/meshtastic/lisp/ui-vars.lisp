@@ -4,6 +4,7 @@
   (:use :cl)
   (:export
    #:*add-manual-marker*
+   #:*ble*
    #:*busy*
    #:*channel-name*
    #:*dialogs*
@@ -36,11 +37,13 @@
    #:*remove-marker*
    #:*share-location*
    #:*toast*
-   #:*unread-messages*))
+   #:*unread-messages*
+   #:*usb*))
 
 (in-package :ui)
 
 (defparameter *add-manual-marker* "add_manual_marker")
+(defparameter *ble*               "BLE")
 (defparameter *busy*              "busy")
 (defparameter *channel-name*      "channel_name")
 (defparameter *dialogs*           "dialogs")
@@ -74,4 +77,5 @@
 (defparameter *share-location*    "share_location")
 (defparameter *toast*             "toast")
 (defparameter *unread-messages*   "unread_messages")
+(defparameter *usb*               "USB")
 

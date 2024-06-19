@@ -1,3 +1,6 @@
+# to set manually (when no BLE available)
+#CONFIG += no_ble
+
 LISP_FILES = $$files(lisp/*) app.asd make.lisp
 
 exists(/etc/sailfish-release) {
@@ -65,7 +68,6 @@ win32 {
 sfos {
   QT      -= serialport
   CONFIG  += no_usb
-  DEFINES += NO_USB
 }
 
 android {
@@ -146,6 +148,14 @@ ios {
   QMAKE_BUNDLE_DATA += launch
 }
 
+no_ble {
+  DEFINES += NO_BLE
+  QT -= bluetooth
+}
+no_usb {
+  DEFINES += NO_USB
+}
+
 32bit {
   android {
     equals(QT_MAJOR_VERSION, 6) {
@@ -188,15 +198,20 @@ SOURCES += \
 !android {
   HEADERS += \
     cpp/connection/connection.h \
-    cpp/connection/ble/ble.h \
-    cpp/connection/ble/ble_me.h \
     cpp/connection/wifi/wifi_me.h
 
   SOURCES += \
     cpp/connection/connection.cpp \
-    cpp/connection/ble/ble.cpp \
-    cpp/connection/ble/ble_me.cpp \
     cpp/connection/wifi/wifi_me.cpp
+
+  !no_ble {
+    HEADERS += \
+      cpp/connection/ble/ble.h \
+      cpp/connection/ble/ble_me.h
+    SOURCES += \
+      cpp/connection/ble/ble.cpp \
+      cpp/connection/ble/ble_me.cpp
+  }
 
   !no_usb {
     HEADERS += \

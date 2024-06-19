@@ -1,10 +1,12 @@
 #include "connection.h"
-#include "ble/ble_me.h"
 #include "wifi/wifi_me.h"
 #include <QStandardPaths>
 #include <QFile>
 #include <QDataStream>
 
+#ifndef NO_BLE
+  #include "ble/ble_me.h"
+#endif
 #ifndef NO_USB
   #ifdef Q_OS_ANDROID
     #include "usb/usb_me.android.h"
@@ -31,7 +33,9 @@ Connection::Connection(QtAndroidService* service) {
 }
 #else
 Connection::Connection() {
+#ifndef NO_BLE
   ble = new BLE_ME(this);
+#endif
 #ifndef NO_USB
   usb = new USB_ME(this);
 #endif
@@ -47,21 +51,27 @@ void Connection::setConnectionType(const QVariant& var) {
 void Connection::startDeviceDiscovery(const QVariant& var) {
   switch (type) {
     case BLE:
-#ifndef NO_USB
+#ifndef NO_BLE
+  #ifndef NO_USB
       usb->disconnect();
-#endif
+  #endif
       wifi->disconnect();
       ble->startDeviceDiscovery(var.toString());
+#endif
       break;
     case USB:
 #ifndef NO_USB
+  #ifndef NO_BLE
       ble->disconnect();
+  #endif
       wifi->disconnect();
       usb->connectToRadio();
 #endif
       break;
     case WiFi:
+#ifndef NO_BLE
       ble->disconnect();
+#endif
 #ifndef NO_USB
       usb->disconnect();
 #endif
@@ -71,13 +81,17 @@ void Connection::startDeviceDiscovery(const QVariant& var) {
 }
 
 void Connection::stopDeviceDiscovery() {
+#ifndef NO_BLE
   ble->stopDeviceDiscovery();
+#endif
 }
 
 void Connection::disconnect() {
   switch (type) {
     case BLE:
+#ifndef NO_BLE
       ble->disconnect();
+#endif
       break;
     case USB:
 #ifndef NO_USB
@@ -91,18 +105,24 @@ void Connection::disconnect() {
 }
 
 void Connection::setDeviceFilter(const QVariant& vName) {
+#ifndef NO_BLE
   ble->setDeviceFilter(vName.toString());
+#endif
 }
 
 void Connection::read2() {
+#ifndef NO_BLE
   ble->read();
+#endif
 }
 
 void Connection::write2(const QVariant& vBytes) {
   QByteArray bytes = vBytes.toByteArray();
   switch (type) {
     case BLE:
+#ifndef NO_BLE
       ble->write(bytes);
+#endif
       break;
     case USB:
 #ifndef NO_USB

@@ -84,7 +84,6 @@ Item {
         autoExclusive: true
         checkable: true
         onTriggered: connection.changed(objectName)
-        Component.onCompleted: if (mobile && (Qt.platform.os !== "android")) { height = 0 }
       }
       Com.MenuItem {
         objectName: "WIFI"
