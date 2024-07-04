@@ -432,7 +432,6 @@
                           :tx-power 0 ; max legal power
                           :sx126x-rx-boosted-gain t))))))
 
-
 (defun wait-for-reboot (&optional (seconds 15))
   "Changing config will reboot device."
   (qlater (lambda ()

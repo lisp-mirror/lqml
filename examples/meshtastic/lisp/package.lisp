@@ -7,6 +7,7 @@
    #:background-mode-changed
    #:change-setting
    #:confirm-dialog
+   #:has-feature
    #:icon-press-and-hold
    #:in-data-path
    #:ini

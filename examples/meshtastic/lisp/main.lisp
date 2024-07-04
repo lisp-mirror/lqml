@@ -32,6 +32,9 @@
                 #-android 0
                 'lora:start-device-discovery))
 
+(defun has-feature (name)
+  (qt:has-feature qt:*cpp* name))
+
 (defun in-data-path (&optional (file "") (prefix "data/"))
   #+mobile
   (merge-pathnames (x:cc prefix file))
