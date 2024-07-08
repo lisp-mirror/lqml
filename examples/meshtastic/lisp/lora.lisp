@@ -361,6 +361,7 @@
              (let ((config (me:config struct)))
                (when (me:config.has-lora config)
                  (setf *config-lora* (me:lora config))
+                 (group:set-modem-preset (me:modem-preset *config-lora*))
                  (let ((region (me:region *config-lora*))
                        (saved-region (radios:saved-region)))
                    (if (eql :unset region)
@@ -425,7 +426,7 @@
       :set-config (me:make-config
                    :lora (me:make-config.lo-ra-config
                           :use-preset t
-                          :modem-preset (app:setting :modem-preset)
+                          :modem-preset (group:modem-preset)
                           :region (app:setting :region)
                           :hop-limit 3
                           :tx-enabled t
@@ -453,8 +454,7 @@
          (qlater 'change-lora-config)))
   (values))
 
-(defun change-modem-preset (modem-preset) ; see QML
-  (app:change-setting :modem-preset (app:kw modem-preset))
+(defun change-modem-preset () ; see QML
   (qlater 'change-lora-config)
   (values))
 

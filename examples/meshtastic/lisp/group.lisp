@@ -3,11 +3,17 @@
 (defun ini ()
   (q> |model| ui:*modem*
       (mapcar (lambda (kw) (string-downcase (symbol-name kw)))
-              (lora:keywords :modem-preset)))
-  (x:when-it (app:setting :modem-preset)
-    (q> |currentIndex| ui:*modem*
-        (q! |indexOfValue| ui:*modem*
-            (string-downcase (symbol-name x:it))))))
+              (lora:keywords :modem-preset))))
+
+(defun modem-preset ()
+  (let ((curr (q< |currentIndex| ui:*modem*)))
+    (nth (if (plusp curr) curr 0)
+         (lora:keywords :modem-preset))))
+
+(defun set-modem-preset (preset)
+  (q> |currentIndex| ui:*modem*
+      (q! |indexOfValue| ui:*modem*
+          (string-downcase (symbol-name preset)))))
 
 (defun add-person (person)
   "Adds passed PERSON (a PLIST) to QML item model.

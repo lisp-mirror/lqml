@@ -20,7 +20,7 @@ Rectangle {
       font.pixelSize: 16
       font.family: fontText.name
 
-      onActivated: Lisp.call("lora:change-modem-preset", currentText)
+      onActivated: Lisp.call("lora:change-modem-preset")
     }
 
     Text {

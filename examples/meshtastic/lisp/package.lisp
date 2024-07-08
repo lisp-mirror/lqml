@@ -80,8 +80,10 @@
    #:add-person
    #:clear
    #:ini
+   #:modem-preset
    #:name-edited
    #:receiver-changed
+   #:set-modem-preset
    #:set-unread
    #:unread-messages-p))
 
