@@ -3,6 +3,11 @@
 (defvar *background-mode* nil)
 
 (defun ini ()
+  #+android
+  (progn
+    (ensure-permissions :access-fine-location)
+    (ensure-permissions :bluetooth-scan
+                        :bluetooth-connect))
   (qt:ini)
   (restore-eventual-backup)
   (load-settings)
@@ -21,11 +26,6 @@
     (q> |model| ui:*recent-emojis* *recent-emojis*))
   (q> |running| ui:*hourglass* nil)
   (q> |visible| ui:*message-view* t)
-  #+android
-  (progn
-    (ensure-permissions :access-fine-location)
-    (ensure-permissions :bluetooth-scan
-                        :bluetooth-connect))
   #+(or android ios)
   (qlater (lambda () (qt:keep-screen-on qt:*cpp*)))
   (qsingle-shot #+android (if (eql :usb radios:*connection*) 2000 0) ; delay for boot

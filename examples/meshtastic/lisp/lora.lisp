@@ -1,7 +1,6 @@
 (in-package :lora)
 
-(defvar *settings* (list :modem-preset :long-fast))
-
+(defvar *settings*     nil)
 (defvar *channel-name* nil)
 (defvar *my-channel*   nil)
 (defvar *channels*     nil)

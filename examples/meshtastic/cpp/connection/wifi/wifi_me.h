@@ -34,8 +34,6 @@ public:
   QTimer timer;
   QByteArrayList packets;
 
-  void received(const QByteArray&);
-
 public Q_SLOTS:
   void done();
   void stateChanged(SocketState);

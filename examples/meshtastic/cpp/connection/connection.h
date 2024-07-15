@@ -22,8 +22,10 @@ class Connection : public QObject {
 public:
 #ifdef Q_OS_ANDROID
   Connection(QtAndroidService*);
+  QtAndroidService* emitter = nullptr;
 #else
   Connection();
+  Connection* emitter = nullptr;
 #endif
 
   enum Type {
@@ -50,6 +52,8 @@ public:
   void read2();
   void write2(const QVariant&);
   void setBackgroundMode(bool);
+  void received(const QByteArray&);
+  void done(QByteArrayList&);
 
   // background mode
   void saveBytes(const QByteArray&);

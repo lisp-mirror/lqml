@@ -25,14 +25,14 @@
 #ifdef Q_OS_ANDROID
 Connection::Connection(QtAndroidService* service) {
   service->con = this;
-  // forward signal
-  connect(this, &Connection::sendSavedPackets, service, &QtAndroidService::sendSavedPackets);
+  emitter = service;
   ble = new BLE_ME(service, this);
   usb = new USB_ME(service, this);
   wifi = new WiFi_ME(service, this);
 }
 #else
 Connection::Connection() {
+  emitter = this;
 #ifndef NO_BLE
   ble = new BLE_ME(this);
 #endif
@@ -135,6 +135,41 @@ void Connection::write2(const QVariant& vBytes) {
   }
 }
 
+void Connection::received(const QByteArray& data) {
+  if (!data.isEmpty()) {
+    if (backgroundMode) {
+      saveBytes(data);
+    } else {
+      emitter->receivedFromRadio(QVariant(QVariantList() << data));
+    }
+  }
+}
+
+void Connection::done(QByteArrayList& packets) {
+  if (!backgroundMode) {
+    static bool startup = true;
+    if (startup) {
+      sendSavedBytes(); // for eventual, saved but not sent packets
+    } else {
+      startup = false;
+    }
+  }
+
+  const QByteArray HEADER = QByteArray::fromHex("94c3");
+  const int LEN = 4;
+  QByteArray data(packets.join());
+  packets.clear();
+  int start = 0;
+  while ((start = data.indexOf(HEADER, start)) != -1) {
+    int i_len = start + 2;
+    int len = (data.at(i_len) << 8) + data.at(i_len + 1);
+    received(data.mid(start + LEN, len));
+    start += LEN + len;
+  }
+
+  emitter->receivingDone();
+}
+
 // background mode
 
 void Connection::setBackgroundMode(bool background) {
@@ -180,7 +215,7 @@ void Connection::sendSavedBytes() {
     }
     file.close();
     if (!packets.isEmpty()) {
-      Q_EMIT sendSavedPackets(QVariant(packets));
+      emitter->sendSavedPackets(QVariant(packets));
       QFile::remove(fileName);
     }
   }

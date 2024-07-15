@@ -26,8 +26,6 @@ public:
   QTimer timer;
   QByteArrayList packets;
 
-  void received(const QByteArray&);
-
   Q_INVOKABLE void onNewData(const QByteArray&);
 
 public Q_SLOTS:

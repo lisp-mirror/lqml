@@ -87,38 +87,7 @@ void USB_ME::read2() {
   timer.start(1000); // assume receiving done after pause of 1 sec
 }
 
-void USB_ME::received(const QByteArray& data) {
-  if (!data.isEmpty()) {
-    if (con->backgroundMode) {
-      con->saveBytes(data);
-    } else {
-      con->receivedFromRadio(QVariant(QVariantList() << data));
-    }
-  }
-}
-
 void USB_ME::done() {
-  if (!con->backgroundMode) {
-    static bool startup = true;
-    if (startup) {
-      con->sendSavedBytes(); // for eventual, saved but not sent packets
-    } else {
-      startup = false;
-    }
-  }
-
-  const QByteArray HEADER = QByteArray::fromHex("94c3");
-  const int LEN = 4;
-  QByteArray data(packets.join());
-  packets.clear();
-  int start = 0;
-  while ((start = data.indexOf(HEADER, start)) != -1) {
-    int i_len = start + 2;
-    int len = (data.at(i_len) << 8) + data.at(i_len + 1);
-    received(data.mid(start + LEN, len));
-    start += LEN + len;
-  }
-
-  con->receivingDone();
+  con->done(packets);
 }
 
