@@ -1,4 +1,4 @@
-;;; for Qt5.15 & NDK 21
+;;; for Qt5.15 & NDK 21 (should also work for Qt6 & NDK 25)
 
 (in-package :cl-user)
 
@@ -33,8 +33,8 @@
                                            (error "clang compiler not found"))))
                              (namestring path))
       c::*ld*              (cc *ndk-toolchain* "/bin/" *arch-triple* "-ld")
-      c::*ar*              (cc *ndk-toolchain* "/bin/" *arch-triple* "-ar")
-      c::*ranlib*          (cc *ndk-toolchain* "/bin/" *arch-triple* "-ranlib")
+      c::*ar*              (cc *ndk-toolchain* "/bin/llvm-ar")
+      c::*ranlib*          (cc *ndk-toolchain* "/bin/llvm-ranlib")
       c::*cc-flags*        (cc (ecl-config "--cflags")
                                " -DANDROID -DPLATFORM_ANDROID -O2 -fPIC -fno-common -D_THREAD_SAFE -I"
                                *ecl-android* "/build/gmp")
