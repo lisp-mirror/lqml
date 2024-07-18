@@ -44,8 +44,8 @@ Connection::Connection() {
 #endif
 
 void Connection::setConnectionType(const QVariant& var) {
-  type = Type(BLE + (QList<QByteArray>() << "BLE" << "USB" << "WIFI")
-                    .indexOf(var.toByteArray()));
+  type = Type(QByteArrayList({"BLE", "USB", "WIFI"})
+              .indexOf(var.toByteArray()));
 }
 
 void Connection::startDeviceDiscovery(const QVariant& var) {

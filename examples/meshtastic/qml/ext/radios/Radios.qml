@@ -48,7 +48,7 @@ Rectangle {
 
     // hack to define all model key _types_
     ListElement {
-      name: ""; ini: false; hwModel: ""; batteryLevel: 0; current: false
+      name: ""; ini: false; hwModel: ""; voltage: ""; batteryLevel: ""; current: false
     }
 
     function addRadio(radio) {
@@ -108,6 +108,7 @@ Rectangle {
       Rad.BatteryLevel {
         anchors.right: parent.right
         anchors.rightMargin: 14
+        voltage: model.voltage
         level: model.batteryLevel
         visible: !model.ini
       }

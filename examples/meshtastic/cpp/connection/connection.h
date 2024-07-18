@@ -29,7 +29,7 @@ public:
 #endif
 
   enum Type {
-    BLE, USB, WiFi
+    BLE = 0, USB, WiFi
   };
 
   WiFi_ME* wifi = nullptr;

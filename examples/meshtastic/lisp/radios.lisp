@@ -96,7 +96,7 @@
 (defun add-radio (radio)
   "Adds passed RADIO (a PLIST) to QML item model.
   The model keys are:
-  :name :hw-model :battery-level :current"
+  :name :hw-model :voltage :battery-level :current"
   (qjs |addRadio| ui:*radios* radio))
 
 (defun clear ()
