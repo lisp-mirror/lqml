@@ -342,7 +342,8 @@
                      (setf radios:*found* t)
                      (radios:add-radio
                       (list :name name
-                            :hw-model (symbol-name (me:hw-model x:it))
+                            :hw-model (x:string-substitute "?" "%UNDEFINED"
+                                                           (symbol-name (me:hw-model x:it)))
                             :voltage       (format nil "~1$V" (if metrics (me:voltage metrics) 0))
                             :battery-level (format nil "~D%"  (if metrics (max 0 (min 100 (me:battery-level metrics))) 0))
                             :current current))

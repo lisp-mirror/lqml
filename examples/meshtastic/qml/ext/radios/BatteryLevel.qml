@@ -4,7 +4,7 @@ Rectangle {
   anchors.verticalCenter: parent.verticalCenter
   width: 12
   height: 25
-  color: (level > 15) ? "#f0f0f0" : "yellow"
+  color: (percent() > 15) ? "#f0f0f0" : "yellow"
   radius: 2
   border.width: 1
   border.color: "#808080"
