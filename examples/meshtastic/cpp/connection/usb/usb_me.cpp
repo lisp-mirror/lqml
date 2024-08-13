@@ -7,9 +7,10 @@
 USB_ME::USB_ME(Connection* _con) : con(_con) {
   connect(this, &QSerialPort::readyRead, this, &USB_ME::read2);
   connect(this, &QSerialPort::errorOccurred,
-          [](QSerialPort::SerialPortError error) {
+          [&](QSerialPort::SerialPortError error) {
             if (error != QSerialPort::NoError) {
               qDebug() << "USB error:" << error;
+              disconnect();
             }
           });
   setBaudRate(Baud115200);
