@@ -71,8 +71,10 @@ done:
 }
 
 void USB_ME::disconnect() {
-  close();
-  qDebug() << "USB closed";
+  if (isOpen()) {
+    close();
+    qDebug() << "USB closed";
+  }
 }
 
 void USB_ME::write2(const QByteArray& data) {
