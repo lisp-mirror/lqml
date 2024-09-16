@@ -54,8 +54,8 @@
                            :for n :from 1 :to len
                            :collect (if (and (stringp arg)
                                              (or (x:starts-with "#x" arg)      ; integer
-                                                 (and (char= #\: (char arg 0)) ; keyword
-                                                      (> (length arg) 1)
+                                                 (and (> (length arg) 1)
+                                                      (char= #\: (char arg 0)) ; keyword
                                                       (every 'alphanumericp (subseq arg 1))
                                                       (< n len))))
                                         (or (ignore-errors (read-from-string arg))
