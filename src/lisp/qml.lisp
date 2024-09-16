@@ -43,24 +43,27 @@
   ;; are automatically converted back to integers.
   ;;
   ;; Strings starting with ':' are assumed to be Lisp keywords, if composed by
-  ;; alphanumeric characters, and if they have a following argument.
+  ;; alphanumeric/dash characters, and if they have a following argument.
   (let ((fun (string-to-symbol function))
         (*caller* (if (zerop caller)
                       *caller*
                       (qt-object caller))))
     (if (fboundp fun)
-        (apply fun (let ((len (length arguments)))
-                     (loop :for arg :in arguments
-                           :for n :from 1 :to len
-                           :collect (if (and (stringp arg)
-                                             (or (x:starts-with "#x" arg)      ; integer
-                                                 (and (> (length arg) 1)
-                                                      (char= #\: (char arg 0)) ; keyword
-                                                      (every 'alphanumericp (subseq arg 1))
-                                                      (< n len))))
-                                        (or (ignore-errors (read-from-string arg))
-                                            arg)
-                                        arg))))
+        (apply fun (loop :with len = (length arguments)
+                         :for arg :in arguments
+                         :for n :from 1 :to len
+                         :collect (if (and (stringp arg)
+                                           (or (x:starts-with "#x" arg)      ; integer
+                                               (and (> (length arg) 1)
+                                                    (char= #\: (char arg 0)) ; keyword
+                                                    (every (lambda (ch)
+                                                             (or (alphanumericp ch)
+                                                                 (char= #\- ch)))
+                                                           (subseq arg 1))
+                                                    (< n len))))
+                                      (or (ignore-errors (read-from-string arg))
+                                          arg)
+                                      arg)))
         (let ((msg (format nil "[LQML:error] Lisp.call(): ~S is undefined." function)))
           (when *break-on-errors*
             (break msg))
