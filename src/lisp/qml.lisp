@@ -65,9 +65,9 @@
                                           arg)
                                       arg)))
         (let ((msg (format nil "[LQML:error] Lisp.call(): ~S is undefined." function)))
-          (when *break-on-errors*
-            (break msg))
-          (format *error-output* "~%~A~%" msg)))))
+          (if *break-on-errors*
+              (break msg)
+              (format *error-output* "~%~A~%" msg))))))
 
 ;;; utils
 
