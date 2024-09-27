@@ -49,7 +49,7 @@
                       *caller*
                       (qt-object caller))))
     (if (fboundp fun)
-        (apply fun (loop :with len = (length arguments)
+        (apply fun (loop :with len := (length arguments)
                          :for arg :in arguments
                          :for n :from 1 :to len
                          :collect (if (and (stringp arg)
