@@ -89,3 +89,9 @@ Known issues
 * on **iOS**, functions `read-sequence`, `read-char` etc. don't update
   `file-position` (ECL bug?); for a workaround see hack
   [here](examples/cl-repl/lisp/upload-download.lisp)
+
+
+Support
+-------
+
+See [reddit/lqml_user](https://www.reddit.com/r/lqml_user/).
