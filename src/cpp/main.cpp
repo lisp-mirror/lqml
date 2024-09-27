@@ -147,6 +147,7 @@ int main(int argc, char* argv[]) {
 
 #ifdef INI_ASDF
   ecl_init_module(NULL, init_lib_ASDF);
+  LQML::eval("(push *default-pathname-defaults* asdf:*central-registry*)");
 #endif
 
   // load .eclrc
