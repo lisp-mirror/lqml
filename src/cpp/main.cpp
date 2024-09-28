@@ -146,8 +146,14 @@ int main(int argc, char* argv[]) {
 #endif
 
 #ifdef INI_ASDF
+  LQML::eval("(x:ensure-compiler)");
   ecl_init_module(NULL, init_lib_ASDF);
-  LQML::eval("(push *default-pathname-defaults* asdf:*central-registry*)");
+  // needed for desktop/SFOS apps that depend on ASDF and need additional files
+  // at runtime; in this case, the absolute app path must be passed when
+  // launching the app, like 'qt-runner /usr/bin/my-app/my-app' (SFOS)
+  LQML::eval("(let ((path (ext:argv 0)))"
+             "  (x:when-it (position #\\/ path :from-end t)"
+             "    (push (subseq path 0 (1+ x:it)) asdf:*central-registry*)))");
 #endif
 
   // load .eclrc

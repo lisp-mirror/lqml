@@ -7,6 +7,7 @@
    #:d
    #:do-string
    #:empty-string
+   #:ensure-compiler
    #:ensure-list
    #:ends-with
    #:it
@@ -136,4 +137,9 @@
       (format nil "~A:~A"
               (package-name (symbol-package callback))
               (symbol-name callback))))
+
+(defun ensure-compiler ()
+  (ignore-errors (ext:install-c-compiler))
+  (unless (find-symbol "*CC*" :c)
+    (ext:install-bytecodes-compiler)))
 
