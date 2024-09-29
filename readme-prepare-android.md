@@ -8,7 +8,12 @@ A good description of what you'll need can be found here:
 You don't need Android Studio, so search for **command line tools** on the SDK
 download page.
 
-The NDK version that will work with both ECL and Qt5.15.2 is `21.3`.
+The NDK version that will work with both ECL and Qt5.15 is `21.3`.
+
+The latest working SDK for Qt5.15 is e.g.
+`/opt/android/sdk/platforms/android-34`. If you find versions greater than 34
+in your SDK platforms path, you need to move them to another directory before
+compiling APKs.
 
 
 
