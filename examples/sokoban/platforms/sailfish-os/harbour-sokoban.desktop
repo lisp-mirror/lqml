@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+X-Nemo-Single-Instance=no
+X-Nemo-Application-Type=no-invoker
+Icon=harbour-sokoban
+Exec=qt-runner harbour-sokoban
+Name=Sokoban
+
+[X-Sailjail]
+Sandboxing=Disabled
