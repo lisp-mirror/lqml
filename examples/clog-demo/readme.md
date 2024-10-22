@@ -1,3 +1,5 @@
+*This example is outdated and not really useful anymore, sorry.*
+
 
 Try it
 ------

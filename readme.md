@@ -38,8 +38,8 @@ LQML is **BSD** 0 clause.
 Tested
 ------
 
-The examples are only tested with **Qt5.15**. The binding also works with
-**Qt6**, but would need some adaption of QML in most examples. It's recommended
+The examples are tested with both **Qt5.15** and **Qt6**. For differences
+in Qt6 (mostly in QML) see [examples/Qt6/](examples/Qt6/). It's recommended
 to use the new Qt online installer (see [readme-qt](readme-qt.md)), where
 you can choose to install different Qt versions side by side, sharing the same
 Qt Creator.
