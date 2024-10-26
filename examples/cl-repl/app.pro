@@ -54,7 +54,6 @@ win32 {
 }
 
 android {
-  QT          += androidextras
   DEFINES     += NO_TEXT_HANDLES NO_USB
   DEFINES     -= DESKTOP_APP
   INCLUDEPATH = $$ECL/include
@@ -64,6 +63,13 @@ android {
   LIBS        += -L$$ECL/lib/$$ECL_VERSION
   LIBS        += -lasdf -lecl-help -ldeflate -lecl-cdb -lecl-curl -lql-minitar -lsockets
   LIBS        += -L../../../platforms/android/lib
+
+  equals(QT_MAJOR_VERSION, 6) {
+    QT += core-private
+  }
+  lessThan(QT_MAJOR_VERSION, 6) {
+    QT += androidextras
+  }
 
   ANDROID_MIN_SDK_VERSION    = 21
   ANDROID_TARGET_SDK_VERSION = 34
@@ -108,9 +114,31 @@ ios {
 }
 
 32bit {
-  LIBS += -llqml32 -llisp32
+  android {
+    equals(QT_MAJOR_VERSION, 6) {
+      LIBS += -llqml32_armeabi-v7a
+    }
+    lessThan(QT_MAJOR_VERSION, 6) {
+      LIBS += -llqml32
+    }
+  }
+  !android {
+    LIBS += -llqml32
+  }
+  LIBS += -llisp32
 } else {
-  LIBS += -llqml -llisp
+  android {
+    equals(QT_MAJOR_VERSION, 6) {
+      LIBS += -llqml_arm64-v8a
+    }
+    lessThan(QT_MAJOR_VERSION, 6) {
+      LIBS += -llqml
+    }
+  }
+  !android {
+    LIBS += -llqml
+  }
+  LIBS += -llisp
 }
 
 LIBS        += -Ltmp -lapp

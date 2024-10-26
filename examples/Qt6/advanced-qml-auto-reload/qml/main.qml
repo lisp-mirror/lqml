@@ -1,8 +1,8 @@
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Controls.Basic
-import ".ext/" as Ext        // for single file auto reload (development)
-//import "ext/" as Ext       // release version
+import ".ext/" as Ext         // for single file auto reload (development)
+//import "ext/" as Ext        // release version
 
 Rectangle {
   id: main

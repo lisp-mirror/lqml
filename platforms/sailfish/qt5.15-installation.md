@@ -22,15 +22,14 @@ $ devel-su zypper install opt-qt5-qtmultimedia-devel
 $ devel-su zypper install opt-qt5-qtquickcontrols2-devel
 $ devel-su zypper install opt-qt5-qtsensors-devel
 ```
-In one occasion (opt-qtdeclarative-devel) it will say:
+If it says:
 ```
 Problem: This request will break your system!
-nothing provides 'pkgconfig(android-headers)' needed by the to be installed libhybris-devel
 ```
-You can safely ignore this warning, nothing will really break (see below),
+You can safely ignore those warnings, nothing will really break (see below),
 so just choose:
 ```
-Solution 3: break libhybris-devel by ignoring some of its dependencies
+Solution 3: break <name>-devel by ignoring some of its dependencies
 ```
 
 Now you should be able to build/install the `lqml` executable and library.

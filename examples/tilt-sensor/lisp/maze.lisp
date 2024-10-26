@@ -8,7 +8,8 @@
 (defconstant *width*  25)
 (defconstant *height* 39)
 
-(defvar *maze*)
+(defvar *maze*  nil)
+(defvar *ready* t)
 
 (defun carve-maze (x y)
   (let ((d (random 4)))
@@ -33,10 +34,11 @@
           (carve-maze x2 y2))))))
 
 (defun generate-maze ()
-  (set-visible 1 1 nil)
-  (carve-maze  1 1)
-  (set-visible 1 0 nil)
-  (set-visible (- *width* 1) (- *height* 2) nil))
+  (let ((*ready* nil))
+    (set-visible 1 1 nil)
+    (carve-maze  1 1)
+    (set-visible 1 0 nil)
+    (set-visible (- *width* 1) (- *height* 2) nil)))
 
 (defun set-visible (x y visible)
   (setf (aref *maze* x y) visible)

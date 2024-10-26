@@ -33,6 +33,21 @@ $ sshfs defaultuser@192.168.2.15: ~/phone
 
 First try to compile/install ECL (tab 1) just like you would do on the desktop.
 
+You may need to run the following commands before compiling (ensure to be
+logged in to your free Jolla account):
+```
+$ devel-su pkcon refresh
+$ devel-su pkcon install zypper
+$ devel-su zypper install gcc make
+```
+You may also needed to edit `ecl-23.9.9/src/gmp/configure`, and replace all
+occurrences of `linux*android*)` with `linux-android*)`.
+
+After compiling and installing ECL, add this soft link:
+```
+$ devel-su ln -s /usr/local/lib/libecl.so.23.9 /usr/lib/libecl.so.23.9
+```
+
 Then follow the description
 [qt5.15-rpm-installation](platforms/sailfish/qt5.15-installation.md).
 
