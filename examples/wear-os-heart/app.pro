@@ -45,7 +45,7 @@ win32 {
 }
 
 android {
-  QT          += androidextras sensors
+  QT          += sensors
   DEFINES     -= DESKTOP_APP
   DEFINES     += QT_EXTENSION
   INCLUDEPATH = $$ECL/include ../../../src/cpp
@@ -53,6 +53,13 @@ android {
   LIBS        += -L../../../platforms/android/lib
   HEADERS     += cpp/qt.h
   SOURCES     += cpp/qt.cpp
+
+  equals(QT_MAJOR_VERSION, 6) {
+    QT += core-private
+  }
+  lessThan(QT_MAJOR_VERSION, 6) {
+    QT += androidextras
+  }
 
   ANDROID_EXTRA_LIBS         += $$ECL/lib/libecl.so
   ANDROID_PACKAGE_SOURCE_DIR = ../platforms/android
@@ -65,9 +72,31 @@ android {
 }
 
 32bit {
-  LIBS += -llqml32 -llisp32
+  android {
+    equals(QT_MAJOR_VERSION, 6) {
+      LIBS += -llqml32_armeabi-v7a
+    }
+    lessThan(QT_MAJOR_VERSION, 6) {
+      LIBS += -llqml32
+    }
+  }
+  !android {
+    LIBS += -llqml32
+  }
+  LIBS += -llisp32
 } else {
-  LIBS += -llqml -llisp
+  android {
+    equals(QT_MAJOR_VERSION, 6) {
+      LIBS += -llqml_arm64-v8a
+    }
+    lessThan(QT_MAJOR_VERSION, 6) {
+      LIBS += -llqml
+    }
+  }
+  !android {
+    LIBS += -llqml
+  }
+  LIBS += -llisp
 }
 
 LIBS    += -Ltmp -lapp
