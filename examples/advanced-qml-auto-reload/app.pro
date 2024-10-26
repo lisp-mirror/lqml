@@ -17,7 +17,7 @@ android {
   lisp.commands = ecl.exe -shell $$PWD/make.lisp
 }
 
-lisp.input  = LISP_FILES
+lisp.input = LISP_FILES
 
 win32:  lisp.output = tmp/app.lib
 !win32: lisp.output = tmp/libapp.a
