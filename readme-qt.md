@@ -1,7 +1,7 @@
 Official online installer
 -------------------------
 
-[qt.io/download](https://www.qt.io/download)
+[download-qt-installer-oss](https://www.qt.io/download-qt-installer-oss)
 
 
 Linux note (desktop)
