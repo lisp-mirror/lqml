@@ -3,10 +3,16 @@ Official online installer
 
 [qt.io/download](https://www.qt.io/download)
 
-* Downloads for open source users
-* Go open source
-* Download the Qt Online Installer
 
+Linux note (desktop)
+--------------------
+
+Ubuntu 22.04 users just need to install the following (assuming the build
+system is already installed):
+
+```
+sudo apt install qtdeclarative5-dev qtquickcontrols2-5-dev
+```
 
 
 macOS note (desktop)
