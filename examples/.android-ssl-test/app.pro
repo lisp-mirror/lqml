@@ -75,8 +75,6 @@ android {
   ANDROID_EXTRA_LIBS         += $$ECL/lib/libecl.so
   ANDROID_PACKAGE_SOURCE_DIR = ../platforms/android
 
-  # can be downloaded from:
-  # https://github.com/KDAB/android_openssl/tree/master/latest
   32bit {
     SSL_PATH = ../../../platforms/android/lib32
   } else {

@@ -28,6 +28,13 @@
 (defun shell (command)
   (ext:run-program "sh" (list "-c" command)))
 
+#+mobile
+(unless (probe-file (cc *assets* "encodings"))
+  (let ((lib (cc (ext:getenv #+android "ECL_ANDROID" #+ios "ECL_IOS")
+                 "/lib/ecl-*/")))
+    (shell (cc "cp " lib "*.doc " *assets*))
+    (shell (cc "cp -r " lib "encodings " *assets*))))
+
 ;;; compile ASDF system
 
 (require :asdf)

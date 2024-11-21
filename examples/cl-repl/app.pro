@@ -76,14 +76,12 @@ android {
   ANDROID_EXTRA_LIBS         += $$ECL/lib/libecl.so
   ANDROID_PACKAGE_SOURCE_DIR = ../platforms/android
 
-  # optional (not included), can be downloaded from:
-  # https://github.com/KDAB/android_openssl/tree/master/latest
   32bit {
     SSL_PATH = ../../../platforms/android/lib32
   } else {
     SSL_PATH = ../../../platforms/android/lib
   }
-  #ANDROID_EXTRA_LIBS += $$SSL_PATH/libcrypto.so $$SSL_PATH/libssl.so
+  ANDROID_EXTRA_LIBS += $$SSL_PATH/libcrypto.so $$SSL_PATH/libssl.so
 
   32bit {
     ANDROID_ABIS = "armeabi-v7a"
