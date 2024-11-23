@@ -1,4 +1,4 @@
-This is here for testing SSL on android.
+This is here for testing SSL on android, both on **Lisp** and on **Qt** side.
 
 After doing `make apk`, please ensure files
 ```
@@ -16,4 +16,5 @@ before installing this one.
 
 When running the app, it should first display "downloading...", and after a few
 seconds (if the android device is connected to the internet), it should display
-"OK".
+"OK" (Lisp side of SSL); it should also display a Lisp logo, downloaded through
+https (Qt side of SSL).
