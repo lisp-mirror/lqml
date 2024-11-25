@@ -99,9 +99,9 @@ android {
   ANDROID_EXTRA_LIBS         += $$ECL/lib/libecl.so
   ANDROID_PACKAGE_SOURCE_DIR = ../platforms/android
 
-  # OpenSSL libs not included here, but can be downloaded from:
-  # https://github.com/KDAB/android_openssl/tree/master/latest
-  # required for downloading map tiles, please note naming convention for Qt:
+  # OpenSSL libs can be downloaded from: https://github.com/KDAB/android_openssl
+  # required for downloading map tiles (please note naming convention for Qt)
+  # N.B. if you need SSL on Lisp side also, remove '_1_1' from the name
   32bit {
     SSL_PATH = $$PWD/../../platforms/android/lib32
   } else {

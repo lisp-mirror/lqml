@@ -11,6 +11,9 @@ build-android/android-build/libs/arm64-v8a/
 ```
 (that is, they should have been copied automatically to above place)
 
+The official Qt OpenSSL android versions can be downloaded from
+[KDAB android openssl](https://github.com/KDAB/android_openssl).
+
 Uninstall any app called 'app' (which you might have previously installed)
 before installing this one.
 
