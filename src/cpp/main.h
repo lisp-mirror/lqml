@@ -118,9 +118,9 @@ public:
     }
     return QGuiApplication::eventFilter(object, event);
   }
+#endif
 
 Q_SIGNALS:
   void keyPressed(const QString&, const QString&);
-#endif
 };
 

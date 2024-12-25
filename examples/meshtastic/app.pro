@@ -132,10 +132,7 @@ ios {
   LIBS        += -lasdf -lecl-help -ldeflate -lecl-cdb -lecl-curl -lql-minitar -lsockets
   LIBS        += -L../../../platforms/ios/lib
 
-  # OpenSSL libs not included here, required for downloading map tiles
-  # either build them by yourself or find a trusted source for downloading,
-  # and put them here: '../../../platforms/ios/lib/'
-  LIBS        += -lcrypto -lssl
+  # note: SSL on Qt side works out of the box on iOS
 
   SOURCES += cpp/ios.mm
 

@@ -80,9 +80,7 @@ public:
 
   // connect
   Q_INVOKABLE QVariant connectDocumentChanged(const QVariant&, const QVariant&);
-#ifdef Q_OS_IOS
   Q_INVOKABLE QVariant connectKeyPressed();
-#endif
 
   // methods
   Q_INVOKABLE QVariant block2                (const QVariant&);

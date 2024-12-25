@@ -94,16 +94,16 @@ QVariant QT::connectDocumentChanged(const QVariant& vDocument, const QVariant& v
   return false;
 }
 
-#ifdef Q_OS_IOS
 QVariant QT::connectKeyPressed() {
+#ifdef Q_OS_IOS
   GuiApplication* sender = static_cast<GuiApplication*>(qGuiApp);
   connect(sender, &GuiApplication::keyPressed,
           [](const QString& key, const QString& objectName) {
             ecl_fun("editor:key-pressed", key, objectName);
           });
+#endif
   return QVariant();
 }
-#endif
 
 
 // methods
