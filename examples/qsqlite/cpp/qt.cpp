@@ -82,12 +82,14 @@ QPixmap DatabaseImageProvider::requestPixmap(const QString& name, QSize* size, c
   auto result = qt->sqlQuery(
     "select data from images where name = ?",
     QVariantList() << name,
-    1); // number of returned columns
+    1).value<QVariantList>(); // number of returned columns
   QPixmap pixmap;
-  pixmap.loadFromData(result.value<QVariantList>().first().toByteArray());
-  *size = pixmap.size();
-  if (requestedSize.isValid() && (pixmap.size() != requestedSize)) {
-    pixmap = pixmap.scaled(requestedSize);
+  if (!result.isEmpty()) {
+    pixmap.loadFromData(result.first().toByteArray());
+    *size = pixmap.size();
+    if (requestedSize.isValid() && (pixmap.size() != requestedSize)) {
+      pixmap = pixmap.scaled(requestedSize);
+    }
   }
   return pixmap;
 }
