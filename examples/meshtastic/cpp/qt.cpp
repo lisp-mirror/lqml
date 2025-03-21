@@ -171,7 +171,7 @@ QVariant QT::iniDb(const QVariant& vName) {
   return vName;
 }
 
-QVariant QT::sqlQuery(const QVariant& vQuery, const QVariant& vValues, const QVariant& vRows) {
+QVariant QT::sqlQuery(const QVariant& vQuery, const QVariant& vValues, const QVariant& vCols) {
   QVariantList results;
   QSqlQuery sqlQuery(db);
   if (db.open()) {
@@ -182,11 +182,11 @@ QVariant QT::sqlQuery(const QVariant& vQuery, const QVariant& vValues, const QVa
       sqlQuery.addBindValue(value);
     }
     if (sqlQuery.exec()) {
-      auto rows = vRows.toInt();
+      auto cols = vCols.toInt();
       while (sqlQuery.next()) {
-        if (rows > 1) {
+        if (cols > 1) {
           QVariantList list;
-          for (auto r = 0; r < rows; r++) {
+          for (auto r = 0; r < cols; r++) {
             list << sqlQuery.value(r);
           }
           results << QVariant(list);
@@ -194,7 +194,7 @@ QVariant QT::sqlQuery(const QVariant& vQuery, const QVariant& vValues, const QVa
           results << sqlQuery.value(0);
         }
       }
-      if (!rows && query.startsWith("insert", Qt::CaseInsensitive)) {
+      if (!cols && query.startsWith("insert", Qt::CaseInsensitive)) {
         results << sqlQuery.lastInsertId();
       }
       db.close();
