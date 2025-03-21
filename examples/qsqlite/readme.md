@@ -1,4 +1,3 @@
-
 Info
 ----
 
@@ -23,6 +22,21 @@ you can then try to change the image source from the REPL:
 (q> |source| ui:*logo* "image://db/logo-256")
 ```
 This will load the image directly from the database.
+
+
+Prepare
+-------
+
+Please copy the app template files first:
+```
+$ cd ..
+$ ./copy.sh qsqlite
+```
+For running on the desktop, you'll also need to compile the plugin:
+```
+$ cd cpp
+$ qmake; make
+```
 
 
 Run
