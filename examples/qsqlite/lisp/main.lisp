@@ -29,7 +29,7 @@
           (progn
             (db:delete-all-images)
             (dolist (file files)
-              (db:save-image (pathname-name file) (file-bytes file)))))
-          (x:d "No 'blob/' directory found."))))
+              (db:save-image (pathname-name file) (file-bytes file))))
+          (x:d "No 'blob/' directory found.")))))
 
 (qlater 'ini)

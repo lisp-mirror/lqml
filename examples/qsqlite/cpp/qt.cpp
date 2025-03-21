@@ -50,8 +50,8 @@ QVariant QT::sqlQuery(const QVariant& vQuery, const QVariant& vValues, const QVa
       while (sqlQuery.next()) {
         if (cols > 1) {
           QVariantList list;
-          for (auto r = 0; r < cols; r++) {
-            list << sqlQuery.value(r);
+          for (auto c = 0; c < cols; c++) {
+            list << sqlQuery.value(c);
           }
           results << QVariant(list);
         } else {
