@@ -18,7 +18,7 @@ class QT : public QObject {
 public:
   Q_INVOKABLE QVariant dataPath(const QVariant&);
   Q_INVOKABLE QVariant iniDb(const QVariant&, const QVariant&);
-  Q_INVOKABLE QVariant sqlQuery(const QVariant&, const QVariant&, const QVariant&);
+  Q_INVOKABLE QVariant sqlQuery(const QVariant&, const QVariant&);
 
   QT();
 
@@ -30,7 +30,7 @@ class DatabaseImageProvider : public QQuickImageProvider {
 public:
   DatabaseImageProvider(QT* _qt) : QQuickImageProvider(QQuickImageProvider::Pixmap), qt(_qt) {}
 
-  QPixmap requestPixmap(const QString&, QSize*, const QSize&);
+  QPixmap requestPixmap(const QString&, QSize*, const QSize&) override;
 
   QT* qt;
 };

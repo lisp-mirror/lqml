@@ -3,9 +3,7 @@
 (defvar *file* nil)
 
 (defun query (query &rest values)
-  (let ((rows (and (x:starts-with "select" query)
-                   (1+ (count #\, (subseq query 0 (search "from" query)))))))
-    (qrun* (qt:sql-query qt:*cpp* query values rows))))
+  (qrun* (qt:sql-query qt:*cpp* query values)))
 
 (defun ini ()
   (setf *file* (app:in-data-path "db"))

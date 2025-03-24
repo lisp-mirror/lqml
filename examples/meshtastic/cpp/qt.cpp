@@ -1,5 +1,6 @@
 #include "qt.h"
 #include <QSqlQuery>
+#include <QSqlRecord>
 #include <QSqlError>
 #include <QNetworkInterface>
 #include <QHostAddress>
@@ -171,7 +172,7 @@ QVariant QT::iniDb(const QVariant& vName) {
   return vName;
 }
 
-QVariant QT::sqlQuery(const QVariant& vQuery, const QVariant& vValues, const QVariant& vCols) {
+QVariant QT::sqlQuery(const QVariant& vQuery, const QVariant& vValues) {
   QVariantList results;
   QSqlQuery sqlQuery(db);
   if (db.open()) {
@@ -182,7 +183,7 @@ QVariant QT::sqlQuery(const QVariant& vQuery, const QVariant& vValues, const QVa
       sqlQuery.addBindValue(value);
     }
     if (sqlQuery.exec()) {
-      auto cols = vCols.toInt();
+      auto cols = sqlQuery.record().count();
       while (sqlQuery.next()) {
         if (cols > 1) {
           QVariantList list;
