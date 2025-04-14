@@ -24,8 +24,7 @@
 
 (defun delete-image (id)
   (query "delete from images where id = ?"
-         id)
-  (values))
+         id))
 
 (defun delete-all-images ()
   (query "delete from images"))

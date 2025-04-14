@@ -40,7 +40,7 @@ $ devel-su pkcon refresh
 $ devel-su pkcon install zypper
 $ devel-su zypper install gcc make
 ```
-You may also needed to edit `ecl-23.9.9/src/gmp/configure`, and replace all
+You may also need to edit `ecl-23.9.9/src/gmp/configure`, and replace all
 occurrences of `linux*android*)` with `linux-android*)`.
 
 After compiling and installing ECL, add this soft link:
