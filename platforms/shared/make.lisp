@@ -37,16 +37,19 @@
 
 (ext:install-bytecodes-compiler)
 
-(when *ql-libs*
+(when (or *ql-libs*
+          (eql :fasl *build-type*)) ; load Quicklisp for finding systems
   (let ((home (user-homedir-pathname)))
     #+ios
     (setf home (make-pathname :directory
                               (remove "Library" (pathname-directory home)
                                       :test 'string=)))
     (let ((quicklisp-init (merge-pathnames "quicklisp/setup.lisp" home)))
-      (when (probe-file quicklisp-init)
-        (load quicklisp-init))))
-  (load *ql-libs*)) ; eventual, not yet installed dependencies
+      (if (probe-file quicklisp-init)
+          (load quicklisp-init)
+          (require :ecl-quicklisp))))
+  (when *ql-libs*
+    (load *ql-libs*))) ; eventual, not yet installed dependencies
 
 (asdf:load-system *asdf-system*)
 
@@ -80,8 +83,13 @@
 
 (in-package :cl-user)
 
-(defun c:build-fasl (file &rest _)
-  ;; do nothing (not needed when cross-compiling)
+(defvar *build-fasl-orig* (symbol-function 'c:build-fasl))
+
+(defun c:build-fasl (file &rest args)
+  (when (eql :fasl *build-type*)
+    #+android
+    (setf c::*ld-libs* "") ; prevent link error
+    (apply *build-fasl-orig* file args))
   file)
 
 ;;; --- HACK end ---
