@@ -74,6 +74,7 @@ android {
   ANDROID_MIN_SDK_VERSION    = 21
   ANDROID_TARGET_SDK_VERSION = 34
   ANDROID_EXTRA_LIBS         += $$ECL/lib/libecl.so
+  ANDROID_EXTRA_LIBS         += ../../../platforms/android/lib/libsqlite3.so # for Quicklisp libs
   ANDROID_PACKAGE_SOURCE_DIR = ../platforms/android
 
   # OpenSSL libs can be downloaded from: https://github.com/KDAB/android_openssl
@@ -145,6 +146,12 @@ INCLUDEPATH += ../../../src/cpp
 
 HEADERS += ../../src/cpp/main.h   cpp/qt.h
 SOURCES += ../../src/cpp/main.cpp cpp/qt.cpp
+
+unix {
+  QT      += serialport
+  HEADERS += cpp/usb/usb.h
+  SOURCES += cpp/usb/usb.cpp
+}
 
 RESOURCES += $$files(qml/*)
 RESOURCES += $$files(i18n/*.qm)
