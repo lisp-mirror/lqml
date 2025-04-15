@@ -85,10 +85,12 @@
 
 (defvar *build-fasl-orig* (symbol-function 'c:build-fasl))
 
+#+android
+(when (eql :fasl *build-type*)
+  (setf c::*ld-libs* ""))
+
 (defun c:build-fasl (file &rest args)
   (when (eql :fasl *build-type*)
-    #+android
-    (setf c::*ld-libs* "") ; prevent link error
     (apply *build-fasl-orig* file args))
   file)
 
