@@ -42,7 +42,7 @@
 ;;; check version
 
 #+(or android ios)
-(defconstant +version+ 6)
+(defconstant +version+ 7)
 
 #+(or android ios)
 (let ((.version (merge-pathnames ".version")))

@@ -184,6 +184,7 @@ version of it on your mobile device.
 $ECL_ANDROID/../ecl-android-host/bin/ecl --norc \
   --load ~/lqml/platforms/android/cross-compile.lisp
 
+> (setf c::*ld-libs* "")   ; prevent link error
 > (compile-file "my.lisp") ; will produce 'my.fas'
 ```
 
