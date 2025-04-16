@@ -37,9 +37,6 @@ Item {
           default: return
         }
         main.log("[status] " + state)
-        if (status === WebSocket.Closed) {
-          Lisp.call("clog:webview/on-close")
-        }
       })
     }
 

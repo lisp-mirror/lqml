@@ -35,11 +35,9 @@ Item {
   Button {
     id: reload
     anchors.bottom: parent.bottom
+    font.pixelSize: 18
     text: "Reload"
     onClicked: {
-      if (Qt.platform.os !== "ios") {
-        Lisp.call("clog:webview/on-close")
-      }
       browser.reload()
     }
   }
@@ -47,6 +45,7 @@ Item {
   Button {
     anchors.bottom: parent.bottom
     anchors.right: parent.right
+    font.pixelSize: 18
     text: "log/REPL"
     onClicked: view.currentIndex = 1
   }

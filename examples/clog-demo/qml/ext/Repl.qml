@@ -11,6 +11,7 @@ Item {
     z: 1
 
     Text {
+      font.pixelSize: 18
       text: "REPL"
       anchors.verticalCenter: show.verticalCenter
       visible: !show.checked

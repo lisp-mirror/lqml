@@ -69,6 +69,8 @@ android {
     QT += androidextras
   }
 
+  ANDROID_MIN_SDK_VERSION    = 21
+  ANDROID_TARGET_SDK_VERSION = 34
   ANDROID_EXTRA_LIBS         += $$ECL/lib/libecl.so
   ANDROID_PACKAGE_SOURCE_DIR = ../platforms/android
 

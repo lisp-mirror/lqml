@@ -1,4 +1,4 @@
-*This example is outdated and not really useful anymore, sorry.*
+*This example has been updated in 2025 to CLOG version 2.2.*
 
 
 Try it
@@ -23,7 +23,7 @@ for installing the Slime sources where this example can find them.
 
 **Important**: you need to put this fork of CLOG in your
 `~/quicklisp/local-projects/` directory:
-[CLOG for mobile](https://github.com/pls153/clog).
+[CLOG for mobile](https://gitlab.com/eql/clog-for-mobile/-/blob/main/clog-2.2.tgz).
 
 If you want to run this example on the desktop, you need to uncomment the Qt
 WebEngine dependency in [../../src/lqml.pro](../../src/lqml.pro) and rebuild

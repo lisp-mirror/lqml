@@ -41,12 +41,12 @@
                    "/lib/ecl-*/")))
       (shell (cc "cp " lib "*.doc " *assets*))
       (shell (cc "cp -r " lib "encodings " *assets*))))
-  (shell (cc "rm -r " *assets* "htm/*")) ; may have changed
-  (shell (cc "cp -r ../clog-assets/htm " *assets*))
+  (shell (cc "rm -r " *assets* "static-files/*")) ; may have changed
+  (shell (cc "cp -r ../clog-assets/static-files " *assets*))
   (shell (cc "cp -r ../clog-assets/*.asd " *assets*)))
 
 #+ios
-(with-open-file (s (merge-pathnames "htm/js/boot.js" *assets*)
+(with-open-file (s (merge-pathnames "static-files/js/boot.js" *assets*)
                    :direction :output :if-exists :append)
   (write-line "ios = true;" s))
 

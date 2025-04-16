@@ -4,9 +4,12 @@
 
 (in-package :clog-demo-1)
 
+(defparameter *app-mode* nil
+  "Run application once and shutdown")
+
 ;; Game Display
-(defconstant display-width  300)
-(defconstant display-height 450)
+(defconstant display-width 375)
+(defconstant display-height 375)
 
 ;; Snake Parameters
 (defconstant initial-length 5)
@@ -15,8 +18,8 @@
 (deftype snake-direction-type () '(member :left :right :up :down))
 
 (defun new-food ()
-  (list (random (floor (- (/ display-width segment-size) 1))) 
-	(random (floor (- (/ display-height segment-size) 1)))))
+  (list (random (floor (- (/ display-width segment-size) 1)))
+        (random (floor (- (/ display-height segment-size) 1)))))
 
 (defclass app-data ()
   ((snake-direction
@@ -34,7 +37,7 @@
 
 (defun display-splash (body)
   (let* ((splash
-	   (create-div body :content
+           (create-div body :content
 "<H1>(Sparky The Snake)</H1>
  <br />
  <p>Use your keyboard to move Sparky to pick up batteries.</p>
@@ -42,7 +45,7 @@
  If sparky hits his tail he electrocute himself to <b>death!!</b>
  <br /><br />
   Use the arrow keys or a,w,s,d for direction keys.<br/><br/>"))
-	 (ticker (create-span splash)))
+         (ticker (create-span splash)))
     (setf (width splash) "100%")
     (setf (text-alignment splash) :center)
     (dotimes (n 10)
@@ -51,81 +54,82 @@
     (setf (hiddenp splash) t)))
 
 (defun local-file (file)
-  (format nil "file://~A" (merge-pathnames file)))
+  #+android file
+  #-android (format nil "file://~A" (merge-pathnames (x:cc "static-files/" file))))
 
 (defun paint (body cx app)
   (let ((game-over nil)
-	(head-cell (car (snake app))))
+        (head-cell (car (snake app))))
     (flet ((draw-segment (cell)
-	     (fill-rect cx
-			(* (car cell) segment-size)
-			(* (cadr cell) segment-size)
-			segment-size
-			segment-size))
-	   (self-collision ()
-	     (dolist (cell (snake app))
-	       (when (equal cell head-cell)
-		 (return t)))))
+             (fill-rect cx
+                        (* (car cell) segment-size)
+                        (* (cadr cell) segment-size)
+                        segment-size
+                        segment-size))
+           (self-collision ()
+             (dolist (cell (snake app))
+               (when (equal cell head-cell)
+                 (return t)))))
       (cond ((eq :right (snake-direction app))
-	      (setf head-cell (list (1+ (car head-cell))
-				    (cadr head-cell))))
-	    ((eq :left (snake-direction app))
-	      (setf head-cell (list (1- (car head-cell))
-				    (cadr head-cell))))
-	    ((eq :up (snake-direction app))
-	      (setf head-cell (list (car head-cell)
-				    (1- (cadr head-cell)))))
-	    ((eq :down (snake-direction app))
-	      (setf head-cell (list (car head-cell)
-				    (1+ (cadr head-cell))))))
+              (setf head-cell (list (1+ (car head-cell))
+                                    (cadr head-cell))))
+            ((eq :left (snake-direction app))
+              (setf head-cell (list (1- (car head-cell))
+                                    (cadr head-cell))))
+            ((eq :up (snake-direction app))
+              (setf head-cell (list (car head-cell)
+                                    (1- (cadr head-cell)))))
+            ((eq :down (snake-direction app))
+              (setf head-cell (list (car head-cell)
+                                    (1+ (cadr head-cell))))))
       (cond ((or (< (car head-cell) 0)
-	      (< (cadr head-cell) 0)
-	      (>= (* (car head-cell) segment-size) display-width)
-	      (>= (* (cadr head-cell) segment-size) display-height)
-	      (self-collision))
-	     (fill-style cx :red)
-	     (font-style cx "bold 20px sans-serif")
-	     (fill-text cx "GAME OVER" 30 30)
-	     (play-media (create-audio body
-                                       :source (local-file "htm/demo/game-over.wav")
+              (< (cadr head-cell) 0)
+              (>= (* (car head-cell) segment-size) display-width)
+              (>= (* (cadr head-cell) segment-size) display-height)
+              (self-collision))
+             (setf (fill-style cx) :red
+                   (font-style cx) "bold 20px sans-serif")
+             (fill-text cx "GAME OVER" 30 30)
+             (play-media (create-audio body
+                                       :source (local-file "demo/game-over.wav")
                                        :controls nil))
-	     (setf game-over t))
-	    (t
-	     (fill-style cx :purple)
-	     (push head-cell (snake app))
-	     (dolist (cell (snake app))
-	       (draw-segment cell))
-	     (fill-style cx :white)
-	     (cond ((equal head-cell (food app))
-		    (fill-text cx (format nil "Score: ~A" (score app))
-			       5 (- display-height 15))
-		    (setf (score app) (+ (score app) 10))
-		    (fill-style cx :green)
-		    (fill-text cx (format nil "Score: ~A" (score app))
-			       5 (- display-height 15))
-		    (play-media (create-audio body
-                                              :source (local-file "htm/demo/eat.wav")
+             (setf game-over t))
+            (t
+             (setf (fill-style cx) :purple)
+             (push head-cell (snake app))
+             (dolist (cell (snake app))
+               (draw-segment cell))
+             (setf (fill-style cx) :white)
+             (cond ((equal head-cell (food app))
+                    (fill-text cx (format nil "Score: ~A" (score app))
+                               5 (- display-height 15))
+                    (setf (score app) (+ (score app) 10))
+                    (setf (fill-style cx) :green)
+                    (fill-text cx (format nil "Score: ~A" (score app))
+                               5 (- display-height 15))
+                    (play-media (create-audio body
+                                              :source (local-file "demo/eat.wav")
                                               :controls nil))
-		    (setf (food app) (new-food)))
-		   (t
-		    (draw-segment (car (last (snake app))))
-		    (setf (snake app) (butlast (snake app)))))	  
-	     (fill-style cx :brown)
-	     (draw-segment (food app))))      
-	game-over)))
+                    (setf (food app) (new-food)))
+                   (t
+                    (draw-segment (car (last (snake app))))
+                    (setf (snake app) (butlast (snake app)))))
+             (setf (fill-style cx) :brown)
+             (draw-segment (food app))))
+        game-over)))
 
 (defun on-key-down (obj event)
   (let ((app      (connection-data-item obj "app-data"))
-	(key      (getf event :key)))
+        (key      (getf event :key)))
     (cond ((or (equalp key "ArrowLeft") (equalp key "a"))
-	   (setf (snake-direction app) :left))
-	  ((or (equalp key "ArrowUp") (equalp key "w"))
-	   (setf (snake-direction app) :up))
-	  ((or (equalp key "ArrowDown") (equalp key "s"))
-	   (setf (snake-direction app) :down))
-	  ((or (equalp key "ArrowRight") (equalp key "d"))
-	   (setf (snake-direction app) :right)))))
-	  
+           (setf (snake-direction app) :left))
+          ((or (equalp key "ArrowUp") (equalp key "w"))
+           (setf (snake-direction app) :up))
+          ((or (equalp key "ArrowDown") (equalp key "s"))
+           (setf (snake-direction app) :down))
+          ((or (equalp key "ArrowRight") (equalp key "d"))
+           (setf (snake-direction app) :right)))))
+
 (defun on-click (obj)
   (let ((app     (connection-data-item obj "app-data"))
         (btn-txt (text obj)))
@@ -137,19 +141,19 @@
 
 (defun start-game (body)
   (let* ((app       (connection-data-item body "app-data"))
-	 (disp      (create-canvas body
-				   :width display-width
-				   :height display-height))
-	 (br        (create-br body))
-	 (controls  (create-div body))
-	 (left-btn  (create-button controls :content "<h3><pre> <-- </pre></h3>"))
-	 (right-btn (create-button controls :content "<h3><pre> --> </pre></h3>"))
-	 (up-btn    (create-button controls :content "<h3><pre> -^- </pre></h3>"))
-	 (down-btn  (create-button controls :content "<h3><pre> -v- </pre></h3>"))
-	 context)
+         (disp      (create-canvas body
+                                   :width display-width
+                                   :height display-height))
+         (br        (create-br body))
+         (controls  (create-div body))
+         (left-btn  (create-button controls :content "<h3><pre> <-- </pre></h3>"))
+         (right-btn (create-button controls :content "<h3><pre> --> </pre></h3>"))
+         (up-btn    (create-button controls :content "<h3><pre> -^- </pre></h3>"))
+         (down-btn  (create-button controls :content "<h3><pre> -v- </pre></h3>"))
+         context)
     (declare (ignore br))
     ;; Initialize display
-    (setf (background-color body) :orange)    
+    (setf (background-color body) :orange)
     (setf (display disp) :block)
     (setf (background-color disp) :white)
     (set-margin disp :auto :auto :auto :auto)
@@ -160,17 +164,17 @@
     (dotimes (n initial-length)
       (push (list n 0) (snake app)))
     (setf context (create-context2d disp))
-    (font-style context "normal 20px sans-serif")
-    (fill-style context :green)
+    (setf (font-style context) "normal 20px sans-serif"
+          (fill-style context) :green)
     (fill-text context (format nil "Score: ~A" (score app))
-	       5 (- display-height 15))
+               5 (- display-height 15))
     (set-on-key-down body      #'on-key-down :disable-default t)
     (set-on-click    left-btn  #'on-click)
     (set-on-click    right-btn #'on-click)
     (set-on-click    up-btn    #'on-click)
     (set-on-click    down-btn  #'on-click)
     (play-media (create-audio body
-                              :source (local-file "htm/demo/start.wav")
+                              :source (local-file "demo/start.wav")
                               :controls nil))
     ;; Game loop
     (loop
