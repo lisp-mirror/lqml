@@ -59,7 +59,8 @@
 ;; needed for :sockets (linked as static lib)
 (asdf:defsystem :sb-bsd-sockets)
 
-;; eventual ssl libs (not included in LQML) need to be loaded manually
+;; eventual ssl libs need to be loaded manually
+;; TODO: still needed?
 #+android
 (when (probe-file "libssl.so")
   (ffi:load-foreign-library "libcrypto.so")
