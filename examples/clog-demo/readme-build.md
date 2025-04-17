@@ -2,7 +2,7 @@
 Prepare
 -------
 
-First you need to patch the ASDF from ECL android. So, switch to where you have
+First you need to patch ASDF from ECL android. So, switch to where you have
 ecl-android installed, and edit file: 'contrib/asdf/asdf.lisp'.
 
 Find the following function, and replace it with this code:
@@ -17,17 +17,17 @@ Find the following function, and replace it with this code:
 ```
 You need to rebuild ECL android after this; in order to make a clean rebuild,
 remove the following directories:
-  
+```
   rm -fr ecl-android
   rm -fr ecl-android-host
   rm -fr build
-
+```
 Then run the 2 build scripts again.
 
 (Notes: this is needed because on android some paths are returned as logical
 pathnames, which need translation for the way they are used in CLOG. And in
 case the ASDF source files are not present, like here, the above path should
-not return NIL, which would give a runtime error, so we simply return the app
+not return `nil`, which would give a runtime error, so we simply return the app
 path instead.)
 
 --

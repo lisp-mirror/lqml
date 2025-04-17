@@ -7,6 +7,10 @@ Try it
 You can download an APK (android devices) of this example from DropBox:
 [CLOG demo](https://www.dropbox.com/s/h5wy57niq4g12ec/CLOG-demo.apk?dl=0).
 
+**Please note**: startup time on mobile is now greatly improved, by simply
+skipping time consuming crypto initialization, not needed for a local
+connection, like in this example.
+
 
 
 Prepare
