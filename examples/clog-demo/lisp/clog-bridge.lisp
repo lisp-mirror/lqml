@@ -3,8 +3,7 @@
 (in-package :clog)
 
 (setf clog-connection::*send-to-webview*
-      #+ios (lambda (js) (qml:qjs |send| ui:*server* js))
-      #-ios (lambda (js) (qml:q! |runJavaScript| ui:*browser* js nil)))
+      (lambda (js) (qml:qjs |send| ui:*server* js)))
 
 (defun webview/on-new-connection ()
   (clog-connection::handle-new-connection 'qml-webview nil))

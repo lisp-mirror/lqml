@@ -2,8 +2,6 @@ import QtQuick 2.15
 import QtWebSockets 1.15
 import "." as Ext
 
-// for iOS only
-
 Item {
   WebSocketServer {
     id: server

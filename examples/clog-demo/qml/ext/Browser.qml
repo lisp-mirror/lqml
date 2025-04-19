@@ -1,12 +1,10 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtWebView 1.15
+import "." as Ext
 
 Item {
-  Loader {
-    active: (Qt.platform.os === "ios")
-    source: "Server.qml"
-  }
+  Ext.Server {}
 
   WebView {
     id: browser
@@ -16,18 +14,8 @@ Item {
     visible: !busy.visible
 
     onLoadingChanged: {
-      if (Qt.platform.os !== "ios") {
-        if (loadRequest.status === WebView.LoadSucceededStatus) {
-          Lisp.call("clog:webview/on-new-connection")
-        }
-      }
-    }
-
-    // hack to get notified from the browser, see 'boot.js'
-    onTitleChanged: {
-      if ((title !== "-") && (title !== "boot.html")) {
-        Lisp.call("clog:webview/on-message", title)
-        main.log(title)
+      if (loadRequest.status === WebView.LoadSucceededStatus) {
+        Lisp.call("clog:webview/on-new-connection")
       }
     }
   }

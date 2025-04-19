@@ -7,7 +7,7 @@ Try it
 You can download an APK (android devices) of this example from DropBox:
 [CLOG demo](https://www.dropbox.com/s/h5wy57niq4g12ec/CLOG-demo.apk?dl=0).
 
-**Please note**: startup time on mobile is now greatly improved, by simply
+**Please note**: startup time on mobile is greatly improved here, by simply
 skipping time consuming crypto initialization, not needed for a local
 connection, like in this example.
 
@@ -41,14 +41,11 @@ also needed on the desktop, if used with LQML).
 Info
 ----
 
-This shows how to run a CLOG app locally on mobile. It uses two different
-approaches, depending on the OS:
+This shows how to run a CLOG app locally on mobile. It uses a simple local
+**websocket-server**.
 
-1. direct calls to the browser to run JS, and a small hack to call back to CLOG
-   on browser events
-
-2. a simple local websocket-server; this is needed on iOS, where the above
-   approach doesn't work
+For android, please see [AndroidManifest.xml](platforms/android/AndroidManifest.xml)
+for the `@xml/network_security_config` file needed to allow a local connection.
 
 The webview is the native one of the mobile device, which has some
 restrictions: it can't overlap with QML items, and things like swiping don't
