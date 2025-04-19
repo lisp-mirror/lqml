@@ -19,13 +19,13 @@ if (typeof clog_debug == 'undefined') {
     clog_debug = false;
 }
 
-function Pingws() {
+function Ping_ws() {
     if (ws.readyState == 1) {
         ws.send ('0');
     }
 }
 
-function Shutdownws(event) {
+function Shutdown_ws(event) {
     if (ws != null) {
 	ws.onerror = null;
 	ws.onclose = null;
@@ -38,7 +38,7 @@ function Shutdownws(event) {
     }
 }
 
-function Setupws() {
+function Setup_ws() {
     ws.onmessage = function (event) {
         try {
             if (clog_debug == true) {
@@ -57,7 +57,7 @@ function Setupws() {
 	ws = new WebSocket (adr  + '?r=' + clog['connection_id']);
         ws.onopen = function (event) {
             console.log ('reconnect successful');
-            Setupws();
+            Setup_ws();
         }
         ws.onclose = function (event) {
             console.log ('reconnect failure');
@@ -74,14 +74,14 @@ function Setupws() {
     ws.onclose = function (event) {
         if (event.code && event.code === 1000) {
             console.log("WebSocket connection got normal close from server. Don't reconnect.");
-            Shutdownws(event);
+            Shutdown_ws(event);
         } else {
 	    rc("onclose - trying reconnnect");
         }
     }
 }
 
-function Openws() {
+function Open_ws() {
     /*
     if (location.protocol == 'https:') {
 	adr = 'wss://' + location.hostname;
@@ -110,7 +110,7 @@ function Openws() {
     if (ws != null) {
         ws.onopen = function (event) {
             console.log ('connection successful');
-            Setupws();
+            Setup_ws();
         }
         pingerid = setInterval (function () {Pingws ();}, 10000);
     } else {
@@ -119,5 +119,5 @@ function Openws() {
 }
 
 $( document ).ready(function() {
-    if (ws == null) { Openws(); }
+    if (ws == null) { Open_ws(); }
 });
