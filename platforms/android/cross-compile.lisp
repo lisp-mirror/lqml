@@ -29,7 +29,7 @@
 (setf c::*cc*              (let ((path (or (probe-file (cc *ndk-toolchain*
                                                            "/bin/"
                                                            (if *32bit* "armv7a-linux-androideabi" *arch-triple*)
-                                                           "21-clang"))
+                                                           "21-clang")) ; 21: min SDK version
                                            (error "clang compiler not found"))))
                              (namestring path))
       c::*ld*              (cc *ndk-toolchain* "/bin/" *arch-triple* "-ld")
