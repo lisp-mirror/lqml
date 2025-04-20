@@ -112,7 +112,7 @@ function Open_ws() {
             console.log ('connection successful');
             Setup_ws();
         }
-        pingerid = setInterval (function () {Pingws ();}, 10000);
+        pingerid = setInterval (function () {Ping_ws ();}, 10000);
     } else {
             document.writeln ('If you are seeing this your browser or your connection to the internet is blocking websockets.');
     }

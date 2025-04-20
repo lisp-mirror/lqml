@@ -133,7 +133,6 @@
 (defun on-click (obj)
   (let ((app     (connection-data-item obj "app-data"))
         (btn-txt (text obj)))
-    ;; LQML note: ignore whitespace (see hack in 'boot.js')
     (cond ((search "<--" btn-txt) (setf (snake-direction app) :left))
           ((search "-->" btn-txt) (setf (snake-direction app) :right))
           ((search "-^-" btn-txt) (setf (snake-direction app) :up))
