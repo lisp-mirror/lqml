@@ -5,7 +5,7 @@
   :components ((:file "lisp/package")
                (:file "lisp/ini")
                (:file "lisp/ui-vars")
-               (:file "lisp/swank-quicklisp")
+               #+mobile (:file "lisp/swank-quicklisp")
                (:file "lisp/eval")
                (:file "lisp/clog-bridge")
                (:file "clog-assets/demos/01-demo")

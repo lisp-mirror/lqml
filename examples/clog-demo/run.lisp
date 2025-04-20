@@ -2,9 +2,10 @@
 
 (require :asdf)
 
-(pushnew :mobile *features*)
-
-(asdf:load-system :clog)
+(progn
+  (pushnew :mobile *features*)
+  (asdf:load-system :clog)
+  (setf *features* (remove :mobile *features*)))
 
 (push (merge-pathnames "./")
       asdf:*central-registry*)

@@ -16,7 +16,7 @@ Item {
       client.sendTextMessage(message)
     }
 
-    onClientConnected: {
+    onClientConnected: (webSocket) => {
       client = webSocket
       webSocket.objectName = ++counter
       main.log("[new] " + counter)

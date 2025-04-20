@@ -3,7 +3,7 @@ Prepare
 -------
 
 First you need to patch ASDF from ECL android. So, switch to where you have
-ecl-android installed, and edit file: 'contrib/asdf/asdf.lisp'.
+ecl-android installed, and edit file: `contrib/asdf/asdf.lisp`.
 
 Find the following function, and replace it with this code:
 ```

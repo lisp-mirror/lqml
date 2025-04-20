@@ -9,15 +9,9 @@ Item {
   WebView {
     id: browser
     objectName: "browser"
-    width: parent. width
+    width: parent.width
     height: parent.height - reload.height
     visible: !busy.visible
-
-    onLoadingChanged: {
-      if (loadRequest.status === WebView.LoadSucceededStatus) {
-        Lisp.call("clog:webview/on-new-connection")
-      }
-    }
   }
 
   Button {
