@@ -10,8 +10,8 @@
     (unless (x:empty-string ip)
       (format nil "http://~A:8080/" ip))))
 
-(defvar *remote-ip* #+interpreter nil
-                    #-interpreter #.(remote-ip))
+(defvar *remote-ip* #+ecl-bytecmp nil
+                    #-ecl-bytecmp #.(remote-ip))
 
 (defun load* (file)
   (load (make-string-input-stream (curl (x:cc *remote-ip* file)))))

@@ -52,7 +52,6 @@
 
 #+mobile
 (progn
-  (pushnew :interpreter *features*)
   (defvar *asdf-system*  "lib")
   (defvar *ql-libs*      (cc *current* "ql-libs.lisp"))
   (defvar *build-type*   :fasl)

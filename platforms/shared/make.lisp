@@ -57,7 +57,7 @@
 
 (ext:install-c-compiler)
 
-(setf *features* (remove :interpreter *features*))
+(setf *features* (remove :interpreter *features*)) ; now obsolete, see #-ecl-bytecmp
 
 (load (merge-pathnames (format nil "platforms/~A/cross-compile"
                                #+android "android"

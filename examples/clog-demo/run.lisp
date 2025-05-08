@@ -10,8 +10,7 @@
 (push (merge-pathnames "./")
       asdf:*central-registry*)
 
-(push :interpreter *features*)
-(push :clog-loaded *features*)
+(push :depends-loaded *features*)
 
 (asdf:operate 'asdf:load-source-op :app)
 

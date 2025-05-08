@@ -45,7 +45,7 @@ StackView {
     Lisp.call("editor:orientation-changed", Screen.orientation)
   }
 
-  Keys.onPressed: {
+  Keys.onPressed: (event) => {
     if (event.key === Qt.Key_Back) {
       event.accepted = true
       Lisp.call("editor:back-pressed")

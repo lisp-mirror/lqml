@@ -70,7 +70,6 @@
 
 #+mobile
 (progn
-  (pushnew :interpreter *features*)
   (defvar *asdf-system*  "app")
   (defvar *ql-libs*      (cc *current* "ql-libs.lisp"))
   (defvar *init-name*    "ini_app")

@@ -33,7 +33,6 @@
 
 #+mobile
 (progn
-  (pushnew :interpreter  *features*)
   (defvar *asdf-system*  "lqml")
   (defvar *init-name*    "ini_LQML")
   (defvar *library-path* (format nil "platforms/~A/lib/"

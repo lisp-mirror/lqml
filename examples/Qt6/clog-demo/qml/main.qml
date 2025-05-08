@@ -33,7 +33,7 @@ Rectangle {
     currentIndex: view.currentIndex
   }
 
-  Keys.onPressed: {
+  Keys.onPressed: (event) => {
     if (event.key === Qt.Key_Back) {
       event.accepted = true
       if (view.currentIndex === 0) {

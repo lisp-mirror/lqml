@@ -2,7 +2,7 @@
 
 (in-package :qml)
 
-#-interpreter
+#-ecl-bytecmp
 (ffi:clines "extern void init_lib_ASDF(cl_object);")
 
 (defun %sym (symbol package)
@@ -12,6 +12,7 @@
 
 (defun ensure-asdf ()
   (unless (find-package :asdf)
+    #-ecl-bytecmp
     (ffi:c-inline nil nil :void "ecl_init_module(NULL, init_lib_ASDF)" :one-liner t)
     (in-package :qml-user))
   :asdf)

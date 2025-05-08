@@ -484,7 +484,7 @@ cl_object qnull(cl_object l_arg) {
   /// args: (qt-object)
   /// Only useful if used with UNLESS, in order to check for a valid pointer.
   /// Returns T if the argument is not of type QT-OBJECT.
-  ///   (unless (qnull ui:*item*)
+  ///   (unless (qnull (find-quick-item ui:*label*))
   ///     ...)
   QObject* qobject = toQObjectPointer(l_arg);
   ecl_return1(ecl_process_env(), (qobject == nullptr) ? ECL_T : ECL_NIL);

@@ -1,7 +1,7 @@
 (defsystem :app
   :serial t
   ;; requires this CLOG fork: https://gitlab.com/eql/clog-for-mobile/-/blob/main/clog-2.2.tgz
-  :depends-on (#-clog-loaded :clog)
+  :depends-on (#-depends-loaded :clog)
   :components ((:file "lisp/package")
                (:file "lisp/ini")
                (:file "lisp/ui-vars")
