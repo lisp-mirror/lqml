@@ -18,6 +18,7 @@
 (defun qfind-child (a b))
 (defun %qfind-children (a b c))
 (defun qfrom-utf8 (a))
+(defun qinstall-translator (a))
 (defun qinvoke-method (a b c d))
 (defun %qload-c++ (a b))
 (defun %qlog (a))

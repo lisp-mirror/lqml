@@ -65,6 +65,7 @@ cl_object qfind_child             (cl_object, cl_object);
 cl_object qfind_children2         (cl_object, cl_object, cl_object);
 cl_object qfrom_utf8              (cl_object);
 cl_object qto_utf8                (cl_object);
+cl_object qinstall_translator     (cl_object);
 cl_object qinvoke_method          (cl_object, cl_object, cl_object, cl_object);
 cl_object qload_cpp               (cl_object, cl_object);
 cl_object qload_rc                (cl_object);

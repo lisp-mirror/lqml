@@ -37,6 +37,7 @@
    #:qexit
    #:qfrom-utf8
    #:qget
+   #:qinstall-translator
    #:qset
    #:qlater
    #:qlater-sequence

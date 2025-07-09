@@ -182,6 +182,14 @@
     (qget *quick-view* |width|)
 
 
+<b>qinstall-translator (language)</b>
+
+  Only needed for changing the UI language at runtime.
+  Returns the passed language string if successful.
+
+    (qinstall-translator "es") ; assumes file 'es.qm' (spanish) is present in 'i18n/'
+
+
 <b>qjs (function item/name &rest arguments)</b>
 
   Fast and convenient way to call JS functions defined in QML. You may pass

@@ -8,6 +8,7 @@
 #include <QThread>
 #include <QFile>
 #include <QDir>
+#include <QTranslator>
 #include <QtGui/QClipboard>
 #include <QtGui/QGuiApplication>
 #include <QtQml/QQmlEngine>
@@ -47,6 +48,7 @@ void iniCLFunctions() {
   DEFUN ("%qfind-children",         qfind_children2,         3)
   DEFUN ("qfrom-utf8",              qfrom_utf8,              1)
   DEFUN ("qto-utf8",                qto_utf8,                1)
+  DEFUN ("qinstall-translator",     qinstall_translator,     1)
   DEFUN ("qinvoke-method",          qinvoke_method,          4)
   DEFUN ("%qload-c++",              qload_cpp,               2)
   DEFUN ("qload-rc",                qload_rc,                1)
@@ -488,6 +490,27 @@ cl_object qnull(cl_object l_arg) {
   ///     ...)
   QObject* qobject = toQObjectPointer(l_arg);
   ecl_return1(ecl_process_env(), (qobject == nullptr) ? ECL_T : ECL_NIL);
+}
+
+cl_object qinstall_translator(cl_object l_lang) {
+  /// args: (language)
+  /// Only needed for changing the UI language at runtime.
+  /// Returns the passed language string if successful.
+  ///   (qinstall-translator "es") ; assumes file 'es.qm' (spanish) is present in 'i18n/'
+  ecl_process_env()->nvalues = 1;
+  QString lang(toQString(l_lang));
+  if (!lang.isEmpty()) {
+    QTranslator translator;
+    QString trFile(QDir::currentPath() + "/i18n");
+    if ((QFile::exists(trFile) && translator.load(QLocale(lang), QString(), QString(), trFile))
+        || translator.load(QLocale(lang), QString(), QString(), ":/i18n")) {
+      QCoreApplication::installTranslator(&translator);
+      LQML::quickView->engine()->retranslate();
+      return l_lang;
+    }
+  }
+  error_msg("QINSTALL-TRANSLATOR", LIST1(l_lang));
+  return ECL_NIL;
 }
 
 cl_object qinvoke_method(cl_object l_obj, cl_object l_name, cl_object l_args, cl_object l_qjs_call) {
