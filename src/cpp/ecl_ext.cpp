@@ -501,8 +501,8 @@ cl_object qinstall_translator(cl_object l_lang) {
   QString lang(toQString(l_lang));
   if (!lang.isEmpty()) {
     QTranslator translator;
-    QString trFile(QDir::currentPath() + "/i18n");
-    if ((QFile::exists(trFile) && translator.load(QLocale(lang), QString(), QString(), trFile))
+    QString trPath(QDir::currentPath() + "/i18n");
+    if ((QFile::exists(trPath) && translator.load(QLocale(lang), QString(), QString(), trPath))
         || translator.load(QLocale(lang), QString(), QString(), ":/i18n")) {
       QCoreApplication::installTranslator(&translator);
       LQML::quickView->engine()->retranslate();

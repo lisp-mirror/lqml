@@ -72,7 +72,7 @@ android {
   }
 
   ANDROID_MIN_SDK_VERSION    = 21
-  ANDROID_TARGET_SDK_VERSION = 34
+  ANDROID_TARGET_SDK_VERSION = 35
   ANDROID_EXTRA_LIBS         += $$ECL/lib/libecl.so
   ANDROID_EXTRA_LIBS         += ../../../platforms/android/lib/libsqlite3.so # for Quicklisp libs
   ANDROID_PACKAGE_SOURCE_DIR = ../platforms/android
