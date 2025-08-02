@@ -71,8 +71,8 @@ android {
     QT += androidextras
   }
 
-  ANDROID_MIN_SDK_VERSION    = 21
-  ANDROID_TARGET_SDK_VERSION = 35
+  ANDROID_MIN_SDK_VERSION    = 21 # set >= 25 when using Qt6
+  ANDROID_TARGET_SDK_VERSION = 34 # starting from 35 you need to use Qt6, NDK >= 25
   ANDROID_EXTRA_LIBS         += $$ECL/lib/libecl.so
   ANDROID_EXTRA_LIBS         += ../../../platforms/android/lib/libsqlite3.so # for Quicklisp libs
   ANDROID_PACKAGE_SOURCE_DIR = ../platforms/android
