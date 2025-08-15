@@ -1,4 +1,4 @@
-;;; for Qt6 & NDK 25
+;;; for Qt6.9, NDK 27
 
 (in-package :cl-user)
 
@@ -29,7 +29,7 @@
 (setf c::*cc*              (let ((path (or (probe-file (cc *ndk-toolchain*
                                                            "/bin/"
                                                            (if *32bit* "armv7a-linux-androideabi" *arch-triple*)
-                                                           "25-clang"))
+                                                           "27-clang"))
                                            (error "clang compiler not found"))))
                              (namestring path))
       c::*ld*              (cc *ndk-toolchain* "/bin/" *arch-triple* "-ld")

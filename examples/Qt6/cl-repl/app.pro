@@ -30,7 +30,7 @@ win32:  PRE_TARGETDEPS = tmp/app.lib
 QT          += quick qml quickcontrols2
 TEMPLATE    = app
 CONFIG      += c++17 no_keywords release
-DEFINES     += DESKTOP_APP INI_LISP INI_ASDF INI_ECL_CONTRIB QT_EXTENSION # NO_USB
+DEFINES     += DESKTOP_APP INI_LISP INI_ASDF INI_ECL_CONTRIB QT_EXTENSION NO_USB
 INCLUDEPATH = /usr/local/include
 ECL_VERSION = $$lower($$system(ecl -v))
 ECL_VERSION = $$replace(ECL_VERSION, " ", "-")
@@ -71,17 +71,17 @@ android {
     QT += androidextras
   }
 
-  ANDROID_MIN_SDK_VERSION    = 21
-  ANDROID_TARGET_SDK_VERSION = 34
+  ANDROID_MIN_SDK_VERSION    = 28
+  ANDROID_TARGET_SDK_VERSION = 35
   ANDROID_EXTRA_LIBS         += $$ECL/lib/libecl.so
-  ANDROID_EXTRA_LIBS         += ../../../platforms/android/lib/libsqlite3.so # for Quicklisp libs
+  ANDROID_EXTRA_LIBS         += /home/polos/lqml/platforms/android/lib/libsqlite3.so # for Quicklisp libs
   ANDROID_PACKAGE_SOURCE_DIR = ../platforms/android
 
   # OpenSSL libs can be downloaded from: https://github.com/KDAB/android_openssl
   32bit {
     SSL_PATH = ../../../platforms/android/lib32
   } else {
-    SSL_PATH = ../../../platforms/android/lib
+    SSL_PATH = /home/polos/lqml/platforms/android/lib
   }
   ANDROID_EXTRA_LIBS += $$SSL_PATH/libcrypto.so $$SSL_PATH/libssl.so
 
@@ -147,11 +147,11 @@ INCLUDEPATH += ../../../src/cpp
 HEADERS += ../../src/cpp/main.h   cpp/qt.h
 SOURCES += ../../src/cpp/main.cpp cpp/qt.cpp
 
-unix {
-  QT      += serialport
-  HEADERS += cpp/usb/usb.h
-  SOURCES += cpp/usb/usb.cpp
-}
+#unix {
+#  QT      += serialport
+#  HEADERS += cpp/usb/usb.h
+#  SOURCES += cpp/usb/usb.cpp
+#}
 
 RESOURCES += $$files(qml/*)
 RESOURCES += $$files(i18n/*.qm)
