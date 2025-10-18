@@ -16,14 +16,13 @@ Rectangle {
 
     background: Rectangle {
       Text {
-        id: iconBack
+        id: back
         x: 10
         height: backButton.height
         verticalAlignment: Text.AlignVCenter
-        font.family: fontAwesome.name
-        font.pixelSize: 32
         color: "#007aff"
-        text: "\uf104"
+        font.pixelSize: 18
+        text: qsTr("Back")
       }
 
       Text {
@@ -32,7 +31,7 @@ Rectangle {
         verticalAlignment: Text.AlignVCenter
         font.pixelSize: 20
         font.weight: Font.DemiBold
-        color: iconBack.color
+        color: back.color
         text: "Repl"
         visible: (Qt.platform.os === "ios")
       }
