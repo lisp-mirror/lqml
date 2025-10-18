@@ -23,15 +23,22 @@ StackView {
 
   // fonts (must stay here, before using them below)
 
-  FontLoader { id: fontHack;     source: "fonts/Hack-Regular.ttf" }        // code
+  FontLoader { id: fontHack;     source: "fonts/Hack-Regular.ttf" }
   FontLoader { id: fontHackBold; source: "fonts/Hack-Bold.ttf" }
-  FontLoader { id: fontAwesome;  source: "fonts/fontawesome-webfont.ttf" } // icons
 
   // items
 
   Rectangle {
     id: mainRect
-    color: "lavender"
+    color: "orange"
+
+    Button {
+      id: button
+      anchors.centerIn: parent
+      text: "Click (or wait 10 seconds)"
+
+      onClicked: Lisp.call("app:crash?")
+    }
   }
 
   // dialogs
