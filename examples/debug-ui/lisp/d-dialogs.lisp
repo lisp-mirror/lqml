@@ -8,8 +8,6 @@
 
 (in-package :dialogs)
 
-(defvar *callback* nil)
-
 (defun push-dialog (name)
   "Pushes dialog NAME onto the StackView."
   (qjs |pushDialog| ui:*main* (string-downcase name)))

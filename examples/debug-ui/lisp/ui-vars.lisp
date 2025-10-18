@@ -10,8 +10,8 @@
 
 (in-package :ui)
 
-(defparameter *d-debug-input*  "debug_input")
-(defparameter *d-debug-model*  "debug_model")
-(defparameter *d-debug-text*   "debug_text")
+(defparameter *d-debug-input* "debug_input")
+(defparameter *d-debug-model* "debug_model")
+(defparameter *d-debug-text*  "debug_text")
 
-(defparameter *main*           "main")
+(defparameter *main* "main")

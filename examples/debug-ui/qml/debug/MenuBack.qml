@@ -25,17 +25,6 @@ Rectangle {
         text: qsTr("Back")
       }
 
-      Text {
-        x: 30
-        height: backButton.height * 1.1 // align correction (different font from above)
-        verticalAlignment: Text.AlignVCenter
-        font.pixelSize: 20
-        font.weight: Font.DemiBold
-        color: back.color
-        text: "Repl"
-        visible: (Qt.platform.os === "ios")
-      }
-
       implicitWidth: 90
       color: menuBack.color
     }
