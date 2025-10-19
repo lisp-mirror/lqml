@@ -28,7 +28,7 @@ Howto
 * extract `local-projects/lqml-debug.tgz` under `~/quicklisp/local-projects/`
 * add `lqml-debug` as your very first dependency in your `app.asd`
 * modify your `main.qml` as can be seen in `examples/`
-* comment out evtl. present `eval.lisp` (needed for repl) and `Ext.Repl {}`
+* comment out evtl. present `eval.lisp` (used in simple repl) and `Ext.Repl {}`
 
 
 Important note
