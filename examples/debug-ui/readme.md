@@ -1,4 +1,14 @@
 
+Prepare
+-------
+
+Please copy the app template files first:
+```
+$ cd ..
+$ ./copy.sh debug-ui
+```
+
+
 Info
 ----
 
@@ -12,8 +22,8 @@ This is especially helpful on android, where Lisp issues are hard to debug once
 the app is installed.
 
 
-Prepare
--------
+Howto
+-----
 
 * extract `local-projects/lqml-debug.tgz` under `~/quicklisp/local-projects/`
 * add `lqml-debug` as your very first dependency in your `app.asd`
