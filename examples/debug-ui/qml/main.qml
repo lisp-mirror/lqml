@@ -6,10 +6,9 @@ import 'debug/' as Dbg
 StackView {
   id: main
   objectName: "main"
-  width: 800  // alternatively: Screen.desktopAvailableWidth
-  height: 600 // alternatively: Screen.desktopAvailableHeight
+  width: 800
+  height: 600
   initialItem: mainRect
-  Screen.orientationUpdateMask: Qt.LandscapeOrientation | Qt.PortraitOrientation | Qt.InvertedLandscapeOrientation
 
   // show/hide dialogs
 
