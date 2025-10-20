@@ -3,21 +3,19 @@ import QtQuick.Controls 2.15
 import "ext/" as Ext
 import "debug/" as Dbg
 
-StackView {
+StackView { // *** for debug-ui
   id: main
   width: 400
   height: 650
-  objectName: "main"
-  initialItem: mainRect
+  objectName: "main"    // important
+  initialItem: mainRect // important
 
-  // show/hide dialogs
-
+  // *** for debug-ui
   function pushDialog(name)  {
     switch (name) {
       case "debug": main.push(dialogDebug); break
     }
   }
-
   function popDialog() { main.pop() }
 
   // log
@@ -53,10 +51,6 @@ StackView {
       count: view.count
       currentIndex: view.currentIndex
     }
-
-    // dialogs
-
-    Dbg.DebugDialog { id: dialogDebug }
   }
 
   Keys.onPressed: (event) => {
@@ -69,4 +63,7 @@ StackView {
       }
     }
   }
+
+  // *** for debug-ui
+  Dbg.DebugDialog { id: dialogDebug }
 }
