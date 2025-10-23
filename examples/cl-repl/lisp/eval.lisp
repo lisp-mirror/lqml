@@ -2,8 +2,8 @@
   (:use :cl :qml)
   (:export
    #:*eval-thread*
-   #:*query-dialog*
-   #:*debug-dialog*
+   #:*gui-query-dialog*
+   #:*gui-debug-dialog*
    #:ini
    #:clear-buffers
    #:feed-top-level

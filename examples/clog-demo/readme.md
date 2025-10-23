@@ -1,6 +1,17 @@
 *This example has been updated in 2025 to CLOG version 2.2.*
 
 
+Known issues
+------------
+
+As of 2025, please put an older version of **mgl-pax** under your
+`~/quicklisp/local-projects/`, since the 2025 version would cause a crash
+during startup.
+
+(I tried with a version from 2024 and it worked for me.)
+
+
+
 Try it
 ------
 
