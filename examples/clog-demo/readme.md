@@ -4,11 +4,9 @@
 Known issues
 ------------
 
-As of 2025, please put an older version of **mgl-pax** under your
-`~/quicklisp/local-projects/`, since the 2025 version would cause a crash
-during startup.
-
-(I tried with a version from 2024 and it worked for me.)
+As of 2025, you'll need to copy file `version.lisp-expr` from **mgl-pax**
+sources under `clog-assets/`. This file is (unfortunately) a runtime dependency
+of the :mgl-pax ASDF system.
 
 
 

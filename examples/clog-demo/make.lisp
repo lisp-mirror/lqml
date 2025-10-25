@@ -41,9 +41,10 @@
                    "/lib/ecl-*/")))
       (shell (cc "cp " lib "*.doc " *assets*))
       (shell (cc "cp -r " lib "encodings " *assets*))))
-  (shell (cc "rm -r " *assets* "static-files/*")) ; may have changed
+  (shell (cc "rm -r " *assets* "static-files/*"))            ; may have changed
   (shell (cc "cp -r ../clog-assets/static-files " *assets*))
-  (shell (cc "cp -r ../clog-assets/*.asd " *assets*)))
+  (shell (cc "cp -r ../clog-assets/*.asd " *assets*))
+  (shell (cc "cp -r ../clog-assets/*.lisp-expr " *assets*))) ; for :mgl-pax
 
 #+mobile
 (unless (find-swank)
