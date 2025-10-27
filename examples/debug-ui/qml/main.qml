@@ -3,21 +3,19 @@ import QtQuick.Controls 2.15
 import QtQuick.Window 2.15
 import 'debug/' as Dbg
 
-StackView {
+StackView { // *** for debug-ui
   id: main
-  objectName: "main"
   width: 800
   height: 600
-  initialItem: mainRect
+  objectName: "main"    // important
+  initialItem: mainRect // important
 
-  // show/hide dialogs
-
+  // *** for debug-ui
   function pushDialog(name)  {
     switch (name) {
       case "debug": main.push(dialogDebug); break
     }
   }
-
   function popDialog() { main.pop() }
 
   // fonts (must stay here, before using them below)
@@ -40,7 +38,6 @@ StackView {
     }
   }
 
-  // dialogs
-
+  // *** for debug-ui
   Dbg.DebugDialog { id: dialogDebug }
 }
