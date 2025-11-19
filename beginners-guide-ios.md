@@ -19,11 +19,10 @@ You'll need a (free) **Apple ID**, which is required anyway for deployment to
 devices.
 
 
-Install Qt5.15
---------------
+Install Qt5/6
+-------------
 
-For mobile we don't want latest Qt6, which currently still misses important QML
-modules. There is basically no way around the online installer, because you
+There is basically no way around the online installer, because (generally) you
 don't want to build the cross-compiled part of Qt for yourself.
 
 See [reademe-qt](readme-qt.md) for the Qt online installer. You'll need to
@@ -36,8 +35,8 @@ Make sure to select the following in the online installer:
 You really want the online installer. Yes it's a 1 GB download, but it brings
 all the examples, demos, tutorials, documentation, Qt Designer, all QML
 modules, so you won't miss anything. And you can easily add/remove parts later
-(see `~/Qt/MaintainanceTool` after installation), or install Qt6 in the future
-(side by side).
+(see `~/Qt/MaintainanceTool` after installation), or install both Qt5 and Qt6
+side by side.
 
 
 Cross-compile ECL
