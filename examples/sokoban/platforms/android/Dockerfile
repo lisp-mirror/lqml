@@ -60,10 +60,10 @@ RUN ./2-make-ecl-android.sh
 
 # Build QT (this takes a few hours on my machine)
 WORKDIR /root/qt
-RUN curl --location --output qt-everywhere-opensource-src-5.15.15.tar.xz https://download.qt.io/official_releases/qt/5.15/5.15.15/single/qt-everywhere-opensource-src-5.15.15.tar.xz
-RUN tar xvf qt-everywhere-opensource-src-5.15.15.tar.xz
-RUN rm qt-everywhere-opensource-src-5.15.15.tar.xz
-WORKDIR /root/qt/qt-everywhere-src-5.15.15
+RUN curl --location --output qt-everywhere-opensource-src-5.15.17.tar.xz https://download.qt.io/archive/qt/5.15/5.15.17/single/qt-everywhere-opensource-src-5.15.17.tar.xz
+RUN tar xvf qt-everywhere-opensource-src-5.15.17.tar.xz
+RUN rm qt-everywhere-opensource-src-5.15.17.tar.xz
+WORKDIR /root/qt/qt-everywhere-src-5.15.17
 RUN ./configure -xplatform android-clang --disable-rpath -nomake tests -nomake examples -android-ndk ${ANDROID_NDK_HOME} -android-sdk ${ANDROID_HOME} -no-warnings-are-errors -opensource -confirm-license
 # `-j 4` seems to make a small difference in building speed
 RUN make -j 4
@@ -73,14 +73,14 @@ RUN make install
 WORKDIR /root
 RUN git clone https://gitlab.com/eql/lqml.git lqml
 WORKDIR /root/lqml/src/build-android
-RUN /usr/local/Qt-5.15.15/bin/qmake ../lqml-lib.pro
+RUN /usr/local/Qt-5.15.17/bin/qmake ../lqml-lib.pro
 RUN make
 
 # Build Sokoban.
 WORKDIR /root/lqml/examples
 RUN env PATH="$PATH:/root/ecl/android/ecl-android-host/bin" ./copy.sh sokoban
 WORKDIR /root/lqml/examples/sokoban/build-android
-RUN /usr/local/Qt-5.15.15/bin/qmake ../app.pro
+RUN /usr/local/Qt-5.15.17/bin/qmake ../app.pro
 RUN make apk
 
 # Pause and show instruction for copying APK.
