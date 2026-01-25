@@ -92,7 +92,7 @@
                            (tpl-prompt)
                            (%tpl-read))
                        values (multiple-value-list
-                                  (eval-with-env - *break-env*)))
+                                  (eval-with-env - *break-env*))) ; TODO change to *break-lexenv* (ECL >= 26)
                  (setf *latest-form*        -
                        *latest-values*      values
                        *uncaught-exception* nil)))))
